@@ -321,6 +321,8 @@ Retrieve details about a specific post.
 
 ### Models
 
+#### Content Publishing Models
+
 #### TextPostRequest
 ```python
 class TextPostRequest(BaseModel):
@@ -343,6 +345,110 @@ class FacebookPostResponse(BaseModel):
     post_id: str  # ID of the created post
     success: bool = True  # Success status
     message: Optional[str] = None  # Additional info
+```
+
+#### Comment Management Models
+
+#### CommentData
+```python
+class CommentData(BaseModel):
+    comment_id: str  # Unique comment identifier
+    post_id: str  # Parent post ID
+    message: str  # Comment text
+    from_user: Dict[str, str]  # User info: {"id": "...", "name": "..."}
+    created_time: str  # ISO 8601 timestamp
+    like_count: int = 0  # Number of likes
+    comment_count: int = 0  # Number of replies
+```
+
+#### CommentsResponse
+```python
+class CommentsResponse(BaseModel):
+    comments: List[CommentData]  # List of retrieved comments
+```
+
+#### CommentReplyRequest
+```python
+class CommentReplyRequest(BaseModel):
+    comment_id: str  # Comment to reply to
+    message: str  # Reply message (1-8000 characters)
+```
+
+#### CommentReactionRequest
+```python
+class CommentReactionRequest(BaseModel):
+    comment_id: str  # Comment to react to
+```
+
+#### CommentActionResponse
+```python
+class CommentActionResponse(BaseModel):
+    success: bool  # Action success status
+    comment_id: Optional[str] = None  # Related comment ID
+    message: str = "Action completed successfully"
+    is_hidden: Optional[str] = None  # "true" if comment is hidden
+```
+
+#### Analytics Models
+
+#### InsightPeriod (Enum)
+```python
+class InsightPeriod(str, Enum):
+    LAST_24_HOURS = "day"  # 24-hour metrics
+    LAST_7_DAYS = "week"  # 7-day metrics
+```
+
+#### ReactionBreakdown
+```python
+class ReactionBreakdown(BaseModel):
+    like: int = 0  # 👍 reactions
+    love: int = 0  # ❤️ reactions
+    wow: int = 0  # 😮 reactions
+    haha: int = 0  # 😂 reactions
+    sad: int = 0  # 😢 reactions
+    angry: int = 0  # 😠 reactions
+    care: int = 0  # 🤗 reactions
+    
+    @property
+    def computed_total(self) -> int:
+        """Total of all reactions"""
+        return self.like + self.love + self.wow + self.haha + self.sad + self.angry + self.care
+```
+
+#### PostInsights
+```python
+class PostInsights(BaseModel):
+    post_id: str  # Post identifier
+    period: str  # "day" or "week"
+    reach: int = 0  # Unique users reached
+    impressions: int = 0  # Total views
+    reactions: ReactionBreakdown  # Reactions breakdown
+    comments_count: int = 0  # Number of comments
+    shares_count: int = 0  # Number of shares
+    clicked: int = 0  # Post clicks
+    
+    @property
+    def engagement_rate(self) -> float:
+        """Calculate engagement rate as percentage"""
+        if self.impressions == 0:
+            return 0.0
+        total_engagement = (self.reactions.computed_total + 
+                          self.comments_count + 
+                          self.shares_count)
+        return (total_engagement / self.impressions) * 100
+```
+
+#### PageInsights
+```python
+class PageInsights(BaseModel):
+    page_id: str  # Page identifier
+    period: str  # "day" or "week"
+    page_impressions: int = 0  # Total page views
+    page_impressions_unique: int = 0  # Unique page views
+    page_engaged_users: int = 0  # Users who engaged
+    page_fans: int = 0  # Total page likes
+    page_views_total: int = 0  # Page tab views
+    page_consumptions: int = 0  # Content clicks
 ```
 
 ### Exceptions
@@ -390,15 +496,21 @@ pytest --cov=src --cov-report=html tests/
 
 The `examples/` directory contains working examples:
 
+**Content Publishing:**
 - `example_text_post.py` - Simple text posting
 - `example_image_post_url.py` - Image posting from URL
 - `example_image_post_file.py` - Image posting from file
 - `example_context_manager.py` - Using context manager pattern
 
+**Comment Management & Analytics:**
+- `example_comment_management.py` - Retrieve, reply, like, hide, and delete comments
+- `example_post_insights.py` - Get post engagement metrics (24h & 7d)
+- `example_page_insights.py` - Get page-level analytics
+
 Run any example:
 
 ```bash
-python examples/example_text_post.py
+python examples/example_comment_management.py
 ```
 
 ## 🏗️ Project Structure
@@ -427,7 +539,10 @@ spec_drive_development/
     ├── example_text_post.py
     ├── example_image_post_url.py
     ├── example_image_post_file.py
-    └── example_context_manager.py
+    ├── example_context_manager.py
+    ├── example_comment_management.py
+    ├── example_post_insights.py
+    └── example_page_insights.py
 ```
 
 ## 🔒 Security Best Practices
@@ -473,17 +588,24 @@ logging.basicConfig(
 
 ## 🗺️ Roadmap
 
+**Completed:**
 - [x] Text post creation
 - [x] Image post creation (URL & file)
-- [x] Comprehensive testing
-- [x] Type-safe models
+- [x] Comment retrieval and keyword extraction
+- [x] Comment management (reply, like, hide, delete)
+- [x] Post insights (24h & 7d metrics)
+- [x] Page insights and analytics
+- [x] Comprehensive testing (80+ tests)
+- [x] Type-safe models with Pydantic
+
+**Planned:**
 - [ ] Video post creation
-- [ ] Comment monitoring
-- [ ] Reaction tracking
+- [ ] Advanced AI-powered sentiment analysis
 - [ ] Post scheduling
-- [ ] Analytics dashboard
-- [ ] Webhook integration
+- [ ] Real-time webhook integration
 - [ ] Multi-page management
+- [ ] Automated response templates
+- [ ] Performance analytics dashboard
 
 ## 🤝 Contributing
 
