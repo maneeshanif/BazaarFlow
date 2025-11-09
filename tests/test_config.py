@@ -17,7 +17,7 @@ class TestFacebookConfig:
         monkeypatch.setenv("FACEBOOK_PAGE_ID", "123456789")
         monkeypatch.setenv("FACEBOOK_ACCESS_TOKEN", "EAAtest123456789012345")
         
-        config = FacebookConfig()
+        config = FacebookConfig(_env_file=None)
         
         assert config.facebook_page_id == "123456789"
         assert config.facebook_access_token == "EAAtest123456789012345"
@@ -31,7 +31,7 @@ class TestFacebookConfig:
         monkeypatch.setenv("FACEBOOK_ACCESS_TOKEN", "EAAtest123456789012345")
         monkeypatch.setenv("FACEBOOK_API_VERSION", "v19.0")
         
-        config = FacebookConfig()
+        config = FacebookConfig(_env_file=None)
         
         assert config.facebook_api_version == "v19.0"
     
@@ -42,7 +42,7 @@ class TestFacebookConfig:
         monkeypatch.setenv("REQUEST_TIMEOUT", "60")
         monkeypatch.setenv("MAX_RETRIES", "5")
         
-        config = FacebookConfig()
+        config = FacebookConfig(_env_file=None)
         
         assert config.request_timeout == 60
         assert config.max_retries == 5
@@ -53,7 +53,7 @@ class TestFacebookConfig:
         monkeypatch.delenv("FACEBOOK_PAGE_ID", raising=False)
         
         with pytest.raises(ValidationError) as exc_info:
-            FacebookConfig()
+            FacebookConfig(_env_file=None)
         
         assert "facebook_page_id" in str(exc_info.value).lower()
     
@@ -63,7 +63,7 @@ class TestFacebookConfig:
         monkeypatch.delenv("FACEBOOK_ACCESS_TOKEN", raising=False)
         
         with pytest.raises(ValidationError) as exc_info:
-            FacebookConfig()
+            FacebookConfig(_env_file=None)
         
         assert "facebook_access_token" in str(exc_info.value).lower()
     
@@ -73,7 +73,7 @@ class TestFacebookConfig:
         monkeypatch.setenv("FACEBOOK_ACCESS_TOKEN", "EAAtest123456789012345")
         
         with pytest.raises(ValidationError) as exc_info:
-            FacebookConfig()
+            FacebookConfig(_env_file=None)
         
         assert "must be numeric" in str(exc_info.value)
     
@@ -83,7 +83,7 @@ class TestFacebookConfig:
         monkeypatch.setenv("FACEBOOK_ACCESS_TOKEN", "EAAtest123456789012345")
         
         with pytest.raises(ValidationError) as exc_info:
-            FacebookConfig()
+            FacebookConfig(_env_file=None)
         
         assert "cannot be empty" in str(exc_info.value)
     
@@ -93,7 +93,7 @@ class TestFacebookConfig:
         monkeypatch.setenv("FACEBOOK_ACCESS_TOKEN", "short")
         
         with pytest.raises(ValidationError) as exc_info:
-            FacebookConfig()
+            FacebookConfig(_env_file=None)
         
         assert "too short" in str(exc_info.value)
     
@@ -104,7 +104,7 @@ class TestFacebookConfig:
         monkeypatch.setenv("FACEBOOK_API_VERSION", "18.0")
         
         with pytest.raises(ValidationError) as exc_info:
-            FacebookConfig()
+            FacebookConfig(_env_file=None)
         
         assert "must start with 'v'" in str(exc_info.value)
     
@@ -113,7 +113,7 @@ class TestFacebookConfig:
         monkeypatch.setenv("FACEBOOK_PAGE_ID", "123456789")
         monkeypatch.setenv("FACEBOOK_ACCESS_TOKEN", "EAAtest123456789012345")
         
-        config = FacebookConfig()
+        config = FacebookConfig(_env_file=None)
         
         assert config.graph_api_url == "https://graph.facebook.com/v18.0"
     
@@ -122,7 +122,7 @@ class TestFacebookConfig:
         monkeypatch.setenv("FACEBOOK_PAGE_ID", "123456789")
         monkeypatch.setenv("FACEBOOK_ACCESS_TOKEN", "EAAtest123456789012345")
         
-        config = FacebookConfig()
+        config = FacebookConfig(_env_file=None)
         
         assert config.page_endpoint == "https://graph.facebook.com/v18.0/123456789"
     
@@ -131,7 +131,7 @@ class TestFacebookConfig:
         monkeypatch.setenv("FACEBOOK_PAGE_ID", "  123456789  ")
         monkeypatch.setenv("FACEBOOK_ACCESS_TOKEN", "  EAAtest123456789012345  ")
         
-        config = FacebookConfig()
+        config = FacebookConfig(_env_file=None)
         
         assert config.facebook_page_id == "123456789"
         assert config.facebook_access_token == "EAAtest123456789012345"
@@ -145,7 +145,7 @@ class TestLoadConfig:
         monkeypatch.setenv("FACEBOOK_PAGE_ID", "123456789")
         monkeypatch.setenv("FACEBOOK_ACCESS_TOKEN", "EAAtest123456789012345")
         
-        config = load_config()
+        config = load_config(use_env_file=False)
         
         assert isinstance(config, FacebookConfig)
         assert config.facebook_page_id == "123456789"

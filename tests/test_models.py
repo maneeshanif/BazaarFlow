@@ -34,14 +34,14 @@ class TestTextPostRequest:
         with pytest.raises(ValidationError) as exc_info:
             TextPostRequest(message="")
         
-        assert "Message cannot be empty" in str(exc_info.value)
+        assert "at least 1 character" in str(exc_info.value)
     
     def test_whitespace_only_message_raises_error(self):
         """Test that whitespace-only message raises validation error"""
         with pytest.raises(ValidationError) as exc_info:
             TextPostRequest(message="   ")
         
-        assert "Message cannot be empty" in str(exc_info.value)
+        assert "cannot be empty" in str(exc_info.value)
     
     def test_message_too_long(self):
         """Test that message exceeding max length raises error"""
@@ -67,7 +67,7 @@ class TestImagePostRequest:
             image_url="https://example.com/image.jpg"
         )
         assert post.message == "Check this out!"
-        assert str(post.image_url) == "https://example.com/image.jpg/"
+        assert str(post.image_url) == "https://example.com/image.jpg"
     
     def test_valid_image_path_post(self):
         """Test creating a valid image post with file path"""

@@ -12,6 +12,7 @@ from collections import Counter
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
+from dotenv import load_dotenv
 
 from .config import FacebookConfig, get_config
 from .models import (
@@ -694,14 +695,15 @@ class FacebookManager:
     def get_post_insights(
         self,
         post_id: str,
-        period: InsightPeriod = InsightPeriod.LAST_24_HOURS
+        period: InsightPeriod = InsightPeriod.LIFETIME
     ) -> PostInsights:
         """
         Get insights/analytics for a specific post.
         
         Args:
             post_id: The Facebook post ID
-            period: Time period for insights (LAST_24_HOURS or LAST_7_DAYS)
+            period: Requested time period. Post-level metrics used here are
+                lifetime-only, so the value will be coerced to InsightPeriod.LIFETIME.
             
         Returns:
             PostInsights with engagement metrics
@@ -710,73 +712,124 @@ class FacebookManager:
             FacebookAPIError: If request fails
         """
         try:
-            logger.info(f"Retrieving insights for post: {post_id} (period: {period.value})")
-            
-            # Get post insights metrics
-            insights_params = {
-                'metric': 'post_impressions,post_reach,post_clicks,post_engaged_users',
-                'period': period.value
-            }
-            
+            if period != InsightPeriod.LIFETIME:
+                logger.debug(
+                    "Post insights metrics are lifetime-only; overriding requested period %s to lifetime.",
+                    period.value
+                )
+            logger.info(f"Retrieving insights for post: {post_id} (period: lifetime)")
+
+            metrics_to_fetch = [
+                'post_impressions',
+                'post_impressions_unique',
+                'post_clicks',
+                'post_reactions_by_type_total',
+                'post_activity_by_action_type_unique'
+            ]
+
             insights_response = self._make_request(
                 method='GET',
                 endpoint=f"{post_id}/insights",
-                params=insights_params
+                params={
+                    'metric': ','.join(metrics_to_fetch),
+                    'period': InsightPeriod.LIFETIME.value
+                }
             )
-            
-            # Get reactions breakdown
-            reactions_response = self._make_request(
-                method='GET',
-                endpoint=f"{post_id}/reactions",
-                params={'summary': 'total_count', 'limit': 0}
-            )
-            
-            # Get post details for comments and shares
+
             post_details = self._make_request(
                 method='GET',
                 endpoint=post_id,
                 params={'fields': 'shares,comments.summary(true)'}
             )
-            
-            # Parse insights data
-            metrics = {}
+
+            metrics: Dict[str, Any] = {}
             for insight in insights_response.get('data', []):
                 metric_name = insight.get('name')
                 values = insight.get('values', [])
-                if values:
-                    metrics[metric_name] = values[0].get('value', 0)
-            
-            # Parse reactions
-            reaction_summary = reactions_response.get('summary', {})
-            reaction_breakdown = self._parse_reaction_breakdown(reactions_response.get('data', []))
-            
-            # Calculate engagement rate
-            reach = metrics.get('post_reach', 0)
-            total_reactions = reaction_breakdown.total
+                if not metric_name or not values:
+                    continue
+                metrics[metric_name] = values[-1].get('value')
+
+            reaction_breakdown = self._build_reaction_breakdown_from_insights(
+                metrics.get('post_reactions_by_type_total')
+            )
+
+            if reaction_breakdown is None:
+                reactions_response = self._make_request(
+                    method='GET',
+                    endpoint=f"{post_id}/reactions",
+                    params={'summary': 'total_count', 'limit': 0}
+                )
+                reaction_breakdown = self._parse_reaction_breakdown(
+                    reactions_response.get('data', [])
+                )
+
+            reach = metrics.get('post_impressions_unique', 0) or 0
+            impressions = metrics.get('post_impressions', 0) or 0
+            clicks = metrics.get('post_clicks', 0) or 0
+
             comments_count = post_details.get('comments', {}).get('summary', {}).get('total_count', 0)
             shares_count = post_details.get('shares', {}).get('count', 0)
-            
+
+            total_engagement = (
+                reaction_breakdown.total
+                + comments_count
+                + shares_count
+                + clicks
+            )
             engagement_rate = 0.0
-            if reach > 0:
-                total_engagement = total_reactions + comments_count + shares_count
+            if reach:
                 engagement_rate = (total_engagement / reach) * 100
-            
+
             return PostInsights(
                 post_id=post_id,
-                period=period,
-                reach=metrics.get('post_reach', 0),
-                impressions=metrics.get('post_impressions', 0),
+                period=InsightPeriod.LIFETIME,
+                reach=reach,
+                impressions=impressions,
                 reactions=reaction_breakdown,
                 comments_count=comments_count,
                 shares_count=shares_count,
                 engagement_rate=round(engagement_rate, 2),
-                clicked=metrics.get('post_clicks', 0)
+                clicked=clicks
             )
-            
+
         except FacebookAPIError as e:
             logger.error(f"Failed to retrieve post insights: {str(e)}")
             raise
     
+    def _build_reaction_breakdown_from_insights(
+        self,
+        reaction_values: Any
+    ) -> Optional[ReactionBreakdown]:
+        """Build a reaction breakdown from insights metric data if available."""
+        if not isinstance(reaction_values, dict):
+            return None
+
+        like = int(reaction_values.get('like', 0) or 0)
+        love = int(reaction_values.get('love', 0) or 0)
+        wow = int(reaction_values.get('wow', 0) or 0)
+        haha = int(reaction_values.get('haha', 0) or 0)
+        sad = int(
+            reaction_values.get('sad', reaction_values.get('sorry', 0)) or 0
+        )
+        angry = int(
+            reaction_values.get('angry', reaction_values.get('anger', 0)) or 0
+        )
+        care = int(reaction_values.get('care', 0) or 0)
+
+        total = like + love + wow + haha + sad + angry + care
+
+        return ReactionBreakdown(
+            like=like,
+            love=love,
+            wow=wow,
+            haha=haha,
+            sad=sad,
+            angry=angry,
+            care=care,
+            total=total
+        )
+
     def _parse_reaction_breakdown(self, reactions_data: List[Dict]) -> ReactionBreakdown:
         """
         Parse reactions data into ReactionBreakdown model.
@@ -832,23 +885,28 @@ class FacebookManager:
             FacebookAPIError: If request fails
         """
         try:
-            logger.info(f"Retrieving page insights (period: {period.value})")
+            api_period = period
+            if period == InsightPeriod.LIFETIME:
+                api_period = InsightPeriod.LAST_28_DAYS
+                logger.debug(
+                    "Page insights do not support lifetime period; falling back to %s.",
+                    api_period.value
+                )
+
+            logger.info(f"Retrieving page insights (period: {api_period.value})")
             
-            # Define metrics to retrieve
             metrics = [
                 'page_impressions',
                 'page_impressions_unique',
                 'page_engaged_users',
                 'page_post_engagements',
                 'page_fans',
-                'page_fans_online',
-                'page_views_total',
-                'page_consumptions'
+                'page_views_total'
             ]
             
             insights_params = {
                 'metric': ','.join(metrics),
-                'period': period.value
+                'period': api_period.value
             }
             
             insights_response = self._make_request(
@@ -858,22 +916,17 @@ class FacebookManager:
             )
             
             # Parse insights data
-            parsed_metrics = {}
+            parsed_metrics: Dict[str, Any] = {}
             for insight in insights_response.get('data', []):
                 metric_name = insight.get('name')
                 values = insight.get('values', [])
                 if values:
-                    # For lifetime metrics, take the last value
-                    if insight.get('period') == 'lifetime':
-                        parsed_metrics[metric_name] = values[-1].get('value', 0)
-                    else:
-                        # For period metrics, sum all values
-                        total = sum(v.get('value', 0) for v in values)
-                        parsed_metrics[metric_name] = total
+                    last_value = values[-1].get('value', 0)
+                    parsed_metrics[metric_name] = last_value
             
             return PageInsights(
                 page_id=self.config.facebook_page_id,
-                period=period,
+                period=api_period,
                 page_impressions=parsed_metrics.get('page_impressions', 0),
                 page_reach=parsed_metrics.get('page_impressions_unique', 0),
                 page_engaged_users=parsed_metrics.get('page_engaged_users', 0),

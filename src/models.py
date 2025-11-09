@@ -228,9 +228,11 @@ class CommentActionResponse(BaseModel):
 # ============================================================================
 
 class InsightPeriod(str, Enum):
-    """Time period for insights"""
+    """Time period for insights aligned with Graph API periods"""
     LAST_24_HOURS = "day"
     LAST_7_DAYS = "week"
+    LAST_28_DAYS = "days_28"
+    LIFETIME = "lifetime"
 
 
 class ReactionBreakdown(BaseModel):

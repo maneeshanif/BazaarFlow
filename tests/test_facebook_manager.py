@@ -26,7 +26,8 @@ def mock_config():
         facebook_access_token="EAAtest123456789012345",
         facebook_api_version="v18.0",
         request_timeout=30,
-        max_retries=3
+        max_retries=3,
+        _env_file=None
     )
 
 
@@ -86,9 +87,10 @@ class TestCreateTextPost:
         # Verify the API was called correctly
         mock_request.assert_called_once()
         call_args = mock_request.call_args
-        assert call_args[1]['method'] == 'POST'
-        assert '123456789/feed' in call_args[1]['url']
-        assert call_args[1]['data']['message'] == "Hello, Facebook!"
+        assert call_args.kwargs['method'] == 'POST'
+        expected_page_id = facebook_manager.config.facebook_page_id
+        assert call_args.kwargs['url'].endswith(f"/{expected_page_id}/feed")
+        assert call_args.kwargs['data']['message'] == "Hello, Facebook!"
     
     @patch('src.facebook_manager.requests.Session.request')
     def test_create_text_post_api_error(self, mock_request, facebook_manager):
@@ -154,10 +156,11 @@ class TestCreateImagePost:
         # Verify the API was called correctly
         mock_request.assert_called_once()
         call_args = mock_request.call_args
-        assert call_args[1]['method'] == 'POST'
-        assert '123456789/photos' in call_args[1]['url']
-        assert call_args[1]['data']['message'] == "Check this out!"
-        assert 'https://example.com/image.jpg' in call_args[1]['data']['url']
+        assert call_args.kwargs['method'] == 'POST'
+        expected_page_id = facebook_manager.config.facebook_page_id
+        assert call_args.kwargs['url'].endswith(f"/{expected_page_id}/photos")
+        assert call_args.kwargs['data']['message'] == "Check this out!"
+        assert 'https://example.com/image.jpg' in call_args.kwargs['data']['url']
     
     @patch('src.facebook_manager.requests.Session.request')
     def test_create_image_post_from_url_without_message(self, mock_request, facebook_manager):
@@ -173,7 +176,7 @@ class TestCreateImagePost:
         
         # Verify message was not included in request
         call_args = mock_request.call_args
-        assert 'message' not in call_args[1]['data']
+        assert 'message' not in call_args.kwargs['data']
     
     @patch('builtins.open', new_callable=mock_open, read_data=b'fake image data')
     @patch('pathlib.Path.exists')
@@ -254,8 +257,9 @@ class TestVerifyCredentials:
         # Verify the API was called correctly
         mock_request.assert_called_once()
         call_args = mock_request.call_args
-        assert call_args[1]['method'] == 'GET'
-        assert '123456789' in call_args[1]['url']
+        assert call_args.kwargs['method'] == 'GET'
+        expected_page_id = facebook_manager.config.facebook_page_id
+        assert call_args.kwargs['url'].endswith(f"/{expected_page_id}")
     
     @patch('src.facebook_manager.requests.Session.request')
     def test_verify_credentials_invalid(self, mock_request, facebook_manager):

@@ -30,7 +30,8 @@ def mock_config():
         facebook_access_token="EAAtest123456789012345",
         facebook_api_version="v18.0",
         request_timeout=30,
-        max_retries=3
+        max_retries=3,
+        _env_file=None
     )
 
 
@@ -82,7 +83,7 @@ class TestCommentRetrieval:
         # Verify API call
         mock_request.assert_called_once()
         call_args = mock_request.call_args
-        assert '123456789_987654321/comments' in call_args[1]['url']
+        assert '123456789_987654321/comments' in call_args.kwargs['url']
     
     @patch('src.facebook_manager.requests.Session.request')
     def test_get_post_comments_with_limit(self, mock_request, facebook_manager):
@@ -104,7 +105,7 @@ class TestCommentRetrieval:
         
         # Verify limit parameter was passed
         call_args = mock_request.call_args
-        assert call_args[1]['params']['limit'] == 1
+        assert call_args.kwargs['params']['limit'] == 1
     
     @patch('src.facebook_manager.requests.Session.request')
     def test_get_post_comments_empty(self, mock_request, facebook_manager):
@@ -143,9 +144,9 @@ class TestCommentActions:
         
         # Verify API call
         call_args = mock_request.call_args
-        assert call_args[1]['method'] == 'POST'
-        assert 'comment_123/comments' in call_args[1]['url']
-        assert call_args[1]['data']['message'] == 'Thank you for your comment!'
+        assert call_args.kwargs['method'] == 'POST'
+        assert 'comment_123/comments' in call_args.kwargs['url']
+        assert call_args.kwargs['data']['message'] == 'Thank you for your comment!'
     
     @patch('src.facebook_manager.requests.Session.request')
     def test_like_comment_success(self, mock_request, facebook_manager):
@@ -166,8 +167,8 @@ class TestCommentActions:
         
         # Verify API call
         call_args = mock_request.call_args
-        assert call_args[1]['method'] == 'POST'
-        assert 'comment_123/likes' in call_args[1]['url']
+        assert call_args.kwargs['method'] == 'POST'
+        assert 'comment_123/likes' in call_args.kwargs['url']
     
     @patch('src.facebook_manager.requests.Session.request')
     def test_hide_comment_success(self, mock_request, facebook_manager):
@@ -183,9 +184,9 @@ class TestCommentActions:
         
         # Verify API call
         call_args = mock_request.call_args
-        assert call_args[1]['method'] == 'POST'
-        assert 'comment_123' in call_args[1]['url']
-        assert call_args[1]['data']['is_hidden'] == 'true'
+        assert call_args.kwargs['method'] == 'POST'
+        assert 'comment_123' in call_args.kwargs['url']
+        assert call_args.kwargs['data']['is_hidden'] == 'true'
     
     @patch('src.facebook_manager.requests.Session.request')
     def test_delete_comment_success(self, mock_request, facebook_manager):
@@ -201,8 +202,8 @@ class TestCommentActions:
         
         # Verify API call
         call_args = mock_request.call_args
-        assert call_args[1]['method'] == 'DELETE'
-        assert 'comment_123' in call_args[1]['url']
+        assert call_args.kwargs['method'] == 'DELETE'
+        assert 'comment_123' in call_args.kwargs['url']
 
 
 class TestKeywordExtraction:
@@ -265,89 +266,117 @@ class TestPostInsights:
     @patch('src.facebook_manager.requests.Session.request')
     def test_get_post_insights_24h(self, mock_request, facebook_manager):
         """Test post insights for 24 hour period"""
-        mock_response = Mock()
-        mock_response.json.return_value = {
+        mock_insights_response = Mock()
+        mock_insights_response.json.return_value = {
             'data': [
+                {'name': 'post_impressions', 'values': [{'value': 1500}]},
+                {'name': 'post_impressions_unique', 'values': [{'value': 1200}]},
+                {'name': 'post_clicks', 'values': [{'value': 300}]},
                 {
-                    'name': 'post_impressions',
-                    'values': [{'value': 1500}]
-                },
-                {
-                    'name': 'post_reach',
-                    'values': [{'value': 1200}]
+                    'name': 'post_reactions_by_type_total',
+                    'values': [{'value': {'like': 10, 'love': 5, 'wow': 1}}]
                 }
             ]
         }
-        mock_request.return_value = mock_response
-        
+
+        mock_post_response = Mock()
+        mock_post_response.json.return_value = {
+            'shares': {'count': 4},
+            'comments': {'summary': {'total_count': 6}}
+        }
+
+        mock_request.side_effect = [mock_insights_response, mock_post_response]
+
         insights = facebook_manager.get_post_insights(
             '123456789_987654321',
             period=InsightPeriod.LAST_24_HOURS
         )
-        
+
         assert isinstance(insights, PostInsights)
         assert insights.post_id == '123456789_987654321'
-        assert insights.period == InsightPeriod.LAST_24_HOURS
-        
-        # Verify API call
-        call_args = mock_request.call_args
-        assert '123456789_987654321/insights' in call_args[1]['url'] or '123456789_987654321' in call_args[1]['url']
+        assert insights.period == InsightPeriod.LIFETIME
+        assert insights.reach == 1200
+        assert insights.reactions.like == 10
+        assert insights.reactions.total == 16
+
+        first_call_kwargs = mock_request.call_args_list[0].kwargs
+        assert first_call_kwargs['params']['period'] == 'lifetime'
+        second_call_kwargs = mock_request.call_args_list[1].kwargs
+        assert second_call_kwargs['params']['fields'] == 'shares,comments.summary(true)'
     
     @patch('src.facebook_manager.requests.Session.request')
     def test_get_post_insights_7d(self, mock_request, facebook_manager):
         """Test post insights for 7 day period"""
-        mock_response = Mock()
-        mock_response.json.return_value = {
+        mock_insights_response = Mock()
+        mock_insights_response.json.return_value = {
             'data': [
-                {
-                    'name': 'post_impressions',
-                    'values': [{'value': 10000}]
-                }
+                {'name': 'post_impressions', 'values': [{'value': 10000}]},
+                {'name': 'post_impressions_unique', 'values': [{'value': 8000}]}
             ]
         }
-        mock_request.return_value = mock_response
-        
+        mock_post_response = Mock()
+        mock_post_response.json.return_value = {
+            'shares': {'count': 0},
+            'comments': {'summary': {'total_count': 0}}
+        }
+
+        mock_reactions_response = Mock()
+        mock_reactions_response.json.return_value = {'data': []}
+
+        mock_request.side_effect = [
+            mock_insights_response,
+            mock_post_response,
+            mock_reactions_response
+        ]
+
         insights = facebook_manager.get_post_insights(
             '123456789_987654321',
             period=InsightPeriod.LAST_7_DAYS
         )
-        
-        assert insights.period == InsightPeriod.LAST_7_DAYS
+
+        assert insights.period == InsightPeriod.LIFETIME
+        assert insights.impressions == 10000
     
     @patch('src.facebook_manager.requests.Session.request')
     def test_get_post_insights_with_reactions(self, mock_request, facebook_manager):
         """Test post insights including reaction breakdown"""
-        # Mock three calls - one for post details, one for insights, one for reactions
+        mock_insights_response = Mock()
+        mock_insights_response.json.return_value = {
+            'data': [
+                {'name': 'post_impressions', 'values': [{'value': 1500}]},
+                {'name': 'post_impressions_unique', 'values': [{'value': 1200}]}
+            ]
+        }
+
         mock_post_response = Mock()
         mock_post_response.json.return_value = {
             'shares': {'count': 25},
             'comments': {'summary': {'total_count': 42}}
         }
-        
-        mock_insights_response = Mock()
-        mock_insights_response.json.return_value = {
-            'data': [
-                {'name': 'post_impressions', 'values': [{'value': 1500}]},
-                {'name': 'post_reach', 'values': [{'value': 1200}]}
-            ]
-        }
-        
+
         mock_reactions_response = Mock()
         mock_reactions_response.json.return_value = {
-            'LIKE': 50,
-            'LOVE': 30,
-            'WOW': 10,
-            'HAHA': 5,
-            'SAD': 2,
-            'ANGRY': 1
+            'data': [
+                {'type': 'LIKE'},
+                {'type': 'LOVE'},
+                {'type': 'LOVE'},
+                {'type': 'WOW'}
+            ]
         }
-        
-        mock_request.side_effect = [mock_post_response, mock_insights_response, mock_reactions_response]
-        
+
+        mock_request.side_effect = [
+            mock_insights_response,
+            mock_post_response,
+            mock_reactions_response
+        ]
+
         insights = facebook_manager.get_post_insights('123456789_987654321')
-        
-        assert insights.reactions is not None
+
         assert isinstance(insights.reactions, ReactionBreakdown)
+        assert insights.reactions.like == 1
+        assert insights.reactions.love == 2
+        assert insights.reactions.wow == 1
+        assert mock_request.call_count == 3
 
 
 class TestPageInsights:
@@ -386,7 +415,7 @@ class TestPageInsights:
         
         # Verify API call
         call_args = mock_request.call_args
-        assert '/insights' in call_args[1]['url']
+        assert '/insights' in call_args.kwargs['url']
     
     @patch('src.facebook_manager.requests.Session.request')
     def test_get_page_insights_week(self, mock_request, facebook_manager):
@@ -471,3 +500,5 @@ class TestInsightPeriodEnum:
         """Test that period enum has correct values"""
         assert InsightPeriod.LAST_24_HOURS == "day"
         assert InsightPeriod.LAST_7_DAYS == "week"
+        assert InsightPeriod.LAST_28_DAYS == "days_28"
+        assert InsightPeriod.LIFETIME == "lifetime"

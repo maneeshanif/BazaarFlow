@@ -55,18 +55,20 @@ class FacebookConfig(BaseSettings):
         env_file=".env",
         env_file_encoding="utf-8",
         case_sensitive=False,
-        extra="ignore"
+        extra="ignore",
+        populate_by_name=True
     )
     
     @field_validator("facebook_page_id")
     @classmethod
     def validate_page_id(cls, v: str) -> str:
         """Validate Facebook Page ID format"""
-        if not v or not v.strip():
+        clean_value = v.strip() if isinstance(v, str) else v
+        if not clean_value:
             raise ValueError("Facebook Page ID cannot be empty")
-        if not v.isdigit():
+        if not clean_value.isdigit():
             raise ValueError("Facebook Page ID must be numeric")
-        return v.strip()
+        return clean_value
     
     @field_validator("facebook_access_token")
     @classmethod
@@ -97,7 +99,7 @@ class FacebookConfig(BaseSettings):
         return f"{self.graph_api_url}/{self.facebook_page_id}"
 
 
-def load_config(env_file: Optional[str] = None) -> FacebookConfig:
+def load_config(env_file: Optional[str] = None, use_env_file: bool = True) -> FacebookConfig:
     """
     Load and validate Facebook configuration.
     
@@ -116,6 +118,9 @@ def load_config(env_file: Optional[str] = None) -> FacebookConfig:
     
     if env_file:
         return FacebookConfig(_env_file=env_file)
+    
+    if not use_env_file:
+        return FacebookConfig(_env_file=None)
     
     return FacebookConfig()
 

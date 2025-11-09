@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "facebook-manager": {
+      "command": "python",
+      "args": [
+        "d:\\spec_drive_development\\mcp_server.py"
+      ],
+      "env": {
+        "FACEBOOK_PAGE_ID": "your_page_id_here",
+        "FACEBOOK_ACCESS_TOKEN": "your_access_token_here",
+        "FACEBOOK_API_VERSION": "v18.0"
+      }
+    }
+  }
+}

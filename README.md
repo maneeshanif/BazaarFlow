@@ -106,6 +106,41 @@ with FacebookManager() as manager:
     print(f"Post created: {response.post_id}")
 ```
 
+### Command-Line Utility (`main.py`)
+
+Prefer to run quick operations from the terminal? The project ships with a comprehensive CLI in `main.py`.
+It loads configuration from environment variables or `.env` and interacts with the live Facebook Graph API.
+
+**Quick Start:**
+
+```bash
+# Verify credentials
+python main.py verify
+
+# Publish a text post
+python main.py post-text "Hello from the CLI!"
+
+# Fetch comments + insights for a specific post
+python main.py fetch-post-engagement YOUR_PAGE_ID_POST_ID --output insights.json
+
+# Post an image from URL
+python main.py post-image --image-url https://example.com/image.jpg --message "Check this out!"
+
+# Get page-level insights
+python main.py page-insights --period week
+```
+
+**Complete CLI Documentation:** See [MAIN_CLI_GUIDE.md](./MAIN_CLI_GUIDE.md) for detailed usage, examples, and troubleshooting.
+
+**Available Commands:**
+- `verify` - Validate Facebook credentials
+- `fetch-post-engagement` - Fetch comments and insights for a post
+- `post-text` - Publish a text post
+- `post-image` - Publish an image post
+- `page-insights` - Get page-level engagement metrics
+
+Use `python main.py --help` or `python main.py <command> --help` for detailed options.
+
 ### Get Comments and Analyze
 
 ```python
