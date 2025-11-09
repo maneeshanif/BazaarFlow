@@ -36,24 +36,7 @@ def init_wa(fastapi_app, logger):
         validate_updates=(os.getenv("WA_VALIDATE_UPDATES", "false").lower() in ("1", "true", "yes")),
     )
 
-    @fastapi_app.on_event("startup")
-    async def _wa_startup():
-        # Basic checks and an optional admin welcome message
-        required_vars = ["WA_TOKEN", "WA_APP_ID", "WA_APP_SECRET", "WA_PHONE_ID"]
-        missing = [v for v in required_vars if not os.getenv(v)]
-        if missing:
-            logger.warning("Missing WA env vars: %s", missing)
-            return
-
-        try:
-            webhook_url = os.getenv("WA_CALLBACK_URL")
-            logger.info("Registering webhook at %s", webhook_url)
-            resp = await wa.send_message(
-                to=os.getenv("WA_ADMIN_PHONE", "923012177654"),
-                text="👋 BazaarFlow started",
-            )
-            logger.info("Startup message sent, id=%s", getattr(resp, "id", None))
-        except Exception:
-            logger.exception("Failed to run WA startup tasks")
+    # Note: Startup logic moved to lifespan context manager in app.py
+    # to avoid conflicts with modern FastAPI lifecycle management
 
     return wa
