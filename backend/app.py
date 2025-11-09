@@ -41,28 +41,9 @@ def safe_int(value: str | None) -> int | None:
     except (ValueError, TypeError):
         return None
 
-# Create FastAPI app first (pywa requires server instance at init time)
-fastapi_app = FastAPI(
-    title="BazaarFlow API",
-    description="BazaarFlow backend API with WhatsApp integration",
-    version="1.0.0",
-)
-
-# Include MVC-style routes
-fastapi_app.include_router(sales_router, prefix="/api")
-fastapi_app.include_router(chat_router, prefix="/api")
-
-# Initialize WhatsApp client using helper module
-wa = init_wa(fastapi_app, logger)
-
-# Log registered routes for debugging
-for route in fastapi_app.routes:
-    logger.info(f"Registered route: {route.path} [{route.methods}]")
 @asynccontextmanager
 async def lifespan(app: FastAPI):
 # ---- startup ------------------------------------------------
-    # Set the server after FastAPI app is created to avoid circular reference
-    wa.server = app
     try:
         log_webhook_event(logger, "startup_begin")
         
@@ -108,13 +89,24 @@ async def lifespan(app: FastAPI):
     print("App shutdown – cleaning up...")
 
 
-fastapi_app = FastAPI(lifespan=lifespan)
+# Create FastAPI app with lifespan (pywa requires server instance at init time)
+fastapi_app = FastAPI(
+    title="BazaarFlow API",
+    description="BazaarFlow backend API with WhatsApp integration",
+    version="1.0.0",
+    lifespan=lifespan,
+)
 
-# Include MVC-style sales routes (POST /api/sales)
+# Include MVC-style routes
 fastapi_app.include_router(sales_router, prefix="/api")
-
-# Include chat routes (POST /api/chat/sales)
 fastapi_app.include_router(chat_router, prefix="/api")
+
+# Initialize WhatsApp client using helper module (this registers /webhook routes)
+wa = init_wa(fastapi_app, logger)
+
+# Log registered routes for debugging
+for route in fastapi_app.routes:
+    logger.info(f"Registered route: {route.path} [{route.methods}]")
 
 # --- CORS middleware -----------------------------------------
 from fastapi.middleware.cors import CORSMiddleware
