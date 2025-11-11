@@ -1,11 +1,14 @@
 """
 WhatsApp (pywa) client initializer module.
 
-Provides init_wa(app, logger) which initializes the pywa WhatsApp client
-with the provided FastAPI app instance and attaches startup tasks.
+Provides ``init_wa(app, logger)`` which initializes the pywa WhatsApp client
+with the provided FastAPI app instance and returns an async lifespan context
+manager for startup/shutdown orchestration.
 """
+from contextlib import asynccontextmanager
 from typing import Optional
 import os
+from fastapi import FastAPI
 from pywa_async import WhatsApp
 
 
@@ -19,10 +22,12 @@ def _safe_int(value: Optional[str]) -> Optional[int]:
 
 
 def init_wa(fastapi_app, logger):
-    """Create and return a WhatsApp client bound to `fastapi_app`.
+    """Create a WhatsApp client bound to ``fastapi_app``.
 
-    This follows pywa's recommended pattern: create the FastAPI app, then
-    initialize WhatsApp with server=fastapi_app so decorators work.
+    Returns a tuple ``(wa_client, lifespan_context)`` where
+    ``lifespan_context`` is an async context manager compatible with FastAPI's
+    lifespan hooks. The caller must wire the context manager into FastAPI to
+    avoid deprecated ``on_event`` handlers.
     """
     wa = WhatsApp(
         phone_id=_safe_int(os.getenv("WA_PHONE_ID")),
@@ -36,18 +41,19 @@ def init_wa(fastapi_app, logger):
         validate_updates=(os.getenv("WA_VALIDATE_UPDATES", "false").lower() in ("1", "true", "yes")),
     )
 
-    @fastapi_app.on_event("startup")
-    async def _wa_startup():
-        # Basic checks and an optional admin welcome message
+    @asynccontextmanager
+    async def wa_lifespan(_: FastAPI):
+        """FastAPI lifespan hook for WhatsApp startup/shutdown."""
         required_vars = ["WA_TOKEN", "WA_APP_ID", "WA_APP_SECRET", "WA_PHONE_ID"]
         missing = [v for v in required_vars if not os.getenv(v)]
         if missing:
             logger.warning("Missing WA env vars: %s", missing)
+            yield
             return
 
         try:
             webhook_url = os.getenv("WA_CALLBACK_URL")
-            logger.info("Registering webhook at %s", webhook_url)
+            logger.info("Registering WhatsApp webhook at %s", webhook_url)
             resp = await wa.send_message(
                 to=os.getenv("WA_ADMIN_PHONE", "923012177654"),
                 text="👋 BazaarFlow started",
@@ -56,4 +62,9 @@ def init_wa(fastapi_app, logger):
         except Exception:
             logger.exception("Failed to run WA startup tasks")
 
-    return wa
+        try:
+            yield
+        finally:
+            logger.info("WhatsApp client shutdown complete")
+
+    return wa, wa_lifespan

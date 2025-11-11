@@ -70,5 +70,77 @@
     "payment_status": "pending",
     "delivery_address": "Non porro consectetu",
     "notes": "asd"
+  },
+  {
+    "id": 7,
+    "customer_name": "Mohammad Anees",
+    "customer_phone": "+19061049626",
+    "product_id": "sku-",
+    "product_name": "Iphone 15 ",
+    "quantity": 1,
+    "budget": "799",
+    "payment_status": "pending",
+    "delivery_address": "Murtaza Chorangi Korangi\n116.118",
+    "notes": ""
+  },
+  {
+    "id": 8,
+    "customer_name": "Mohummad Habib",
+    "customer_phone": "923075209357",
+    "product_id": "",
+    "product_name": "Iphone 15",
+    "quantity": 1,
+    "budget": "",
+    "payment_status": "pending",
+    "delivery_address": "34 Dubai, UAE",
+    "notes": ""
+  },
+  {
+    "id": 9,
+    "customer_name": "champak chacha",
+    "customer_phone": "98435689234",
+    "product_id": "",
+    "product_name": "macbook air m3",
+    "quantity": 2,
+    "budget": "",
+    "payment_status": "pending",
+    "delivery_address": "dubai , uea wala",
+    "notes": ""
+  },
+  {
+    "id": 10,
+    "customer_name": "babban bhi",
+    "customer_phone": "235235",
+    "product_id": "",
+    "product_name": "iPhone 15",
+    "quantity": 2,
+    "budget": "",
+    "payment_status": "placed",
+    "delivery_address": "muscat",
+    "notes": ""
+  },
+  {
+    "id": 11,
+    "customer_name": "Chmpo Bhi",
+    "customer_phone": "03223334",
+    "product_id": "",
+    "product_name": "iPhone 14 Pro Max",
+    "quantity": 2,
+    "budget": "10000",
+    "payment_status": "placed",
+    "delivery_address": "house no 23 , steret 3 and dubai ,uae",
+    "notes": ""
+  },
+  {
+    "id": 12,
+    "customer_name": "Mohummad Anees",
+    "customer_phone": "02342352542345",
+    "product_id": "",
+    "product_name": "iPhone 15",
+    "quantity": 1,
+    "budget": "",
+    "payment_status": "placed",
+    "delivery_address": "Karachi, Pakistan",
+    "notes": ""
   }
 ]

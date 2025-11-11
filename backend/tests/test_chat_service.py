@@ -1,9 +1,17 @@
-"""
-Unit tests for the chat service
-"""
+"""Unit tests for the chat service."""
+from types import SimpleNamespace
+
 import pytest
 from services.chat_service import ChatService, chat_service
-from agents import SQLiteSession
+from agents import SQLiteSession, Runner
+
+
+@pytest.fixture(autouse=True)
+def stub_runner(monkeypatch):
+    async def _fake_run(*args, **kwargs):
+        return SimpleNamespace(final_output="stub response")
+
+    monkeypatch.setattr(Runner, "run", _fake_run)
 
 
 @pytest.fixture
@@ -24,7 +32,7 @@ async def test_process_message_new_session(chat_service_instance):
     assert isinstance(response_text, str)
     assert isinstance(session_id, str)
     assert session_id.startswith("web_")
-    assert len(response_text) > 0
+    assert response_text == "stub response"
 
 
 @pytest.mark.asyncio
@@ -38,7 +46,7 @@ async def test_process_message_existing_session(chat_service_instance):
     
     assert returned_session_id == test_session_id
     assert isinstance(response_text, str)
-    assert len(response_text) > 0
+    assert response_text == "stub response"
     
     # Verify the session was created
     session = chat_service_instance.get_session(test_session_id)

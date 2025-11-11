@@ -1,25 +1,27 @@
 
-from agents import Agent
-from dotenv import load_dotenv, find_dotenv
-from agents import AsyncOpenAI, OpenAIChatCompletionsModel
+import logging
 import os
-# import tools from separate module
-from my_agents.tool.sales_tool import (
-    lookup_product,
-    list_all_products,
-    get_product_by_price_range,
-    get_product_by_category,
-)
+
+from agents import Agent
+from agents import AsyncOpenAI, OpenAIChatCompletionsModel
+from dotenv import find_dotenv, load_dotenv
+
+from my_agents.finance_agent import finance_agent
+from my_agents.inventory_agent import inventory_agent
 
 # Import MCP server tools
 # import sys
 # sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from mcp_server.server import PRODUCTS_DB,mcp
-from agents.mcp import MCPServerStreamableHttp, MCPServerStreamableHttpParams
+logger = logging.getLogger(__name__)
 
 load_dotenv(find_dotenv())
 
 api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    logger.warning(
+        "GEMINI_API_KEY not set; using placeholder key. Real agent calls will fail until a valid key is configured."
+    )
+    api_key = "placeholder-test-key"
 
 # Use environment variables for external LLM client configuration
 external_client = AsyncOpenAI(
@@ -31,26 +33,47 @@ model = OpenAIChatCompletionsModel(
     model=os.getenv("OPENAI_MODEL", "gemini-2.0-flash"),
     openai_client=external_client,
 )
-# -------------------------- Sales Agent (MCP Server Integration) ------------------------
+# -------------------------- Sales Agent (Multi-Agent Orchestration) ----------------------
+finance_tool = finance_agent.as_tool(
+    tool_name="consult_finance_agent",
+    tool_description="Delegate questions about payments, revenue trends, or outstanding invoices to the FinanceAgent.",
+)
+
+inventory_tool = inventory_agent.as_tool(
+    tool_name="consult_inventory_agent",
+    tool_description="Delegate stock levels, restock planning, and catalog breakdowns to the InventoryAgent.",
+)
+
 sales_agent = Agent(
     name="salesagent",
     instructions="""
-You are SalesAgent, a BazaarFlow sales expert. Use the provided tools whenever product information, availability, pricing, or categories are requested.
+You are SalesAgent, BazaarFlow's friendly sales orchestrator.
 
-Always prefer calling an explicit tool over guessing. When a tool is called, return the tool output followed by a concise CTA.
+How to respond:
 
-If the user asks about products, availability, price ranges, or categories — CALL the correct tool.
+**Greetings ONLY (hi/hello/salaam/hey without other requests):**
+- Respond warmly WITHOUT calling any tools: "👋 Hi! I'm here to help with BazaarFlow products. What can I show you today?"
+- Do NOT call tools for simple greetings
 
-Do not invent product names or prices. If a tool returns no result, ask clarifying questions (e.g., model, use-case, budget).
+**Product discovery:**
+- Catalog questions ("all products", "what do you have", "show inventory") → consult_inventory_agent with "customer:catalog overview"
+- Specific product search (any casing) → consult_inventory_agent with "customer:search [product]"
+- Both return product names and prices (NO stock counts)
 
-Keep replies short (<=300 chars) and use some emjojis to make it user friendly.
+**Order placement:**
+- When users want to buy/order/purchase → consult_finance_agent with "user wants to order [product name]"
+- Finance agent handles all order details collection (name, phone, quantity, address)
 
-Examples:
- - What phones do you have? -> call lookup_product('phone')
- - Show me all products -> call list_all_products()
- - Products under 2000 -> call get_product_by_price_range(0,2000)
- - Show mobile devices -> call get_product_by_category('mobile')
+**Payment queries:**
+- Payment status, invoices, revenue → consult_finance_agent
+
+Rules:
+- Simple greetings = direct response, NO tool calls
+- All other requests = MUST call exactly one tool before replying
+- Keep responses ≤320 characters, show prices, never mention stock counts
+- NEVER suggest /sales form or routes - handle everything through agents
+- For orders, delegate completely to finance agent
 """,
     model=model,
-    tools=[lookup_product, list_all_products, get_product_by_price_range, get_product_by_category],
+    tools=[finance_tool, inventory_tool],
 )

@@ -4,6 +4,7 @@ import "./global.css";
 import Header from "./components/Header";
 import Image from "next/image";
 import SmoothScroll from "@/components/SmoothScroll";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,6 +28,7 @@ export default function RootLayout({
         <Header />
 
         <main className="site-main">{children}</main>
+        <Toaster position="top-right" richColors />
 
         <footer className="border-t border-[#427A76]/30 bg-gradient-to-br from-[#174143] via-[#427A76] to-[#174143]">
           <div className="container mx-auto py-12">

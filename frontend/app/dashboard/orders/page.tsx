@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
 import {
   ShoppingCart,
   CheckCircle2,
@@ -20,96 +22,77 @@ import {
   DollarSign,
   User,
   Calendar,
+  Loader2,
+  X,
+  Phone,
+  MapPin,
+  FileText,
+  Printer,
+  CheckCheck,
 } from "lucide-react";
+import axios from "axios";
+import { DashboardLayout } from "@/components/DashboardSidebar";
+import { toast } from "sonner";
 
-const allOrders = [
-  {
-    id: '#ORD-001',
-    customer: 'Ahmed Khan',
-    items: '2x iPhone Charger',
-    amount: 'PKR 2,400',
-    status: 'completed',
-    date: '2024-01-15',
-    time: '2 mins ago',
-    paymentMethod: 'JazzCash'
-  },
-  {
-    id: '#ORD-002',
-    customer: 'Fatima Ali',
-    items: '1x Phone Case, 1x Screen Protector',
-    amount: 'PKR 3,200',
-    status: 'pending',
-    date: '2024-01-15',
-    time: '15 mins ago',
-    paymentMethod: 'Easypaisa'
-  },
-  {
-    id: '#ORD-003',
-    customer: 'Hassan Raza',
-    items: '3x USB Cable',
-    amount: 'PKR 1,800',
-    status: 'completed',
-    date: '2024-01-15',
-    time: '1 hour ago',
-    paymentMethod: 'Cash'
-  },
-  {
-    id: '#ORD-004',
-    customer: 'Ayesha Malik',
-    items: '1x Power Bank',
-    amount: 'PKR 4,500',
-    status: 'processing',
-    date: '2024-01-15',
-    time: '2 hours ago',
-    paymentMethod: 'JazzCash'
-  },
-  {
-    id: '#ORD-005',
-    customer: 'Bilal Ahmed',
-    items: '2x Earphones',
-    amount: 'PKR 2,800',
-    status: 'completed',
-    date: '2024-01-14',
-    time: '1 day ago',
-    paymentMethod: 'Easypaisa'
-  },
-  {
-    id: '#ORD-006',
-    customer: 'Zainab Khan',
-    items: '1x Bluetooth Speaker',
-    amount: 'PKR 5,200',
-    status: 'cancelled',
-    date: '2024-01-14',
-    time: '1 day ago',
-    paymentMethod: 'Cash'
-  },
-  {
-    id: '#ORD-007',
-    customer: 'Usman Ali',
-    items: '4x Phone Case',
-    amount: 'PKR 3,600',
-    status: 'completed',
-    date: '2024-01-14',
-    time: '2 days ago',
-    paymentMethod: 'JazzCash'
-  },
-  {
-    id: '#ORD-008',
-    customer: 'Sana Tariq',
-    items: '1x Wireless Charger',
-    amount: 'PKR 3,900',
-    status: 'processing',
-    date: '2024-01-13',
-    time: '2 days ago',
-    paymentMethod: 'Easypaisa'
-  },
-];
+interface Order {
+  id: number;
+  customer_name: string;
+  customer_phone: string;
+  product_name: string;
+  quantity: number;
+  budget: string;
+  payment_status: string;
+  delivery_address: string;
+  notes: string;
+}
 
 export default function OrdersPage() {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
 
-  const filteredOrders = allOrders.filter(order => {
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"}/api/sales`);
+      if (response.data.ok) {
+        setOrders(response.data.orders || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch orders:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formattedOrders = orders.map(order => {
+    const budgetStr = order.budget?.replace(/,/g, "").trim() || "0";
+    const budget = parseInt(budgetStr, 10) || 0;
+    const quantity = parseInt(String(order.quantity), 10) || 1;
+    const totalAmount = budget * quantity;
+
+    return {
+      id: `#ORD-${order.id.toString().padStart(3, '0')}`,
+      customer: order.customer_name,
+      phone: order.customer_phone,
+      items: `${quantity}x ${order.product_name}`,
+      amount: `PKR ${totalAmount.toLocaleString()}`,
+      amountNum: totalAmount,
+      status: order.payment_status || "pending",
+      date: new Date().toISOString().split('T')[0],
+      time: "Recently",
+      paymentMethod: "Pending",
+      address: order.delivery_address,
+      notes: order.notes,
+    };
+  });
+
+  const filteredOrders = formattedOrders.filter(order => {
     const matchesSearch = order.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          order.id.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = filterStatus === "all" || order.status === filterStatus;
@@ -147,14 +130,24 @@ export default function OrdersPage() {
   };
 
   const stats = [
-    { label: "Total Orders", value: allOrders.length, icon: ShoppingCart, color: "from-blue-600 to-cyan-600" },
-    { label: "Completed", value: allOrders.filter(o => o.status === "completed").length, icon: CheckCircle2, color: "from-green-600 to-emerald-600" },
-    { label: "Pending", value: allOrders.filter(o => o.status === "pending").length, icon: Clock, color: "from-orange-600 to-orange-700" },
-    { label: "Processing", value: allOrders.filter(o => o.status === "processing").length, icon: Package, color: "from-purple-600 to-indigo-600" },
+    { label: "Total Orders", value: formattedOrders.length, icon: ShoppingCart, color: "from-blue-600 to-cyan-600" },
+    { label: "Completed", value: formattedOrders.filter(o => o.status === "completed" || o.status === "paid").length, icon: CheckCircle2, color: "from-green-600 to-emerald-600" },
+    { label: "Pending", value: formattedOrders.filter(o => o.status === "pending").length, icon: Clock, color: "from-orange-600 to-orange-700" },
+    { label: "Processing", value: formattedOrders.filter(o => o.status === "processing").length, icon: Package, color: "from-purple-600 to-indigo-600" },
   ];
 
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-96">
+          <Loader2 className="w-8 h-8 animate-spin text-[#174143]" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 py-20 px-4">
+    <DashboardLayout>
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
         <motion.div
@@ -162,14 +155,6 @@ export default function OrdersPage() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="flex items-center gap-4 mb-4">
-            <Link href="/dashboard">
-              <Button variant="outline" size="sm" className="gap-2">
-                <ArrowLeft className="w-4 h-4" />
-                Back to Dashboard
-              </Button>
-            </Link>
-          </div>
           <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">All Orders</h1>
           <p className="text-slate-600 dark:text-slate-400">Manage and track all your orders</p>
         </motion.div>
@@ -311,7 +296,12 @@ export default function OrdersPage() {
                           <p className="text-xl font-bold text-slate-900 dark:text-white">{order.amount}</p>
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{order.paymentMethod}</p>
                         </div>
-                        <Button variant="outline" size="sm" className="rounded-xl">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="rounded-xl"
+                          onClick={() => setSelectedOrder(order)}
+                        >
                           View Details
                         </Button>
                       </div>
@@ -322,7 +312,152 @@ export default function OrdersPage() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Order Details Modal */}
+        <Dialog open={!!selectedOrder} onOpenChange={(open) => !open && setSelectedOrder(null)}>
+          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            {selectedOrder && (
+              <>
+                <DialogHeader className="space-y-3">
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#174143] to-[#427A76] rounded-2xl flex items-center justify-center shadow-lg">
+                      <ShoppingCart className="w-8 h-8 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <DialogTitle className="text-2xl font-bold text-slate-900 dark:text-white">
+                        {selectedOrder.id}
+                      </DialogTitle>
+                      <DialogDescription className="text-slate-600 dark:text-slate-400">
+                        Order placed {selectedOrder.time}
+                      </DialogDescription>
+                    </div>
+                    <Badge className={`${getStatusColor(selectedOrder.status)} flex items-center gap-2 text-base px-4 py-2 shadow-sm`}>
+                      {getStatusIcon(selectedOrder.status)}
+                      {selectedOrder.status.toUpperCase()}
+                    </Badge>
+                  </div>
+                </DialogHeader>
+
+                <Separator className="my-4" />
+
+                <div className="space-y-6">
+                  {/* Customer Information */}
+                  <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-5 border-2 border-blue-100 dark:border-slate-600">
+                    <h3 className="font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2 text-lg">
+                      <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                      Customer Information
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center bg-white/60 dark:bg-slate-900/40 rounded-lg p-3">
+                        <span className="text-slate-600 dark:text-slate-400 font-medium">Name</span>
+                        <span className="font-semibold text-slate-900 dark:text-white">{selectedOrder.customer}</span>
+                      </div>
+                      <div className="flex justify-between items-center bg-white/60 dark:bg-slate-900/40 rounded-lg p-3">
+                        <span className="text-slate-600 dark:text-slate-400 font-medium">Phone</span>
+                        <span className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                          <Phone className="w-4 h-4 text-green-600" />
+                          {selectedOrder.phone}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-start bg-white/60 dark:bg-slate-900/40 rounded-lg p-3">
+                        <span className="text-slate-600 dark:text-slate-400 font-medium">Address</span>
+                        <span className="font-semibold text-slate-900 dark:text-white text-right max-w-xs flex items-start gap-2">
+                          <MapPin className="w-4 h-4 text-red-600 mt-0.5 flex-shrink-0" />
+                          {selectedOrder.address || "Not provided"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Order Items */}
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-5 border-2 border-purple-100 dark:border-slate-600">
+                    <h3 className="font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2 text-lg">
+                      <Package className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                      Order Items
+                    </h3>
+                    <div className="bg-white/60 dark:bg-slate-900/40 rounded-lg p-4">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-slate-900 dark:text-white">{selectedOrder.items}</span>
+                        <Badge variant="outline" className="text-purple-700 dark:text-purple-300 border-purple-300">
+                          In Stock
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Payment Information */}
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-5 border-2 border-green-100 dark:border-slate-600">
+                    <h3 className="font-semibold text-slate-900 dark:text-white mb-4 flex items-center gap-2 text-lg">
+                      <DollarSign className="w-5 h-5 text-green-600 dark:text-green-400" />
+                      Payment Information
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center bg-white/60 dark:bg-slate-900/40 rounded-lg p-4">
+                        <span className="text-slate-600 dark:text-slate-400 font-medium">Total Amount</span>
+                        <span className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
+                          {selectedOrder.amount}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center bg-white/60 dark:bg-slate-900/40 rounded-lg p-3">
+                        <span className="text-slate-600 dark:text-slate-400 font-medium">Payment Method</span>
+                        <span className="font-semibold text-slate-900 dark:text-white">{selectedOrder.paymentMethod}</span>
+                      </div>
+                      <div className="flex justify-between items-center bg-white/60 dark:bg-slate-900/40 rounded-lg p-3">
+                        <span className="text-slate-600 dark:text-slate-400 font-medium">Order Date</span>
+                        <span className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                          <Calendar className="w-4 h-4 text-blue-600" />
+                          {selectedOrder.date}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Notes */}
+                  {selectedOrder.notes && (
+                    <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-slate-800 dark:to-slate-700 rounded-2xl p-5 border-2 border-amber-100 dark:border-slate-600">
+                      <h3 className="font-semibold text-slate-900 dark:text-white mb-3 flex items-center gap-2 text-lg">
+                        <FileText className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                        Order Notes
+                      </h3>
+                      <p className="text-sm text-slate-700 dark:text-slate-300 bg-white/60 dark:bg-slate-900/40 rounded-lg p-4 leading-relaxed">
+                        {selectedOrder.notes}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-3 pt-4">
+                    <Button 
+                      className="flex-1 h-12 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white shadow-lg hover:shadow-xl transition-all"
+                      onClick={() => {
+                        toast.success("Order Completed!", {
+                          description: `Order ${selectedOrder.id} has been marked as completed.`,
+                        });
+                        setSelectedOrder(null);
+                      }}
+                    >
+                      <CheckCircle2 className="w-5 h-5 mr-2" />
+                      Mark as Completed
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="flex-1 h-12 border-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+                      onClick={() => {
+                        toast.info("Printing Invoice...", {
+                          description: "Invoice is being prepared for printing.",
+                        });
+                      }}
+                    >
+                      <Download className="w-5 h-5 mr-2" />
+                      Print Invoice
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }

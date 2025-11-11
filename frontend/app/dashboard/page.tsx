@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,7 +20,10 @@ import {
   ArrowDownRight,
   MessageSquare,
   Megaphone,
+  Loader2,
 } from "lucide-react";
+import axios from "axios";
+import { DashboardLayout } from "@/components/DashboardSidebar";
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -27,11 +31,53 @@ const fadeInUp = {
   transition: { duration: 0.5 },
 };
 
+interface Order {
+  id: number;
+  customer_name: string;
+  product_name: string;
+  quantity: number;
+  budget: string;
+  payment_status: string;
+  delivery_address: string;
+  notes: string;
+}
+
 export default function DashboardPage() {
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"}/api/sales`);
+      if (response.data.ok) {
+        setOrders(response.data.orders || []);
+      }
+    } catch (error) {
+      console.error("Failed to fetch orders:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Calculate stats from real data
+  const totalRevenue = orders.reduce((sum, order) => {
+    const budgetStr = order.budget?.replace(/,/g, "").trim() || "0";
+    const budget = parseInt(budgetStr, 10) || 0;
+    const quantity = parseInt(String(order.quantity), 10) || 1;
+    return sum + (budget * quantity);
+  }, 0);
+
+  const todayOrders = orders.length; // In production, filter by date
+  const uniqueCustomers = new Set(orders.map(o => o.customer_name)).size;
+
   const stats = [
     {
       title: "Total Revenue",
-      value: "PKR 245,000",
+      value: `PKR ${totalRevenue.toLocaleString()}`,
       change: "+12.5%",
       trend: "up",
       icon: DollarSign,
@@ -40,8 +86,8 @@ export default function DashboardPage() {
       border: "border-green-200",
     },
     {
-      title: "Orders Today",
-      value: "48",
+      title: "Total Orders",
+      value: todayOrders.toString(),
       change: "+8.2%",
       trend: "up",
       icon: ShoppingCart,
@@ -51,9 +97,9 @@ export default function DashboardPage() {
     },
     {
       title: "Active Products",
-      value: "156",
-      change: "-2.1%",
-      trend: "down",
+      value: "8",
+      change: "0%",
+      trend: "up",
       icon: Package,
       color: "from-orange-600 to-orange-700",
       bg: "bg-orange-50",
@@ -61,7 +107,7 @@ export default function DashboardPage() {
     },
     {
       title: "Total Customers",
-      value: "1,234",
+      value: uniqueCustomers.toString(),
       change: "+15.3%",
       trend: "up",
       icon: Users,
@@ -71,28 +117,36 @@ export default function DashboardPage() {
     },
   ];
 
-  const recentOrders = [
-    { id: "#ORD-001", customer: "Ahmed Khan", amount: "PKR 2,400", status: "completed", time: "2 mins ago" },
-    { id: "#ORD-002", customer: "Fatima Ali", amount: "PKR 3,200", status: "pending", time: "15 mins ago" },
-    { id: "#ORD-003", customer: "Hassan Raza", amount: "PKR 1,800", status: "completed", time: "1 hour ago" },
-    { id: "#ORD-004", customer: "Ayesha Malik", amount: "PKR 4,500", status: "processing", time: "2 hours ago" },
-  ];
+  const recentOrders = orders.slice(-4).reverse().map(order => {
+    const budgetStr = order.budget?.replace(/,/g, "").trim() || "0";
+    const budget = parseInt(budgetStr, 10) || 0;
+    const quantity = parseInt(String(order.quantity), 10) || 1;
+    const totalAmount = budget * quantity;
+    
+    return {
+      id: `#ORD-${order.id.toString().padStart(3, '0')}`,
+      customer: order.customer_name,
+      amount: `PKR ${totalAmount.toLocaleString()}`,
+      status: order.payment_status || "pending",
+      product: order.product_name,
+    };
+  });
 
   const lowStockItems = [
-    { name: "iPhone Charger", stock: 5, threshold: 10 },
-    { name: "Phone Case", stock: 3, threshold: 15 },
-    { name: "Screen Protector", stock: 8, threshold: 20 },
+    { name: "MacBook Air M3", stock: 5, threshold: 7 },
+    { name: "Logitech MX Master 4", stock: 3, threshold: 5 },
+    { name: "Surface Pro 10", stock: 4, threshold: 6 },
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 py-20 px-4">
+    <DashboardLayout>
       <div className="container mx-auto max-w-7xl">
         {/* Header */}
         <motion.div {...fadeInUp} className="mb-8">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">Dashboard</h1>
-              <p className="text-slate-600 dark:text-slate-400">Welcome back! Here's what's happening today.</p>
+              <p className="text-slate-600 dark:text-slate-400">Welcome back! Here&apos;s what&apos;s happening today.</p>
             </div>
             <Badge className="px-4 py-2 bg-teal-50 text-teal-700 border border-teal-200 rounded-full">
               <div className="w-2 h-2 bg-teal-500 rounded-full animate-pulse mr-2" />
@@ -164,20 +218,21 @@ export default function DashboardPage() {
                         <div>
                           <p className="font-medium text-slate-900 dark:text-white">{order.id}</p>
                           <p className="text-sm text-slate-600 dark:text-slate-400">{order.customer}</p>
+                          <p className="text-xs text-slate-500">{order.product}</p>
                         </div>
                       </div>
                       <div className="text-right">
                         <p className="font-semibold text-slate-900 dark:text-white">{order.amount}</p>
                         <Badge
                           className={`text-xs ${
-                            order.status === "completed"
+                            order.status === "completed" || order.status === "paid"
                               ? "bg-green-100 text-green-700 border-green-200"
                               : order.status === "pending"
                               ? "bg-blue-100 text-blue-700 border-blue-200"
                               : "bg-orange-100 text-orange-700 border-orange-200"
                           }`}
                         >
-                          {order.status === "completed" && <CheckCircle2 className="w-3 h-3 mr-1" />}
+                          {(order.status === "completed" || order.status === "paid") && <CheckCircle2 className="w-3 h-3 mr-1" />}
                           {order.status === "pending" && <Clock className="w-3 h-3 mr-1" />}
                           {order.status}
                         </Badge>
@@ -286,6 +341,6 @@ export default function DashboardPage() {
           </Card>
         </motion.div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }

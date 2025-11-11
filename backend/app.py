@@ -17,6 +17,7 @@ from agents import Runner, SQLiteSession
 import json
 from controllers.sales_controller import router as sales_router
 from controllers.chat_controller import router as chat_router
+from controllers.inventory_controller import router as inventory_router
 from dotenv import load_dotenv, find_dotenv
 import os
 
@@ -41,80 +42,36 @@ def safe_int(value: str | None) -> int | None:
     except (ValueError, TypeError):
         return None
 
-# Create FastAPI app first (pywa requires server instance at init time)
 fastapi_app = FastAPI(
     title="BazaarFlow API",
     description="BazaarFlow backend API with WhatsApp integration",
     version="1.0.0",
 )
 
-# Include MVC-style routes
+# Include API routes up front so pywa can register its handlers against the same app
 fastapi_app.include_router(sales_router, prefix="/api")
 fastapi_app.include_router(chat_router, prefix="/api")
+fastapi_app.include_router(inventory_router)
 
-# Initialize WhatsApp client using helper module
-wa = init_wa(fastapi_app, logger)
+# Initialize WhatsApp client and lifespan hooks
+wa, wa_lifespan = init_wa(fastapi_app, logger)
 
-# Log registered routes for debugging
-for route in fastapi_app.routes:
-    logger.info(f"Registered route: {route.path} [{route.methods}]")
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-# ---- startup ------------------------------------------------
-    # Set the server after FastAPI app is created to avoid circular reference
-    wa.server = app
-    try:
-        log_webhook_event(logger, "startup_begin")
-        
-        # Validate required environment variables
-        required_vars = ['WA_TOKEN', 'WA_APP_ID', 'WA_APP_SECRET', 'WA_PHONE_ID']
-        missing_vars = [var for var in required_vars if not os.getenv(var)]
-        if missing_vars:
-            log_webhook_event(logger, "startup_error", {
-                "error": "missing_env_vars",
-                "missing": missing_vars
-            })
-            raise ValueError(f"Missing required environment variables: {missing_vars}")
-
-        # Attempt to register webhook
-        webhook_url = os.getenv("WA_CALLBACK_URL", "https://planiform-doctrinally-lynnette.ngrok-free.dev/")
-        log_webhook_event(logger, "webhook_registration", {
-            "url": webhook_url
-        })
-            
-        resp = await wa.send_message(
-            to=os.getenv("WA_ADMIN_PHONE", "923012177654"),
-            text="👋 Welcome to BazaFlow! 🚀 Let's talk about your products and business goals 💡",
-        )
-
-        # resp = await wa.send_template(
-        #     to="923012177654",
-        #     name="buy_new_iphone_x",
-        #     language=TemplateLanguage.ENGLISH_US,
-        #     params=[
-        #         {"type": "header", "parameters": [{"type": "text", "text": "15"}]},
-        #         {"type": "body", "parameters": [
-        #             {"type": "text", "text": "WA_IPHONE_15"},
-        #             {"type": "text", "text": "15"}
-        #         ]}
-        #     ]
-        # )
-
-        print("Startup send success:", resp.id)
-    except Exception as e:
-        print("Startup send error:", e)
-    yield
-    # ---- shutdown -----------------------------------------------
-    print("App shutdown – cleaning up...")
+    """Compose backend startup/shutdown with the WhatsApp lifespan."""
+    wa.server = app  # Ensure pywa continues to reference the active FastAPI instance
+    log_webhook_event(logger, "startup_begin")
+    async with wa_lifespan(app):
+        yield
+    log_webhook_event(logger, "shutdown_complete")
 
 
-fastapi_app = FastAPI(lifespan=lifespan)
+fastapi_app.router.lifespan_context = lifespan
 
-# Include MVC-style sales routes (POST /api/sales)
-fastapi_app.include_router(sales_router, prefix="/api")
-
-# Include chat routes (POST /api/chat/sales)
-fastapi_app.include_router(chat_router, prefix="/api")
+# Log registered routes for debugging visibility once configuration is complete
+for route in fastapi_app.routes:
+    logger.info(f"Registered route: {route.path} [{route.methods}]")
 
 # --- CORS middleware -----------------------------------------
 from fastapi.middleware.cors import CORSMiddleware

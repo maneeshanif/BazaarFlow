@@ -89,8 +89,8 @@ export default function Header() {
                 href={link.href}
                 className={`relative px-4 py-2 text-sm font-medium transition-colors ${
                   pathname === link.href
-                    ? "text-white"
-                    : "text-[rgb(var(--muted))] hover:text-white"
+                    ? "text-[rgb(var(--muted))]"
+                    : "hover:text-[rgb(var(--muted))] text-white"
                 }`}
               >
                 {link.label}
@@ -182,7 +182,7 @@ export default function Header() {
               <span className="text-xs text-white ml-1 font-medium">Agents Active</span>
             </div>
 
-            <Button asChild size="sm" variant="outline" className="border-2 border-white text-white hover:bg-white/10 font-semibold">
+            <Button asChild size="sm" variant="outline" className="border-2 border-white text-slate-300 hover:bg-white/10 font-semibold">
               <Link href="/dashboard">Dashboard</Link>
             </Button>
 

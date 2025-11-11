@@ -1,76 +1,86 @@
-"""
-Chat Service for handling sales agent conversations
-This service manages chat sessions and processes messages using the sales agent.
-"""
-from typing import Optional
+"""Session-aware chat helpers for agent-backed conversations."""
+from __future__ import annotations
+
+from typing import Dict, Optional
 import logging
-from agents import Runner, SQLiteSession
+import sys
+
+from agents import Runner, SQLiteSession, enable_verbose_stdout_logging
+
 from my_agents.sales_agent import sales_agent
+from my_agents.finance_agent import finance_agent
+from my_agents.inventory_agent import inventory_agent
 
 logger = logging.getLogger(__name__)
 
-class ChatService:
-    """
-    Service class for handling chat conversations with the sales agent
-    """
-    
-    def __init__(self):
-        # In-memory store for active sessions
-        # In production, you'd likely use Redis or a database
-        self.active_sessions = {}
-    
-    async def process_message(self, message: str, session_id: Optional[str]) -> tuple[str, str]:
-        """
-        Process a user message through the sales agent
-        
-        Args:
-            message: The user's message
-            session_id: Optional session ID to maintain conversation context
-            
-        Returns:
-            Tuple of (response_text, session_id)
-        """
+# Emit detailed agent/tool traces to the backend console for easier debugging.
+enable_verbose_stdout_logging()
+
+# Pytest swaps sys.stdout with a capture stream, which can be closed at shutdown.
+# Nudge the handler added by enable_verbose_stdout_logging() to use the original
+# stdout so test runs avoid "I/O operation on closed file" errors.
+_agents_logger = logging.getLogger("openai.agents")
+for handler in list(_agents_logger.handlers):
+    if isinstance(handler, logging.StreamHandler):
         try:
-            # Use provided session_id or generate a new one
-            if not session_id:
-                session_id = f"web_{len(self.active_sessions) + 1}"
-            
-            # Get or create session for conversation history
-            if session_id not in self.active_sessions:
-                session = SQLiteSession(session_id=session_id)
-                self.active_sessions[session_id] = session
-            else:
-                session = self.active_sessions[session_id]
-            
-            # Run the sales agent with the user's message
+            handler.setStream(sys.__stdout__)
+        except AttributeError:  # pragma: no cover - fallback for older Python
+            handler.stream = sys.__stdout__
+
+
+class AgentChatService:
+    """Manage chat sessions for a specific agent instance."""
+
+    def __init__(self, *, agent, session_prefix: str) -> None:
+        self._agent = agent
+        self._session_prefix = session_prefix
+        self.active_sessions: Dict[str, SQLiteSession] = {}
+
+    def _resolve_session(self, session_id: Optional[str]) -> tuple[str, SQLiteSession]:
+        if not session_id:
+            session_id = f"{self._session_prefix}_{len(self.active_sessions) + 1}"
+
+        session = self.active_sessions.get(session_id)
+        if session is None:
+            session = SQLiteSession(session_id=session_id)
+            self.active_sessions[session_id] = session
+        return session_id, session
+
+    async def process_message(self, message: str, session_id: Optional[str]) -> tuple[str, str]:
+        try:
+            resolved_id, session = self._resolve_session(session_id)
+
             response = await Runner.run(
-                starting_agent=sales_agent,
+                starting_agent=self._agent,
                 input=message,
-                session=session
+                session=session,
             )
-            
-            # Get the final output from the agent
-            response_text = response.final_output if hasattr(response, 'final_output') else str(response)
-            
-            return response_text, session_id
-            
-        except Exception as e:
-            logger.error(f"Error processing message in session {session_id}: {str(e)}")
-            return "Sorry, I encountered an error processing your request. Please try again.", session_id
+
+            response_text = response.final_output if hasattr(response, "final_output") else str(response)
+            return response_text, resolved_id
+
+        except Exception as exc:  # pragma: no cover - defensive path
+            logger.error("Error processing message in session %s: %s", session_id, exc)
+            return "Sorry, I encountered an error processing your request. Please try again.", (
+                session_id or ""
+            )
 
     def get_session(self, session_id: str) -> Optional[SQLiteSession]:
-        """
-        Get a session by ID
-        """
         return self.active_sessions.get(session_id)
-    
+
     def create_session(self, session_id: str) -> SQLiteSession:
-        """
-        Create a new session
-        """
         session = SQLiteSession(session_id=session_id)
         self.active_sessions[session_id] = session
         return session
 
-# Create a singleton instance of the service
+
+class ChatService(AgentChatService):
+    """Backward-compatible sales chat service."""
+
+    def __init__(self) -> None:
+        super().__init__(agent=sales_agent, session_prefix="web")
+
+
 chat_service = ChatService()
+finance_chat_service = AgentChatService(agent=finance_agent, session_prefix="web_finance")
+inventory_chat_service = AgentChatService(agent=inventory_agent, session_prefix="web_inventory")
