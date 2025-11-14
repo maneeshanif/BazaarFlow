@@ -2,12 +2,22 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Activity, MessageSquare, Package, DollarSign, BarChart3, Megaphone,
-  ArrowRight, CheckCircle2, AlertCircle, Clock, Zap, Database
+import {
+  Activity,
+  MessageSquare,
+  Package,
+  DollarSign,
+  BarChart3,
+  Megaphone,
+  CheckCircle2,
+  AlertCircle,
+  Clock,
+  Zap,
+  Database,
+  type LucideIcon,
 } from "lucide-react";
 
 interface LogEntry {
@@ -21,11 +31,12 @@ interface LogEntry {
   toolInvoked?: string;
 }
 
-export default function AgentLogsPage() {
-  const [logs, setLogs] = useState<LogEntry[]>([
+const buildInitialLogs = (): LogEntry[] => {
+  const baseTime = Date.now();
+  return [
     {
       id: "1",
-      timestamp: new Date(Date.now() - 5000),
+      timestamp: new Date(baseTime - 5000),
       agent: "Sales Agent",
       action: "Customer Query",
       message: "Received order request for iPhone 15",
@@ -35,7 +46,7 @@ export default function AgentLogsPage() {
     },
     {
       id: "2",
-      timestamp: new Date(Date.now() - 4500),
+      timestamp: new Date(baseTime - 4500),
       agent: "Inventory Agent",
       action: "Stock Check",
       message: "iPhone 15 stock: 5 units available",
@@ -45,7 +56,7 @@ export default function AgentLogsPage() {
     },
     {
       id: "3",
-      timestamp: new Date(Date.now() - 4000),
+      timestamp: new Date(baseTime - 4000),
       agent: "Inventory Agent",
       action: "Auto-Reorder",
       message: "Sent reorder notification to supplier",
@@ -55,7 +66,7 @@ export default function AgentLogsPage() {
     },
     {
       id: "4",
-      timestamp: new Date(Date.now() - 3500),
+      timestamp: new Date(baseTime - 3500),
       agent: "Sales Agent",
       action: "Order Creation",
       message: "Created order #1245 for PKR 285,000",
@@ -65,7 +76,7 @@ export default function AgentLogsPage() {
     },
     {
       id: "5",
-      timestamp: new Date(Date.now() - 3000),
+      timestamp: new Date(baseTime - 3000),
       agent: "Finance Agent",
       action: "Payment Request",
       message: "Awaiting Easypaisa payment confirmation",
@@ -75,7 +86,7 @@ export default function AgentLogsPage() {
     },
     {
       id: "6",
-      timestamp: new Date(Date.now() - 2500),
+      timestamp: new Date(baseTime - 2500),
       agent: "Finance Agent",
       action: "Payment Confirmed",
       message: "Payment received: PKR 285,000 via Easypaisa",
@@ -85,7 +96,7 @@ export default function AgentLogsPage() {
     },
     {
       id: "7",
-      timestamp: new Date(Date.now() - 2000),
+      timestamp: new Date(baseTime - 2000),
       agent: "Inventory Agent",
       action: "Stock Update",
       message: "Updated iPhone 15 stock: 4 units remaining",
@@ -95,7 +106,7 @@ export default function AgentLogsPage() {
     },
     {
       id: "8",
-      timestamp: new Date(Date.now() - 1500),
+      timestamp: new Date(baseTime - 1500),
       agent: "Analytics Agent",
       action: "Demand Prediction",
       message: "Predicted +25% demand for iPhone 15 (Eid season)",
@@ -105,7 +116,7 @@ export default function AgentLogsPage() {
     },
     {
       id: "9",
-      timestamp: new Date(Date.now() - 1000),
+      timestamp: new Date(baseTime - 1000),
       agent: "Marketing Agent",
       action: "Content Generation",
       message: "Generated Facebook post for iPhone 15 promotion",
@@ -115,7 +126,7 @@ export default function AgentLogsPage() {
     },
     {
       id: "10",
-      timestamp: new Date(Date.now() - 500),
+      timestamp: new Date(baseTime - 500),
       agent: "MCP Server",
       action: "Inter-Agent Communication",
       message: "All agents synchronized. Workflow complete.",
@@ -123,7 +134,13 @@ export default function AgentLogsPage() {
       reasoning: "Multi-agent collaboration successful. Order processed end-to-end.",
       toolInvoked: "mcp_sync",
     },
-  ]);
+  ];
+};
+
+const INITIAL_LOGS = buildInitialLogs();
+
+export default function AgentLogsPage() {
+  const [logs, setLogs] = useState<LogEntry[]>(INITIAL_LOGS);
 
   const [filter, setFilter] = useState<string>("all");
   const [autoRefresh, setAutoRefresh] = useState(true);
@@ -166,7 +183,7 @@ export default function AgentLogsPage() {
     "MCP Server": "text-blue-600 bg-blue-100",
   };
 
-  const agentIcons: Record<string, any> = {
+  const agentIcons: Record<string, LucideIcon> = {
     "Sales Agent": MessageSquare,
     "Inventory Agent": Package,
     "Finance Agent": DollarSign,

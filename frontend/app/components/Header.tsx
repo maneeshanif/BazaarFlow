@@ -7,7 +7,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Menu, X, ChevronDown, MessageSquare, Package, DollarSign, BarChart3, Megaphone } from "lucide-react";
+import { Menu, X, ChevronDown, MessageSquare } from "lucide-react";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -43,10 +43,6 @@ export default function Header() {
 
   const agentChatLinks = [
     { href: "/chat/sales", label: "Sales", icon: MessageSquare },
-    { href: "/chat/inventory", label: "Inventory", icon: Package },
-    { href: "/chat/finance", label: "Finance", icon: DollarSign },
-    { href: "/chat/analytics", label: "Analytics", icon: BarChart3 },
-    { href: "/chat/marketing", label: "Marketing", icon: Megaphone },
   ];
 
   return (
@@ -117,7 +113,7 @@ export default function Header() {
                     : "text-[rgb(var(--muted))] hover:text-white"
                 }`}
               >
-                Chat Agents
+                Chat Agent
                 <ChevronDown className="w-3 h-3" />
                 {pathname.startsWith("/chat") && (
                   <motion.div

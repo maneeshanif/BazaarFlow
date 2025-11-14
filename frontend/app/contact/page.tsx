@@ -47,7 +47,7 @@ export default function ContactPage() {
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#174143]">Contact Us</h1>
             <p className="text-lg text-[#427A76] max-w-2xl mx-auto">
-              Have questions? We'd love to hear from you. Send us a message or reach out via WhatsApp.
+              Have questions? We&rsquo;d love to hear from you. Send us a message or reach out via WhatsApp.
             </p>
           </div>
 
@@ -61,7 +61,7 @@ export default function ContactPage() {
                     Send us a Message
                   </CardTitle>
                   <CardDescription className="text-[#427A76]">
-                    Fill out the form below and we'll get back to you as soon as possible
+                    Fill out the form below and we&rsquo;ll get back to you as soon as possible
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -128,7 +128,7 @@ export default function ContactPage() {
                       >
                         <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
                         <p className="text-sm font-medium">
-                          Thanks! We've received your message and will respond via email or WhatsApp soon.
+                          Thanks! We&rsquo;ve received your message and will respond via email or WhatsApp soon.
                         </p>
                       </motion.div>
                     )}

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 import json
 from datetime import datetime
 
@@ -171,6 +171,57 @@ class InventoryAnalyticsService:
             if query_lower in item.get("name", "").lower()
         ]
         return matches[:limit]
+
+    def _locate_item(
+        self,
+        *,
+        sku: Optional[str] = None,
+        product_name: Optional[str] = None,
+    ) -> Tuple[int, dict]:
+        """Return (index, item) for the first match by SKU or product name."""
+
+        items = list(self._ensure_cache())
+
+        if sku:
+            for index, item in enumerate(items):
+                if item.get("sku", "").lower() == sku.lower():
+                    return index, dict(item)
+
+        if product_name:
+            target = product_name.lower()
+            for index, item in enumerate(items):
+                if item.get("name", "").lower() == target:
+                    return index, dict(item)
+
+        identifier = sku or product_name or "product"
+        raise ValueError(f"{identifier} is not available in inventory")
+
+    def reserve_stock(
+        self,
+        *,
+        quantity: int,
+        sku: Optional[str] = None,
+        product_name: Optional[str] = None,
+    ) -> dict:
+        """Decrease on-hand stock for a product while preventing negative counts."""
+
+        if quantity <= 0:
+            raise ValueError("Quantity must be at least 1")
+
+        items = [dict(item) for item in self._ensure_cache()]
+        index, item = self._locate_item(sku=sku, product_name=product_name)
+
+        current_stock = int(item.get("stock", 0))
+        if quantity > current_stock:
+            product_label = item.get("name") or sku or product_name or "product"
+            raise ValueError(
+                f"Only {current_stock} unit(s) of {product_label} available in stock"
+            )
+
+        updated_item = {**item, "stock": current_stock - quantity}
+        items[index] = updated_item
+        self._write_all(items)
+        return updated_item
 
     def _write_all(self, items: List[dict]) -> None:
         """Write all items back to the JSON file."""

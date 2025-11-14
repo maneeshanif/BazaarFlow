@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-unused-vars */
 // Mock the axios library for testing
 const axios = require('axios');
 const { SalesChatComponent } = require('./SalesChat'); // This would be the actual import path

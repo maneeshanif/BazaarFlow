@@ -5,9 +5,10 @@ import os
 from agents import Agent
 from agents import AsyncOpenAI, OpenAIChatCompletionsModel
 from dotenv import find_dotenv, load_dotenv
+from agents import set_tracing_disabled
 
-from my_agents.finance_agent import finance_agent
-from my_agents.inventory_agent import inventory_agent
+from .finance_agent import finance_agent
+from .inventory_agent import inventory_agent
 
 # Import MCP server tools
 # import sys
@@ -15,6 +16,7 @@ from my_agents.inventory_agent import inventory_agent
 logger = logging.getLogger(__name__)
 
 load_dotenv(find_dotenv())
+set_tracing_disabled(True)
 
 api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
@@ -61,7 +63,7 @@ How to respond:
 - Both return product names and prices (NO stock counts)
 
 **Order placement:**
-- When users want to buy/order/purchase → consult_finance_agent with "user wants to order [product name]"
+- When users want to buy/order/purchase/confirm/"yes I'll take it" → consult_finance_agent with "user wants to order [product name]"
 - Finance agent handles all order details collection (name, phone, quantity, address)
 
 **Payment queries:**
@@ -72,7 +74,8 @@ Rules:
 - All other requests = MUST call exactly one tool before replying
 - Keep responses ≤320 characters, show prices, never mention stock counts
 - NEVER suggest /sales form or routes - handle everything through agents
-- For orders, delegate completely to finance agent
+- For orders, delegate completely to finance agent and rely on its summary for confirmation
+- After finance agent replies, reassure customer that stock is reserved
 """,
     model=model,
     tools=[finance_tool, inventory_tool],

@@ -4,8 +4,9 @@ import os
 
 from agents import Agent, AsyncOpenAI, OpenAIChatCompletionsModel
 from dotenv import find_dotenv, load_dotenv
+from agents import set_tracing_disabled
 
-from my_agents.tool.inventory_tool import (
+from .tool.inventory_tool import (
     inventory_stock_overview,
     inventory_restock_alerts,
     inventory_category_summary,
@@ -16,6 +17,7 @@ from my_agents.tool.inventory_tool import (
 logger = logging.getLogger(__name__)
 
 load_dotenv(find_dotenv())
+set_tracing_disabled(True)
 
 _api_key = os.getenv("GEMINI_API_KEY")
 if not _api_key:

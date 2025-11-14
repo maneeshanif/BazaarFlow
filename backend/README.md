@@ -1,44 +1,70 @@
 # BazaarFlow Backend
 
-FastAPI-powered orchestration layer that connects WhatsApp, multi-agent workflows, and the frontend dashboard. The backend exposes `/api/chat/*` endpoints, coordinates specialist agents (sales, finance, inventory), and serves lightweight analytics over the bundled datasets.
+FastAPI backend that powers the BazaarFlow WhatsApp sales agent. It now runs a
+multi-tenant webhook pipeline on top of the WhatsApp Business Cloud API, keeps
+vendor/customer state inside a lightweight JSON DB, and orchestrates replies via
+the OpenAI Agents SDK.
 
-## Architecture Snapshot
-- **FastAPI app**: defined in `app.py`, bootstrapped via the async lifespan returned by `wa_client.init_wa` so the WhatsApp client starts and stops cleanly.
-- **Agents**: located under `my_agents/`. The sales agent acts as the orchestrator, while finance and inventory agents expose analytic tools through the OpenAI Agents SDK.
-- **Services**: `services/` wraps deterministic helpers for finance and inventory data. Inventory tooling now includes a customer-safe catalog as well as vendor analytics.
-- **Datasets**: JSON fixtures live in `data/`; they seed analytics without requiring external systems during development.
-- **WhatsApp integration**: `wa_client.py` houses the client wiring and is activated during lifespan start-up.
+## Key Components
+- **FastAPI app (`app.py`)** – exposes `/webhook` plus dashboard APIs under
+	`/api/vendors/*`. Startup initialises a shared `httpx.AsyncClient` for Meta
+	Graph calls.
+- **Webhook handler (`webhook.py`)** – parses inbound Meta payloads, upserts
+	vendors and customers, stores transcripts, executes the sales agent, and
+	replies through the Cloud API.
+- **JSON DB (`db/json_store.py`, `db/repository.py`)** – tiny persistence layer
+	with POSIX file locking. Stores vendors, customers, and messages in
+	`backend/db/*.json` files.
+- **Runner glue (`runner.py`)** – prepares context for the sales agent and
+	applies fallback rules if the agent response is empty.
+- **Vendor API (`api/vendors.py`)** – dashboard endpoints for managing WhatsApp
+	credentials, browsing customers, loading conversation history, and sending
+	manual replies.
 
-## Customer vs Vendor Inventory Flows
-- Sales conversations call the inventory agent with a `customer:` prefix, triggering customer-safe tools (`inventory_customer_catalog`, `inventory_search_items`) that list product names without revealing stock counts.
-- Vendor dashboards and `/chat/inventory` continue to rely on analytic tools (`inventory_stock_overview`, `inventory_restock_alerts`, `inventory_category_summary`) that surface stock buckets, restock queues, and category breakdowns.
+## JSON Storage Layout
+```
+backend/db/vendors.json   # vendor profile + tokens
+backend/db/customers.json # vendor scoped customer list
+backend/db/messages.json  # ordered transcript history
+```
+Each file is written atomically with a sibling `.lock` file to stay safe under
+concurrent access.
 
 ## Local Development
 1. **Install dependencies**
-	```bash
-	cd backend
-	uv sync  # or pip install -e . if uv is unavailable
-	```
-2. **Run the API**
-	```bash
-	fastapi dev app.py
-	```
-	The dev server hot-reloads and registers `/api/chat/sales`, `/api/chat/finance`, and `/api/chat/inventory` routes.
-3. **Environment variables**
-	- `GEMINI_API_KEY` – required by the inventory agent (falls back to a placeholder during local testing).
-	- `OPENAI_MODEL` – optional override for the agent model (defaults to `gemini-2.0-flash`).
+	 ```bash
+	 cd backend
+	 uv sync  # or: pip install -e .
+	 ```
+2. **Environment variables**
+	 - `META_VERIFY_TOKEN` – verification token for GET `/webhook` (defaults to
+		 `test123`).
+	 - `META_GRAPH_VERSION` / `META_GRAPH_BASE` – optional overrides for the Cloud
+		 API base URL (default `https://graph.facebook.com/v17.0`).
+	 - `GEMINI_API_KEY`, `OPENAI_MODEL` – agent credentials as before.
+3. **Run the server**
+	 ```bash
+	 fastapi dev app.py
+	 ```
+	 or via uvicorn: `uvicorn backend.app:app --reload`.
 
 ## Testing
-- Targeted suites live in `backend/tests/`.
-- After agent changes, prioritise:
-  ```bash
-  pytest backend/tests/test_inventory_service.py \
-			backend/tests/test_inventory_api.py \
-			backend/tests/test_chat_service.py
-  ```
-- Finance coverage remains under `backend/tests/test_finance_service.py` and `backend/tests/test_finance_api.py`.
+```bash
+pytest backend/tests/test_db_repository.py backend/tests/test_webhook.py
+```
+`test_webhook.py` stubs the runner + WhatsApp client to verify payload parsing
+and JSON DB writes. Repository tests cover the JSON store’s locking helpers.
 
-## Pending Work
-- Frontend chat pages still mock responses — wire them to the backend endpoints once agent behaviour stabilises.
-- Swap remaining `example=` parameters in pywa hooks to `examples=` to remove deprecation warnings.
-- Capture regression tests for the new customer-safe inventory catalogue behaviour.
+## Tooling / Harness
+- `backend/scripts/mock_webhook.py` – quick CLI to POST a sample payload to a
+	running server (use `--payload` to inject a custom JSON file).
+
+## Frontend Contract
+The dashboard should call the following endpoints:
+- `GET /api/vendors/{vendor_id}/customers`
+- `GET /api/vendors/{vendor_id}/customers/{phone}/messages`
+- `POST /api/vendors/{vendor_id}/customers/{phone}/messages`
+- `GET /api/vendors/{vendor_id}/settings`
+- `POST /api/vendors/{vendor_id}/settings`
+
+Each route is functional and returns JSON payloads ready for the React client.

@@ -3,7 +3,7 @@ from typing import Any
 
 from agents import function_tool
 
-from services.inventory_service import inventory_analytics_service
+from ...services.inventory_service import inventory_analytics_service
 
 
 def _format_stock_bucket(detail: dict[str, dict[str, Any]]) -> str:

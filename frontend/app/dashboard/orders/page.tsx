@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,20 +14,15 @@ import {
   Clock,
   XCircle,
   Search,
-  Filter,
   Download,
-  ArrowLeft,
   Package,
   DollarSign,
   User,
   Calendar,
   Loader2,
-  X,
   Phone,
   MapPin,
   FileText,
-  Printer,
-  CheckCheck,
 } from "lucide-react";
 import axios from "axios";
 import { DashboardLayout } from "@/components/DashboardSidebar";
@@ -46,12 +40,27 @@ interface Order {
   notes: string;
 }
 
+interface FormattedOrder {
+  id: string;
+  customer: string;
+  phone: string;
+  items: string;
+  amount: string;
+  amountNum: number;
+  status: string;
+  date: string;
+  time: string;
+  paymentMethod: string;
+  address: string;
+  notes: string;
+}
+
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<FormattedOrder | null>(null);
 
   useEffect(() => {
     fetchOrders();
@@ -70,7 +79,7 @@ export default function OrdersPage() {
     }
   };
 
-  const formattedOrders = orders.map(order => {
+  const formattedOrders: FormattedOrder[] = orders.map((order) => {
     const budgetStr = order.budget?.replace(/,/g, "").trim() || "0";
     const budget = parseInt(budgetStr, 10) || 0;
     const quantity = parseInt(String(order.quantity), 10) || 1;

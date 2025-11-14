@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 import logging
-from services.chat_service import (
+from ..services.chat_service import (
     chat_service,
     finance_chat_service,
     inventory_chat_service,

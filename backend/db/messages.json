@@ -1,0 +1,2714 @@
+[
+  {
+    "id": "041a406b-b509-444a-b5d5-37a2435bb81f",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923001234567",
+    "direction": "inbound",
+    "text": "Hi, can you help me?",
+    "raw_payload": {
+      "from": "923001234567",
+      "id": "wamid.test456",
+      "timestamp": "1731524400",
+      "text": {
+        "body": "Hi, can you help me?"
+      },
+      "type": "text"
+    },
+    "timestamp": "2024-11-13T19:00:00+00:00"
+  },
+  {
+    "id": "4629c3aa-c2f5-4c61-bed7-942f05b303c6",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923001234567",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "status": "send_failed",
+      "error": "whatsapp_api_error"
+    },
+    "timestamp": "2025-11-12T20:42:44.292810+00:00"
+  },
+  {
+    "id": "c8e4f92b-6d41-43a8-a151-658bad762654",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923001234567",
+    "direction": "inbound",
+    "text": "Hi, can you help me?",
+    "raw_payload": {
+      "from": "923001234567",
+      "id": "wamid.test456",
+      "timestamp": "1731524400",
+      "text": {
+        "body": "Hi, can you help me?"
+      },
+      "type": "text"
+    },
+    "timestamp": "2024-11-13T19:00:00+00:00"
+  },
+  {
+    "id": "9d174ffa-31c6-48d8-9479-dee0148950ec",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923001234567",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "status": "send_failed",
+      "error": "whatsapp_api_error"
+    },
+    "timestamp": "2025-11-12T20:44:53.717856+00:00"
+  },
+  {
+    "id": "9290b851-ddd6-4edb-a2d6-2ed3e88d17f1",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923999999999",
+    "direction": "inbound",
+    "text": "Diagnostic test message",
+    "raw_payload": {
+      "from": "923999999999",
+      "id": "wamid.diagnostic123",
+      "timestamp": "1731524400",
+      "text": {
+        "body": "Diagnostic test message"
+      },
+      "type": "text"
+    },
+    "timestamp": "2024-11-13T19:00:00+00:00"
+  },
+  {
+    "id": "5bc6318e-18a2-4293-9298-46045788f687",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923999999999",
+    "direction": "outbound",
+    "text": "To check our diagnostic tests, could you please share the specific test you're looking for?",
+    "raw_payload": {
+      "status": "send_failed",
+      "error": "whatsapp_api_error"
+    },
+    "timestamp": "2025-11-12T21:04:37.157317+00:00"
+  },
+  {
+    "id": "302a7c32-ff26-4f4f-84b8-e2fafd227cb4",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923001234567",
+    "direction": "inbound",
+    "text": "Hi, can you help me?",
+    "raw_payload": {
+      "from": "923001234567",
+      "id": "wamid.test456",
+      "timestamp": "1731524400",
+      "text": {
+        "body": "Hi, can you help me?"
+      },
+      "type": "text"
+    },
+    "timestamp": "2024-11-13T19:00:00+00:00"
+  },
+  {
+    "id": "db7254ef-dc18-49c7-bccc-05db1870bdcc",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923001234567",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "status": "send_failed",
+      "error": "whatsapp_api_error"
+    },
+    "timestamp": "2025-11-13T10:56:22.254584+00:00"
+  },
+  {
+    "id": "489b5148-9c58-4e66-b7f4-ecb630817da9",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Discord link : https://discord.gg/3Sr4e95Ve",
+    "raw_payload": {
+      "context": {
+        "forwarded": true
+      },
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUM5MzAwRERFNkNGMUNFQTcwRUVGQkUyNjExMEU3RTcA",
+      "timestamp": "1763046277",
+      "text": {
+        "body": "Discord link : https://discord.gg/3Sr4e95Ve"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T15:04:37+00:00"
+  },
+  {
+    "id": "bf74d2ca-bd01-4bbf-96b1-087b56a13a87",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSQzA2ODVBMTZGNjI3NDMwNDhBAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T15:04:43.737363+00:00"
+  },
+  {
+    "id": "91d23abd-fe16-4284-b74f-a66fab097896",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Show me all the priduct u have",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUM4MDY3MTU3QjFBRjdFRkM3MjZDOTc5NUU2QjY0MUIA",
+      "timestamp": "1763046364",
+      "text": {
+        "body": "Show me all the priduct u have"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T15:06:04+00:00"
+  },
+  {
+    "id": "32aaccd4-3408-4c51-9d14-1c6aed732d4a",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Sure, let me check our inventory for you.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMjk0MDQyMTc5MkFERTY1NTI5AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T15:06:10.157842+00:00"
+  },
+  {
+    "id": "7dbf314e-b878-4891-adfc-584b13494842",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Please",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUM3REU0QzIzODczMkY1RTIzRTRGMkMwMEI1MkE0MkYA",
+      "timestamp": "1763046402",
+      "text": {
+        "body": "Please"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T15:06:42+00:00"
+  },
+  {
+    "id": "f4c18fc4-37bb-4f54-a316-334c760374a0",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Here's an overview of our catalog:",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSRDVBRUU3RDgwNkExRTY4OUM5AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T15:06:46.612748+00:00"
+  },
+  {
+    "id": "b06b3422-085e-4309-a3a1-eceb03266483",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Where is the list",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUNCNjI0NTBDRDMzRDQ5RDJBNjVGMEEyRDM5QUY5NjEA",
+      "timestamp": "1763046430",
+      "text": {
+        "body": "Where is the list"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T15:07:10+00:00"
+  },
+  {
+    "id": "1b4b67e2-145e-45c6-b24f-9c454744615f",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Available products: Cozy Blanket - $25, Tech Backpack - $49, Coffee Mug - $12",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSRkZCMjhDMjQ1QkZFMzg5MzIxAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T15:07:13.767397+00:00"
+  },
+  {
+    "id": "91f6df79-10a1-4e51-91e9-0aa1edaaa3a9",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Any iPhone available there",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUNDOEVFREY3Mzk1MzA5OUJFODU2NTlDNkVEQTYxRTQA",
+      "timestamp": "1763046476",
+      "text": {
+        "body": "Any iPhone available there"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T15:07:56+00:00"
+  },
+  {
+    "id": "8c070dd1-859a-4be9-9a99-ea4ee0f44637",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Let me check if we have any iPhones available.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSNzlCRDlEOTRFMUI3NzNBNkI3AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T15:08:00.448961+00:00"
+  },
+  {
+    "id": "697d31a9-b310-4433-90a1-2430ab972898",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923352057728",
+    "direction": "inbound",
+    "text": "Hii",
+    "raw_payload": {
+      "from": "923352057728",
+      "id": "wamid.HBgMOTIzMzUyMDU3NzI4FQIAEhggQUNFNUExQ0I3QUJBMEI2RjhDOTA4MTBFNDhCNURFNDYA",
+      "timestamp": "1763046676",
+      "text": {
+        "body": "Hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T15:11:16+00:00"
+  },
+  {
+    "id": "11aabe41-046f-4a0d-90ff-1488d2a2124f",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923352057728",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "status": "send_failed",
+      "error": "whatsapp_api_error"
+    },
+    "timestamp": "2025-11-13T15:11:23.231177+00:00"
+  },
+  {
+    "id": "4cf2f977-7e68-4e58-b12c-5461244bd0c6",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923352057728",
+    "direction": "inbound",
+    "text": "How are u",
+    "raw_payload": {
+      "from": "923352057728",
+      "id": "wamid.HBgMOTIzMzUyMDU3NzI4FQIAEhggQUM2QjA3OEJFM0U5OUYwODhERjg3RjM5Mzk1OUFDQUQA",
+      "timestamp": "1763046700",
+      "text": {
+        "body": "How are u"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T15:11:40+00:00"
+  },
+  {
+    "id": "7794404b-1ba7-4f86-b06d-89490cf409a7",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923352057728",
+    "direction": "outbound",
+    "text": "I'm great, thanks for asking! Ready to explore our products?",
+    "raw_payload": {
+      "status": "send_failed",
+      "error": "whatsapp_api_error"
+    },
+    "timestamp": "2025-11-13T15:11:45.325990+00:00"
+  },
+  {
+    "id": "2c5eff8b-d7b2-49d6-a730-8edef263fee2",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923352057728",
+    "direction": "inbound",
+    "text": "Hshshsvsvdvdhdjdhrkkr jejeheve",
+    "raw_payload": {
+      "from": "923352057728",
+      "id": "wamid.HBgMOTIzMzUyMDU3NzI4FQIAEhggQUMyMjlDQzU1RTEyNUNCNkY2Nzc2M0VDNTBFMTI1MzYA",
+      "timestamp": "1763046715",
+      "text": {
+        "body": "Hshshsvsvdvdhdjdhrkkr jejeheve"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T15:11:55+00:00"
+  },
+  {
+    "id": "df807c4a-bab5-41dd-9413-67d72947e9b5",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923352057728",
+    "direction": "outbound",
+    "text": "I'm sorry, I didn't understand. Can I help you with product information or placing an order?",
+    "raw_payload": {
+      "status": "send_failed",
+      "error": "whatsapp_api_error"
+    },
+    "timestamp": "2025-11-13T15:12:00.582861+00:00"
+  },
+  {
+    "id": "f06eef89-2813-4818-a636-96d3cdf373a6",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Bisma",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUNDODBFMEEyNDU5QjM4ODRGM0I1OTk2NDQzRkRGNkYA",
+      "timestamp": "1763046760",
+      "text": {
+        "body": "Bisma"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T15:12:40+00:00"
+  },
+  {
+    "id": "571f00c3-e5bb-4d8a-ac59-ea95110c587e",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "I am sorry, I do not understand. Can you please clarify your request?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMTUzQTIxQ0M5NzAxODQ0NjMwAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T15:12:44.953344+00:00"
+  },
+  {
+    "id": "0394bd8f-3f79-4ac1-945a-9353b2bcf1ff",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMEE1NTk0NzQ4Qjg4NEY3OUNDRgA=",
+      "timestamp": "1763058981",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T18:36:21+00:00"
+  },
+  {
+    "id": "8ca169de-7558-4b63-aac4-d72dda2c53c5",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMURCRUY1QTcxNEI2MTRBMEM4AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T18:36:26.598347+00:00"
+  },
+  {
+    "id": "7bdeb311-c60e-4a0e-a969-c9f2d60802a4",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "HELLO WORLD",
+    "raw_payload": {
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhgWM0VCMDZCNjREQUE0RDBGODhEMzIzNgA=",
+      "timestamp": "1763058994",
+      "text": {
+        "body": "HELLO WORLD"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T18:36:34+00:00"
+  },
+  {
+    "id": "8c23dd5b-6a2d-47d8-96d1-37cea88ef925",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "yuck fu",
+    "raw_payload": {
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhgWM0VCMENEQjhBRjAwRDAyRjVEMzRDMwA=",
+      "timestamp": "1763058997",
+      "text": {
+        "body": "yuck fu"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T18:36:37+00:00"
+  },
+  {
+    "id": "b6de5b4a-54a6-4af0-8cef-8b9d3ea9c5ad",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "I am sorry, I cannot fulfill that request. I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "status": "send_failed",
+      "error": "whatsapp_api_error"
+    },
+    "timestamp": "2025-11-13T18:36:40.944531+00:00"
+  },
+  {
+    "id": "052702fc-4e17-4a6e-b143-ea54605e5193",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "status": "send_failed",
+      "error": "whatsapp_api_error"
+    },
+    "timestamp": "2025-11-13T18:36:49.837703+00:00"
+  },
+  {
+    "id": "5a1c8c3e-a7a7-4ec8-9826-aad18b495c91",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Ok so please give me detail of all think u have",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUNBQkRBMDFDRDc1MjFGNkZEQ0NDRjExQTlDODgxMDcA",
+      "timestamp": "1763059304",
+      "text": {
+        "body": "Ok so please give me detail of all think u have"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T18:41:44+00:00"
+  },
+  {
+    "id": "89432958-f7ef-4f6e-b46a-75ffe2ccf4a1",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Sure, let me check our inventory for you.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSRjMzMUU3MzU2OTdFQ0Q3RjFEAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T18:41:48.844841+00:00"
+  },
+  {
+    "id": "5bc53858-e051-4f28-98a2-a1df5023c827",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923010325745",
+    "direction": "inbound",
+    "text": "Hello",
+    "raw_payload": {
+      "from": "923010325745",
+      "id": "wamid.HBgMOTIzMDEwMzI1NzQ1FQIAEhggQUNGNzg3OUY4MDM2QjZBQUQ1QTFGOTcxREJBNjc3MDQA",
+      "timestamp": "1763060160",
+      "text": {
+        "body": "Hello"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T18:56:00+00:00"
+  },
+  {
+    "id": "c26a4e0e-0819-4436-806a-359afe0825b0",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923010325745",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "status": "send_failed",
+      "source": "whatsapp_api",
+      "error": {
+        "status": 400,
+        "body": {
+          "error": {
+            "message": "(#131030) Recipient phone number not in allowed list",
+            "type": "OAuthException",
+            "code": 131030,
+            "error_data": {
+              "messaging_product": "whatsapp",
+              "details": "Recipient phone number not in allowed list: Add recipient phone number to recipient list and try again."
+            },
+            "fbtrace_id": "AZ9GBRIjcPX-gOUId0ymJFU"
+          }
+        }
+      }
+    },
+    "timestamp": "2025-11-13T18:56:05.213344+00:00"
+  },
+  {
+    "id": "4ccb94a3-2599-40f2-968f-de1e39dae88d",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "hn ladle",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMjFBMTg3MzI0MDAyMkM3MzJDAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:01:17.327827+00:00"
+  },
+  {
+    "id": "a104072d-ad62-4b94-bab5-781d1f80176e",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "hn bete ache seh message krta hn k nhi bhut chrbi chari hn tum main ",
+    "raw_payload": {
+      "status": "send_failed",
+      "source": "whatsapp_api",
+      "error": {
+        "status": 400,
+        "body": {
+          "error": {
+            "message": "(#131030) Recipient phone number not in allowed list",
+            "type": "OAuthException",
+            "code": 131030,
+            "error_data": {
+              "messaging_product": "whatsapp",
+              "details": "Recipient phone number not in allowed list: Add recipient phone number to recipient list and try again."
+            },
+            "fbtrace_id": "AqvIOKWd9tnubYktGbR_NFF"
+          }
+        }
+      }
+    },
+    "timestamp": "2025-11-13T19:01:58.081237+00:00"
+  },
+  {
+    "id": "c44fb749-9612-4447-918d-e8e4958f6d96",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "hn bete ache seh message krta hn k nhi bhut chrbi chari hn tum main ",
+    "raw_payload": {
+      "status": "send_failed",
+      "source": "whatsapp_api",
+      "error": {
+        "status": 400,
+        "body": {
+          "error": {
+            "message": "(#131030) Recipient phone number not in allowed list",
+            "type": "OAuthException",
+            "code": 131030,
+            "error_data": {
+              "messaging_product": "whatsapp",
+              "details": "Recipient phone number not in allowed list: Add recipient phone number to recipient list and try again."
+            },
+            "fbtrace_id": "ASIccjN5d93VVqFx72D8XmA"
+          }
+        }
+      }
+    },
+    "timestamp": "2025-11-13T19:02:15.288189+00:00"
+  },
+  {
+    "id": "635eb608-37fb-4371-bb3d-b125eecc5355",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "hn bete ache seh message krta hn k nhi bhut chrbi chari hn tum main ",
+    "raw_payload": {
+      "status": "send_failed",
+      "source": "whatsapp_api",
+      "error": {
+        "status": 400,
+        "body": {
+          "error": {
+            "message": "(#131030) Recipient phone number not in allowed list",
+            "type": "OAuthException",
+            "code": 131030,
+            "error_data": {
+              "messaging_product": "whatsapp",
+              "details": "Recipient phone number not in allowed list: Add recipient phone number to recipient list and try again."
+            },
+            "fbtrace_id": "Ae8yUJSmDcrg2kPrjACDlFE"
+          }
+        }
+      }
+    },
+    "timestamp": "2025-11-13T19:02:30.649606+00:00"
+  },
+  {
+    "id": "aaf53fd0-a7d4-41a0-bfd3-315b8704b46b",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "hn bete ache seh message krta hn k nhi bhut chrbi chari hn tum main ",
+    "raw_payload": {
+      "status": "send_failed",
+      "source": "whatsapp_api",
+      "error": {
+        "status": 400,
+        "body": {
+          "error": {
+            "message": "(#131030) Recipient phone number not in allowed list",
+            "type": "OAuthException",
+            "code": 131030,
+            "error_data": {
+              "messaging_product": "whatsapp",
+              "details": "Recipient phone number not in allowed list: Add recipient phone number to recipient list and try again."
+            },
+            "fbtrace_id": "AAlt0FvHsN8WaPV7X9xV-fG"
+          }
+        }
+      }
+    },
+    "timestamp": "2025-11-13T19:05:56.384875+00:00"
+  },
+  {
+    "id": "fb304630-8ecd-42df-a4b7-9632f84e7f75",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "hn bete ache seh message krta hn k nhi bhut chrbi chari hn tum main ",
+    "raw_payload": {
+      "status": "send_failed",
+      "source": "whatsapp_api",
+      "error": {
+        "status": 400,
+        "body": {
+          "error": {
+            "message": "(#131030) Recipient phone number not in allowed list",
+            "type": "OAuthException",
+            "code": 131030,
+            "error_data": {
+              "messaging_product": "whatsapp",
+              "details": "Recipient phone number not in allowed list: Add recipient phone number to recipient list and try again."
+            },
+            "fbtrace_id": "ATqMLX45HbvVt9MvM2AUGfl"
+          }
+        }
+      }
+    },
+    "timestamp": "2025-11-13T19:05:59.070988+00:00"
+  },
+  {
+    "id": "1f4efca6-5a12-45f3-885b-2a19d631acc2",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "hn bete ache seh message krta hn k nhi bhut chrbi chari hn tum main ",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMkE0MDAyMjZEODM1NzEyMDM1AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:06:04.467184+00:00"
+  },
+  {
+    "id": "543c52bc-392c-4a4d-a51a-62c38066198f",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923001234567",
+    "direction": "outbound",
+    "text": "             /api/vendors/f8add875-6bff-4f1a-99f5-f8e5d3ec3b67/customers/9233432950\n             24/messages HTTP/1.1\" 400\nWhatsApp API returned 400 for recipient 923343295024: (#131030) Recipient phone number not in allowed list (code 131030)\n      INFO   127.0.0.1:56812 - \"POST                                               \n             /api/vendors/f8add875-6bff-4f1a-99f5-f8e5d3ec3b67/customers/9233432950\n             24/messages HTTP/1.1\" 400",
+    "raw_payload": {
+      "status": "send_failed",
+      "source": "whatsapp_api",
+      "error": {
+        "status": 400,
+        "body": {
+          "error": {
+            "message": "(#131030) Recipient phone number not in allowed list",
+            "type": "OAuthException",
+            "code": 131030,
+            "error_data": {
+              "messaging_product": "whatsapp",
+              "details": "Recipient phone number not in allowed list: Add recipient phone number to recipient list and try again."
+            },
+            "fbtrace_id": "A-Rhu2OqxJkpEN_N9XqNdcG"
+          }
+        }
+      }
+    },
+    "timestamp": "2025-11-13T19:06:17.769798+00:00"
+  },
+  {
+    "id": "57276a3b-6bc3-44bb-86dc-408616573b8d",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923010325745",
+    "direction": "outbound",
+    "text": "             /api/vendors/f8add875-6bff-4f1a-99f5-f8e5d3ec3b67/customers/9233432950\n             24/messages HTTP/1.1\" 400\nWhatsApp API returned 400 for recipient 923343295024: (#131030) Recipient phone number not in allowed list (code 131030)\n      INFO   127.0.0.1:56812 - \"POST                                               \n             /api/vendors/f8add875-6bff-4f1a-99f5-f8e5d3ec3b67/customers/9233432950\n             24/messages HTTP/1.1\" 400",
+    "raw_payload": {
+      "status": "send_failed",
+      "source": "whatsapp_api",
+      "error": {
+        "status": 400,
+        "body": {
+          "error": {
+            "message": "(#131030) Recipient phone number not in allowed list",
+            "type": "OAuthException",
+            "code": 131030,
+            "error_data": {
+              "messaging_product": "whatsapp",
+              "details": "Recipient phone number not in allowed list: Add recipient phone number to recipient list and try again."
+            },
+            "fbtrace_id": "ArM71LenepQN82DZtUvC2xn"
+          }
+        }
+      }
+    },
+    "timestamp": "2025-11-13T19:06:25.768275+00:00"
+  },
+  {
+    "id": "4305d095-4fcb-475e-9f89-1de875546135",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "hii",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMThCQzg3RTEzNzY3MUU2MkIzAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:06:54.533699+00:00"
+  },
+  {
+    "id": "43525cac-5bad-4c0c-8f13-012dedfd837a",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "sd",
+    "raw_payload": {
+      "status": "send_failed",
+      "source": "whatsapp_api",
+      "error": {
+        "status": 400,
+        "body": {
+          "error": {
+            "message": "(#131030) Recipient phone number not in allowed list",
+            "type": "OAuthException",
+            "code": 131030,
+            "error_data": {
+              "messaging_product": "whatsapp",
+              "details": "Recipient phone number not in allowed list: Add recipient phone number to recipient list and try again."
+            },
+            "fbtrace_id": "An1kyg4QekGEMVYGW88yUq9"
+          }
+        }
+      }
+    },
+    "timestamp": "2025-11-13T19:11:37.157279+00:00"
+  },
+  {
+    "id": "b3f36f60-9bb0-4041-ab77-c27cfb426210",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "Nahi pohonche kujh nahi aya",
+    "raw_payload": {
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUM3M0ZBMEFBRTVDRkYzREZDRTFCNkI0NDBEODAwMzQA",
+      "timestamp": "1763061475",
+      "text": {
+        "body": "Nahi pohonche kujh nahi aya"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T19:17:55+00:00"
+  },
+  {
+    "id": "bcce21a3-3a0d-4bd5-9816-5297873f08c3",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "I'm sorry, I don't understand. Could you please clarify your request?",
+    "raw_payload": {
+      "status": "send_failed",
+      "source": "whatsapp_api",
+      "error": {
+        "status": 400,
+        "body": {
+          "error": {
+            "message": "(#131030) Recipient phone number not in allowed list",
+            "type": "OAuthException",
+            "code": 131030,
+            "error_data": {
+              "messaging_product": "whatsapp",
+              "details": "Recipient phone number not in allowed list: Add recipient phone number to recipient list and try again."
+            },
+            "fbtrace_id": "AH4lVbfBwgImLlMBTiXFmLx"
+          }
+        }
+      }
+    },
+    "timestamp": "2025-11-13T19:17:59.318765+00:00"
+  },
+  {
+    "id": "cc664d22-7d5f-40e3-9aab-b82fe65b73b3",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": null,
+    "raw_payload": {
+      "context": {
+        "forwarded": true
+      },
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUM4M0NDNDU4NkE2NjMxNjA5M0Q3OEQ0RjhEMTc0Q0EA",
+      "timestamp": "1762992864",
+      "type": "audio",
+      "audio": {
+        "mime_type": "audio/ogg; codecs=opus",
+        "sha256": "BCC6ZtfPtaXJVce10Fu+n9X3h7FzVggd9TWHuWfUVYc=",
+        "id": "1191403426383211",
+        "voice": false
+      }
+    },
+    "timestamp": "2025-11-13T00:14:24+00:00"
+  },
+  {
+    "id": "25dd7d12-d81f-48a7-84d5-a258d4c4c5b2",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Please clarify what you are looking for. Are you looking for the details of all products we have?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSQTQxREM1NDUxNTUzQkRGMDI2AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:18:17.950528+00:00"
+  },
+  {
+    "id": "8a28d57e-7572-4c71-802b-08b0fe27ae32",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Yes",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUMzM0U3QTdERkU2MjJCMDlENzVDMUU2OTI4OTQ3MUMA",
+      "timestamp": "1763061580",
+      "text": {
+        "body": "Yes"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T19:19:40+00:00"
+  },
+  {
+    "id": "6c1da776-4d05-4563-bc61-74e746ca2487",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "OK! Let me show you our catalog.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSQ0VEM0MwRjQ2RTdFNUNCODI5AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:19:44.750712+00:00"
+  },
+  {
+    "id": "e95ca8dd-98c9-4e83-8b38-4727eb1761b9",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Yes pleas",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUMxREQwOTVGMDY4NDA0M0I1QTYzMDk3NTgzNkM4NkMA",
+      "timestamp": "1763061592",
+      "text": {
+        "body": "Yes pleas"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T19:19:52+00:00"
+  },
+  {
+    "id": "8e007a4c-5250-4854-8a5a-f9bc1ea7c053",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Please wait while I check our inventory.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSRDYxNzM2NjkyREU4QzAzM0E5AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:19:55.952026+00:00"
+  },
+  {
+    "id": "5c3fa537-6fa7-416c-a74c-789feba56847",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Ok",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUNGRTg4QTE0NkQ3MjIyNjk2MEFCREFCQ0ZDQjBERTAA",
+      "timestamp": "1763061602",
+      "text": {
+        "body": "Ok"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T19:20:02+00:00"
+  },
+  {
+    "id": "e56921b1-79f3-479d-a1a1-a6101c75aa32",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Here is our catalog overview:",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSNUY5MzY0OUU0NTI2NUM1NUI5AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:20:08.658197+00:00"
+  },
+  {
+    "id": "0de397de-2488-4b8a-bd4a-080d135b1c12",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "..",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUMzRDc3RTYwNzFFM0RDRTYwMzlEMUQ4OUE1MjNDRjIA",
+      "timestamp": "1763061619",
+      "text": {
+        "body": ".."
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T19:20:19+00:00"
+  },
+  {
+    "id": "b7873235-00bd-46d5-9164-6adaf14d35c7",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Is there anything specific you're looking for?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSNzI4QTZENkUwNDI0MzBBNzVGAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:20:23.136554+00:00"
+  },
+  {
+    "id": "d684112b-2ad6-4d78-aee6-307f0fa4f50f",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Ur products",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUNDMzJCRjI5NDhGNDZFOEYwRUEwMzVDRjkxQjMzREUA",
+      "timestamp": "1763061634",
+      "text": {
+        "body": "Ur products"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T19:20:34+00:00"
+  },
+  {
+    "id": "33eb2908-499c-459b-bcd1-28f447995ab1",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "I am sorry, I do not understand. Can you please clarify your request?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSQkYxQkNCRDRDREUzQ0EyMjhBAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:20:38.341536+00:00"
+  },
+  {
+    "id": "fa93c7ce-8ee3-44eb-8833-e0d0d856c76d",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "What product do u guys sell so far",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUNBRjlBQTk0MTYwRTE0OTVDNDRGQzczQTJFN0VCQjMA",
+      "timestamp": "1763061656",
+      "text": {
+        "body": "What product do u guys sell so far"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T19:20:56+00:00"
+  },
+  {
+    "id": "84c85542-942b-460a-86cf-711b4d7b7a6e",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Let me check our inventory for a catalog overview.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMzU4QkM5NTY2M0M5N0ZFRUY1AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:21:00.672161+00:00"
+  },
+  {
+    "id": "fa30b9c7-0ac7-4d48-b6e9-6d5c1ce65c95",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Ok",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUNCM0Y4OEE4MzY3RkJEMjcwNjAyNjAwQ0ZFRjMyOUQA",
+      "timestamp": "1763046937",
+      "text": {
+        "body": "Ok"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T15:15:37+00:00"
+  },
+  {
+    "id": "6c83213a-7aa7-4203-b350-e8dcad072df1",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "One moment while I gather the product information.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSQUVCRDlBMDYxMDdCMTQzNEMwAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:23:32.523831+00:00"
+  },
+  {
+    "id": "6e8755f9-d56b-4988-a8b5-3747f9b8ece6",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": null,
+    "raw_payload": {
+      "context": {
+        "forwarded": true
+      },
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUMzNUUzMTc1NzlBRDdCMDlEMjUwNEYyNjhBMzY5NTgA",
+      "timestamp": "1762992864",
+      "type": "audio",
+      "audio": {
+        "mime_type": "audio/ogg; codecs=opus",
+        "sha256": "wuqbrl+vaYShk5S3/iZrjYaTbyoTlFkcYh/oAhuuW7o=",
+        "id": "3302258746594891",
+        "voice": false
+      }
+    },
+    "timestamp": "2025-11-13T00:14:24+00:00"
+  },
+  {
+    "id": "965b6817-79f8-4359-bef8-794083a0bd49",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Here's an overview of our catalog:",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSNEZGMDdEQURGMDlGNDM0Q0JGAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:29:21.919941+00:00"
+  },
+  {
+    "id": "00392237-b2cc-43d9-b061-ff7e88332c01",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "yes bro",
+    "raw_payload": {
+      "status": "send_failed",
+      "source": "whatsapp_api",
+      "error": {
+        "status": 400,
+        "body": {
+          "error": {
+            "message": "(#131030) Recipient phone number not in allowed list",
+            "type": "OAuthException",
+            "code": 131030,
+            "error_data": {
+              "messaging_product": "whatsapp",
+              "details": "Recipient phone number not in allowed list: Add recipient phone number to recipient list and try again."
+            },
+            "fbtrace_id": "AyqtcITDkeXa9a-An1IAcKS"
+          }
+        }
+      },
+      "http_status": 400
+    },
+    "timestamp": "2025-11-13T19:33:17.856118+00:00"
+  },
+  {
+    "id": "0193bdd3-c57b-4ba3-80fc-d18dba951bf5",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "[13/11, 9:07 pm] mohummad anees: Baki prompt enj ka exM kaisa diya app neh \ud83d\ude05\n[13/11, 9:08 pm] Nirma Qureshi GIAIC: Nimra or main nay achy bache by sir Qasim \ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83e\udee3\ud83e\udee3\ud83e\udee3\n[13/11, 9:10 pm] mohummad anees: Baki yeah nimra kon hn ???\n[13/11, 9:11 pm] Nirma Qureshi GIAIC: Apko Sab Pata \ud83d\udc40\n[13/11, 9:12 pm] mohummad anees: Kiya bhen main nhi janta mere upar ghalAt ilzam nhi lagea\n[13/11, 9:12 pm] mohummad anees: \ud83e\udd72\n[13/11, 9:12 pm] Nirma Qureshi GIAIC: Allah huma barik\n[13/11, 9:12 pm] mohummad anees: Woh Acha cr",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUNDRUYxRTcxNEZEQ0E3NDdBNTg0QTdDNkVCQjExOTMA",
+      "timestamp": "1763052983",
+      "text": {
+        "body": "[13/11, 9:07 pm] mohummad anees: Baki prompt enj ka exM kaisa diya app neh \ud83d\ude05\n[13/11, 9:08 pm] Nirma Qureshi GIAIC: Nimra or main nay achy bache by sir Qasim \ud83d\ude02\ud83d\ude02\ud83d\ude02\ud83e\udee3\ud83e\udee3\ud83e\udee3\n[13/11, 9:10 pm] mohummad anees: Baki yeah nimra kon hn ???\n[13/11, 9:11 pm] Nirma Qureshi GIAIC: Apko Sab Pata \ud83d\udc40\n[13/11, 9:12 pm] mohummad anees: Kiya bhen main nhi janta mere upar ghalAt ilzam nhi lagea\n[13/11, 9:12 pm] mohummad anees: \ud83e\udd72\n[13/11, 9:12 pm] Nirma Qureshi GIAIC: Allah huma barik\n[13/11, 9:12 pm] mohummad anees: Woh Acha cr"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T16:56:23+00:00"
+  },
+  {
+    "id": "8ceb97db-ab16-4c09-a898-9f6bda3c4cae",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "I'm here to help with BazaarFlow products. Let me know if you have any questions about our catalog!",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSNjY3MzMzNUZEN0E0ODM0MTAyAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:41:14.213496+00:00"
+  },
+  {
+    "id": "96b6b5c8-517e-4699-8f75-7a5f32a33243",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "yes bro",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSRDE0OEU0OTcxMTNERjFGOEI1AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:41:31.006493+00:00"
+  },
+  {
+    "id": "75c07a97-820d-44d9-b05c-147d5c6a4499",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "Great bro yuck fu",
+    "raw_payload": {
+      "context": {
+        "from": "15551603580",
+        "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSRDE0OEU0OTcxMTNERjFGOEI1AA=="
+      },
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUNENDE4RTY2QUY3RUNGNjNGQzRGODIxRkY0Njk4NzEA",
+      "timestamp": "1763062904",
+      "text": {
+        "body": "Great bro yuck fu"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T19:41:44+00:00"
+  },
+  {
+    "id": "6cfd6acb-96b7-475b-b97f-096e8f99f075",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "I'm sorry, I don't understand. Could you please clarify your request?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSRTk5OTJDRUE2NTBDRTlBMTE1AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:41:48.312079+00:00"
+  },
+  {
+    "id": "ade90184-462c-4642-964d-1b96fd01c9ed",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "hn bete ache seh message krta hn k nhi bhut chrbi chari hn tum main",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSQThCNDQ1RjVBRkNGQjJCNTk5AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:42:05.110482+00:00"
+  },
+  {
+    "id": "ed8b33a3-8691-4b17-afdd-a1c05e608a07",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "I want to yuck fu with your products",
+    "raw_payload": {
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUM5RTVBMERFQzU2MjJGRTM0Q0I4NEM0REExQTBBMUEA",
+      "timestamp": "1763062925",
+      "text": {
+        "body": "I want to yuck fu with your products"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T19:42:05+00:00"
+  },
+  {
+    "id": "44db667a-1eaf-4e1a-a7d8-6eae7936b992",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "I'm sorry, I don't understand. Could you please clarify your request?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSQzE5OTY4QUFGMUFDQjc5NzlCAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:42:08.694634+00:00"
+  },
+  {
+    "id": "4a4a1494-c3b1-472a-852d-e22c4067d322",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "What products u have",
+    "raw_payload": {
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUNCRTEwQkFCOEREMTIzOTMyMDM2REZGOTdERUNBMkUA",
+      "timestamp": "1763062939",
+      "text": {
+        "body": "What products u have"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T19:42:19+00:00"
+  },
+  {
+    "id": "64c81240-a1a3-430a-b938-8c89afb26f1b",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "Sure, let me check our product catalog for you.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSNUFERkNCNzFDMTQzRkRDRjUwAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:42:23.132007+00:00"
+  },
+  {
+    "id": "f58b0c23-3793-4e64-8180-56c58b2605bb",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "Wow",
+    "raw_payload": {
+      "context": {
+        "from": "15551603580",
+        "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSNUFERkNCNzFDMTQzRkRDRjUwAA=="
+      },
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUM0RkE3QjM2NTE4QjQ3QjFGRUU3RkY2RTFENTk5QTkA",
+      "timestamp": "1763063011",
+      "text": {
+        "body": "Wow"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T19:43:31+00:00"
+  },
+  {
+    "id": "94996e2d-a789-49cf-b40f-69564a64f75f",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "Is there anything specific you're looking for?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSQzNBM0RDNDJBMjA2QkExQ0UyAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:43:34.706078+00:00"
+  },
+  {
+    "id": "e318aa64-4be4-40bd-b3e7-6ddaf08467c4",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "Yeah am looking for t shirts",
+    "raw_payload": {
+      "context": {
+        "from": "15551603580",
+        "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSQzNBM0RDNDJBMjA2QkExQ0UyAA=="
+      },
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUM0OTNBNTU1QTQ5MjZDOTc5NDY0QTEyQkRCNkQ4QTEA",
+      "timestamp": "1763063032",
+      "text": {
+        "body": "Yeah am looking for t shirts"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T19:43:52+00:00"
+  },
+  {
+    "id": "6e1d7221-5c02-4137-850f-15e0a186c193",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "Okay, let me see what T-shirts we have.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSMDk1QjE4RTkxNENFMTQ3NkExAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:43:55.597193+00:00"
+  },
+  {
+    "id": "f1718f4a-8955-4545-9ea3-cceeee364559",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "bro agent jahil thora khtarnak ho giya hn but shi kro gah abi just mannually msg krne check kr rha tah\n",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSNjA0MzY2OTA0OUJDQTI4MzA1AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:45:21.523862+00:00"
+  },
+  {
+    "id": "4058882c-6a8f-4048-a861-c68aafe09401",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": null,
+    "raw_payload": {
+      "context": {
+        "from": "15551603580",
+        "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSNjA0MzY2OTA0OUJDQTI4MzA1AA=="
+      },
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUMzODI0Rjc4REE1REY5NzA0RENGQUEwQ0UxMENFMTgA",
+      "timestamp": "1763063450",
+      "type": "sticker",
+      "sticker": {
+        "mime_type": "image/webp",
+        "sha256": "wbrI9JlX48qUdFU2qoZFvO7A9zf/GPaU0174mkBfQ6A=",
+        "id": "1202540111689612",
+        "animated": false
+      }
+    },
+    "timestamp": "2025-11-13T19:50:50+00:00"
+  },
+  {
+    "id": "86fb962a-fa0e-433d-8479-6c41d353e0cf",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "I'm sorry, I don't understand. Could you please clarify your request?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSNDgyQThFRjgyMURCNzAxOTk0AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:50:54.621200+00:00"
+  },
+  {
+    "id": "4cbaf92d-1d94-45b9-acb3-fb3854c23744",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": null,
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUMwODhCREI5MkMzODU4MjVBNTlDRjk3RjZFMzQzNDIA",
+      "timestamp": "1763063557",
+      "type": "audio",
+      "audio": {
+        "mime_type": "audio/ogg; codecs=opus",
+        "sha256": "vpOf//Xcy1iOFMYUbi2jePgCxJzd7N4yXnqFXFIgqfE=",
+        "id": "4087369818141920",
+        "voice": true
+      }
+    },
+    "timestamp": "2025-11-13T19:52:37+00:00"
+  },
+  {
+    "id": "94c2e152-3f9a-4002-84aa-6aac52fabf7b",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Do you have any questions about our products? Or are you interested in placing an order?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSRDhDQUI4MkVCMkQ4NTFBNkMzAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T19:52:44.125991+00:00"
+  },
+  {
+    "id": "166b42de-bb88-4247-ac6f-9382b44ee14c",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUM5RkVFNTFFM0U0REY0QjdGREQzM0Q3ODkwMjFFQjAA",
+      "timestamp": "1763070442",
+      "text": {
+        "body": "Hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T21:47:22+00:00"
+  },
+  {
+    "id": "691e9ce7-4e0d-4a3b-99ae-5051e11e2cc6",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSRDQ1MzYwRTgwODBGMkIwQUI0AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T21:47:26.279758+00:00"
+  },
+  {
+    "id": "3be6fd3f-e022-4536-995a-01327d3e4374",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "I want to bus some thing from u could u please give what products do u have",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUMzMDY4QTI3OTdGRjQ0OTRGRjUxQzNGMDA3OTQ0REMA",
+      "timestamp": "1763070485",
+      "text": {
+        "body": "I want to bus some thing from u could u please give what products do u have"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T21:48:05+00:00"
+  },
+  {
+    "id": "3d8234f7-6699-4f40-8048-b8900571fca7",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Sure, let me check our inventory for a catalog overview.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSRDczRTFGQkNBMTRDNzMwOTM3AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T21:48:09.281308+00:00"
+  },
+  {
+    "id": "a9dd30e7-6a86-42a8-9039-5badae281732",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUM0RTZERUI1NTg0NUNFNDg2NzE2REJEQjA2Q0RDNTUA",
+      "timestamp": "1763071558",
+      "text": {
+        "body": "Hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-13T22:05:58+00:00"
+  },
+  {
+    "id": "ba84626e-d229-476d-904a-3405b7cd98b0",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMTYzMUNGNDhCNDUzMjE0MDkwAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-13T22:06:02.939838+00:00"
+  },
+  {
+    "id": "bb8f4297-7079-4a06-a6b0-524f5d095fe3",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hiii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDNEQ0EyNjA4MThFQjBERkRGQQA=",
+      "timestamp": "1763112858",
+      "text": {
+        "body": "hiii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T09:34:18+00:00"
+  },
+  {
+    "id": "513a6270-a192-4390-94a0-9f01182929c7",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSODkzRTk5ODk0MkEzRjA2QUUyAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T09:34:22.908263+00:00"
+  },
+  {
+    "id": "503f73d1-a2e4-40fc-b513-152c8bd196d8",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "i want to buy some thinks from u could u please give me the inventory u have",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDg1RkNFMjMwREQ5NzA3MUUxMQA=",
+      "timestamp": "1763112904",
+      "text": {
+        "body": "i want to buy some thinks from u could u please give me the inventory u have"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T09:35:04+00:00"
+  },
+  {
+    "id": "5891fa3e-d69f-4947-b5ba-e4dfc5aad11f",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Okay! Let me check our inventory for a catalog overview.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSQkM4RjcxRjBFQTExRTM1NkFCAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T09:35:09.803452+00:00"
+  },
+  {
+    "id": "eadd971f-6d25-4ae5-8483-3a44b3eddef4",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "Hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhggQUM0NUUxMzc4ODg0REYyQjYyQzg2RjQ1OTZBM0NGN0QA",
+      "timestamp": "1763111490",
+      "text": {
+        "body": "Hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T09:11:30+00:00"
+  },
+  {
+    "id": "5c817b4a-7642-4c03-8cfc-30812cf059df",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDIwNzM0MTQ3REQxNUIyNTU0MwA=",
+      "timestamp": "1763115223",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:13:43+00:00"
+  },
+  {
+    "id": "cef6a534-6a52-423c-a12d-7eb6e767b284",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDIwNzM0MTQ3REQxNUIyNTU0MwA=",
+      "timestamp": "1763115223",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:13:43+00:00"
+  },
+  {
+    "id": "c3ae9ef6-de34-4ab2-8683-59c0f12ecca8",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDIwNzM0MTQ3REQxNUIyNTU0MwA=",
+      "timestamp": "1763115223",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:13:43+00:00"
+  },
+  {
+    "id": "28df957b-d9f9-4f53-ad13-0d6892c54c34",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDIwNzM0MTQ3REQxNUIyNTU0MwA=",
+      "timestamp": "1763115223",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:13:43+00:00"
+  },
+  {
+    "id": "6b7554e3-3528-420d-b64a-8edef6c83e88",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDIwNzM0MTQ3REQxNUIyNTU0MwA=",
+      "timestamp": "1763115223",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:13:43+00:00"
+  },
+  {
+    "id": "3f13ba25-ac73-4cd6-999b-2578ca2a5ec3",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSOEMxRkI0NjQ0NDdDNDQwMjdFAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:16:16.580874+00:00"
+  },
+  {
+    "id": "c05824ac-160b-4f28-aac8-2a2120f9fce7",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSRTVDQjI3RUNCNUMwOUE5NUU2AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:16:16.601677+00:00"
+  },
+  {
+    "id": "feaf7efa-1513-4254-8b0b-ddb007d32f86",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSNzcxMzI5ODZGREY0N0I5QUVGAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:16:16.841512+00:00"
+  },
+  {
+    "id": "61685d79-f686-4b0e-b60b-817b6d1dba7f",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMjM1NDkxOTQwNTU4Q0YxRDJGAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:16:16.856794+00:00"
+  },
+  {
+    "id": "b99fc8b9-c316-4ba4-a3fa-d0f12b289b51",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMjYyRTM5NzNDQTMzN0EyRjUxAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:16:17.038897+00:00"
+  },
+  {
+    "id": "961c4b71-a783-45ae-b874-0e59a168dfe2",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSRUJFQ0E1NEU0MTQ5OEM3ODdEAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:16:17.056850+00:00"
+  },
+  {
+    "id": "318b041d-2127-4eb7-ad9f-98a3bd1bc78d",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "gii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMEM2QjI1Mjg0RUY5N0RDQ0Y0MAA=",
+      "timestamp": "1763115376",
+      "text": {
+        "body": "gii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:16:16+00:00"
+  },
+  {
+    "id": "3c4712e4-67d3-44b6-8875-37a65a7b37fd",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSOTgzNjJDQjk0OTZDN0MxQUFDAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:16:19.599233+00:00"
+  },
+  {
+    "id": "92cda5a2-862f-4b56-8bf8-f7cf843ac9d1",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "please give me inevtory list",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMEVFMUY5ODY5M0FEOUJEOEFDQQA=",
+      "timestamp": "1763115394",
+      "text": {
+        "body": "please give me inevtory list"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:16:34+00:00"
+  },
+  {
+    "id": "a50510f6-d0bf-4691-8294-13012217d28c",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Okay! Let me check our inventory for a catalog overview.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSQTM5RjIyNkMyRTdDNjE2QTNGAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:16:37.824080+00:00"
+  },
+  {
+    "id": "bd9d3c91-af3a-43c1-bef3-838d6ba335be",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "fast",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDc2QTg0NzI5OThDQkRFOThFRAA=",
+      "timestamp": "1763115415",
+      "text": {
+        "body": "fast"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:16:55+00:00"
+  },
+  {
+    "id": "5ce7bcfc-8d7e-4d90-8edd-19bffd471652",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Sure, I'm on it!",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSNEYzNzgyOUU5QjlGN0MwRkUwAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:16:59.021584+00:00"
+  },
+  {
+    "id": "17a8ce6d-8201-4cb9-91f0-485d4d43ed19",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMEI1OTVDN0ExMDU0QUVENEI4MgA=",
+      "timestamp": "1763115454",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:17:34+00:00"
+  },
+  {
+    "id": "0556d3a5-b9f9-476b-84ab-b195ef05e05b",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMkJGQUY3N0I1M0JENUI4MjQ4AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:17:37.321157+00:00"
+  },
+  {
+    "id": "ca21ac83-4c78-438a-bd20-3711abb3147b",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDIwNzM0MTQ3REQxNUIyNTU0MwA=",
+      "timestamp": "1763115223",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:13:43+00:00"
+  },
+  {
+    "id": "ebe46b02-7f38-4ab8-b017-6322ed1d0391",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSNTZBOTI1MUIwNEFBNTNCMTNCAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:18:15.822761+00:00"
+  },
+  {
+    "id": "dfef92ed-65b5-497e-806a-ac5ede1bd046",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "all products",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDE1OTg2OEQ5NTJBRThCM0M5OQA=",
+      "timestamp": "1763115548",
+      "text": {
+        "body": "all products"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:19:08+00:00"
+  },
+  {
+    "id": "92089bb5-bc9e-4bb0-a383-60186c8f23b9",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Okay! Let me check our inventory for a catalog overview.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSRDUxRTdBQjY4QTQ2OENGNDg2AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:19:12.143648+00:00"
+  },
+  {
+    "id": "11ae7875-bf31-45e6-8aad-51e9de263419",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hiii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDY2N0UwNjEyNEFGMDdGMkEwQwA=",
+      "timestamp": "1763116355",
+      "text": {
+        "body": "hiii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:32:35+00:00"
+  },
+  {
+    "id": "4b49be6f-3e02-4b87-92bd-95f4505bca53",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSNEE0OEEyRDczNzA4OUIyMDQyAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:32:39.981832+00:00"
+  },
+  {
+    "id": "e1c34066-b7b7-4742-8c90-32076f76508d",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "pls show me ur inventory",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDlEOTlDRkZBRDA5MUM3MTAzMwA=",
+      "timestamp": "1763116377",
+      "text": {
+        "body": "pls show me ur inventory"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:32:57+00:00"
+  },
+  {
+    "id": "bf488845-2e8b-4f62-9e9f-f660bd1e5628",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "{\"action\": \"consult_inventory_agent\", \"parameters\": {\"input\": \"customer:catalog overview\"}}",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMUZDNDVGN0M0MUJGNEI1NkY5AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:33:01.073967+00:00"
+  },
+  {
+    "id": "48b2881b-7d62-4b78-89e7-093d3e52a080",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "what is this",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMEU3QjkzMjJFMDE0OTVEODJCNQA=",
+      "timestamp": "1763116407",
+      "text": {
+        "body": "what is this"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:33:27+00:00"
+  },
+  {
+    "id": "71451ccc-42dc-4251-a909-c5e2894ff353",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Okay! Let me check our inventory for a catalog overview.",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSNkU5RDQ2MzEwNUQ0ODg3MEZFAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:33:37.018955+00:00"
+  },
+  {
+    "id": "bd69cdbe-fbf6-412a-913f-adaba252f031",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "yes",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDUwNzhBOTIyNDlCM0JDMjFBNAA=",
+      "timestamp": "1763116423",
+      "text": {
+        "body": "yes"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:33:43+00:00"
+  },
+  {
+    "id": "29041746-0236-4af3-b764-ad3668b2353d",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "{\"action\": \"consult_inventory_agent\", \"parameters\": {\"input\": \"customer:catalog overview\"}}",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSRDUyOThBQTZENUU3RDM5OTA1AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:33:46.963939+00:00"
+  },
+  {
+    "id": "193fe0e6-d79a-4b16-be11-43c33c0a1eb4",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDdGNTUwRTYyRDdGMzlCMTJGOAA=",
+      "timestamp": "1763116482",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:34:42+00:00"
+  },
+  {
+    "id": "f5474334-3ed3-4869-979b-f242d8578238",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMjM2NDM0OEVEOEFBRTE0ODE5AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:35:03.009650+00:00"
+  },
+  {
+    "id": "b362bc50-f0a0-4780-ab2b-c72f0e5f2729",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "i want a list of products",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDVBODFCNTRGREYwRDlBQzRDNwA=",
+      "timestamp": "1763116521",
+      "text": {
+        "body": "i want a list of products"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:35:21+00:00"
+  },
+  {
+    "id": "b804357e-2a56-47d7-bdc1-cac0257ee9c7",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "{\n  \"action\": \"consult_inventory_agent\",\n  \"parameters\": {\n    \"input\": \"customer:catalog overview\"\n  }\n}",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMzMyMEYyMEExRDEzQTlBNEVDAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:35:25.360103+00:00"
+  },
+  {
+    "id": "dafa36e7-e45d-49f2-ac4e-70057122199c",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMEJGRkNFOUMyNkFDQTNBMkI3MAA=",
+      "timestamp": "1763116779",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:39:39+00:00"
+  },
+  {
+    "id": "1a8c2d75-9f5b-48c8-a593-442a2f0a4c73",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMEZDQzk3QTIxRjU1QjM0ODBGAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:39:43.227396+00:00"
+  },
+  {
+    "id": "b90e49e4-8f0e-4dc9-84c8-2a56d1b6c79e",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "please give me full list of inventory",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMEQ4QURDOTAwNzI4MzYxQjZCRAA=",
+      "timestamp": "1763116796",
+      "text": {
+        "body": "please give me full list of inventory"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-14T10:39:56+00:00"
+  },
+  {
+    "id": "7f9d3d0d-2582-4208-bdde-34e0e8668f78",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "{\n  \"action\": \"consult_inventory_agent\",\n  \"parameters\": {\n    \"input\": \"customer:catalog overview\"\n  }\n}",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMUUzREJGREUxMEFGMTRDNzNFAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-14T10:40:00.502467+00:00"
+  }
+]

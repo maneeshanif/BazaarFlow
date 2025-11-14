@@ -8,6 +8,7 @@ import {
   Package,
   Settings,
   Home,
+  MessageCircle,
 } from "lucide-react";
 import {
   Sidebar,
@@ -37,6 +38,11 @@ const menuItems = [
     title: "Inventory",
     url: "/dashboard/inventory",
     icon: Package,
+  },
+  {
+    title: "Sales",
+    url: "/dashboard/sales",
+    icon: MessageCircle,
   },
 ];
 
@@ -68,7 +74,7 @@ export function DashboardSidebar() {
             <SidebarMenu>
               {menuItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = pathname === item.url;
+                const isActive = pathname === item.url || pathname.startsWith(`${item.url}/`);
                 
                 return (
                   <SidebarMenuItem key={item.title}>

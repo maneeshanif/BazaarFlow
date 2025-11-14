@@ -12,6 +12,8 @@ BACKEND_DIR = HERE.parent
 sys.path.insert(0, str(BACKEND_DIR))
 
 import app as app_module
+import services.inventory_service as inventory_service
+import services.sales_service as sales_service
 
 
 class DummyResp:
@@ -24,21 +26,35 @@ class DummyWA:
         return DummyResp()
 
 
-def clear_orders_file():
-    orders_file = BACKEND_DIR / "data" / "sales_orders.json"
-    if orders_file.exists():
-        orders_file.unlink()
+@pytest.fixture
+def sales_test_env(tmp_path, monkeypatch):
+    inventory_file = tmp_path / "inventory.json"
+    inventory_payload = [
+        {
+            "sku": "sku-test-1",
+            "name": "Test Product",
+            "category": "test",
+            "price": 1500,
+            "stock": 5,
+            "reorder_point": 1,
+            "incoming": 0,
+            "supplier": "Test Supplier",
+            "last_restocked": "2024-01-01",
+        }
+    ]
+    inventory_file.write_text(json.dumps(inventory_payload), encoding="utf-8")
+
+    test_inventory = inventory_service.InventoryAnalyticsService(data_path=inventory_file)
+    monkeypatch.setattr(inventory_service, "inventory_analytics_service", test_inventory)
+    monkeypatch.setattr(sales_service, "inventory_analytics_service", test_inventory)
+
+    orders_file = tmp_path / "sales_orders.json"
+    monkeypatch.setattr(sales_service, "ORDERS_FILE", orders_file)
+
+    return orders_file
 
 
-@pytest.fixture(autouse=True)
-def cleanup_before_and_after():
-    # Ensure a clean state for each test
-    clear_orders_file()
-    yield
-    clear_orders_file()
-
-
-def test_create_and_list_sales(monkeypatch):
+def test_create_and_list_sales(monkeypatch, sales_test_env):
     # Replace wa to avoid network calls during app startup
     monkeypatch.setattr(app_module, "wa", DummyWA())
 
@@ -47,7 +63,7 @@ def test_create_and_list_sales(monkeypatch):
     payload = {
         "customer_name": "Test User",
         "customer_phone": "+923001112233",
-        "product_id": "sku-test-1",
+        "product_id": "",  # sales service should resolve SKU
         "product_name": "Test Product",
         "quantity": 2,
         "budget": "1000-2000",
@@ -64,7 +80,9 @@ def test_create_and_list_sales(monkeypatch):
     order = body.get("order")
     assert order is not None
     assert order["customer_name"] == payload["customer_name"]
-    assert order["product_id"] == payload["product_id"]
+    assert order["product_id"] == "sku-test-1"
+    snapshot = order.get("inventory_snapshot")
+    assert snapshot["remaining_stock"] == 3
     assert "id" in order
 
     # List orders
@@ -77,7 +95,7 @@ def test_create_and_list_sales(monkeypatch):
     assert any(o["id"] == order["id"] for o in orders)
 
     # Verify persistence file exists and contains the order
-    orders_file = BACKEND_DIR / "data" / "sales_orders.json"
+    orders_file = sales_test_env
     assert orders_file.exists()
     with orders_file.open("r", encoding="utf-8") as f:
         saved = json.load(f)

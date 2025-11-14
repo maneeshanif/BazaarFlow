@@ -217,9 +217,9 @@ export default function AgentsPage() {
                       The Sales Agent is your 24/7 customer service representative, handling all WhatsApp interactions with customers.
                     </p>
                     <div className="bg-muted/50 p-6 rounded-lg space-y-3">
-                      <p className="font-mono text-sm">1. Customer sends: "I want 2 iPhone chargers"</p>
+                      <p className="font-mono text-sm">1. Customer sends: &ldquo;I want 2 iPhone chargers&rdquo;</p>
                       <p className="font-mono text-sm">2. Agent checks inventory availability</p>
-                      <p className="font-mono text-sm">3. Confirms order and price: "PKR 2,400"</p>
+                      <p className="font-mono text-sm">3. Confirms order and price: &ldquo;PKR 2,400&rdquo;</p>
                       <p className="font-mono text-sm">4. Sends payment instructions</p>
                       <p className="font-mono text-sm">5. Generates digital receipt</p>
                     </div>
@@ -246,7 +246,7 @@ export default function AgentsPage() {
                       <p className="font-mono text-sm">1. Collects sales data throughout the week</p>
                       <p className="font-mono text-sm">2. Analyzes trends and patterns</p>
                       <p className="font-mono text-sm">3. Generates weekly summary (Urdu/English)</p>
-                      <p className="font-mono text-sm">4. Predicts next week's demand</p>
+                      <p className="font-mono text-sm">4. Predicts next week&rsquo;s demand</p>
                       <p className="font-mono text-sm">5. Suggests pricing optimizations</p>
                     </div>
                   </TabsContent>

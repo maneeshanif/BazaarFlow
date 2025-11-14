@@ -7,9 +7,9 @@ import sys
 
 from agents import Runner, SQLiteSession, enable_verbose_stdout_logging
 
-from my_agents.sales_agent import sales_agent
-from my_agents.finance_agent import finance_agent
-from my_agents.inventory_agent import inventory_agent
+from ..my_agents.sales_agent import sales_agent
+from ..my_agents.finance_agent import finance_agent
+from ..my_agents.inventory_agent import inventory_agent
 
 logger = logging.getLogger(__name__)
 

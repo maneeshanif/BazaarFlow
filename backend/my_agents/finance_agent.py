@@ -5,16 +5,18 @@ import os
 from agents import Agent, AsyncOpenAI, OpenAIChatCompletionsModel
 from dotenv import find_dotenv, load_dotenv
 
-from my_agents.tool.finance_tool import (
+from .tool.finance_tool import (
     payment_status_overview,
     payment_method_breakdown,
     recent_pending_payments,
     create_customer_order,
 )
+from agents import set_tracing_disabled
 
 logger = logging.getLogger(__name__)
 
 load_dotenv(find_dotenv())
+set_tracing_disabled(True)
 
 _api_key = os.getenv("GEMINI_API_KEY")
 if not _api_key:

@@ -6,7 +6,7 @@ lookups (uses the MCP server PRODUCTS_DB).
 """
 from agents import function_tool
 from typing import List
-from mcp_server.server import PRODUCTS_DB
+from ...mcp_server.server import PRODUCTS_DB
 
 
 @function_tool

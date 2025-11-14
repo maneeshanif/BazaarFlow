@@ -3,7 +3,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 
-from services.inventory_service import inventory_analytics_service
+from ..services.inventory_service import inventory_analytics_service
 
 router = APIRouter(prefix="/api/inventory", tags=["inventory"])
 

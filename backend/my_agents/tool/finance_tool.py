@@ -1,8 +1,8 @@
 """Tool functions used by the finance agent."""
 from agents import function_tool
 
-from services.finance_service import finance_analytics_service
-from services.sales_service import save_order
+from ...services.finance_service import finance_analytics_service
+from ...services.sales_service import save_order
 
 
 def _format_summary(summary: dict[str, dict[str, int]]) -> str:
@@ -93,13 +93,23 @@ def create_customer_order(
     
     try:
         order = save_order(payload)
-        return (
-            f"✅ Order #{order['id']} created successfully!\n"
-            f"Product: {product_name}\n"
-            f"Quantity: {quantity}\n"
-            f"Customer: {customer_name}\n"
-            f"Delivery to: {delivery_address}\n"
-            f"Status: Order Placed ✓"
-        )
-    except Exception as e:
-        return f"❌ Failed to create order: {str(e)}"
+    except ValueError as exc:
+        return f"❌ {exc}"
+    except Exception as exc:  # pragma: no cover - defensive path for unexpected errors
+        return f"❌ Failed to create order: {exc}"
+
+    snapshot = order.get("inventory_snapshot", {})
+    remaining = snapshot.get("remaining_stock")
+    inventory_line = ""
+    if remaining is not None:
+        inventory_line = f"\nStock remaining: {remaining} unit(s)"
+
+    return (
+        f"✅ Order #{order['id']} created successfully!\n"
+        f"Product: {order.get('product_name', product_name)}\n"
+        f"Quantity: {quantity}\n"
+        f"Customer: {customer_name}\n"
+        f"Delivery to: {delivery_address}\n"
+        f"Status: Order Placed ✓"
+        f"{inventory_line}"
+    )
