@@ -60,7 +60,7 @@ app.include_router(vendors_router)
 # Include API routes up front so pywa can register its handlers against the same app
 app.include_router(sales_router, prefix="/api")
 app.include_router(chat_router, prefix="/api")
-app.include_router(inventory_router, prefix="/api")
+app.include_router(inventory_router)
 
 @app.get("/health")
 async def healthcheck():

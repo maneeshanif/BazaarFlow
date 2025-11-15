@@ -21,7 +21,7 @@ if str(TEST_ROOT) not in sys.path:
 import pytest
 
 from config.fb_config import FacebookConfig
-from exceptions import FacebookAPIError, ImageUploadError, PostCreationError
+from src.exceptions import FacebookAPIError, ImageUploadError, PostCreationError
 from facebook_manager import FacebookManager
 from models.fb_model import (
     CommentReplyRequest,

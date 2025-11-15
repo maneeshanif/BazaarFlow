@@ -4,7 +4,7 @@
     "name": "iPhone 15",
     "category": "mobile",
     "price": 289999,
-    "stock": 11,
+    "stock": 10,
     "reorder_point": 8,
     "incoming": 25,
     "supplier": "Apple Middle East",
@@ -48,11 +48,11 @@
     "name": "Surface Pro 10",
     "category": "computer",
     "price": 349999,
-    "stock": 4,
+    "stock": 14,
     "reorder_point": 6,
     "incoming": 15,
     "supplier": "Microsoft Gulf",
-    "last_restocked": "2024-10-05"
+    "last_restocked": "2025-11-15T22:28:25.412507"
   },
   {
     "sku": "SKU-AIRPODS-PRO3",

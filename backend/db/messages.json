@@ -4022,5 +4022,427 @@
       ]
     },
     "timestamp": "2025-11-15T12:58:16.562087+00:00"
+  },
+  {
+    "id": "e0571435-a166-4e4c-8c53-a8cfd379647f",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "Hello world bro",
+    "raw_payload": {
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUM5MTU1NURDRDU4QkFDQjEwMzNDOUQ2MUZGOTc2ODkA",
+      "timestamp": "1763214724",
+      "text": {
+        "body": "Hello world bro"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-15T13:52:04+00:00"
+  },
+  {
+    "id": "5bb41d6e-c003-465b-a63b-b6f4e4ff159f",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "\ud83d\udc55 T-shirts: We've got you covered! Check out our stylish T-shirts, prices may vary. Want to see more?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSMkZGOTkzMDcyQ0NENEY1RTEzAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-15T13:57:48.559363+00:00"
+  },
+  {
+    "id": "79708ecd-4ecf-4117-b602-71314e4c6fdf",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "Yess",
+    "raw_payload": {
+      "context": {
+        "from": "15551603580",
+        "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSMkZGOTkzMDcyQ0NENEY1RTEzAA=="
+      },
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUM0M0Y4NkFEMTg2NDdGQjI2NzI0OTQ5RTk3QkY2RDYA",
+      "timestamp": "1763215095",
+      "text": {
+        "body": "Yess"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-15T13:58:15+00:00"
+  },
+  {
+    "id": "f0ee4328-63f1-4ee7-a6e0-d5e098e966dd",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "We've got some great T-shirts for you! Check out our 'Cotton Tee' and 'V-Neck Tee'. Prices are available upon request. \ud83d\ude09 Want to grab one today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSRDkwMEVDRDY2OUY2MTM0MTdGAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-15T13:58:20.508544+00:00"
+  },
+  {
+    "id": "7ba7f1c0-3aa9-4967-8022-87e898aca526",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "Yeah I want the v necks details",
+    "raw_payload": {
+      "context": {
+        "from": "15551603580",
+        "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSRDkwMEVDRDY2OUY2MTM0MTdGAA=="
+      },
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUNCOTI1NjlDNkY4RDJGNkVDREEzRkM4Mzg4MTQ2OEQA",
+      "timestamp": "1763215121",
+      "text": {
+        "body": "Yeah I want the v necks details"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-15T13:58:41+00:00"
+  },
+  {
+    "id": "9625c253-182a-4ceb-ba2b-b8c7f1a99948",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "We found one V-Neck Tee for sale! \ud83d\udc55 Check it out!",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSM0Q1NTVBQ0JCRjYzMEVFOEUxAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-15T13:58:46.720424+00:00"
+  },
+  {
+    "id": "9cb03831-5b68-4001-acdb-9a652c1ce26c",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "Yeah gimme details",
+    "raw_payload": {
+      "context": {
+        "from": "15551603580",
+        "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSM0Q1NTVBQ0JCRjYzMEVFOEUxAA=="
+      },
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUMzMjkxQzQxMTM5NDFDN0EyMERCOUZEQ0JCNUUzOUQA",
+      "timestamp": "1763215138",
+      "text": {
+        "body": "Yeah gimme details"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-15T13:58:58+00:00"
+  },
+  {
+    "id": "e9108b6e-b115-496e-8494-cdc83a6d0c62",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "Ok, I can help with that! To place the order, I need a little more info:\n\n* Your full name\n* Phone number\n* Delivery address\n* How many V-Neck Tees would you like to order? \ud83d\udecd\ufe0f",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSMEU0OUNGNEVCNzg5RTk1QjRDAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-15T13:59:04.353805+00:00"
+  },
+  {
+    "id": "54820afa-d6ea-41c9-8a5f-86cebcf78318",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "Habib ullah\n837353782\nYuck fu city\n1 v neck t shirt",
+    "raw_payload": {
+      "context": {
+        "from": "15551603580",
+        "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSMEU0OUNGNEVCNzg5RTk1QjRDAA=="
+      },
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUMzODY3RTJGRTFFOUY3QTY3QzJGQTMzNjkyQ0UyRTYA",
+      "timestamp": "1763215289",
+      "text": {
+        "body": "Habib ullah\n837353782\nYuck fu city\n1 v neck t shirt"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-15T14:01:29+00:00"
+  },
+  {
+    "id": "eb5644e5-a7ff-403d-b217-9d8f9b1efc73",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "Sorry, Habib ullah, V-Neck Tee is not available. \ud83d\ude14 Is there anything else I can help with?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSOUQ0NUY0NjJGMjA4NkI2QUFBAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-15T14:01:36.906584+00:00"
+  },
+  {
+    "id": "7d257784-7cd4-49ec-ba4a-7a489345e22d",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "So what else u got",
+    "raw_payload": {
+      "context": {
+        "from": "15551603580",
+        "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSOUQ0NUY0NjJGMjA4NkI2QUFBAA=="
+      },
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUM1NjUyQjMxRjEwQjRERkVFNzc2NzREQkY0RUIxNzYA",
+      "timestamp": "1763215371",
+      "text": {
+        "body": "So what else u got"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-15T14:02:51+00:00"
+  },
+  {
+    "id": "4365769d-5e30-4636-90e7-5d66433715bc",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "Check out these hot items: iPhone 15 (PKR 289,999)\ud83d\udcf1, MacBook Air M3 (PKR 399,999)\ud83d\udcbb, Samsung Galaxy S24 (PKR 249,999)\ud83d\udcf1, Google Pixel 9 (PKR 199,999)\ud83d\udcf1, Surface Pro 10 (PKR 349,999)\ud83d\udcbb, and AirPods Pro 3 (PKR 79,999)\ud83c\udfa7! Need anything else?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSNkYyQUVEOTUyODNFRUU5ODE0AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-15T14:02:59.129261+00:00"
+  },
+  {
+    "id": "4b60ce1e-1634-4e9f-ad5f-7deb749cff11",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "I wanna purchase iphone 15",
+    "raw_payload": {
+      "context": {
+        "from": "15551603580",
+        "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSNkYyQUVEOTUyODNFRUU5ODE0AA=="
+      },
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUNDNEMwNUQ3QjZCMjdGRjIzNjAzMkU1NkIxNzFBM0UA",
+      "timestamp": "1763215393",
+      "text": {
+        "body": "I wanna purchase iphone 15"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-15T14:03:13+00:00"
+  },
+  {
+    "id": "cfc4b949-cb7b-4a63-9dc5-4914e03b26ea",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "Great choice! To place your order, I need a bit more information:\n\n* What's your full name?\n* What's your phone number?\n* What's the delivery address?\n* How many units do you want?\n\nDo you have any notes or a budget in mind? \u270d\ufe0f",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSNURFRjQzQ0VFMERCN0ZBQ0U4AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-15T14:03:20.508563+00:00"
+  },
+  {
+    "id": "cb60ffcc-366b-4492-979b-7f98a31fada1",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "1. Habib ullah \n2. 73829203\n3. Yuck fu city flat 14242\n4. One unit",
+    "raw_payload": {
+      "context": {
+        "from": "15551603580",
+        "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSNURFRjQzQ0VFMERCN0ZBQ0U4AA=="
+      },
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUM4NkNGMTc0QTVBQjg3QTQ0NDgxMjJBNDNEMUVCRkYA",
+      "timestamp": "1763215449",
+      "text": {
+        "body": "1. Habib ullah \n2. 73829203\n3. Yuck fu city flat 14242\n4. One unit"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-15T14:04:09+00:00"
+  },
+  {
+    "id": "543024ab-c06c-4248-845f-4cbd7d79f164",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "Great news! \ud83c\udf89 Order #15 has been placed for 1 iPhone 15, to be delivered to Habib ullah at Yuck fu city flat 14242. \ud83d\udce6",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSQTdGRTYxNEQ1MTkwOTJGNzY1AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-15T14:04:18.209103+00:00"
+  },
+  {
+    "id": "b7823707-4b1f-4098-800d-84ebd4bb6a92",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "inbound",
+    "text": "Ala",
+    "raw_payload": {
+      "context": {
+        "from": "15551603580",
+        "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSQTdGRTYxNEQ1MTkwOTJGNzY1AA=="
+      },
+      "from": "923343295024",
+      "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAEhggQUM5NzhBNDkzQ0ZBMkRCQjlFNDhFODk1OTIxRDFCNDYA",
+      "timestamp": "1763215505",
+      "text": {
+        "body": "Ala"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-15T14:05:05+00:00"
+  },
+  {
+    "id": "1414ba49-a9fb-42ed-ba69-f9d3793eb588",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923343295024",
+    "direction": "outbound",
+    "text": "Great! Your iPhone 15 is reserved and ready to go. Let me know if you need anything else!",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923343295024",
+          "wa_id": "923343295024"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMzQzMjk1MDI0FQIAERgSM0M5RkY3MDg2RTNEOTE4MkVEAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-15T14:05:08.885672+00:00"
+  },
+  {
+    "id": "904e4b36-f5f5-4982-a63f-39c0fc4bb49b",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDc4MDgyQUE0MEFEN0EwRDlBQwA=",
+      "timestamp": "1763194263",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-15T08:11:03+00:00"
+  },
+  {
+    "id": "7f934629-b38d-446e-b20f-9c2aed22ab78",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSNkE2QTYwQ0I4RDRDMjE5OUE3AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-15T18:32:51.047572+00:00"
   }
 ]

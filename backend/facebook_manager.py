@@ -31,11 +31,11 @@ from models.fb_model import (
     ReactionBreakdown,
     InsightPeriod,
 )
-from exceptions import (
+from src.exceptions import (
     FacebookAPIError,
     InvalidCredentialsError,
     PostCreationError,
-    ImageUploadError
+    ImageUploadError,
 )
 
 
