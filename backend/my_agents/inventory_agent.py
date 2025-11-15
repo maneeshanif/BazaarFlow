@@ -2,8 +2,9 @@
 import logging
 import os
 
-from agents import Agent, AsyncOpenAI, OpenAIChatCompletionsModel
-from dotenv import find_dotenv, load_dotenv
+from agents import Agent
+from .model import model
+
 from agents import set_tracing_disabled
 
 from .tool.inventory_tool import (
@@ -16,25 +17,8 @@ from .tool.inventory_tool import (
 
 logger = logging.getLogger(__name__)
 
-load_dotenv(find_dotenv())
+
 set_tracing_disabled(True)
-
-_api_key = os.getenv("GEMINI_API_KEY")
-if not _api_key:
-    logger.warning(
-        "GEMINI_API_KEY not set; using placeholder key. Inventory agent responses will fail until configured."
-    )
-    _api_key = "placeholder-test-key"
-
-_external_client = AsyncOpenAI(
-    api_key=_api_key,
-    base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
-)
-
-_model = OpenAIChatCompletionsModel(
-    model=os.getenv("OPENAI_MODEL", "gemini-2.0-flash"),
-    openai_client=_external_client,
-)
 
 inventory_agent = Agent(
     name="inventoryagent",
@@ -64,7 +48,7 @@ For vendor/admin queries:
 Always report item names exactly as stored, note if price data is unavailable, and
 offer a follow-up CTA.
 """,
-    model=_model,
+    model=model,
     tools=[
         inventory_stock_overview,
         inventory_restock_alerts,
