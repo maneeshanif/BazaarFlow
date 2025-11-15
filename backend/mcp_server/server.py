@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 # Initialize the MCP server
-mcp = FastMCP(name="BazaarFlow Sales Tools", stateless_http=True,
+mcp = FastMCP(name="BazaarFlow Sales Tools", stateless_http=False,
     json_response=True, # Generally easier for HTTP clients if they don't need full SSE parsing
     )
 
