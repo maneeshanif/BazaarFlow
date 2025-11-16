@@ -1,0 +1,175 @@
+[
+  {
+    "record_id": "c6b6ba41-8048-43fe-b66e-95785f008701",
+    "account_id": "65c34594-fc34-4c2f-a41c-e05535ccb3be",
+    "user_id": "admin",
+    "facebook_post_id": "122100015243119888",
+    "message": "Upgrade your tech! \ud83d\udcf1 The new iPhone is here and selling fast. Get yours before they're gone! Limited stock available. Don't miss out!\n\n#iphone #newphone #sale #smartphone #tech #upgrade",
+    "image_url": "https://images.pexels.com/photos/772831/pexels-photo-772831.jpeg?auto=compress&cs=tinysrgb&h=350",
+    "product_sku": null,
+    "hashtags": [
+      "iphone",
+      "newphone",
+      "tech",
+      "sale",
+      "upgrade",
+      "smartphone"
+    ],
+    "angle": "New iPhone release hype",
+    "source": "manual",
+    "extra": {
+      "campaign": {
+        "message": "Upgrade your tech! \ud83d\udcf1 The new iPhone is here and selling fast. Get yours before they're gone! Limited stock available. Don't miss out!",
+        "hashtags": [
+          "iphone",
+          "newphone",
+          "tech",
+          "sale",
+          "upgrade",
+          "smartphone"
+        ],
+        "angle": "New iPhone release hype",
+        "image_url": "https://images.pexels.com/photos/772831/pexels-photo-772831.jpeg?auto=compress&cs=tinysrgb&h=350",
+        "image_query": "new iPhone",
+        "product_sku": null,
+        "call_to_action": "Shop the new iPhone now!"
+      }
+    },
+    "created_at": "2025-11-15T20:46:59.708701+00:00",
+    "updated_at": "2025-11-15T20:54:56.994047+00:00",
+    "insights": {
+      "post_id": "122100015243119888",
+      "period": "lifetime",
+      "reach": 0,
+      "impressions": 0,
+      "reactions": {
+        "like": 1,
+        "love": 0,
+        "wow": 0,
+        "haha": 0,
+        "sad": 0,
+        "angry": 0,
+        "care": 0
+      },
+      "comments_count": 0,
+      "shares_count": 0,
+      "clicked": 0,
+      "engagement_rate": 0.0,
+      "retrieved_at": "2025-11-15T20:54:56.993600+00:00"
+    }
+  },
+  {
+    "record_id": "32953685-63be-4974-a1c1-23ecad8b9d2a",
+    "account_id": "65c34594-fc34-4c2f-a41c-e05535ccb3be",
+    "user_id": "admin",
+    "facebook_post_id": "122100024267119888",
+    "message": "Upgrade your tech! \ud83d\udcf1 The latest iPhones are here! Experience the best in innovation and design. Get yours today and stay ahead! \ud83d\ude80\n\n#Innovation #NewTech #Smartphone #Upgrade #iPhone",
+    "image_url": "https://images.pexels.com/photos/3568518/pexels-photo-3568518.jpeg?auto=compress&cs=tinysrgb&h=350",
+    "product_sku": null,
+    "hashtags": [
+      "iPhone",
+      "NewTech",
+      "Upgrade",
+      "Smartphone",
+      "Innovation"
+    ],
+    "angle": "Highlighting new iPhone arrivals.",
+    "source": "manual",
+    "extra": {
+      "campaign": {
+        "message": "Upgrade your tech! \ud83d\udcf1 The latest iPhones are here! Experience the best in innovation and design. Get yours today and stay ahead! \ud83d\ude80",
+        "hashtags": [
+          "iPhone",
+          "NewTech",
+          "Upgrade",
+          "Smartphone",
+          "Innovation"
+        ],
+        "angle": "Highlighting new iPhone arrivals.",
+        "image_url": "https://images.pexels.com/photos/3568518/pexels-photo-3568518.jpeg?auto=compress&cs=tinysrgb&h=350",
+        "image_query": "iPhone",
+        "product_sku": null,
+        "call_to_action": "Shop the new iPhone collection now."
+      }
+    },
+    "created_at": "2025-11-15T21:01:53.656420+00:00",
+    "updated_at": "2025-11-15T21:22:43.452369+00:00",
+    "insights": {
+      "post_id": "122100024267119888",
+      "period": "lifetime",
+      "reach": 1,
+      "impressions": 1,
+      "reactions": {
+        "like": 1,
+        "love": 0,
+        "wow": 0,
+        "haha": 0,
+        "sad": 0,
+        "angry": 0,
+        "care": 0
+      },
+      "comments_count": 0,
+      "shares_count": 0,
+      "clicked": 0,
+      "engagement_rate": 100.0,
+      "retrieved_at": "2025-11-15T21:22:43.452106+00:00"
+    }
+  },
+  {
+    "record_id": "a5cfdb29-cdab-42f1-bf66-0d61090ed700",
+    "account_id": "65c34594-fc34-4c2f-a41c-e05535ccb3be",
+    "user_id": "admin",
+    "facebook_post_id": "882314041626021_122100494025119888",
+    "message": "Level up your game with our unbeatable deals on gaming PCs and laptops! \ud83d\ude80 High performance, zero lag. Limited stock available, grab yours now! \ud83d\udd25\n\n#deals #gaminglaptop #gamingpc #gamingsetup #pcgaming",
+    "image_url": "https://images.pexels.com/photos/3568521/pexels-photo-3568521.jpeg?auto=compress&cs=tinysrgb&h=350",
+    "product_sku": null,
+    "hashtags": [
+      "gamingpc",
+      "gaminglaptop",
+      "pcgaming",
+      "deals",
+      "gamingsetup"
+    ],
+    "angle": "Gaming pc and laptop sale",
+    "source": "manual",
+    "extra": {
+      "campaign": {
+        "message": "Level up your game with our unbeatable deals on gaming PCs and laptops! \ud83d\ude80 High performance, zero lag. Limited stock available, grab yours now! \ud83d\udd25",
+        "hashtags": [
+          "gamingpc",
+          "gaminglaptop",
+          "pcgaming",
+          "deals",
+          "gamingsetup"
+        ],
+        "angle": "Gaming pc and laptop sale",
+        "image_url": "https://images.pexels.com/photos/3568521/pexels-photo-3568521.jpeg?auto=compress&cs=tinysrgb&h=350",
+        "image_query": "gaming PC laptop setup",
+        "product_sku": null,
+        "call_to_action": "Shop now and elevate your game!"
+      }
+    },
+    "created_at": "2025-11-16T11:31:27.954770+00:00",
+    "updated_at": "2025-11-16T11:47:06.812643+00:00",
+    "insights": {
+      "post_id": "882314041626021_122100494025119888",
+      "period": "lifetime",
+      "reach": 0,
+      "impressions": 0,
+      "reactions": {
+        "like": 0,
+        "love": 0,
+        "wow": 0,
+        "haha": 0,
+        "sad": 0,
+        "angry": 0,
+        "care": 0
+      },
+      "comments_count": 1,
+      "shares_count": 0,
+      "clicked": 0,
+      "engagement_rate": 0.0,
+      "retrieved_at": "2025-11-16T11:47:06.812191+00:00"
+    }
+  }
+]

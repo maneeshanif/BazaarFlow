@@ -15,6 +15,7 @@ from .controllers.webhook_controller import router as webhook_router
 from .controllers.sales_controller import router as sales_router
 from .controllers.chat_controller import router as chat_router
 from .controllers.inventory_controller import router as inventory_router
+from .controllers.marketing_controller import router as marketing_router
 
 
 
@@ -61,6 +62,7 @@ app.include_router(vendors_router)
 app.include_router(sales_router, prefix="/api")
 app.include_router(chat_router, prefix="/api")
 app.include_router(inventory_router)
+app.include_router(marketing_router)
 
 @app.get("/health")
 async def healthcheck():

@@ -12,31 +12,58 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-from config.fb_config import FacebookConfig, get_config
-from models.fb_model import (
-    TextPostRequest,
-    ImagePostRequest,
-    VideoPostRequest,
-    FacebookPostResponse,
-    FacebookErrorResponse,
-    PostType,
-    CommentData,
-    CommentsResponse,
-    CommentReplyRequest,
-    CommentReactionRequest,
-    CommentActionResponse,
-    ReactionType,
-    PostInsights,
-    PageInsights,
-    ReactionBreakdown,
-    InsightPeriod,
-)
-from src.exceptions import (
-    FacebookAPIError,
-    InvalidCredentialsError,
-    PostCreationError,
-    ImageUploadError,
-)
+try:
+    from .config.fb_config import FacebookConfig, get_config
+    from .models.fb_model import (
+        TextPostRequest,
+        ImagePostRequest,
+        VideoPostRequest,
+        FacebookPostResponse,
+        FacebookErrorResponse,
+        PostType,
+        CommentData,
+        CommentsResponse,
+        CommentReplyRequest,
+        CommentReactionRequest,
+        CommentActionResponse,
+        ReactionType,
+        PostInsights,
+        PageInsights,
+        ReactionBreakdown,
+        InsightPeriod,
+    )
+    from .src.exceptions import (
+        FacebookAPIError,
+        InvalidCredentialsError,
+        PostCreationError,
+        ImageUploadError,
+    )
+except ImportError:  # pragma: no cover - fallback for script-style imports
+    from config.fb_config import FacebookConfig, get_config
+    from models.fb_model import (
+        TextPostRequest,
+        ImagePostRequest,
+        VideoPostRequest,
+        FacebookPostResponse,
+        FacebookErrorResponse,
+        PostType,
+        CommentData,
+        CommentsResponse,
+        CommentReplyRequest,
+        CommentReactionRequest,
+        CommentActionResponse,
+        ReactionType,
+        PostInsights,
+        PageInsights,
+        ReactionBreakdown,
+        InsightPeriod,
+    )
+    from src.exceptions import (
+        FacebookAPIError,
+        InvalidCredentialsError,
+        PostCreationError,
+        ImageUploadError,
+    )
 
 
 logger = logging.getLogger(__name__)
@@ -258,7 +285,7 @@ class FacebookManager:
             data=data
         )
         
-        post_id = response.get('id') or response.get('post_id')
+        post_id = response.get('post_id') or response.get('id')
         
         if not post_id:
             raise ImageUploadError("No post ID returned from Facebook")
@@ -316,7 +343,7 @@ class FacebookManager:
                 files=files
             )
         
-        post_id = response.get('id') or response.get('post_id')
+        post_id = response.get('post_id') or response.get('id')
         
         if not post_id:
             raise ImageUploadError("No post ID returned from Facebook")
@@ -378,7 +405,7 @@ class FacebookManager:
             raise InvalidCredentialsError(f"Invalid credentials: {str(e)}")
     
     def normalize_post_id(self, raw_post_id: str) -> str:
-        """Ensure we are using the feed-style `pageId_postId` identifier."""
+        """Normalize the post identifier for Graph API operations."""
 
         if "_" in raw_post_id:
             return raw_post_id
@@ -392,9 +419,25 @@ class FacebookManager:
 
             post_id = response.get("post_id") or response.get("id")
             if isinstance(post_id, str) and "_" in post_id:
+                logger.debug("Resolved raw post id %s to feed id %s", raw_post_id, post_id)
                 return post_id
-        except FacebookAPIError:
-            logger.debug("Could not normalize post id %s; using raw value.", raw_post_id)
+        except FacebookAPIError as exc:
+            logger.debug("Could not resolve raw post id %s via direct lookup: %s", raw_post_id, exc)
+
+        candidate = f"{self.config.facebook_page_id}_{raw_post_id}"
+        if "_" in candidate:
+            try:
+                self._make_request(
+                    method="GET",
+                    endpoint=candidate,
+                    params={"fields": "id"}
+                )
+                logger.debug("Using page-prefixed candidate %s for post %s", candidate, raw_post_id)
+                return candidate
+            except FacebookAPIError as exc:
+                logger.debug(
+                    "Prefixed lookup for post id %s (%s) failed: %s", raw_post_id, candidate, exc
+                )
 
         return raw_post_id
 
@@ -426,6 +469,36 @@ class FacebookManager:
             
         except FacebookAPIError as e:
             logger.error(f"Failed to retrieve post: {str(e)}")
+            raise
+
+    def delete_post(self, post_id: str) -> bool:
+        """Delete a post from the configured Facebook page."""
+
+        try:
+            normalized_id = self.normalize_post_id(post_id)
+            logger.info(f"Deleting post: {normalized_id}")
+            response = self._make_request(method="DELETE", endpoint=normalized_id)
+            success = response.get("success")
+            if success is None:
+                return True
+            return bool(success)
+        except FacebookAPIError as e:
+            if normalized_id != post_id:
+                logger.debug(
+                    "Delete via normalized id %s failed (%s); retrying with raw id %s",
+                    normalized_id,
+                    e,
+                    post_id,
+                )
+                try:
+                    response = self._make_request(method="DELETE", endpoint=post_id)
+                    success = response.get("success")
+                    if success is None:
+                        return True
+                    return bool(success)
+                except FacebookAPIError as inner_exc:
+                    logger.debug("Fallback delete using %s also failed: %s", post_id, inner_exc)
+            logger.error(f"Failed to delete post: {str(e)}")
             raise
     
     # ========================================================================

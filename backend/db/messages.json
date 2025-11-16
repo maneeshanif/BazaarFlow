@@ -4444,5 +4444,44 @@
       ]
     },
     "timestamp": "2025-11-15T18:32:51.047572+00:00"
+  },
+  {
+    "id": "6bdbf024-e263-46e3-bbc0-37ade3a0b47a",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDJERDU3MjhBMkIzOTIwQTY5NQA=",
+      "timestamp": "1763190922",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-15T07:15:22+00:00"
+  },
+  {
+    "id": "ce8327fc-8089-4f0e-8f2f-70eed68ce4b4",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSQ0MxRjNCQjNBQjhGNDNDQjkxAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-15T20:56:29.249771+00:00"
   }
 ]

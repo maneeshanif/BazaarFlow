@@ -1,8 +1,7 @@
 """Public package surface for the Facebook Manager toolkit."""
 
-from facebook_manager import FacebookManager
-from config.fb_config import FacebookConfig, get_config, load_config
-from models.fb_model import (
+from ..config.fb_config import FacebookConfig, get_config, load_config
+from ..models.fb_model import (
     CommentActionResponse,
     CommentData,
     CommentReactionRequest,
@@ -20,6 +19,12 @@ from models.fb_model import (
     TextPostRequest,
     VideoPostRequest,
 )
+from .exceptions import (
+    FacebookAPIError,
+    ImageUploadError,
+    InvalidCredentialsError,
+    PostCreationError,
+)
 
 __all__ = [
     "CommentActionResponse",
@@ -27,19 +32,22 @@ __all__ = [
     "CommentReactionRequest",
     "CommentReplyRequest",
     "CommentsResponse",
+    "FacebookAPIError",
     "FacebookConfig",
     "FacebookErrorResponse",
-    "FacebookManager",
     "FacebookPostResponse",
     "ImagePostRequest",
     "InsightPeriod",
+    "InvalidCredentialsError",
     "PageInsights",
     "PostInsights",
     "PostType",
+    "PostCreationError",
     "ReactionBreakdown",
     "ReactionType",
     "TextPostRequest",
     "VideoPostRequest",
+    "ImageUploadError",
     "get_config",
     "load_config",
 ]

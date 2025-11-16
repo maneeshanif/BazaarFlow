@@ -9,6 +9,7 @@ import {
   Settings,
   Home,
   MessageCircle,
+  Megaphone,
 } from "lucide-react";
 import {
   Sidebar,
@@ -43,6 +44,11 @@ const menuItems = [
     title: "Sales",
     url: "/dashboard/sales",
     icon: MessageCircle,
+  },
+  {
+    title: "Marketing",
+    url: "/dashboard/marketing",
+    icon: Megaphone,
   },
 ];
 
