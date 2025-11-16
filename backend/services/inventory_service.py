@@ -282,5 +282,17 @@ class InventoryAnalyticsService:
                 return item
         return None
 
+    def delete_item(self, sku: str) -> Optional[dict]:
+        """Remove an inventory item by SKU."""
+        items = self._ensure_cache().copy()
+
+        for index, item in enumerate(items):
+            if item.get("sku") == sku:
+                removed = items.pop(index)
+                self._write_all(items)
+                return removed
+
+        return None
+
 
 inventory_analytics_service = InventoryAnalyticsService()

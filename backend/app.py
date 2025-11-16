@@ -16,8 +16,14 @@ from .controllers.sales_controller import router as sales_router
 from .controllers.chat_controller import router as chat_router
 from .controllers.inventory_controller import router as inventory_router
 from .controllers.marketing_controller import router as marketing_router
+from .services.marketing_scheduler import marketing_scheduler
 
 
+ENABLE_MARKETING_SCHEDULER = os.getenv("MARKETING_SCHEDULER_ENABLED", "true").lower() in {
+    "1",
+    "true",
+    "yes",
+}
 
 logger = logging.getLogger(__name__)
 
@@ -34,9 +40,15 @@ def _allowed_origins() -> list[str]:
 async def lifespan(app: FastAPI):
     logger.info("Starting BazaarFlow FastAPI app")
     app.state.http_client = httpx.AsyncClient(timeout=30.0)
+    if ENABLE_MARKETING_SCHEDULER:
+        await marketing_scheduler.start()
+    else:
+        logger.info("MARKETING_SCHEDULER_ENABLED flag is false; skipping auto scheduler start")
     try:
         yield
     finally:
+        if ENABLE_MARKETING_SCHEDULER:
+            await marketing_scheduler.stop()
         await app.state.http_client.aclose()
         logger.info("FastAPI app shutdown complete")
 

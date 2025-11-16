@@ -183,7 +183,7 @@ export default function Header() {
             </Button>
 
             <Button asChild size="sm" className="bg-white text-[#174143] hover:bg-[rgb(var(--muted))] font-semibold shadow-lg">
-              <Link href="/sales">Get Started</Link>
+              <Link href="/sign-in">Get Started</Link>
             </Button>
           </div>
 

@@ -20,6 +20,11 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+### Auth demo screens
+
+- `/register` &mdash; marketing-style landing panel with a modal-based registration form. Includes Google sign-in CTA and high-level onboarding copy only.
+- `/sign-in` &mdash; complementary sign-in hero that opens a modal with email/password and Google buttons. Both pages are purely UI; hook them to your preferred auth API when ready.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

@@ -22,6 +22,8 @@ __all__ = [
     "list_marketing_posts",
     "update_post_insights",
     "delete_marketing_post",
+    "record_comment_reply",
+    "get_comment_reply",
 ]
 
 
@@ -44,6 +46,10 @@ def _default_posts() -> List[Dict[str, Any]]:
     return []
 
 
+def _default_comment_replies() -> List[Dict[str, Any]]:
+    return []
+
+
 def _resolve_root() -> Path:
     try:
         import os
@@ -59,18 +65,21 @@ def _resolve_root() -> Path:
 _FACEBOOK_ACCOUNTS_STORE: JsonStore
 _SCHEDULES_STORE: JsonStore
 _POSTS_STORE: JsonStore
+_COMMENT_REPLIES_STORE: JsonStore
 
 
 def configure_marketing_root(root: Path | str) -> None:
     """Initialise marketing JsonStore instances at the given filesystem root."""
 
     global _FACEBOOK_ACCOUNTS_STORE, _SCHEDULES_STORE, _POSTS_STORE
+    global _COMMENT_REPLIES_STORE
     base_path = Path(root)
     base_path.mkdir(parents=True, exist_ok=True)
 
     _FACEBOOK_ACCOUNTS_STORE = JsonStore(base_path / "facebook_accounts.json", _default_accounts)
     _SCHEDULES_STORE = JsonStore(base_path / "marketing_schedules.json", _default_schedules)
     _POSTS_STORE = JsonStore(base_path / "marketing_posts.json", _default_posts)
+    _COMMENT_REPLIES_STORE = JsonStore(base_path / "marketing_comment_replies.json", _default_comment_replies)
 
 
 configure_marketing_root(_resolve_root())
@@ -186,6 +195,10 @@ def get_schedule(account_id: str) -> Optional[Dict[str, Any]]:
     return None
 
 
+def list_schedules() -> List[Dict[str, Any]]:
+    return [_copy(schedule) for schedule in _SCHEDULES_STORE.read()]
+
+
 def mark_schedule_triggered(account_id: str, *, triggered_at: Optional[str] = None) -> Optional[Dict[str, Any]]:
     timestamp = triggered_at or _utcnow()
 
@@ -276,3 +289,53 @@ def delete_marketing_post(*, account_id: str, facebook_post_id: str) -> bool:
         return doc, len(doc) < initial_len
 
     return _POSTS_STORE.update(mutate)
+
+
+def record_comment_reply(
+    *,
+    account_id: str,
+    facebook_post_id: str,
+    comment_id: str,
+    reply_text: str,
+) -> Dict[str, Any]:
+    """Persist the reply that was sent for a specific comment."""
+
+    def mutate(doc: List[Dict[str, Any]]) -> Tuple[List[Dict[str, Any]], Dict[str, Any]]:
+        now = _utcnow()
+        for record in doc:
+            if (
+                record.get("account_id") == account_id
+                and record.get("facebook_post_id") == facebook_post_id
+                and record.get("comment_id") == comment_id
+            ):
+                record["reply_text"] = reply_text
+                record["replied_at"] = now
+                return doc, _copy(record)
+
+        entry = {
+            "account_id": account_id,
+            "facebook_post_id": facebook_post_id,
+            "comment_id": comment_id,
+            "reply_text": reply_text,
+            "replied_at": now,
+        }
+        doc.append(entry)
+        return doc, _copy(entry)
+
+    return _COMMENT_REPLIES_STORE.update(mutate)
+
+
+def get_comment_reply(
+    *,
+    account_id: str,
+    facebook_post_id: str,
+    comment_id: str,
+) -> Optional[Dict[str, Any]]:
+    for record in _COMMENT_REPLIES_STORE.read():
+        if (
+            record.get("account_id") == account_id
+            and record.get("facebook_post_id") == facebook_post_id
+            and record.get("comment_id") == comment_id
+        ):
+            return _copy(record)
+    return None

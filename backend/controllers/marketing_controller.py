@@ -76,6 +76,11 @@ class ScheduledTriggerRequest(BaseModel):
     triggered_at: Optional[str] = None
 
 
+class CommentReplyPayload(BaseModel):
+    commenter_name: Optional[str] = None
+    comment_message: Optional[str] = None
+
+
 @router.get("/accounts")
 async def list_accounts(user_id: Optional[str] = Query(default=None, description="Filter by owner identifier")):
     accounts = marketing_service.get_accounts(user_id=user_id)
@@ -233,3 +238,26 @@ async def delete_post(account_id: str, facebook_post_id: str, remove_remote: boo
         raise HTTPException(status_code=404, detail="Post not found in BazaarFlow records")
 
     return {"ok": True, "removed_remote": removed_remote, "removed_local": removed_local}
+
+
+@router.post("/accounts/{account_id}/posts/{facebook_post_id}/comments/{comment_id}/reply")
+async def reply_to_comment(
+    account_id: str,
+    facebook_post_id: str,
+    comment_id: str,
+    payload: CommentReplyPayload,
+):
+    try:
+        result = marketing_service.reply_to_comment(
+            account_id=account_id,
+            facebook_post_id=facebook_post_id,
+            comment_id=comment_id,
+            comment_message=payload.comment_message,
+            commenter_name=payload.commenter_name,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except FacebookAPIError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    return {"ok": True, **result}

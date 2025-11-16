@@ -483,7 +483,7 @@ export default function Home() {
             <div className="flex flex-wrap gap-4 justify-center">
               <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
                 <Button asChild size="lg" className="h-12 px-8 text-base font-medium bg-gradient-to-r from-[#174143] to-[#427A76] hover:from-[#427A76] hover:to-[#174143] text-white rounded-xl shadow-md hover:shadow-lg transition-all">
-                  <Link href="/sales">
+                  <Link href="/dashboard">
                     Start Free Trial
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Link>

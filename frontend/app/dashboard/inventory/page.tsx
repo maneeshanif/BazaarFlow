@@ -23,8 +23,8 @@ import {
   Loader2,
   AlertCircle,
   TrendingUp,
-  TrendingDown,
   Box,
+  Trash2,
 } from "lucide-react";
 import axios from "axios";
 import { DashboardLayout } from "@/components/DashboardSidebar";
@@ -47,6 +47,9 @@ export default function InventoryPage() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<InventoryItem | null>(null);
+  const [deleteSubmitting, setDeleteSubmitting] = useState(false);
   const [formData, setFormData] = useState<Partial<InventoryItem>>({
     sku: "",
     name: "",
@@ -131,6 +134,33 @@ export default function InventoryPage() {
     } catch (error) {
       console.error("Failed to add stock:", error);
       toast.error("Failed to update stock");
+    }
+  };
+
+  const startDelete = (item: InventoryItem) => {
+    setItemToDelete(item);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!itemToDelete) {
+      return;
+    }
+
+    setDeleteSubmitting(true);
+    try {
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000"}/api/inventory/${itemToDelete.sku}`,
+      );
+      toast.success("Item deleted successfully!");
+      setDeleteDialogOpen(false);
+      setItemToDelete(null);
+      fetchInventory();
+    } catch (error) {
+      console.error("Failed to delete item:", error);
+      toast.error("Failed to delete item");
+    } finally {
+      setDeleteSubmitting(false);
     }
   };
 
@@ -432,6 +462,14 @@ export default function InventoryPage() {
                           <Edit className="w-4 h-4 mr-1" />
                           Edit
                         </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => startDelete(item)}
+                        >
+                          <Trash2 className="w-4 h-4 mr-1" />
+                          Delete
+                        </Button>
                       </div>
                     </div>
                   </motion.div>
@@ -440,6 +478,46 @@ export default function InventoryPage() {
             </CardContent>
           </Card>
         </motion.div>
+
+        <Dialog
+          open={deleteDialogOpen}
+          onOpenChange={(open) => {
+            setDeleteDialogOpen(open);
+            if (!open) {
+              setItemToDelete(null);
+            }
+          }}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete inventory item</DialogTitle>
+              <DialogDescription>
+                This action will permanently remove {itemToDelete?.name ?? "this item"} from your
+                catalog.
+              </DialogDescription>
+            </DialogHeader>
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              Deleting an item will erase its stock history and metrics. You can always create it again
+              later, but existing analytics snapshots will no longer include it.
+            </p>
+            <DialogFooter className="flex gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setDeleteDialogOpen(false);
+                  setItemToDelete(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button type="button" variant="destructive" onClick={() => void confirmDelete()} disabled={deleteSubmitting}>
+                {deleteSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+                Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );

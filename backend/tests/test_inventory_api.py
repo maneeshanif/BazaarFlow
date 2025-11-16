@@ -226,3 +226,37 @@ def test_add_stock_nonexistent_item():
         json={"quantity": 10}
     )
     assert response.status_code == 404
+
+
+def test_delete_inventory_item():
+    """Test DELETE /api/inventory/{sku} - should remove existing item."""
+    client = TestClient(app_module.fastapi_app)
+
+    test_sku = "TEST-DELETE-001"
+    new_item = {
+        "sku": test_sku,
+        "name": "Delete Me",
+        "category": "Disposable",
+        "price": 50,
+        "stock": 5,
+        "reorder_point": 2,
+        "incoming": 0,
+        "supplier": "Temp Supplier",
+    }
+    client.post("/api/inventory", json=new_item)
+
+    delete_response = client.delete(f"/api/inventory/{test_sku}")
+    assert delete_response.status_code == 200
+    body = delete_response.json()
+    assert body["ok"] is True
+    assert body["item"]["sku"] == test_sku
+
+    follow_up = client.get(f"/api/inventory/{test_sku}")
+    assert follow_up.status_code == 404
+
+
+def test_delete_nonexistent_item():
+    """Test DELETE /api/inventory/{sku} with invalid SKU - should return 404."""
+    client = TestClient(app_module.fastapi_app)
+    response = client.delete("/api/inventory/INVALID-SKU-DELETE")
+    assert response.status_code == 404

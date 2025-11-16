@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "schedule_id": "b9de71f5-7fae-49d1-8201-f07859dffdb4",
+    "account_id": "65c34594-fc34-4c2f-a41c-e05535ccb3be",
+    "user_id": "admin",
+    "times": [
+      "02:33"
+    ],
+    "timezone": "Asia/Karachi",
+    "last_triggered_at": "2025-11-16T21:33:40.421053+00:00",
+    "created_at": "2025-11-16T21:07:26.929438+00:00",
+    "updated_at": "2025-11-16T21:33:40.421053+00:00"
+  }
+]

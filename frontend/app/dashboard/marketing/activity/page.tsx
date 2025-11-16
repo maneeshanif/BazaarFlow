@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Image as ImageIcon, Link2, Loader2, Megaphone, MessageCircle, RefreshCcw, Trash2 } from "lucide-react";
+import { Image as ImageIcon, Link2, Loader2, Megaphone, MessageCircle, RefreshCcw, Send, Trash2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 import { useMarketing } from "../MarketingContext";
 
@@ -31,9 +38,13 @@ export default function MarketingActivityPage() {
     fetchCommentsForPost,
     deletePost,
     deletingPostId,
+    replyToComment,
+    replyingCommentIds,
   } = useMarketing();
 
   const [activePostId, setActivePostId] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [postPendingDelete, setPostPendingDelete] = useState<string | null>(null);
 
   const orderedPosts = useMemo(
     () => [...posts].sort((a, b) => (a.created_at < b.created_at ? 1 : -1)),
@@ -50,6 +61,15 @@ export default function MarketingActivityPage() {
   const activeSummary = activePostId ? commentsByPost[activePostId] : undefined;
   const activeCommentsLoading = activePostId ? Boolean(commentsLoading[activePostId]) : false;
 
+  const pendingDeletePost = useMemo(() => {
+    if (!postPendingDelete) {
+      return null;
+    }
+    return posts.find((post) => post.facebook_post_id === postPendingDelete) ?? null;
+  }, [postPendingDelete, posts]);
+
+  const isDeletingPendingPost = postPendingDelete ? deletingPostId === postPendingDelete : false;
+
   useEffect(() => {
     if (!activePostId) {
       return;
@@ -60,16 +80,22 @@ export default function MarketingActivityPage() {
     void fetchCommentsForPost(activePostId);
   }, [activePostId, activeCommentsLoading, activeSummary, fetchCommentsForPost]);
 
-  const handleDeletePost = async (postId: string) => {
-    const confirmed = window.confirm(
-      "Delete this post from Facebook and BazaarFlow? This cannot be undone.",
-    );
-    if (!confirmed) {
+  const openDeleteDialog = (postId: string) => {
+    setPostPendingDelete(postId);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDeletePost = async () => {
+    if (!postPendingDelete) {
       return;
     }
-    const removed = await deletePost(postId);
-    if (removed && activePostId === postId) {
+    const removed = await deletePost(postPendingDelete);
+    if (removed && activePostId === postPendingDelete) {
       setActivePostId(null);
+    }
+    if (removed) {
+      setDeleteDialogOpen(false);
+      setPostPendingDelete(null);
     }
   };
 
@@ -203,9 +229,7 @@ export default function MarketingActivityPage() {
                       <Button
                         size="sm"
                         variant="destructive"
-                        onClick={() => {
-                          void handleDeletePost(post.facebook_post_id);
-                        }}
+                        onClick={() => openDeleteDialog(post.facebook_post_id)}
                         disabled={isDeleting}
                       >
                         {isDeleting ? (
@@ -261,23 +285,23 @@ export default function MarketingActivityPage() {
         </CardContent>
       </Card>
 
-      <Dialog
+      <Sheet
         open={Boolean(activePostId)}
-        onOpenChange={(isOpen) => {
+        onOpenChange={(isOpen: boolean) => {
           if (!isOpen) {
             setActivePostId(null);
           }
         }}
       >
-        <DialogContent className="max-h-[80vh] overflow-hidden">
-          <DialogHeader>
-            <DialogTitle>Post Comments</DialogTitle>
-            <DialogDescription>
+        <SheetContent side="right" className="flex h-full w-full flex-col gap-4 overflow-hidden sm:max-w-xl">
+          <SheetHeader>
+            <SheetTitle>Post Comments</SheetTitle>
+            <SheetDescription>
               {activePost ? `Published ${new Date(activePost.created_at).toLocaleString()}` : ""}
-            </DialogDescription>
-          </DialogHeader>
+            </SheetDescription>
+          </SheetHeader>
           {activePost && (
-            <div className="space-y-3 text-sm text-slate-700 dark:text-slate-200">
+            <div className="flex flex-1 flex-col gap-3 overflow-hidden text-sm text-slate-700 dark:text-slate-200">
               <p className="rounded-lg bg-slate-100 p-3 text-slate-800 dark:bg-slate-900/40 dark:text-slate-100">
                 {activePost.message}
               </p>
@@ -299,7 +323,7 @@ export default function MarketingActivityPage() {
                   <span>Fetched {new Date(activeSummary.fetchedAt).toLocaleTimeString()}</span>
                 )}
               </div>
-              <div className="max-h-[50vh] overflow-y-auto pr-2">
+              <div className="flex-1 overflow-y-auto pr-2">
                 {activeCommentsLoading ? (
                   <div className="flex h-40 items-center justify-center text-slate-500">
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading comments...
@@ -311,6 +335,12 @@ export default function MarketingActivityPage() {
                         typeof comment.from_user?.name === "string"
                           ? comment.from_user.name
                           : comment.from_user?.username;
+                      const isReplying = Boolean(replyingCommentIds[comment.comment_id]);
+                      const replyMeta = comment.reply_metadata;
+                      const hasReply = Boolean(replyMeta);
+                      const replyTimestamp = replyMeta?.replied_at
+                        ? new Date(replyMeta.replied_at).toLocaleString()
+                        : null;
                       return (
                         <div
                           key={comment.comment_id}
@@ -332,6 +362,35 @@ export default function MarketingActivityPage() {
                             )}
                             {comment.is_hidden && <span className="text-amber-600">Hidden</span>}
                           </div>
+                          <div className="mt-3 flex flex-wrap items-center gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                if (activePostId) {
+                                  void replyToComment(activePostId, comment);
+                                }
+                              }}
+                              disabled={isReplying || hasReply || !activePostId}
+                            >
+                              {isReplying ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              ) : (
+                                <Send className="mr-2 h-4 w-4" />
+                              )}
+                              {hasReply ? "Reply Sent" : "Reply"}
+                            </Button>
+                            {hasReply && replyTimestamp && (
+                              <span className="text-[11px] text-emerald-600 dark:text-emerald-400">
+                                Sent {replyTimestamp}
+                              </span>
+                            )}
+                          </div>
+                          {replyMeta && (
+                            <div className="mt-2 rounded-lg bg-slate-100 p-2 text-xs text-slate-600 dark:bg-slate-800/70 dark:text-slate-200">
+                              <span className="font-medium">Reply:</span> {replyMeta.reply_text}
+                            </div>
+                          )}
                         </div>
                       );
                     })}
@@ -347,9 +406,62 @@ export default function MarketingActivityPage() {
               )}
             </div>
           )}
-          <DialogFooter>
+          <div className="flex justify-end">
             <Button variant="outline" onClick={() => setActivePostId(null)}>
               Close
+            </Button>
+          </div>
+        </SheetContent>
+      </Sheet>
+
+      <Dialog
+        open={deleteDialogOpen}
+        onOpenChange={(open) => {
+          setDeleteDialogOpen(open);
+          if (!open) {
+            setPostPendingDelete(null);
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Delete campaign post</DialogTitle>
+            <DialogDescription>
+              This removes the post from BazaarFlow {"and"} Facebook. You can always rebuild the campaign later, but
+              existing engagement will be gone.
+            </DialogDescription>
+          </DialogHeader>
+          {pendingDeletePost && (
+            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm dark:border-slate-800 dark:bg-slate-900/40">
+              <p className="text-xs uppercase tracking-wide text-slate-500">
+                {new Date(pendingDeletePost.created_at).toLocaleString()}
+              </p>
+              <p className="mt-2 text-slate-700 dark:text-slate-200">{pendingDeletePost.message}</p>
+            </div>
+          )}
+          <DialogFooter className="flex-col gap-3 sm:flex-row sm:justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                setDeleteDialogOpen(false);
+                setPostPendingDelete(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => void confirmDeletePost()}
+              disabled={!postPendingDelete || isDeletingPendingPost}
+            >
+              {isDeletingPendingPost ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Trash2 className="mr-2 h-4 w-4" />
+              )}
+              Delete post
             </Button>
           </DialogFooter>
         </DialogContent>

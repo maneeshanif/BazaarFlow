@@ -75,6 +75,10 @@ export interface MarketingComment {
   is_hidden?: boolean;
   parent_comment_id?: string | null;
   attachment?: Record<string, unknown> | null;
+  reply_metadata?: {
+    reply_text: string;
+    replied_at: string;
+  };
 }
 
 interface MarketingCommentKeyword {
@@ -103,6 +107,39 @@ interface CampaignSummary {
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 export const MAX_SCHEDULE_TIMES = 3;
 export const defaultTimes = ["09:00", "13:00"];
+
+const padTimeUnit = (value: number): string => value.toString().padStart(2, "0");
+const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
+
+const normaliseScheduleTime = (rawValue: string): string => {
+  const raw = (rawValue ?? "").trim();
+  if (!raw) {
+    return "";
+  }
+
+  const ampmMatch = raw.match(/^(\d{1,2}):(\d{1,2})\s*(AM|PM)$/i);
+  if (ampmMatch) {
+    let hour = clamp(parseInt(ampmMatch[1], 10) || 0, 1, 12);
+    const minute = clamp(parseInt(ampmMatch[2], 10) || 0, 0, 59);
+    const period = ampmMatch[3].toUpperCase();
+    if (period === "PM" && hour !== 12) {
+      hour += 12;
+    }
+    if (period === "AM" && hour === 12) {
+      hour = 0;
+    }
+    return `${padTimeUnit(hour)}:${padTimeUnit(minute)}`;
+  }
+
+  const twentyFourMatch = raw.match(/^(\d{1,2}):(\d{1,2})$/);
+  if (twentyFourMatch) {
+    const hour = clamp(parseInt(twentyFourMatch[1], 10) || 0, 0, 23);
+    const minute = clamp(parseInt(twentyFourMatch[2], 10) || 0, 0, 59);
+    return `${padTimeUnit(hour)}:${padTimeUnit(minute)}`;
+  }
+
+  return raw;
+};
 
 export const TIMEZONE_PRESETS = [
   {
@@ -198,6 +235,7 @@ interface MarketingContextValue {
   commentsByPost: Record<string, PostCommentsSummary>;
   commentsLoading: Record<string, boolean>;
   deletingPostId: string | null;
+  replyingCommentIds: Record<string, boolean>;
   refreshAll: () => Promise<void>;
   handleManualCampaign: () => Promise<unknown>;
   handleScheduleSubmit: (event: React.FormEvent) => Promise<void>;
@@ -208,6 +246,7 @@ interface MarketingContextValue {
   handleRefreshInsights: (postId: string) => Promise<void>;
   fetchCommentsForPost: (facebookPostId: string) => Promise<PostCommentsSummary | undefined>;
   deletePost: (facebookPostId: string) => Promise<boolean>;
+  replyToComment: (facebookPostId: string, comment: MarketingComment) => Promise<boolean>;
   insightsSummary: CampaignSummary;
   publishing: boolean;
   savingSchedule: boolean;
@@ -239,6 +278,7 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
   const [posts, setPosts] = useState<MarketingPost[]>([]);
   const [commentsByPost, setCommentsByPost] = useState<Record<string, PostCommentsSummary>>({});
   const [commentsLoading, setCommentsLoading] = useState<Record<string, boolean>>({});
+  const [replyingCommentIds, setReplyingCommentIds] = useState<Record<string, boolean>>({});
   const [loadingAccounts, setLoadingAccounts] = useState(false);
   const [savingCredentials, setSavingCredentials] = useState(false);
   const [savingSchedule, setSavingSchedule] = useState(false);
@@ -249,6 +289,13 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
   const [deletingPostId, setDeletingPostId] = useState<string | null>(null);
 
   const postsAutoRefreshIntervalMs = 30000;
+
+  const selectedAccount = useMemo(() => {
+    if (!selectedAccountId) {
+      return null;
+    }
+    return accounts.find((account) => account.account_id === selectedAccountId) ?? null;
+  }, [accounts, selectedAccountId]);
 
   const triggerConfetti = useCallback(() => {
     const defaults = { origin: { y: 0.65 } };
@@ -460,7 +507,7 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
   const handleScheduleTimeChange = useCallback((index: number, value: string) => {
     setScheduleForm((prev) => {
       const nextTimes = [...prev.times];
-      nextTimes[index] = value;
+      nextTimes[index] = normaliseScheduleTime(value);
       return { ...prev, times: nextTimes };
     });
   }, []);
@@ -488,18 +535,52 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
         toast.error("Select an account first");
         return;
       }
-      if (scheduleForm.times.some((time) => !time.trim())) {
-        toast.error("Provide valid posting times");
+
+      const derivedUserId = scheduleForm.userId.trim() || selectedAccount?.user_id || "";
+      if (!derivedUserId) {
+        toast.error("Missing a user ID for this account");
         return;
       }
+
+      const timezoneValue = scheduleForm.timezone.trim();
+      if (!timezoneValue) {
+        toast.error("Pick a timezone before saving");
+        return;
+      }
+
+      const normalisedTimes = scheduleForm.times
+        .map((time) => normaliseScheduleTime(time))
+        .filter((time) => !!time);
+
+      if (normalisedTimes.length === 0) {
+        toast.error("Provide at least one posting time");
+        return;
+      }
+
+      setScheduleForm((prev) => ({
+        ...prev,
+        userId: derivedUserId,
+        timezone: timezoneValue,
+        times: normalisedTimes,
+      }));
+
       setSavingSchedule(true);
       try {
         const response = await axios.put(`${API_BASE_URL}/api/marketing/accounts/${selectedAccountId}/schedule`, {
-          user_id: scheduleForm.userId,
-          times: scheduleForm.times,
-          timezone_name: scheduleForm.timezone,
+          user_id: derivedUserId,
+          times: normalisedTimes,
+          timezone_name: timezoneValue,
         });
-        setScheduleMeta(response.data.schedule);
+        const savedSchedule: MarketingSchedule = response.data.schedule;
+        setScheduleMeta(savedSchedule);
+        setScheduleForm((prev) => ({
+          ...prev,
+          userId: savedSchedule?.user_id || derivedUserId,
+          timezone: savedSchedule?.timezone || timezoneValue,
+          times: Array.isArray(savedSchedule?.times) && savedSchedule.times.length > 0
+            ? savedSchedule.times
+            : normalisedTimes,
+        }));
         toast.success("Schedule updated");
       } catch (error) {
         console.error("Failed to save schedule", error);
@@ -509,7 +590,7 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
         setSavingSchedule(false);
       }
     },
-    [scheduleForm, selectedAccountId],
+    [scheduleForm, selectedAccount, selectedAccountId],
   );
 
   const handleRefreshInsights = useCallback(
@@ -536,6 +617,7 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     setCommentsByPost({});
     setCommentsLoading({});
+    setReplyingCommentIds({});
   }, [selectedAccountId]);
 
   const fetchCommentsForPost = useCallback(
@@ -618,6 +700,70 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
     [selectedAccountId],
   );
 
+  const replyToComment = useCallback(
+    async (facebookPostId: string, comment: MarketingComment) => {
+      if (!selectedAccountId) {
+        toast.error("Select an account first");
+        return false;
+      }
+      const commentId = comment.comment_id;
+      setReplyingCommentIds((prev) => ({ ...prev, [commentId]: true }));
+      try {
+        const response = await axios.post(
+          `${API_BASE_URL}/api/marketing/accounts/${selectedAccountId}/posts/${facebookPostId}/comments/${commentId}/reply`,
+          {
+            comment_message: comment.message || undefined,
+            commenter_name: comment.from_user?.name || comment.from_user?.username || undefined,
+          },
+        );
+
+        const replyMetadata = response.data?.reply_metadata;
+        const replyText: string = replyMetadata?.reply_text || response.data?.reply || "Thanks for reaching out!";
+        const repliedAt = replyMetadata?.replied_at || new Date().toISOString();
+
+        setCommentsByPost((prev) => {
+          const summary = prev[facebookPostId];
+          if (!summary) {
+            return prev;
+          }
+          const updatedComments = summary.comments.map((item) =>
+            item.comment_id === commentId
+              ? {
+                  ...item,
+                  reply_metadata: {
+                    reply_text: replyText,
+                    replied_at: repliedAt,
+                  },
+                }
+              : item,
+          );
+          return {
+            ...prev,
+            [facebookPostId]: {
+              ...summary,
+              comments: updatedComments,
+            },
+          };
+        });
+
+        toast.success("Reply sent on Facebook");
+        return true;
+      } catch (error) {
+        console.error("Failed to reply to Facebook comment", error);
+        const detail = axios.isAxiosError(error) ? error.response?.data?.detail : undefined;
+        toast.error(detail || "Unable to send reply");
+        return false;
+      } finally {
+        setReplyingCommentIds((prev) => {
+          const next = { ...prev };
+          delete next[commentId];
+          return next;
+        });
+      }
+    },
+    [selectedAccountId],
+  );
+
   useEffect(() => {
     void refreshAll();
   }, [refreshAll]);
@@ -685,13 +831,6 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
     };
   }, [posts]);
 
-  const selectedAccount = useMemo(() => {
-    if (!selectedAccountId) {
-      return null;
-    }
-    return accounts.find((account) => account.account_id === selectedAccountId) ?? null;
-  }, [accounts, selectedAccountId]);
-
   const value: MarketingContextValue = {
     accounts,
     loadingAccounts,
@@ -713,6 +852,7 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
     commentsByPost,
     commentsLoading,
     deletingPostId,
+    replyingCommentIds,
     refreshAll,
     handleManualCampaign,
     handleScheduleSubmit,
@@ -723,6 +863,7 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
     handleRefreshInsights,
     fetchCommentsForPost,
     deletePost,
+    replyToComment,
     insightsSummary,
     publishing,
     savingSchedule,

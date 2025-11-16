@@ -100,3 +100,22 @@ async def add_stock_to_item(sku: str, request: AddStockRequest):
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to add stock: {str(e)}")
+
+
+@router.delete("/{sku}")
+async def delete_inventory_item(sku: str):
+    """Delete an inventory item by SKU."""
+    try:
+        deleted_item = inventory_analytics_service.delete_item(sku)
+        if not deleted_item:
+            raise HTTPException(status_code=404, detail=f"Item with SKU {sku} not found")
+
+        return {
+            "ok": True,
+            "item": deleted_item,
+            "message": "Item deleted successfully",
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete item: {str(e)}")

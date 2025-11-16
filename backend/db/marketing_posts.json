@@ -150,14 +150,14 @@
       }
     },
     "created_at": "2025-11-16T11:31:27.954770+00:00",
-    "updated_at": "2025-11-16T11:47:06.812643+00:00",
+    "updated_at": "2025-11-16T19:19:03.187804+00:00",
     "insights": {
       "post_id": "882314041626021_122100494025119888",
       "period": "lifetime",
-      "reach": 0,
-      "impressions": 0,
+      "reach": 1,
+      "impressions": 3,
       "reactions": {
-        "like": 0,
+        "like": 1,
         "love": 0,
         "wow": 0,
         "haha": 0,
@@ -165,11 +165,125 @@
         "angry": 0,
         "care": 0
       },
-      "comments_count": 1,
+      "comments_count": 2,
       "shares_count": 0,
       "clicked": 0,
-      "engagement_rate": 0.0,
-      "retrieved_at": "2025-11-16T11:47:06.812191+00:00"
+      "engagement_rate": 300.0,
+      "retrieved_at": "2025-11-16T19:19:03.187196+00:00"
     }
+  },
+  {
+    "record_id": "5295efd8-3150-44b0-b4c0-1460fa5276a9",
+    "account_id": "65c34594-fc34-4c2f-a41c-e05535ccb3be",
+    "user_id": "admin",
+    "facebook_post_id": "882314041626021_122100856377119888",
+    "message": "Top sellers are flying off the shelves! \ud83d\ude80 Get your iPhone 15 and Macbook Air M3 before they're gone! \ud83d\udd25 Limited stock available. Don't miss out! \ud83d\udc47\n\n#apple #electronics #iphones #sale #techdeals",
+    "image_url": "https://images.pexels.com/photos/3568521/pexels-photo-3568521.jpeg?auto=compress&cs=tinysrgb&h=350",
+    "product_sku": null,
+    "hashtags": [
+      "iphones",
+      "apple",
+      "techdeals",
+      "electronics",
+      "sale"
+    ],
+    "angle": "Highlight trending products with limited stock.",
+    "source": "scheduled",
+    "extra": {
+      "campaign": {
+        "message": "Top sellers are flying off the shelves! \ud83d\ude80 Get your iPhone 15 and Macbook Air M3 before they're gone! \ud83d\udd25 Limited stock available. Don't miss out! \ud83d\udc47",
+        "hashtags": [
+          "iphones",
+          "apple",
+          "techdeals",
+          "electronics",
+          "sale"
+        ],
+        "angle": "Highlight trending products with limited stock.",
+        "image_url": "https://images.pexels.com/photos/3568521/pexels-photo-3568521.jpeg?auto=compress&cs=tinysrgb&h=350",
+        "image_query": "iPhone 15 and Macbook Air M3",
+        "product_sku": null,
+        "call_to_action": "Shop now and grab the latest tech!"
+      }
+    },
+    "created_at": "2025-11-16T21:21:34.189887+00:00",
+    "updated_at": "2025-11-16T21:21:34.189887+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "bc9a325d-d77c-4be2-be5d-2237f59069be",
+    "account_id": "65c34594-fc34-4c2f-a41c-e05535ccb3be",
+    "user_id": "admin",
+    "facebook_post_id": "882314041626021_122100861003119888",
+    "message": "iPhone 15 is flying off the shelves! \ud83d\ude80 Get yours now and experience the hype. Limited stock available! \ud83d\ude09\n\n#apple #iphone15 #musthave #sale #tech",
+    "image_url": "https://images.pexels.com/photos/18525574/pexels-photo-18525574.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "iphone15",
+      "apple",
+      "tech",
+      "sale",
+      "musthave"
+    ],
+    "angle": "Trending product spotlight",
+    "source": "scheduled",
+    "extra": {
+      "campaign": {
+        "message": "iPhone 15 is flying off the shelves! \ud83d\ude80 Get yours now and experience the hype. Limited stock available! \ud83d\ude09",
+        "hashtags": [
+          "iphone15",
+          "apple",
+          "tech",
+          "sale",
+          "musthave"
+        ],
+        "angle": "Trending product spotlight",
+        "image_url": "https://images.pexels.com/photos/18525574/pexels-photo-18525574.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "image_query": "iPhone 15",
+        "product_sku": null,
+        "call_to_action": "Shop the iPhone 15 before it's gone!"
+      }
+    },
+    "created_at": "2025-11-16T21:32:10.405706+00:00",
+    "updated_at": "2025-11-16T21:32:10.405706+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "16444332-a100-48d3-a42a-d07fee6cd0f6",
+    "account_id": "65c34594-fc34-4c2f-a41c-e05535ccb3be",
+    "user_id": "admin",
+    "facebook_post_id": "882314041626021_122100862395119888",
+    "message": "Top tech is flying off the shelves! \ud83d\ude80 Don't miss out on the most-wanted: iPhone 15 & Macbook Air M3 are trending! Get yours before they're gone! \ud83c\udfc3\u200d\u2640\ufe0f\n\n#electronics #iphone15 #macbookair #musthave #techdeals",
+    "image_url": "https://images.pexels.com/photos/2265488/pexels-photo-2265488.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "techdeals",
+      "electronics",
+      "musthave",
+      "iphone15",
+      "macbookair"
+    ],
+    "angle": "Highlighting trending products based on recent sales data.",
+    "source": "scheduled",
+    "extra": {
+      "campaign": {
+        "message": "Top tech is flying off the shelves! \ud83d\ude80 Don't miss out on the most-wanted: iPhone 15 & Macbook Air M3 are trending! Get yours before they're gone! \ud83c\udfc3\u200d\u2640\ufe0f",
+        "hashtags": [
+          "techdeals",
+          "electronics",
+          "musthave",
+          "iphone15",
+          "macbookair"
+        ],
+        "angle": "Highlighting trending products based on recent sales data.",
+        "image_url": "https://images.pexels.com/photos/2265488/pexels-photo-2265488.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "image_query": "iphone macbook electronics",
+        "product_sku": null,
+        "call_to_action": "Shop trending tech today!"
+      }
+    },
+    "created_at": "2025-11-16T21:33:47.585155+00:00",
+    "updated_at": "2025-11-16T21:33:47.585155+00:00",
+    "insights": null
   }
 ]
