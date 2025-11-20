@@ -16,7 +16,9 @@ from .controllers.sales_controller import router as sales_router
 from .controllers.chat_controller import router as chat_router
 from .controllers.inventory_controller import router as inventory_router
 from .controllers.marketing_controller import router as marketing_router
+from .controllers.logs_controller import router as logs_router
 from .services.marketing_scheduler import marketing_scheduler
+from .utils.live_logs import configure_live_logging
 
 
 ENABLE_MARKETING_SCHEDULER = os.getenv("MARKETING_SCHEDULER_ENABLED", "true").lower() in {
@@ -25,6 +27,7 @@ ENABLE_MARKETING_SCHEDULER = os.getenv("MARKETING_SCHEDULER_ENABLED", "true").lo
     "yes",
 }
 
+configure_live_logging(logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
@@ -75,6 +78,7 @@ app.include_router(sales_router, prefix="/api")
 app.include_router(chat_router, prefix="/api")
 app.include_router(inventory_router)
 app.include_router(marketing_router)
+app.include_router(logs_router)
 
 @app.get("/health")
 async def healthcheck():

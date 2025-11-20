@@ -17,6 +17,7 @@ from agents import Runner, SQLiteSession  # type: ignore[import-not-found]
 
 from .my_agents.sales_agent import sales_agent
 from .lib import repository
+from .utils.agent_hooks import AgentTurnLogger
 
 logger = logging.getLogger(__name__)
 
@@ -150,6 +151,7 @@ async def runner_hook(
             starting_agent=sales_agent,
             input=agent_input,
             session=session,
+            hooks=AgentTurnLogger(),
         )
     except Exception as e:
         logger.exception("Agent crash. Returning fallback message.")
