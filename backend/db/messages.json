@@ -4483,5 +4483,200 @@
       ]
     },
     "timestamp": "2025-11-15T20:56:29.249771+00:00"
+  },
+  {
+    "id": "176b1f9b-e20b-4b30-bf2d-450d1d7243ab",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDI3MDc0MUI5OEYzRUZFQ0VGRQA=",
+      "timestamp": "1763650628",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-20T14:57:08+00:00"
+  },
+  {
+    "id": "a33b3289-ffd1-46c0-93ad-124a9afcdc53",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMEEwNDk4NzE4RTM4QzJGRDlFAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-20T14:57:40.256283+00:00"
+  },
+  {
+    "id": "7903fb4e-3d01-411c-ab5e-da2b2b2a72b4",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "hii",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMEU2QTUzQjc0MUFGQzI0NEIwQwA=",
+      "timestamp": "1763650673",
+      "text": {
+        "body": "hii"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-20T14:57:53+00:00"
+  },
+  {
+    "id": "e92e749d-517e-48a3-b44c-a855d948351e",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "\ud83d\udc4b Hi! I'm here to help with BazaarFlow products. What can I show you today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSRkMxOTY4MjJCMDY1NkRCOUJGAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-20T14:57:57.993993+00:00"
+  },
+  {
+    "id": "6d7adb2a-d746-42e9-9623-925842b42243",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "show me all products do u have",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDM5NUQ5RjYxQ0FCMTIzOEI0QwA=",
+      "timestamp": "1763650692",
+      "text": {
+        "body": "show me all products do u have"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-20T14:58:12+00:00"
+  },
+  {
+    "id": "df1a6239-6981-45a9-81cb-36d3963e1e68",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "We have: iPhone 15 (PKR 289,999)\ud83d\udcf1, MacBook Air M3 (PKR 399,999)\ud83d\udcbb, Galaxy S24 (PKR 249,999) \ud83d\ude80, Pixel 9 (PKR 199,999), Surface Pro 10 (PKR 349,999) and AirPods Pro 3 (PKR 79,999)\ud83c\udfa7! What will you buy today?",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMDMzRDBCOTEyOEQ2NkZCN0JEAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-20T14:58:29.605742+00:00"
+  },
+  {
+    "id": "13df6a81-a724-419c-9ee1-6b569f8006ef",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "so i want to buy MacBook Air M3",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMEM4NTMwQkM1OEFCMUExQ0RCRAA=",
+      "timestamp": "1763650726",
+      "text": {
+        "body": "so i want to buy MacBook Air M3"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-20T14:58:46+00:00"
+  },
+  {
+    "id": "9b99f09f-e98e-4c4f-a684-baf847cb669a",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "I can help with that! To place your order, I need your full name, phone number, quantity of MacBook Air M3, and full delivery address. \ud83d\udcbb",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSMEI1NEExRDhDMDIwRTcwMzdGAA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-20T14:58:57.061511+00:00"
+  },
+  {
+    "id": "f70ebfa3-dea6-4489-a032-3d768ff70713",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "inbound",
+    "text": "my name is habib bhi , i want 1 macbook , my adrrss is karachi , pakistan and my phone number is 293847129357",
+    "raw_payload": {
+      "from": "923012177654",
+      "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAEhgWM0VCMDlEM0IzMjk2MjE0MUY2MUNGMAA=",
+      "timestamp": "1763650782",
+      "text": {
+        "body": "my name is habib bhi , i want 1 macbook , my adrrss is karachi , pakistan and my phone number is 293847129357"
+      },
+      "type": "text"
+    },
+    "timestamp": "2025-11-20T14:59:42+00:00"
+  },
+  {
+    "id": "768c0c14-287a-4699-8835-731034a1ec8f",
+    "vendor_id": "f8add875-6bff-4f1a-99f5-f8e5d3ec3b67",
+    "customer_phone": "923012177654",
+    "direction": "outbound",
+    "text": "Great! Order #17 for 1 MacBook Air M3 for Habib Bhi is confirmed and will be delivered to Karachi, Pakistan. \ud83d\udce6 Your stock is reserved! \u2728",
+    "raw_payload": {
+      "messaging_product": "whatsapp",
+      "contacts": [
+        {
+          "input": "923012177654",
+          "wa_id": "923012177654"
+        }
+      ],
+      "messages": [
+        {
+          "id": "wamid.HBgMOTIzMDEyMTc3NjU0FQIAERgSNjNENzQ0OTQ1MUM5NjUyRjE1AA=="
+        }
+      ]
+    },
+    "timestamp": "2025-11-20T14:59:49.893117+00:00"
   }
 ]

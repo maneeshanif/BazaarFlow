@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Clock, MessageCircle, RefreshCw, Users } from "lucide-react";
@@ -62,6 +62,7 @@ export default function SalesHistoryPage() {
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [messagesError, setMessagesError] = useState<string | null>(null);
+  const transcriptRef = useRef<HTMLDivElement | null>(null);
 
   const fetchCustomers = useCallback(
     async (signal?: AbortSignal) => {
@@ -140,6 +141,17 @@ export default function SalesHistoryPage() {
     }
     setSelectedPhone(initialCustomerPhone);
   }, [initialCustomerPhone]);
+
+  useEffect(() => {
+    if (!selectedPhone || loadingMessages) {
+      return;
+    }
+    const container = transcriptRef.current;
+    if (!container) {
+      return;
+    }
+    container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+  }, [messages, selectedPhone, loadingMessages]);
 
   const filteredCustomers = useMemo(() => {
     const needle = searchTerm.trim().toLowerCase();
@@ -223,7 +235,7 @@ export default function SalesHistoryPage() {
         </CardContent>
       </Card>
 
-      <Card className="min-h-[520px] border-2 border-slate-200 shadow-md">
+      <Card className="flex h-[650px] flex-col border-2 border-slate-200 shadow-md">
         <CardHeader className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
             <CardTitle className="text-lg text-[#174143]">
@@ -247,57 +259,73 @@ export default function SalesHistoryPage() {
             </Button>
           )}
         </CardHeader>
-        <CardContent className="flex h-full flex-col gap-4">
-          {!selectedPhone ? (
-            <div className="flex flex-1 flex-col items-center justify-center gap-3 text-slate-500">
-              <MessageCircle className="h-10 w-10 text-[#174143]/60" />
-              <p className="text-lg font-medium">Select a conversation to view the transcript.</p>
-            </div>
-          ) : loadingMessages ? (
-            <div className="space-y-3">
-              {Array.from({ length: 6 }).map((_, index) => (
-                <Skeleton key={index} className="h-16" />
-              ))}
-            </div>
-          ) : messages.length === 0 ? (
-            <div className="flex flex-1 flex-col items-center justify-center gap-3 text-slate-500">
-              <MessageCircle className="h-10 w-10 text-[#174143]/60" />
-              <p className="text-lg font-medium">No messages yet</p>
-              <p className="text-sm max-w-sm text-center">
-                We have not received any conversation logs for this customer. Messages sent from WhatsApp will appear here instantly.
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {messages.map((message) => {
-                const outbound = message.direction === "outbound";
-                return (
-                  <div key={message.id} className="flex flex-col">
-                    <div
-                      className={cn(
-                        "w-fit max-w-2xl rounded-2xl px-4 py-3 text-sm shadow-sm",
-                        outbound
-                          ? "ml-auto bg-[#174143] text-white"
-                          : "bg-slate-100 text-slate-900"
+        <CardContent className="flex flex-1 flex-col gap-4 overflow-hidden">
+          <div
+            className="relative flex flex-1 flex-col overflow-hidden rounded-3xl border border-slate-100 shadow-inner"
+            style={{
+              backgroundColor: "#efeae2",
+              backgroundImage:
+                "url('data:image/svg+xml,%3Csvg width=\'120\' height=\'120\' viewBox=\'0 0 100 100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Ctext x=\'5\' y=\'30\' font-size=\'18\' opacity=\'0.03\'%3E😊%3C/text%3E%3Ctext x=\'70\' y=\'25\' font-size=\'16\' opacity=\'0.03\'%3E✨%3C/text%3E%3Ctext x=\'35\' y=\'75\' font-size=\'18\' opacity=\'0.03\'%3E💬%3C/text%3E%3Ctext x=\'80\' y=\'65\' font-size=\'20\' opacity=\'0.03\'%3E🛒%3C/text%3E%3C/svg%3E')",
+            }}
+          >
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-white/30" />
+            {!selectedPhone ? (
+              <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-3 p-6 text-slate-500">
+                <MessageCircle className="h-10 w-10 text-[#174143]/60" />
+                <p className="text-lg font-medium">Select a conversation to view the transcript.</p>
+              </div>
+            ) : loadingMessages ? (
+              <div className="relative z-10 flex flex-1 flex-col gap-3 overflow-y-auto px-4 py-4 pr-2">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <Skeleton key={index} className="h-16" />
+                ))}
+              </div>
+            ) : messages.length === 0 ? (
+              <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-3 p-6 text-slate-500">
+                <MessageCircle className="h-10 w-10 text-[#174143]/60" />
+                <p className="text-lg font-medium">No messages yet</p>
+                <p className="text-sm max-w-sm text-center">
+                  We have not received any conversation logs for this customer. Messages sent from WhatsApp will appear here instantly.
+                </p>
+              </div>
+            ) : (
+              <div
+                ref={transcriptRef}
+                className="relative z-10 flex flex-1 flex-col gap-4 overflow-y-auto px-4 py-4 pr-2"
+              >
+                {messages.map((message) => {
+                  const outbound = message.direction === "outbound";
+                  return (
+                    <div key={message.id} className="flex flex-col">
+                      <div
+                        className={cn(
+                          "w-fit max-w-2xl rounded-2xl px-4 py-3 text-sm shadow-sm",
+                          outbound
+                            ? "ml-auto rounded-br-sm bg-[#174143] text-white"
+                            : "rounded-bl-sm bg-white text-slate-900"
+                        )}
+                      >
+                        <p className="whitespace-pre-line">{message.text || "(no text)"}</p>
+                      </div>
+                      <div className={cn(
+                        "mt-1 flex items-center gap-2 text-xs",
+                        outbound ? "justify-end text-slate-100/80" : "text-slate-600"
                       )}
-                    >
-                      <p className="whitespace-pre-line">{message.text || "(no text)"}</p>
-                    </div>
-                    <div className={cn("mt-1 flex items-center gap-2 text-xs", outbound ? "justify-end" : "text-slate-500")}
-                    >
-                      <Badge variant="outline" className="border-slate-200 text-slate-500">
-                        {outbound ? "Agent" : "Customer"}
-                      </Badge>
-                      <div className="flex items-center gap-1 text-slate-400">
-                        <Clock className="h-3 w-3" />
-                        {formatTimestamp(message.timestamp)}
+                      >
+                        <Badge variant="outline" className="border-slate-200 text-slate-500">
+                          {outbound ? "Agent" : "Customer"}
+                        </Badge>
+                        <div className="flex items-center gap-1 text-slate-400">
+                          <Clock className="h-3 w-3" />
+                          {formatTimestamp(message.timestamp)}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+                  );
+                })}
+              </div>
+            )}
+          </div>
 
           {messagesError && (
             <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">{messagesError}</div>
