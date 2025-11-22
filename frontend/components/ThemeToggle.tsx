@@ -16,30 +16,29 @@ function getInitialTheme(): "light" | "dark" {
 }
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<"light" | "dark">(() => getInitialTheme());
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+    const initial = getInitialTheme();
+    // We need to hydrate from persisted state once the browser APIs are available.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTheme(initial);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
     window.localStorage.setItem("theme", theme);
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+    document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    
-    if (newTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
   };
 
   return (

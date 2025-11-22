@@ -34,7 +34,14 @@ export default function RootLayout({
           <div className="container mx-auto py-12">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div>
-                <Image src="/logo.jpeg" alt="BazaarFlow" className="h-10 w-auto mb-4 rounded-lg ring-2 ring-white/30" width={120} height={40} priority />
+                <Image
+                  src="/logo.jpeg"
+                  alt="BazaarFlow"
+                  className="mb-4 rounded-lg ring-2 ring-white/30 object-contain"
+                  width={120}
+                  height={40}
+                  priority
+                />
                 <p className="text-sm text-[rgb(var(--muted))]">Agentic AI for Pakistan&apos;s informal digital economy.</p>
               </div>
               <div>

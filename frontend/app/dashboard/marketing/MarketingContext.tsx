@@ -105,19 +105,61 @@ interface CampaignSummary {
 }
 
 interface GeneratedCampaignPostSummary {
-  facebook: unknown;
-  post: MarketingPost;
+  facebook?: unknown;
+  post?: MarketingPost | CampaignDraftPost;
+  [key: string]: unknown;
 }
+
+interface CampaignDraftPost {
+  record_id?: string;
+  message?: string;
+  image_url?: string | null;
+  hashtags?: string[];
+  product_sku?: string | null;
+  call_to_action?: string | null;
+  extra?: Record<string, unknown> | null;
+  raw_campaign?: Record<string, unknown> | null;
+  title?: string | null;
+}
+
+type GeneratedCampaignPost = GeneratedCampaignPostSummary | CampaignDraftPost | MarketingPost;
 
 interface GeneratedCampaignResult {
   campaign_id: string;
   strategy_summary?: string;
-  posts: GeneratedCampaignPostSummary[];
+  posts?: GeneratedCampaignPost[];
+}
+
+interface ScheduledPostDraft {
+  index: number;
+  post: CampaignDraftPost;
+  scheduledAt: string;
+}
+
+export interface ScheduledPostRecord {
+  scheduled_post_id: string;
+  scheduled_campaign_id: string;
+  account_id: string;
+  user_id: string;
+  campaign_post_index: number;
+  post_payload: {
+    message?: string;
+    image_url?: string | null;
+    hashtags?: string[];
+    product_sku?: string | null;
+    call_to_action?: string | null;
+    [key: string]: unknown;
+  };
+  scheduled_at: string;
+  status: "pending" | "posted" | "cancelled" | "failed" | string;
+  facebook_post_id?: string | null;
+  error?: string | null;
 }
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 export const MAX_SCHEDULE_TIMES = 3;
 export const defaultTimes = ["09:00", "13:00"];
+export const DEV_USER_ID = process.env.NEXT_PUBLIC_DEV_USER_ID || "dev_admin";
 
 const padTimeUnit = (value: number): string => value.toString().padStart(2, "0");
 const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
@@ -150,6 +192,40 @@ const normaliseScheduleTime = (rawValue: string): string => {
   }
 
   return raw;
+};
+
+const normaliseDraftPost = (candidate: unknown, index: number): CampaignDraftPost => {
+  if (!candidate || typeof candidate !== "object") {
+    return {
+      record_id: `draft_${index}`,
+      message: "",
+      hashtags: [],
+      image_url: null,
+      extra: null,
+    };
+  }
+
+  const raw = candidate as Record<string, unknown>;
+  const hashtags = Array.isArray(raw.hashtags) ? raw.hashtags.map((tag) => String(tag)) : [];
+  const imageUrl = typeof raw.image_url === "string" ? raw.image_url : null;
+  const productSku = typeof raw.product_sku === "string" ? raw.product_sku : null;
+  const callToAction = typeof raw.call_to_action === "string" ? raw.call_to_action : null;
+  const extra = raw.extra && typeof raw.extra === "object" && !Array.isArray(raw.extra) ? (raw.extra as Record<string, unknown>) : null;
+  const rawCampaign = raw.raw_campaign && typeof raw.raw_campaign === "object" && !Array.isArray(raw.raw_campaign)
+    ? (raw.raw_campaign as Record<string, unknown>)
+    : null;
+
+  return {
+    record_id: typeof raw.record_id === "string" ? raw.record_id : `draft_${index}`,
+    message: typeof raw.message === "string" ? raw.message : "",
+    image_url: imageUrl,
+    hashtags,
+    product_sku: productSku,
+    call_to_action: callToAction,
+    extra,
+    raw_campaign: rawCampaign,
+    title: typeof raw.title === "string" ? raw.title : typeof raw.angle === "string" ? raw.angle : null,
+  };
 };
 
 export const TIMEZONE_PRESETS = [
@@ -267,6 +343,32 @@ interface MarketingContextValue {
   lastGeneratedCampaign: GeneratedCampaignResult | null;
   postCount: number;
   setPostCount: Dispatch<SetStateAction<number>>;
+  schedulePrompt: string;
+  setSchedulePrompt: Dispatch<SetStateAction<string>>;
+  previewedScheduledCampaign: GeneratedCampaignResult | null;
+  scheduledPostsDraft: ScheduledPostDraft[];
+  previewingScheduledCampaign: boolean;
+  savingScheduledCampaign: boolean;
+  setScheduledPostsDraft: Dispatch<SetStateAction<ScheduledPostDraft[]>>;
+  previewScheduledCampaign: () => Promise<GeneratedCampaignResult | null>;
+  createScheduledCampaign: () => Promise<{
+    ok: boolean;
+    campaign?: unknown;
+    posts?: unknown;
+  } | null>;
+  scheduledPosts: ScheduledPostRecord[];
+  scheduledPostsLoading: boolean;
+  updateScheduledPost: (
+    scheduledPostId: string,
+    updates: {
+      message?: string;
+      hashtags?: string[];
+      call_to_action?: string | null;
+      image_url?: string | null;
+      product_sku?: string | null;
+      scheduled_at?: string;
+    },
+  ) => Promise<ScheduledPostRecord | null>;
 }
 
 const MarketingContext = createContext<MarketingContextValue | undefined>(undefined);
@@ -275,14 +377,14 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
   const [accounts, setAccounts] = useState<MarketingAccount[]>([]);
   const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
   const [credentialsForm, setCredentialsForm] = useState({
-    userId: "",
+    userId: DEV_USER_ID,
     pageId: "",
     pageName: "",
     accessToken: "",
     verify: true,
   });
   const [scheduleForm, setScheduleForm] = useState({
-    userId: "",
+    userId: DEV_USER_ID,
     timezone: "UTC",
     times: defaultTimes,
   });
@@ -303,6 +405,14 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
   const [deletingPostId, setDeletingPostId] = useState<string | null>(null);
   const [lastGeneratedCampaign, setLastGeneratedCampaign] = useState<GeneratedCampaignResult | null>(null);
   const [postCount, setPostCount] = useState<number>(3);
+  const [schedulePrompt, setSchedulePrompt] = useState<string>("");
+  const [previewedScheduledCampaign, setPreviewedScheduledCampaign] =
+    useState<GeneratedCampaignResult | null>(null);
+  const [scheduledPostsDraft, setScheduledPostsDraft] = useState<ScheduledPostDraft[]>([]);
+  const [previewingScheduledCampaign, setPreviewingScheduledCampaign] = useState(false);
+  const [savingScheduledCampaign, setSavingScheduledCampaign] = useState(false);
+  const [scheduledPosts, setScheduledPosts] = useState<ScheduledPostRecord[]>([]);
+  const [scheduledPostsLoading, setScheduledPostsLoading] = useState(false);
 
   const postsAutoRefreshIntervalMs = 30000;
 
@@ -398,16 +508,85 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
+  const fetchScheduledActivity = useCallback(
+    async (accountId: string) => {
+      setScheduledPostsLoading(true);
+      try {
+        const response = await axios.get(
+          `${API_BASE_URL}/api/marketing/accounts/${accountId}/scheduled/activity`,
+        );
+        const records: ScheduledPostRecord[] = response.data.posts ?? [];
+        setScheduledPosts(records);
+      } catch (error) {
+        console.error("Failed to load scheduled activity", error);
+        toast.error("Unable to fetch scheduled activity");
+      } finally {
+        setScheduledPostsLoading(false);
+      }
+    },
+    [],
+  );
+
+  const updateScheduledPost = useCallback(
+    async (
+      scheduledPostId: string,
+      updates: {
+        message?: string;
+        hashtags?: string[];
+        call_to_action?: string | null;
+        image_url?: string | null;
+        product_sku?: string | null;
+        scheduled_at?: string;
+      },
+    ): Promise<ScheduledPostRecord | null> => {
+      if (!selectedAccountId) {
+        toast.error("Select an account first");
+        return null;
+      }
+
+      try {
+        const response = await axios.patch(
+          `${API_BASE_URL}/api/marketing/accounts/${selectedAccountId}/scheduled/posts/${scheduledPostId}`,
+          {
+            message: updates.message,
+            hashtags: updates.hashtags,
+            call_to_action: updates.call_to_action ?? undefined,
+            image_url: updates.image_url ?? undefined,
+            product_sku: updates.product_sku ?? undefined,
+            scheduled_at: updates.scheduled_at,
+          },
+        );
+
+        const updated: ScheduledPostRecord = response.data.post;
+        setScheduledPosts((prev) =>
+          prev.map((record) => (record.scheduled_post_id === scheduledPostId ? updated : record)),
+        );
+        toast.success("Scheduled post updated");
+        return updated;
+      } catch (error) {
+        console.error("Failed to update scheduled post", error);
+        const detail = axios.isAxiosError(error) ? error.response?.data?.detail : undefined;
+        toast.error(detail || "Unable to update scheduled post");
+        return null;
+      }
+    },
+    [selectedAccountId],
+  );
+
   const refreshAll = useCallback(async () => {
     try {
       await fetchAccounts();
       if (selectedAccountId) {
-        await Promise.all([fetchSchedule(selectedAccountId), fetchPosts(selectedAccountId)]);
+        await Promise.all([
+          fetchSchedule(selectedAccountId),
+          fetchPosts(selectedAccountId),
+          fetchScheduledActivity(selectedAccountId),
+        ]);
       }
     } finally {
       setLastRefreshedAt(new Date());
     }
-  }, [fetchAccounts, fetchSchedule, fetchPosts, selectedAccountId]);
+  }, [fetchAccounts, fetchSchedule, fetchPosts, fetchScheduledActivity, selectedAccountId]);
 
   const parseOverridesInput = useCallback((): Record<string, unknown> => {
     const raw = overridesInput.trim();
@@ -461,16 +640,13 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
       toast.error("Select an account first");
       return Promise.reject(new Error("No account"));
     }
-    if (!scheduleForm.userId) {
-      toast.error("Associate a user ID to launch campaigns");
-      return Promise.reject(new Error("Missing user id"));
-    }
+    const userId = scheduleForm.userId || DEV_USER_ID;
     setPublishing(true);
     try {
   const baseOverrides = parseOverridesInput();
   const clampedPostCount = clamp(postCount, 1, 6);
       const response = await axios.post(`${API_BASE_URL}/api/marketing/accounts/${selectedAccountId}/campaign`, {
-        user_id: scheduleForm.userId,
+        user_id: userId,
         prompt: manualPrompt || undefined,
         overrides: { ...baseOverrides, post_count: clampedPostCount },
       });
@@ -496,6 +672,129 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
       setPublishing(false);
     }
   }, [fetchPosts, manualPrompt, parseOverridesInput, scheduleForm.userId, selectedAccountId, triggerConfetti, postCount]);
+
+  const previewScheduledCampaign = useCallback(async () => {
+    if (!selectedAccountId) {
+      toast.error("Select an account first");
+      return null;
+    }
+    const userId = scheduleForm.userId || DEV_USER_ID;
+    if (!schedulePrompt.trim()) {
+      toast.error("Add a prompt for the scheduled campaign");
+      return Promise.reject(new Error("Missing prompt"));
+    }
+
+    setPreviewingScheduledCampaign(true);
+    try {
+      const baseOverrides = parseOverridesInput();
+      const clampedPostCount = clamp(postCount, 1, 6);
+      const response = await axios.post(
+        `${API_BASE_URL}/api/marketing/accounts/${selectedAccountId}/scheduled/preview`,
+        {
+          user_id: userId,
+          prompt: schedulePrompt,
+          post_count: clampedPostCount,
+          overrides: { ...baseOverrides, post_count: clampedPostCount },
+        },
+      );
+
+      const result: GeneratedCampaignResult = response.data.campaign;
+      setPreviewedScheduledCampaign(result);
+
+      const drafts: ScheduledPostDraft[] = (result.posts || []).map((item, index) => {
+        const payload =
+          item && typeof item === "object" && "post" in item && item.post
+            ? (item.post as CampaignDraftPost | MarketingPost)
+            : item;
+        return {
+          index,
+          post: normaliseDraftPost(payload, index),
+          scheduledAt: "",
+        };
+      });
+      setScheduledPostsDraft(drafts);
+      toast.success("Draft posts generated. Pick times and schedule them.");
+      return result;
+    } catch (error) {
+      console.error("Scheduled preview failed", error);
+      const detail = axios.isAxiosError(error) ? error.response?.data?.detail : undefined;
+      toast.error(detail || "Could not generate scheduled campaign preview");
+      throw error;
+    } finally {
+      setPreviewingScheduledCampaign(false);
+    }
+  }, [parseOverridesInput, postCount, scheduleForm.userId, schedulePrompt, selectedAccountId]);
+
+  const createScheduledCampaign = useCallback(async () => {
+    if (!selectedAccountId) {
+      toast.error("Select an account first");
+      return null;
+    }
+    const userId = scheduleForm.userId || DEV_USER_ID;
+    if (!previewedScheduledCampaign || scheduledPostsDraft.length === 0) {
+      toast.error("Generate posts first, then pick times");
+      return Promise.reject(new Error("No drafts"));
+    }
+
+    const missingTime = scheduledPostsDraft.find((draft) => !draft.scheduledAt);
+    if (missingTime) {
+      toast.error("Pick a scheduled time for every post");
+      return Promise.reject(new Error("Missing scheduled time"));
+    }
+
+    setSavingScheduledCampaign(true);
+    try {
+      const baseOverrides = parseOverridesInput();
+      const payloadPosts = scheduledPostsDraft.map((draft, index) => ({
+        post_payload: {
+          message: draft.post.message ?? "",
+          image_url: draft.post.image_url ?? undefined,
+          hashtags: draft.post.hashtags ?? [],
+          product_sku: draft.post.product_sku ?? undefined,
+          call_to_action: draft.post.call_to_action ?? undefined,
+          extra: draft.post.extra ?? undefined,
+          raw_campaign: draft.post.raw_campaign ?? undefined,
+          title: draft.post.title ?? undefined,
+          record_id: draft.post.record_id ?? `draft_${index}`,
+        },
+        scheduled_at: draft.scheduledAt,
+      }));
+
+      const response = await axios.post(
+        `${API_BASE_URL}/api/marketing/accounts/${selectedAccountId}/scheduled`,
+        {
+          user_id: userId,
+          prompt: schedulePrompt,
+          overrides: baseOverrides,
+          posts: payloadPosts,
+        },
+      );
+
+      const body = response.data as {
+        ok: boolean;
+        campaign?: unknown;
+        posts?: unknown;
+      };
+
+      if (!body.ok) {
+        toast.error("Failed to save scheduled campaign");
+        return body;
+      }
+
+      toast.success("Scheduled campaign saved. Posts will go out automatically.");
+      setPreviewedScheduledCampaign(null);
+      setScheduledPostsDraft([]);
+      setSchedulePrompt("");
+      return body;
+    } catch (error) {
+      console.error("Create scheduled campaign failed", error);
+      const detail = axios.isAxiosError(error) ? error.response?.data?.detail : undefined;
+      toast.error(detail || "Could not save scheduled campaign");
+      throw error;
+    } finally {
+      setSavingScheduledCampaign(false);
+    }
+  }, [parseOverridesInput, previewedScheduledCampaign, scheduleForm.userId, schedulePrompt, scheduledPostsDraft, selectedAccountId]);
 
   const handleCredentialsSubmit = useCallback(
     async (event: React.FormEvent) => {
@@ -561,11 +860,8 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
-      const derivedUserId = scheduleForm.userId.trim() || selectedAccount?.user_id || "";
-      if (!derivedUserId) {
-        toast.error("Missing a user ID for this account");
-        return;
-      }
+      const derivedUserId =
+        scheduleForm.userId.trim() || selectedAccount?.user_id || DEV_USER_ID;
 
       const timezoneValue = scheduleForm.timezone.trim();
       if (!timezoneValue) {
@@ -898,6 +1194,18 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
     lastGeneratedCampaign,
     postCount,
     setPostCount,
+    schedulePrompt,
+    setSchedulePrompt,
+    previewedScheduledCampaign,
+    scheduledPostsDraft,
+    previewingScheduledCampaign,
+    savingScheduledCampaign,
+    setScheduledPostsDraft,
+    previewScheduledCampaign,
+    createScheduledCampaign,
+  scheduledPosts,
+  scheduledPostsLoading,
+  updateScheduledPost,
   };
 
   return <MarketingContext.Provider value={value}>{children}</MarketingContext.Provider>;
