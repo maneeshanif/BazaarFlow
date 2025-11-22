@@ -76,6 +76,29 @@ class ScheduledTriggerRequest(BaseModel):
     triggered_at: Optional[str] = None
 
 
+class ScheduledPreviewRequest(BaseModel):
+    user_id: str = Field(..., min_length=1)
+    prompt: Optional[str] = None
+    post_count: int = Field(default=3, ge=1, le=6)
+    overrides: Dict[str, Any] = Field(default_factory=dict)
+
+    _normalise_overrides = ManualCampaignRequest._normalise_overrides
+
+
+class ScheduledCreateRequest(BaseModel):
+    user_id: str = Field(..., min_length=1)
+    prompt: Optional[str] = None
+    overrides: Dict[str, Any] = Field(default_factory=dict)
+    posts: list[Dict[str, Any]] = Field(
+        ...,
+        min_items=1,
+        max_items=6,
+        description="List of posts with post_payload and scheduled_at fields",
+    )
+
+    _normalise_overrides = ManualCampaignRequest._normalise_overrides
+
+
 class CommentReplyPayload(BaseModel):
     commenter_name: Optional[str] = None
     comment_message: Optional[str] = None
@@ -169,6 +192,72 @@ async def trigger_scheduled_campaign(account_id: str, payload: ScheduledTriggerR
         raise HTTPException(status_code=500, detail="Failed to execute scheduled marketing campaign") from exc
 
     return {"ok": True, "result": result}
+
+
+@router.post("/accounts/{account_id}/scheduled/preview")
+async def preview_scheduled_campaign(account_id: str, payload: ScheduledPreviewRequest):
+    """Generate a campaign preview for scheduling without publishing.
+
+    This endpoint runs the marketing agent with mode="scheduled" and returns
+    the structured campaign payload (including posts) without posting to
+    Facebook or recording posts.
+    """
+
+    try:
+        # Ensure post_count hint is visible to the agent via overrides.
+        overrides = dict(payload.overrides)
+        overrides.setdefault("post_count", payload.post_count)
+        account = marketing_service._require_account(account_id)  # type: ignore[attr-defined]
+        campaign = await marketing_service._generate_campaign(  # type: ignore[attr-defined]
+            account=account,
+            user_id=payload.user_id,
+            mode="scheduled",
+            prompt=payload.prompt,
+            overrides=overrides,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:  # pragma: no cover - defensive guard
+        logger.exception("Scheduled campaign preview failed")
+        raise HTTPException(status_code=500, detail="Failed to generate scheduled campaign preview") from exc
+
+    return {"ok": True, "campaign": campaign}
+
+
+@router.post("/accounts/{account_id}/scheduled")
+async def create_scheduled_campaign(account_id: str, payload: ScheduledCreateRequest):
+    """Persist a scheduled campaign made up of generated posts.
+
+    The posts field should contain objects with at least:
+    - post_payload: CampaignPost-like dict
+    - scheduled_at: ISO 8601 timestamp (ideally in UTC)
+    """
+
+    posts_with_times: list[Dict[str, Any]] = []
+    for index, item in enumerate(payload.posts):
+        if not isinstance(item, dict):
+            raise HTTPException(status_code=400, detail=f"Post at index {index} must be an object")
+        post_payload = item.get("post_payload") or item.get("payload") or item
+        scheduled_at = item.get("scheduled_at")
+        if not scheduled_at:
+            raise HTTPException(status_code=400, detail=f"scheduled_at is required for post index {index}")
+        posts_with_times.append({"post_payload": post_payload, "scheduled_at": scheduled_at})
+
+    try:
+        result = await marketing_service.create_scheduled_campaign(
+            account_id=account_id,
+            user_id=payload.user_id,
+            prompt=payload.prompt,
+            overrides=payload.overrides,
+            posts_with_times=posts_with_times,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:  # pragma: no cover - defensive guard
+        logger.exception("Failed to create scheduled campaign")
+        raise HTTPException(status_code=500, detail="Failed to create scheduled campaign") from exc
+
+    return {"ok": True, **result}
 
 
 @router.get("/accounts/{account_id}/posts")

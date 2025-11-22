@@ -40,11 +40,48 @@ export default function MarketingActivityPage() {
     deletingPostId,
     replyToComment,
     replyingCommentIds,
+    lastGeneratedCampaign,
   } = useMarketing();
 
   const [activePostId, setActivePostId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [postPendingDelete, setPostPendingDelete] = useState<string | null>(null);
+
+  const campaigns = useMemo(() => {
+    const groups = new Map<string, typeof posts>();
+
+    posts.forEach((post) => {
+      const extra = (post.extra as Record<string, unknown> | undefined) ?? {};
+      const rawCampaignId = (extra.campaign_id ?? (extra.campaign as Record<string, unknown> | undefined)?.campaign_id) as
+        | string
+        | undefined;
+      const campaignId = typeof rawCampaignId === "string" && rawCampaignId.trim() ? rawCampaignId : "__solo__";
+      if (!groups.has(campaignId)) {
+        groups.set(campaignId, []);
+      }
+      groups.get(campaignId)!.push(post);
+    });
+
+    const campaignBlocks = Array.from(groups.entries()).map(([campaignId, groupPosts]) => {
+      const sorted = [...groupPosts].sort((a, b) => (a.created_at < b.created_at ? 1 : -1));
+      const first = sorted[0];
+      const extra = (first.extra as Record<string, unknown> | undefined) ?? {};
+      const rawStrategy =
+        (extra.strategy_summary as string | undefined) ||
+        (extra.campaign as Record<string, unknown> | undefined)?.strategy_summary;
+      const strategySummary = typeof rawStrategy === "string" ? rawStrategy : undefined;
+      return {
+        id: campaignId,
+        posts: sorted,
+        strategySummary,
+      };
+    });
+
+    // Put non-campaign/single posts at the end for clarity
+    const multi = campaignBlocks.filter((block) => block.id !== "__solo__" && block.posts.length > 1);
+    const solo = campaignBlocks.filter((block) => block.id === "__solo__" || block.posts.length === 1);
+    return [...multi, ...solo];
+  }, [posts]);
 
   const orderedPosts = useMemo(
     () => [...posts].sort((a, b) => (a.created_at < b.created_at ? 1 : -1)),
@@ -139,22 +176,57 @@ export default function MarketingActivityPage() {
             </div>
           ) : (
             <div className="space-y-4">
-              {orderedPosts.map((post) => {
-                const campaign = (post.extra as Record<string, unknown> | undefined)?.campaign as Record<string, unknown> | undefined;
-                const hashtags: string[] = (campaign?.hashtags as string[] | undefined) ?? post.hashtags ?? [];
-                const angleSource = campaign?.angle ?? post.angle;
-                const campaignAngle = typeof angleSource === "string" ? angleSource : undefined;
-                const reactionTotal = Object.values(post.insights?.reactions ?? {}).reduce<number>(
-                  (accumulator, value) => accumulator + (typeof value === "number" ? value : 0),
-                  0,
-                );
-                const isRefreshing = refreshingPostId === post.facebook_post_id;
-                const cachedSummary = commentsByPost[post.facebook_post_id];
-                const commentsCount = cachedSummary?.totalCount ?? post.insights?.comments_count ?? 0;
-                const isLoadingComments = Boolean(commentsLoading[post.facebook_post_id]);
-                const isDeleting = deletingPostId === post.facebook_post_id;
+              {campaigns.map((campaignBlock) => {
+                const isAdHoc = campaignBlock.id === "__solo__";
+                const label = isAdHoc
+                  ? campaignBlock.posts.length > 1
+                    ? `Ad-hoc group (${campaignBlock.posts.length} posts)`
+                    : "Single post"
+                  : `Campaign ${campaignBlock.id.slice(0, 8)} • ${campaignBlock.posts.length} post${
+                      campaignBlock.posts.length > 1 ? "s" : ""
+                    }`;
+
                 return (
-                  <div key={post.record_id} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white p-4 dark:bg-slate-800">
+                  <div
+                    key={campaignBlock.id}
+                    className="space-y-3 rounded-2xl border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900/40"
+                  >
+                    <div className="flex flex-col gap-1 md:flex-row md:items-center md:justify-between">
+                      <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-300">
+                        <Badge variant="outline" className="bg-white/60 dark:bg-slate-900/40">
+                          {label}
+                        </Badge>
+                        {campaignBlock.strategySummary && (
+                          <span className="line-clamp-1 text-[11px] text-slate-500 dark:text-slate-400">
+                            {campaignBlock.strategySummary}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      {campaignBlock.posts.map((post) => {
+                        const campaign = (post.extra as Record<string, unknown> | undefined)?.campaign as
+                          | Record<string, unknown>
+                          | undefined;
+                        const hashtags: string[] = (campaign?.hashtags as string[] | undefined) ?? post.hashtags ?? [];
+                        const angleSource = campaign?.angle ?? post.angle;
+                        const campaignAngle = typeof angleSource === "string" ? angleSource : undefined;
+                        const reactionTotal = Object.values(post.insights?.reactions ?? {}).reduce<number>(
+                          (accumulator, value) => accumulator + (typeof value === "number" ? value : 0),
+                          0,
+                        );
+                        const isRefreshing = refreshingPostId === post.facebook_post_id;
+                        const cachedSummary = commentsByPost[post.facebook_post_id];
+                        const commentsCount = cachedSummary?.totalCount ?? post.insights?.comments_count ?? 0;
+                        const isLoadingComments = Boolean(commentsLoading[post.facebook_post_id]);
+                        const isDeleting = deletingPostId === post.facebook_post_id;
+
+                        return (
+                          <div
+                            key={post.record_id}
+                            className="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800"
+                          >
                     <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
@@ -277,6 +349,10 @@ export default function MarketingActivityPage() {
                         </div>
                       </div>
                     )}
+                  </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 );
               })}

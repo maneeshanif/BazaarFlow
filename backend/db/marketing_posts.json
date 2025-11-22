@@ -285,5 +285,1105 @@
     "created_at": "2025-11-16T21:33:47.585155+00:00",
     "updated_at": "2025-11-16T21:33:47.585155+00:00",
     "insights": null
+  },
+  {
+    "record_id": "5f66956a-8585-42f5-a863-9fb2809758e4",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118400365036166",
+    "message": "Top tech alert! \ud83d\udea8 The MacBook Air M3 is back in stock, but quantities are limited! Snag yours before they vanish. \ud83d\udd25\ud83d\udcbb Shop now!\n\n#backinstock #limitedquantity #macbookair #techdeals",
+    "image_url": "https://images.pexels.com/photos/15941869/pexels-photo-15941869.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": "SKU-MBA-M3",
+    "hashtags": [
+      "techdeals",
+      "macbookair",
+      "backinstock",
+      "limitedquantity"
+    ],
+    "angle": "MacBook Air M3 restock hype",
+    "source": "manual",
+    "extra": {
+      "campaign": {
+        "message": "Top tech alert! \ud83d\udea8 The MacBook Air M3 is back in stock, but quantities are limited! Snag yours before they vanish. \ud83d\udd25\ud83d\udcbb Shop now!",
+        "hashtags": [
+          "techdeals",
+          "macbookair",
+          "backinstock",
+          "limitedquantity"
+        ],
+        "angle": "MacBook Air M3 restock hype",
+        "image_url": "https://images.pexels.com/photos/15941869/pexels-photo-15941869.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "image_query": "MacBook Air M3",
+        "product_sku": "SKU-MBA-M3",
+        "call_to_action": "Shop the MacBook Air M3 now!"
+      }
+    },
+    "created_at": "2025-11-21T21:59:13.250042+00:00",
+    "updated_at": "2025-11-21T21:59:13.250042+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "7c74e440-86a2-46d8-a595-299c68288005",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118452673036166",
+    "message": "Our weekend sale is here! \ud83c\udf89 Stock up on your favorite fresh produce. Everyone's loving our Apples!\ud83c\udf4e Don't miss out! Shop now and enjoy the freshest deals. \ud83e\udd29\n\nShop now and save!\n\n#farmersmarket #freshproduce #healthyliving #weekendsale",
+    "image_url": "https://images.pexels.com/photos/18121630/pexels-photo-18121630.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "freshproduce",
+      "weekendsale",
+      "healthyliving",
+      "farmersmarket"
+    ],
+    "angle": "Weekend Sale Starts Now!",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T07:49:05.334928+00:00",
+      "strategy_summary": "This campaign promotes a weekend sale on fresh produce, leveraging social proof and urgency. The first post highlights trending items and the sale kickoff. The second post showcases specific popular items with limited stock. The third post serves as a final call to action, emphasizing the sale's end and encouraging immediate purchases.",
+      "campaign_post_index": 0,
+      "raw_campaign": {
+        "strategy_summary": "This campaign promotes a weekend sale on fresh produce, leveraging social proof and urgency. The first post highlights trending items and the sale kickoff. The second post showcases specific popular items with limited stock. The third post serves as a final call to action, emphasizing the sale's end and encouraging immediate purchases.",
+        "posts": [
+          {
+            "title": "Weekend Sale Starts Now!",
+            "message": "Our weekend sale is here! \ud83c\udf89 Stock up on your favorite fresh produce. Everyone's loving our Apples!\ud83c\udf4e Don't miss out! Shop now and enjoy the freshest deals. \ud83e\udd29",
+            "hashtags": [
+              "freshproduce",
+              "weekendsale",
+              "healthyliving",
+              "farmersmarket"
+            ],
+            "image_query": "close up of fresh produce at farmers market, vibrant colors",
+            "image_url": "https://images.pexels.com/photos/18121630/pexels-photo-18121630.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Shop now and save!",
+            "day_offset": 0
+          },
+          {
+            "title": "Popular Items Selling Fast!",
+            "message": "Hurry! \u23f3 Our popular Apples are flying off the shelves! Get yours before they're gone. Limited stock available. Don't miss out on our weekend sale discounts. \ud83d\ude09",
+            "hashtags": [
+              "freshproduce",
+              "weekendsale",
+              "limitedstock",
+              "apples"
+            ],
+            "image_query": "close up of red apples in a basket, sunlight",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Grab yours before they're gone!",
+            "day_offset": 1
+          },
+          {
+            "title": "Last Chance for Weekend Deals!",
+            "message": "Last day of our weekend sale! \u23f0 Don't miss your chance to save on fresh, delicious produce. Treat yourself and your family to healthy goodness. \ud83d\ude0a Shop now!",
+            "hashtags": [
+              "freshproduce",
+              "lastchance",
+              "weekendsale",
+              "healthylifestyle"
+            ],
+            "image_query": "family shopping for fresh produce at a market, smiling",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Shop now before it's too late!",
+            "day_offset": 2
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T07:49:12.788673+00:00",
+    "updated_at": "2025-11-22T07:49:12.788673+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "a577b46d-9611-4dbd-93b9-8c03e25793f1",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118452727036166",
+    "message": "Hurry! \u23f3 Our popular Apples are flying off the shelves! Get yours before they're gone. Limited stock available. Don't miss out on our weekend sale discounts. \ud83d\ude09\n\nGrab yours before they're gone!\n\n#apples #freshproduce #limitedstock #weekendsale",
+    "image_url": "https://images.pexels.com/photos/7658815/pexels-photo-7658815.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "freshproduce",
+      "weekendsale",
+      "limitedstock",
+      "apples"
+    ],
+    "angle": "Popular Items Selling Fast!",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T07:49:05.334928+00:00",
+      "strategy_summary": "This campaign promotes a weekend sale on fresh produce, leveraging social proof and urgency. The first post highlights trending items and the sale kickoff. The second post showcases specific popular items with limited stock. The third post serves as a final call to action, emphasizing the sale's end and encouraging immediate purchases.",
+      "campaign_post_index": 1,
+      "raw_campaign": {
+        "strategy_summary": "This campaign promotes a weekend sale on fresh produce, leveraging social proof and urgency. The first post highlights trending items and the sale kickoff. The second post showcases specific popular items with limited stock. The third post serves as a final call to action, emphasizing the sale's end and encouraging immediate purchases.",
+        "posts": [
+          {
+            "title": "Weekend Sale Starts Now!",
+            "message": "Our weekend sale is here! \ud83c\udf89 Stock up on your favorite fresh produce. Everyone's loving our Apples!\ud83c\udf4e Don't miss out! Shop now and enjoy the freshest deals. \ud83e\udd29",
+            "hashtags": [
+              "freshproduce",
+              "weekendsale",
+              "healthyliving",
+              "farmersmarket"
+            ],
+            "image_query": "close up of fresh produce at farmers market, vibrant colors",
+            "image_url": "https://images.pexels.com/photos/18121630/pexels-photo-18121630.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Shop now and save!",
+            "day_offset": 0
+          },
+          {
+            "title": "Popular Items Selling Fast!",
+            "message": "Hurry! \u23f3 Our popular Apples are flying off the shelves! Get yours before they're gone. Limited stock available. Don't miss out on our weekend sale discounts. \ud83d\ude09",
+            "hashtags": [
+              "freshproduce",
+              "weekendsale",
+              "limitedstock",
+              "apples"
+            ],
+            "image_query": "close up of red apples in a basket, sunlight",
+            "image_url": "https://images.pexels.com/photos/7658815/pexels-photo-7658815.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Grab yours before they're gone!",
+            "day_offset": 1
+          },
+          {
+            "title": "Last Chance for Weekend Deals!",
+            "message": "Last day of our weekend sale! \u23f0 Don't miss your chance to save on fresh, delicious produce. Treat yourself and your family to healthy goodness. \ud83d\ude0a Shop now!",
+            "hashtags": [
+              "freshproduce",
+              "lastchance",
+              "weekendsale",
+              "healthylifestyle"
+            ],
+            "image_query": "family shopping for fresh produce at a market, smiling",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Shop now before it's too late!",
+            "day_offset": 2
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T07:49:16.376126+00:00",
+    "updated_at": "2025-11-22T07:49:16.376126+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "099d7531-a06f-4814-b162-30fcc6f69743",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118452781036166",
+    "message": "Last day of our weekend sale! \u23f0 Don't miss your chance to save on fresh, delicious produce. Treat yourself and your family to healthy goodness. \ud83d\ude0a Shop now!\n\nShop now before it's too late!\n\n#freshproduce #healthylifestyle #lastchance #weekendsale",
+    "image_url": "https://images.pexels.com/photos/3985059/pexels-photo-3985059.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "freshproduce",
+      "lastchance",
+      "weekendsale",
+      "healthylifestyle"
+    ],
+    "angle": "Last Chance for Weekend Deals!",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T07:49:05.334928+00:00",
+      "strategy_summary": "This campaign promotes a weekend sale on fresh produce, leveraging social proof and urgency. The first post highlights trending items and the sale kickoff. The second post showcases specific popular items with limited stock. The third post serves as a final call to action, emphasizing the sale's end and encouraging immediate purchases.",
+      "campaign_post_index": 2,
+      "raw_campaign": {
+        "strategy_summary": "This campaign promotes a weekend sale on fresh produce, leveraging social proof and urgency. The first post highlights trending items and the sale kickoff. The second post showcases specific popular items with limited stock. The third post serves as a final call to action, emphasizing the sale's end and encouraging immediate purchases.",
+        "posts": [
+          {
+            "title": "Weekend Sale Starts Now!",
+            "message": "Our weekend sale is here! \ud83c\udf89 Stock up on your favorite fresh produce. Everyone's loving our Apples!\ud83c\udf4e Don't miss out! Shop now and enjoy the freshest deals. \ud83e\udd29",
+            "hashtags": [
+              "freshproduce",
+              "weekendsale",
+              "healthyliving",
+              "farmersmarket"
+            ],
+            "image_query": "close up of fresh produce at farmers market, vibrant colors",
+            "image_url": "https://images.pexels.com/photos/18121630/pexels-photo-18121630.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Shop now and save!",
+            "day_offset": 0
+          },
+          {
+            "title": "Popular Items Selling Fast!",
+            "message": "Hurry! \u23f3 Our popular Apples are flying off the shelves! Get yours before they're gone. Limited stock available. Don't miss out on our weekend sale discounts. \ud83d\ude09",
+            "hashtags": [
+              "freshproduce",
+              "weekendsale",
+              "limitedstock",
+              "apples"
+            ],
+            "image_query": "close up of red apples in a basket, sunlight",
+            "image_url": "https://images.pexels.com/photos/7658815/pexels-photo-7658815.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Grab yours before they're gone!",
+            "day_offset": 1
+          },
+          {
+            "title": "Last Chance for Weekend Deals!",
+            "message": "Last day of our weekend sale! \u23f0 Don't miss your chance to save on fresh, delicious produce. Treat yourself and your family to healthy goodness. \ud83d\ude0a Shop now!",
+            "hashtags": [
+              "freshproduce",
+              "lastchance",
+              "weekendsale",
+              "healthylifestyle"
+            ],
+            "image_query": "family shopping for fresh produce at a market, smiling",
+            "image_url": "https://images.pexels.com/photos/3985059/pexels-photo-3985059.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Shop now before it's too late!",
+            "day_offset": 2
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T07:49:20.450292+00:00",
+    "updated_at": "2025-11-22T07:49:20.450292+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "4aeac218-20c4-41f3-84f2-1476fd9d10b6",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118453117036166",
+    "message": "Feel the power of Suzuki heavy bikes! \ud83c\udfcd\ufe0f\ud83d\udca8 Experience unmatched performance and style. Adventure awaits! #SuzukiBikes\n\nExplore our collection now!\n\n#adventure #bikelife #heavybikes #motorcycle #suzuki",
+    "image_url": "https://images.pexels.com/photos/34031071/pexels-photo-34031071.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "suzuki",
+      "heavybikes",
+      "motorcycle",
+      "adventure",
+      "bikelife"
+    ],
+    "angle": "Unleash Your Inner Rider",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T07:53:36.610462+00:00",
+      "strategy_summary": "This campaign focuses on promoting Suzuki heavy bikes by showcasing their power and style. The posts aim to create excitement and encourage enthusiasts to explore the available models, emphasizing the thrill and freedom associated with riding these bikes. Each post builds anticipation, highlighting different aspects of the bikes and culminating in a call to action to view the collection.",
+      "campaign_post_index": 0,
+      "raw_campaign": {
+        "strategy_summary": "This campaign focuses on promoting Suzuki heavy bikes by showcasing their power and style. The posts aim to create excitement and encourage enthusiasts to explore the available models, emphasizing the thrill and freedom associated with riding these bikes. Each post builds anticipation, highlighting different aspects of the bikes and culminating in a call to action to view the collection.",
+        "posts": [
+          {
+            "title": "Unleash Your Inner Rider",
+            "message": "Feel the power of Suzuki heavy bikes! \ud83c\udfcd\ufe0f\ud83d\udca8 Experience unmatched performance and style. Adventure awaits! #SuzukiBikes",
+            "hashtags": [
+              "suzuki",
+              "heavybikes",
+              "motorcycle",
+              "adventure",
+              "bikelife"
+            ],
+            "image_query": "suzuki heavy bike riding on open road",
+            "image_url": "https://images.pexels.com/photos/34031071/pexels-photo-34031071.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Explore our collection now!",
+            "day_offset": 0
+          },
+          {
+            "title": "Dominate the Road",
+            "message": "Ready to dominate the road? Suzuki heavy bikes deliver raw power and precision handling. \u2699\ufe0f\ud83d\udd25 Elevate your ride! #SuzukiPower",
+            "hashtags": [
+              "suzuki",
+              "heavybikes",
+              "performance",
+              "motorcyclelife",
+              "roadtrip"
+            ],
+            "image_query": "suzuki heavy bike close-up shot",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Find your perfect bike!",
+            "day_offset": 1
+          },
+          {
+            "title": "Style Meets Performance",
+            "message": "Experience the perfect blend of style and performance with Suzuki heavy bikes. Sleek design, powerful engine. \ud83d\udcaf #BikeStyle",
+            "hashtags": [
+              "suzuki",
+              "heavybikes",
+              "motorcycle",
+              "design",
+              "biker"
+            ],
+            "image_query": "suzuki heavy bike parked in city street",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "View the latest models!",
+            "day_offset": 2
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T07:53:41.848256+00:00",
+    "updated_at": "2025-11-22T07:53:41.848256+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "4178c6a3-7b0c-4865-8b88-386872dbb051",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118453171036166",
+    "message": "Ready to dominate the road? Suzuki heavy bikes deliver raw power and precision handling. \u2699\ufe0f\ud83d\udd25 Elevate your ride! #SuzukiPower\n\nFind your perfect bike!\n\n#heavybikes #motorcyclelife #performance #roadtrip #suzuki",
+    "image_url": "https://images.pexels.com/photos/13514352/pexels-photo-13514352.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "suzuki",
+      "heavybikes",
+      "performance",
+      "motorcyclelife",
+      "roadtrip"
+    ],
+    "angle": "Dominate the Road",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T07:53:36.610462+00:00",
+      "strategy_summary": "This campaign focuses on promoting Suzuki heavy bikes by showcasing their power and style. The posts aim to create excitement and encourage enthusiasts to explore the available models, emphasizing the thrill and freedom associated with riding these bikes. Each post builds anticipation, highlighting different aspects of the bikes and culminating in a call to action to view the collection.",
+      "campaign_post_index": 1,
+      "raw_campaign": {
+        "strategy_summary": "This campaign focuses on promoting Suzuki heavy bikes by showcasing their power and style. The posts aim to create excitement and encourage enthusiasts to explore the available models, emphasizing the thrill and freedom associated with riding these bikes. Each post builds anticipation, highlighting different aspects of the bikes and culminating in a call to action to view the collection.",
+        "posts": [
+          {
+            "title": "Unleash Your Inner Rider",
+            "message": "Feel the power of Suzuki heavy bikes! \ud83c\udfcd\ufe0f\ud83d\udca8 Experience unmatched performance and style. Adventure awaits! #SuzukiBikes",
+            "hashtags": [
+              "suzuki",
+              "heavybikes",
+              "motorcycle",
+              "adventure",
+              "bikelife"
+            ],
+            "image_query": "suzuki heavy bike riding on open road",
+            "image_url": "https://images.pexels.com/photos/34031071/pexels-photo-34031071.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Explore our collection now!",
+            "day_offset": 0
+          },
+          {
+            "title": "Dominate the Road",
+            "message": "Ready to dominate the road? Suzuki heavy bikes deliver raw power and precision handling. \u2699\ufe0f\ud83d\udd25 Elevate your ride! #SuzukiPower",
+            "hashtags": [
+              "suzuki",
+              "heavybikes",
+              "performance",
+              "motorcyclelife",
+              "roadtrip"
+            ],
+            "image_query": "suzuki heavy bike close-up shot",
+            "image_url": "https://images.pexels.com/photos/13514352/pexels-photo-13514352.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Find your perfect bike!",
+            "day_offset": 1
+          },
+          {
+            "title": "Style Meets Performance",
+            "message": "Experience the perfect blend of style and performance with Suzuki heavy bikes. Sleek design, powerful engine. \ud83d\udcaf #BikeStyle",
+            "hashtags": [
+              "suzuki",
+              "heavybikes",
+              "motorcycle",
+              "design",
+              "biker"
+            ],
+            "image_query": "suzuki heavy bike parked in city street",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "View the latest models!",
+            "day_offset": 2
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T07:53:45.211200+00:00",
+    "updated_at": "2025-11-22T07:53:45.211200+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "bcf26950-3392-4505-a769-9b88c250c2e3",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118453219036166",
+    "message": "Experience the perfect blend of style and performance with Suzuki heavy bikes. Sleek design, powerful engine. \ud83d\udcaf #BikeStyle\n\nView the latest models!\n\n#biker #design #heavybikes #motorcycle #suzuki",
+    "image_url": "https://images.pexels.com/photos/1130494/pexels-photo-1130494.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "suzuki",
+      "heavybikes",
+      "motorcycle",
+      "design",
+      "biker"
+    ],
+    "angle": "Style Meets Performance",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T07:53:36.610462+00:00",
+      "strategy_summary": "This campaign focuses on promoting Suzuki heavy bikes by showcasing their power and style. The posts aim to create excitement and encourage enthusiasts to explore the available models, emphasizing the thrill and freedom associated with riding these bikes. Each post builds anticipation, highlighting different aspects of the bikes and culminating in a call to action to view the collection.",
+      "campaign_post_index": 2,
+      "raw_campaign": {
+        "strategy_summary": "This campaign focuses on promoting Suzuki heavy bikes by showcasing their power and style. The posts aim to create excitement and encourage enthusiasts to explore the available models, emphasizing the thrill and freedom associated with riding these bikes. Each post builds anticipation, highlighting different aspects of the bikes and culminating in a call to action to view the collection.",
+        "posts": [
+          {
+            "title": "Unleash Your Inner Rider",
+            "message": "Feel the power of Suzuki heavy bikes! \ud83c\udfcd\ufe0f\ud83d\udca8 Experience unmatched performance and style. Adventure awaits! #SuzukiBikes",
+            "hashtags": [
+              "suzuki",
+              "heavybikes",
+              "motorcycle",
+              "adventure",
+              "bikelife"
+            ],
+            "image_query": "suzuki heavy bike riding on open road",
+            "image_url": "https://images.pexels.com/photos/34031071/pexels-photo-34031071.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Explore our collection now!",
+            "day_offset": 0
+          },
+          {
+            "title": "Dominate the Road",
+            "message": "Ready to dominate the road? Suzuki heavy bikes deliver raw power and precision handling. \u2699\ufe0f\ud83d\udd25 Elevate your ride! #SuzukiPower",
+            "hashtags": [
+              "suzuki",
+              "heavybikes",
+              "performance",
+              "motorcyclelife",
+              "roadtrip"
+            ],
+            "image_query": "suzuki heavy bike close-up shot",
+            "image_url": "https://images.pexels.com/photos/13514352/pexels-photo-13514352.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Find your perfect bike!",
+            "day_offset": 1
+          },
+          {
+            "title": "Style Meets Performance",
+            "message": "Experience the perfect blend of style and performance with Suzuki heavy bikes. Sleek design, powerful engine. \ud83d\udcaf #BikeStyle",
+            "hashtags": [
+              "suzuki",
+              "heavybikes",
+              "motorcycle",
+              "design",
+              "biker"
+            ],
+            "image_query": "suzuki heavy bike parked in city street",
+            "image_url": "https://images.pexels.com/photos/1130494/pexels-photo-1130494.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "View the latest models!",
+            "day_offset": 2
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T07:53:48.265949+00:00",
+    "updated_at": "2025-11-22T07:53:48.265949+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "291b6116-a7f7-4ce7-a577-20ce4d47a3df",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118454281036166",
+    "message": "Dominate the competition with our new gaming laptop! \ud83d\ude80 Experience unbeatable performance and stunning graphics. Limited stock available, grab yours now! \ud83d\udcbb\ud83d\udd25\n\nShop Now & Unleash Your Potential!\n\n#gamers #gamingcommunity #gaminglaptop #newtech #pcgaming",
+    "image_url": "https://images.pexels.com/photos/735911/pexels-photo-735911.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "gaminglaptop",
+      "newtech",
+      "gamers",
+      "pcgaming",
+      "gamingcommunity"
+    ],
+    "angle": "Level Up Your Game!",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T08:08:03.967758+00:00",
+      "strategy_summary": "This campaign focuses on promoting the new gaming laptop. Given the user's prompt, a single, impactful post is created to highlight the laptop's features and drive immediate sales. The post incorporates urgency and a clear call to action to maximize engagement.",
+      "campaign_post_index": 0,
+      "raw_campaign": {
+        "strategy_summary": "This campaign focuses on promoting the new gaming laptop. Given the user's prompt, a single, impactful post is created to highlight the laptop's features and drive immediate sales. The post incorporates urgency and a clear call to action to maximize engagement.",
+        "posts": [
+          {
+            "title": "Level Up Your Game!",
+            "message": "Dominate the competition with our new gaming laptop! \ud83d\ude80 Experience unbeatable performance and stunning graphics. Limited stock available, grab yours now! \ud83d\udcbb\ud83d\udd25",
+            "hashtags": [
+              "gaminglaptop",
+              "newtech",
+              "gamers",
+              "pcgaming",
+              "gamingcommunity"
+            ],
+            "image_query": "high-performance gaming laptop on a desk, illuminated keyboard",
+            "image_url": "https://images.pexels.com/photos/735911/pexels-photo-735911.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Shop Now & Unleash Your Potential!",
+            "day_offset": 0
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T08:08:08.244206+00:00",
+    "updated_at": "2025-11-22T08:08:08.244206+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "09b082b5-7b9f-4148-b170-7e3b786c3e1a",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118454425036166",
+    "message": "Revolutionize your business with AI Agents! \ud83d\ude80 Automate tasks, boost efficiency, and gain a competitive edge. Discover how AI Agents can transform your workflow. #AIagents #Automation #BusinessSolutions\n\nLearn more about AI Agents today!\n\n#aiagents #artificialintelligence #automation #businesssolutions #futureofwork",
+    "image_url": "https://images.pexels.com/photos/5614124/pexels-photo-5614124.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "aiagents",
+      "automation",
+      "businesssolutions",
+      "artificialintelligence",
+      "futureofwork"
+    ],
+    "angle": "Unlock the Power of AI Agents",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T08:09:28.159997+00:00",
+      "strategy_summary": "This campaign focuses on highlighting BazaarFlow's expertise in AI agent solutions, leveraging the recent customer interest in iPhones and MacBooks to draw attention. The sequence begins by introducing the concept of AI agents, then showcases their benefits, highlights the existing customer base, offers a limited-time discount and concludes with a strong call to action to contact BazaarFlow for a free consultation.",
+      "campaign_post_index": 0,
+      "raw_campaign": {
+        "strategy_summary": "This campaign focuses on highlighting BazaarFlow's expertise in AI agent solutions, leveraging the recent customer interest in iPhones and MacBooks to draw attention. The sequence begins by introducing the concept of AI agents, then showcases their benefits, highlights the existing customer base, offers a limited-time discount and concludes with a strong call to action to contact BazaarFlow for a free consultation.",
+        "posts": [
+          {
+            "title": "Unlock the Power of AI Agents",
+            "message": "Revolutionize your business with AI Agents! \ud83d\ude80 Automate tasks, boost efficiency, and gain a competitive edge. Discover how AI Agents can transform your workflow. #AIagents #Automation #BusinessSolutions",
+            "hashtags": [
+              "aiagents",
+              "automation",
+              "businesssolutions",
+              "artificialintelligence",
+              "futureofwork"
+            ],
+            "image_query": "futuristic office with AI assistant",
+            "image_url": "https://images.pexels.com/photos/5614124/pexels-photo-5614124.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Learn more about AI Agents today!",
+            "day_offset": 0
+          },
+          {
+            "title": "Benefits of AI Agents",
+            "message": "AI Agents offer unparalleled benefits: increased productivity, reduced costs, and improved decision-making. \ud83d\udca1 See how our clients are already reaping the rewards. #AIbenefits #Productivity #CostSavings",
+            "hashtags": [
+              "aibenefits",
+              "productivity",
+              "costsavings",
+              "efficiency",
+              "businessgrowth"
+            ],
+            "image_query": "business people collaborating with holographic AI interface",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Explore the possibilities with AI Agents!",
+            "day_offset": 1
+          },
+          {
+            "title": "Join Our Growing Customer Base",
+            "message": "Like Habib and Anees, businesses are trusting BazaarFlow's AI Agents to transform their operations. Join the ranks of satisfied customers! \ud83e\udd1d #CustomerSuccess #AIadoption #BusinessTransformation",
+            "hashtags": [
+              "customersuccess",
+              "aiadoption",
+              "businesstransformation",
+              "clienttestimonials",
+              "satisfiedcustomers"
+            ],
+            "image_query": "happy business team celebrating success",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "See how AI Agents can work for you.",
+            "day_offset": 2
+          },
+          {
+            "title": "Limited-Time Offer",
+            "message": "Get 20% off your first month of AI Agent services! \u2728 Don't miss this opportunity to optimize your business. Act now! #AISale #Discount #LimitedTimeOffer",
+            "hashtags": [
+              "aisale",
+              "discount",
+              "limitedtimeoffer",
+              "promotion",
+              "businessdeal"
+            ],
+            "image_query": "discount tag with ai theme",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Claim your discount today!",
+            "day_offset": 3
+          },
+          {
+            "title": "Free AI Consultation",
+            "message": "Ready to take your business to the next level? Contact us for a free AI consultation. \ud83d\udcde Let our experts guide you. #AIConsultation #FreeConsultation #BusinessAdvice",
+            "hashtags": [
+              "aiconsultation",
+              "freeconsultation",
+              "businessadvice",
+              "aiexperts",
+              "businessstrategy"
+            ],
+            "image_query": "business consultant explaining ai solutions",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Book your free consultation now!",
+            "day_offset": 4
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T08:09:31.610057+00:00",
+    "updated_at": "2025-11-22T08:09:31.610057+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "88812e2e-23e2-481d-bdba-853a393e3c5b",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118454473036166",
+    "message": "AI Agents offer unparalleled benefits: increased productivity, reduced costs, and improved decision-making. \ud83d\udca1 See how our clients are already reaping the rewards. #AIbenefits #Productivity #CostSavings\n\nExplore the possibilities with AI Agents!\n\n#aibenefits #businessgrowth #costsavings #efficiency #productivity",
+    "image_url": "https://images.pexels.com/photos/8728105/pexels-photo-8728105.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "aibenefits",
+      "productivity",
+      "costsavings",
+      "efficiency",
+      "businessgrowth"
+    ],
+    "angle": "Benefits of AI Agents",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T08:09:28.159997+00:00",
+      "strategy_summary": "This campaign focuses on highlighting BazaarFlow's expertise in AI agent solutions, leveraging the recent customer interest in iPhones and MacBooks to draw attention. The sequence begins by introducing the concept of AI agents, then showcases their benefits, highlights the existing customer base, offers a limited-time discount and concludes with a strong call to action to contact BazaarFlow for a free consultation.",
+      "campaign_post_index": 1,
+      "raw_campaign": {
+        "strategy_summary": "This campaign focuses on highlighting BazaarFlow's expertise in AI agent solutions, leveraging the recent customer interest in iPhones and MacBooks to draw attention. The sequence begins by introducing the concept of AI agents, then showcases their benefits, highlights the existing customer base, offers a limited-time discount and concludes with a strong call to action to contact BazaarFlow for a free consultation.",
+        "posts": [
+          {
+            "title": "Unlock the Power of AI Agents",
+            "message": "Revolutionize your business with AI Agents! \ud83d\ude80 Automate tasks, boost efficiency, and gain a competitive edge. Discover how AI Agents can transform your workflow. #AIagents #Automation #BusinessSolutions",
+            "hashtags": [
+              "aiagents",
+              "automation",
+              "businesssolutions",
+              "artificialintelligence",
+              "futureofwork"
+            ],
+            "image_query": "futuristic office with AI assistant",
+            "image_url": "https://images.pexels.com/photos/5614124/pexels-photo-5614124.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Learn more about AI Agents today!",
+            "day_offset": 0
+          },
+          {
+            "title": "Benefits of AI Agents",
+            "message": "AI Agents offer unparalleled benefits: increased productivity, reduced costs, and improved decision-making. \ud83d\udca1 See how our clients are already reaping the rewards. #AIbenefits #Productivity #CostSavings",
+            "hashtags": [
+              "aibenefits",
+              "productivity",
+              "costsavings",
+              "efficiency",
+              "businessgrowth"
+            ],
+            "image_query": "business people collaborating with holographic AI interface",
+            "image_url": "https://images.pexels.com/photos/8728105/pexels-photo-8728105.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Explore the possibilities with AI Agents!",
+            "day_offset": 1
+          },
+          {
+            "title": "Join Our Growing Customer Base",
+            "message": "Like Habib and Anees, businesses are trusting BazaarFlow's AI Agents to transform their operations. Join the ranks of satisfied customers! \ud83e\udd1d #CustomerSuccess #AIadoption #BusinessTransformation",
+            "hashtags": [
+              "customersuccess",
+              "aiadoption",
+              "businesstransformation",
+              "clienttestimonials",
+              "satisfiedcustomers"
+            ],
+            "image_query": "happy business team celebrating success",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "See how AI Agents can work for you.",
+            "day_offset": 2
+          },
+          {
+            "title": "Limited-Time Offer",
+            "message": "Get 20% off your first month of AI Agent services! \u2728 Don't miss this opportunity to optimize your business. Act now! #AISale #Discount #LimitedTimeOffer",
+            "hashtags": [
+              "aisale",
+              "discount",
+              "limitedtimeoffer",
+              "promotion",
+              "businessdeal"
+            ],
+            "image_query": "discount tag with ai theme",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Claim your discount today!",
+            "day_offset": 3
+          },
+          {
+            "title": "Free AI Consultation",
+            "message": "Ready to take your business to the next level? Contact us for a free AI consultation. \ud83d\udcde Let our experts guide you. #AIConsultation #FreeConsultation #BusinessAdvice",
+            "hashtags": [
+              "aiconsultation",
+              "freeconsultation",
+              "businessadvice",
+              "aiexperts",
+              "businessstrategy"
+            ],
+            "image_query": "business consultant explaining ai solutions",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Book your free consultation now!",
+            "day_offset": 4
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T08:09:34.655445+00:00",
+    "updated_at": "2025-11-22T08:09:34.655445+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "18dd9849-51f4-41f5-a7b2-8b9df4700d66",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118454533036166",
+    "message": "Like Habib and Anees, businesses are trusting BazaarFlow's AI Agents to transform their operations. Join the ranks of satisfied customers! \ud83e\udd1d #CustomerSuccess #AIadoption #BusinessTransformation\n\nSee how AI Agents can work for you.\n\n#aiadoption #businesstransformation #clienttestimonials #customersuccess #satisfiedcustomers",
+    "image_url": "https://images.pexels.com/photos/7698820/pexels-photo-7698820.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "customersuccess",
+      "aiadoption",
+      "businesstransformation",
+      "clienttestimonials",
+      "satisfiedcustomers"
+    ],
+    "angle": "Join Our Growing Customer Base",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T08:09:28.159997+00:00",
+      "strategy_summary": "This campaign focuses on highlighting BazaarFlow's expertise in AI agent solutions, leveraging the recent customer interest in iPhones and MacBooks to draw attention. The sequence begins by introducing the concept of AI agents, then showcases their benefits, highlights the existing customer base, offers a limited-time discount and concludes with a strong call to action to contact BazaarFlow for a free consultation.",
+      "campaign_post_index": 2,
+      "raw_campaign": {
+        "strategy_summary": "This campaign focuses on highlighting BazaarFlow's expertise in AI agent solutions, leveraging the recent customer interest in iPhones and MacBooks to draw attention. The sequence begins by introducing the concept of AI agents, then showcases their benefits, highlights the existing customer base, offers a limited-time discount and concludes with a strong call to action to contact BazaarFlow for a free consultation.",
+        "posts": [
+          {
+            "title": "Unlock the Power of AI Agents",
+            "message": "Revolutionize your business with AI Agents! \ud83d\ude80 Automate tasks, boost efficiency, and gain a competitive edge. Discover how AI Agents can transform your workflow. #AIagents #Automation #BusinessSolutions",
+            "hashtags": [
+              "aiagents",
+              "automation",
+              "businesssolutions",
+              "artificialintelligence",
+              "futureofwork"
+            ],
+            "image_query": "futuristic office with AI assistant",
+            "image_url": "https://images.pexels.com/photos/5614124/pexels-photo-5614124.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Learn more about AI Agents today!",
+            "day_offset": 0
+          },
+          {
+            "title": "Benefits of AI Agents",
+            "message": "AI Agents offer unparalleled benefits: increased productivity, reduced costs, and improved decision-making. \ud83d\udca1 See how our clients are already reaping the rewards. #AIbenefits #Productivity #CostSavings",
+            "hashtags": [
+              "aibenefits",
+              "productivity",
+              "costsavings",
+              "efficiency",
+              "businessgrowth"
+            ],
+            "image_query": "business people collaborating with holographic AI interface",
+            "image_url": "https://images.pexels.com/photos/8728105/pexels-photo-8728105.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Explore the possibilities with AI Agents!",
+            "day_offset": 1
+          },
+          {
+            "title": "Join Our Growing Customer Base",
+            "message": "Like Habib and Anees, businesses are trusting BazaarFlow's AI Agents to transform their operations. Join the ranks of satisfied customers! \ud83e\udd1d #CustomerSuccess #AIadoption #BusinessTransformation",
+            "hashtags": [
+              "customersuccess",
+              "aiadoption",
+              "businesstransformation",
+              "clienttestimonials",
+              "satisfiedcustomers"
+            ],
+            "image_query": "happy business team celebrating success",
+            "image_url": "https://images.pexels.com/photos/7698820/pexels-photo-7698820.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "See how AI Agents can work for you.",
+            "day_offset": 2
+          },
+          {
+            "title": "Limited-Time Offer",
+            "message": "Get 20% off your first month of AI Agent services! \u2728 Don't miss this opportunity to optimize your business. Act now! #AISale #Discount #LimitedTimeOffer",
+            "hashtags": [
+              "aisale",
+              "discount",
+              "limitedtimeoffer",
+              "promotion",
+              "businessdeal"
+            ],
+            "image_query": "discount tag with ai theme",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Claim your discount today!",
+            "day_offset": 3
+          },
+          {
+            "title": "Free AI Consultation",
+            "message": "Ready to take your business to the next level? Contact us for a free AI consultation. \ud83d\udcde Let our experts guide you. #AIConsultation #FreeConsultation #BusinessAdvice",
+            "hashtags": [
+              "aiconsultation",
+              "freeconsultation",
+              "businessadvice",
+              "aiexperts",
+              "businessstrategy"
+            ],
+            "image_query": "business consultant explaining ai solutions",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Book your free consultation now!",
+            "day_offset": 4
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T08:09:38.193348+00:00",
+    "updated_at": "2025-11-22T08:09:38.193348+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "85a40ae1-5500-4a93-bf87-78a4d7a3ac1a",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118454599036166",
+    "message": "Get 20% off your first month of AI Agent services! \u2728 Don't miss this opportunity to optimize your business. Act now! #AISale #Discount #LimitedTimeOffer\n\nClaim your discount today!\n\n#aisale #businessdeal #discount #limitedtimeoffer #promotion",
+    "image_url": "https://images.pexels.com/photos/5625046/pexels-photo-5625046.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "aisale",
+      "discount",
+      "limitedtimeoffer",
+      "promotion",
+      "businessdeal"
+    ],
+    "angle": "Limited-Time Offer",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T08:09:28.159997+00:00",
+      "strategy_summary": "This campaign focuses on highlighting BazaarFlow's expertise in AI agent solutions, leveraging the recent customer interest in iPhones and MacBooks to draw attention. The sequence begins by introducing the concept of AI agents, then showcases their benefits, highlights the existing customer base, offers a limited-time discount and concludes with a strong call to action to contact BazaarFlow for a free consultation.",
+      "campaign_post_index": 3,
+      "raw_campaign": {
+        "strategy_summary": "This campaign focuses on highlighting BazaarFlow's expertise in AI agent solutions, leveraging the recent customer interest in iPhones and MacBooks to draw attention. The sequence begins by introducing the concept of AI agents, then showcases their benefits, highlights the existing customer base, offers a limited-time discount and concludes with a strong call to action to contact BazaarFlow for a free consultation.",
+        "posts": [
+          {
+            "title": "Unlock the Power of AI Agents",
+            "message": "Revolutionize your business with AI Agents! \ud83d\ude80 Automate tasks, boost efficiency, and gain a competitive edge. Discover how AI Agents can transform your workflow. #AIagents #Automation #BusinessSolutions",
+            "hashtags": [
+              "aiagents",
+              "automation",
+              "businesssolutions",
+              "artificialintelligence",
+              "futureofwork"
+            ],
+            "image_query": "futuristic office with AI assistant",
+            "image_url": "https://images.pexels.com/photos/5614124/pexels-photo-5614124.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Learn more about AI Agents today!",
+            "day_offset": 0
+          },
+          {
+            "title": "Benefits of AI Agents",
+            "message": "AI Agents offer unparalleled benefits: increased productivity, reduced costs, and improved decision-making. \ud83d\udca1 See how our clients are already reaping the rewards. #AIbenefits #Productivity #CostSavings",
+            "hashtags": [
+              "aibenefits",
+              "productivity",
+              "costsavings",
+              "efficiency",
+              "businessgrowth"
+            ],
+            "image_query": "business people collaborating with holographic AI interface",
+            "image_url": "https://images.pexels.com/photos/8728105/pexels-photo-8728105.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Explore the possibilities with AI Agents!",
+            "day_offset": 1
+          },
+          {
+            "title": "Join Our Growing Customer Base",
+            "message": "Like Habib and Anees, businesses are trusting BazaarFlow's AI Agents to transform their operations. Join the ranks of satisfied customers! \ud83e\udd1d #CustomerSuccess #AIadoption #BusinessTransformation",
+            "hashtags": [
+              "customersuccess",
+              "aiadoption",
+              "businesstransformation",
+              "clienttestimonials",
+              "satisfiedcustomers"
+            ],
+            "image_query": "happy business team celebrating success",
+            "image_url": "https://images.pexels.com/photos/7698820/pexels-photo-7698820.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "See how AI Agents can work for you.",
+            "day_offset": 2
+          },
+          {
+            "title": "Limited-Time Offer",
+            "message": "Get 20% off your first month of AI Agent services! \u2728 Don't miss this opportunity to optimize your business. Act now! #AISale #Discount #LimitedTimeOffer",
+            "hashtags": [
+              "aisale",
+              "discount",
+              "limitedtimeoffer",
+              "promotion",
+              "businessdeal"
+            ],
+            "image_query": "discount tag with ai theme",
+            "image_url": "https://images.pexels.com/photos/5625046/pexels-photo-5625046.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Claim your discount today!",
+            "day_offset": 3
+          },
+          {
+            "title": "Free AI Consultation",
+            "message": "Ready to take your business to the next level? Contact us for a free AI consultation. \ud83d\udcde Let our experts guide you. #AIConsultation #FreeConsultation #BusinessAdvice",
+            "hashtags": [
+              "aiconsultation",
+              "freeconsultation",
+              "businessadvice",
+              "aiexperts",
+              "businessstrategy"
+            ],
+            "image_query": "business consultant explaining ai solutions",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Book your free consultation now!",
+            "day_offset": 4
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T08:09:41.942760+00:00",
+    "updated_at": "2025-11-22T08:09:41.942760+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "fe56e91c-0d36-4e0a-950b-861659516795",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118454671036166",
+    "message": "Ready to take your business to the next level? Contact us for a free AI consultation. \ud83d\udcde Let our experts guide you. #AIConsultation #FreeConsultation #BusinessAdvice\n\nBook your free consultation now!\n\n#aiconsultation #aiexperts #businessadvice #businessstrategy #freeconsultation",
+    "image_url": "https://images.pexels.com/photos/7176026/pexels-photo-7176026.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "aiconsultation",
+      "freeconsultation",
+      "businessadvice",
+      "aiexperts",
+      "businessstrategy"
+    ],
+    "angle": "Free AI Consultation",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T08:09:28.159997+00:00",
+      "strategy_summary": "This campaign focuses on highlighting BazaarFlow's expertise in AI agent solutions, leveraging the recent customer interest in iPhones and MacBooks to draw attention. The sequence begins by introducing the concept of AI agents, then showcases their benefits, highlights the existing customer base, offers a limited-time discount and concludes with a strong call to action to contact BazaarFlow for a free consultation.",
+      "campaign_post_index": 4,
+      "raw_campaign": {
+        "strategy_summary": "This campaign focuses on highlighting BazaarFlow's expertise in AI agent solutions, leveraging the recent customer interest in iPhones and MacBooks to draw attention. The sequence begins by introducing the concept of AI agents, then showcases their benefits, highlights the existing customer base, offers a limited-time discount and concludes with a strong call to action to contact BazaarFlow for a free consultation.",
+        "posts": [
+          {
+            "title": "Unlock the Power of AI Agents",
+            "message": "Revolutionize your business with AI Agents! \ud83d\ude80 Automate tasks, boost efficiency, and gain a competitive edge. Discover how AI Agents can transform your workflow. #AIagents #Automation #BusinessSolutions",
+            "hashtags": [
+              "aiagents",
+              "automation",
+              "businesssolutions",
+              "artificialintelligence",
+              "futureofwork"
+            ],
+            "image_query": "futuristic office with AI assistant",
+            "image_url": "https://images.pexels.com/photos/5614124/pexels-photo-5614124.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Learn more about AI Agents today!",
+            "day_offset": 0
+          },
+          {
+            "title": "Benefits of AI Agents",
+            "message": "AI Agents offer unparalleled benefits: increased productivity, reduced costs, and improved decision-making. \ud83d\udca1 See how our clients are already reaping the rewards. #AIbenefits #Productivity #CostSavings",
+            "hashtags": [
+              "aibenefits",
+              "productivity",
+              "costsavings",
+              "efficiency",
+              "businessgrowth"
+            ],
+            "image_query": "business people collaborating with holographic AI interface",
+            "image_url": "https://images.pexels.com/photos/8728105/pexels-photo-8728105.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Explore the possibilities with AI Agents!",
+            "day_offset": 1
+          },
+          {
+            "title": "Join Our Growing Customer Base",
+            "message": "Like Habib and Anees, businesses are trusting BazaarFlow's AI Agents to transform their operations. Join the ranks of satisfied customers! \ud83e\udd1d #CustomerSuccess #AIadoption #BusinessTransformation",
+            "hashtags": [
+              "customersuccess",
+              "aiadoption",
+              "businesstransformation",
+              "clienttestimonials",
+              "satisfiedcustomers"
+            ],
+            "image_query": "happy business team celebrating success",
+            "image_url": "https://images.pexels.com/photos/7698820/pexels-photo-7698820.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "See how AI Agents can work for you.",
+            "day_offset": 2
+          },
+          {
+            "title": "Limited-Time Offer",
+            "message": "Get 20% off your first month of AI Agent services! \u2728 Don't miss this opportunity to optimize your business. Act now! #AISale #Discount #LimitedTimeOffer",
+            "hashtags": [
+              "aisale",
+              "discount",
+              "limitedtimeoffer",
+              "promotion",
+              "businessdeal"
+            ],
+            "image_query": "discount tag with ai theme",
+            "image_url": "https://images.pexels.com/photos/5625046/pexels-photo-5625046.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Claim your discount today!",
+            "day_offset": 3
+          },
+          {
+            "title": "Free AI Consultation",
+            "message": "Ready to take your business to the next level? Contact us for a free AI consultation. \ud83d\udcde Let our experts guide you. #AIConsultation #FreeConsultation #BusinessAdvice",
+            "hashtags": [
+              "aiconsultation",
+              "freeconsultation",
+              "businessadvice",
+              "aiexperts",
+              "businessstrategy"
+            ],
+            "image_query": "business consultant explaining ai solutions",
+            "image_url": "https://images.pexels.com/photos/7176026/pexels-photo-7176026.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Book your free consultation now!",
+            "day_offset": 4
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T08:09:44.928188+00:00",
+    "updated_at": "2025-11-22T08:09:44.928188+00:00",
+    "insights": null
   }
 ]

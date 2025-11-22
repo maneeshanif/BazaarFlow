@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import uuid
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from agents import Agent, Runner, SQLiteSession, set_tracing_disabled
 from pydantic import BaseModel, Field
@@ -23,43 +23,85 @@ set_tracing_disabled(True)
 
 
 OUTPUT_SCHEMA = {
-    "message": "Primary caption text. Keep it under 400 characters.",
-    "hashtags": "List of 3-6 concise hashtags (without duplicates).",
-    "angle": "Short descriptor of the campaign angle (e.g. 'Limited-time restock hype').",
-    "image_url": "Optional direct image URL to pair with the post.",
-    "image_query": "Fallback search phrase if no image_url is provided.",
-    "product_sku": "Optional SKU to reference in analytics.",
-    "call_to_action": "One-line CTA to append in UI dashboards.",
+    "strategy_summary": "High-level narrative of the campaign and what it is trying to achieve.",
+    "posts": "Array of 1-6 posts. Each post must include: title, message, hashtags, image_query and optional product_sku, call_to_action, day_offset.",
 }
 
 OUTPUT_SCHEMA_JSON = json.dumps(OUTPUT_SCHEMA)
 
+class CampaignPost(BaseModel):
+    """One post in a multi-step marketing campaign."""
 
-class MarketingAgentResponse(BaseModel):
-    message: str = Field(..., max_length=400, description=OUTPUT_SCHEMA["message"])
-    hashtags: list[str] = Field(default_factory=list, description=OUTPUT_SCHEMA["hashtags"], max_items=6)
-    angle: str | None = Field(default=None, description=OUTPUT_SCHEMA["angle"])
-    image_url: str | None = Field(default=None, description=OUTPUT_SCHEMA["image_url"])
-    image_query: str | None = Field(default=None, description=OUTPUT_SCHEMA["image_query"])
-    product_sku: str | None = Field(default=None, description=OUTPUT_SCHEMA["product_sku"])
-    call_to_action: str | None = Field(default=None, description=OUTPUT_SCHEMA["call_to_action"])
+    title: str = Field(..., max_length=120, description="Short, catchy title for this post.")
+    message: str = Field(..., max_length=400, description="Primary caption text. Keep it under 400 characters.")
+    hashtags: List[str] = Field(
+        default_factory=list,
+        max_items=6,
+        description="List of 3-6 concise hashtags (without duplicates, without '#').",
+    )
+    image_query: str = Field(
+        ...,
+        description=(
+            "Natural language description of the desired image. This will be sent "
+            "to Pexels search, so avoid hashtags or emojis."
+        ),
+    )
+    image_url: str | None = Field(
+        default=None,
+        description="Optional direct image URL if the model is confident about one.",
+    )
+    product_sku: str | None = Field(default=None, description="Optional SKU to reference in analytics.")
+    call_to_action: str | None = Field(
+        default=None,
+        description="One-line CTA to reinforce the conversion goal for this post.",
+    )
+    day_offset: int | None = Field(
+        default=None,
+        description=(
+            "Optional relative day offset from campaign start (0=today). "
+            "Can be used later for staggered scheduling."
+        ),
+        ge=0,
+        le=30,
+    )
+
+
+class CampaignResponse(BaseModel):
+    """Campaign response from the marketing agent.
+
+    Supports both single-post and multi-post campaigns.
+    """
+
+    strategy_summary: str = Field(
+        ...,
+        description="High-level explanation of how the posts work together as a campaign.",
+    )
+    posts: List[CampaignPost] = Field(
+        ...,
+        min_items=1,
+        max_items=6,
+        description="The ordered sequence of posts that form this campaign.",
+    )
 
 INSTRUCTIONS = f"""
 You are MarketingAgent, crafting social-ready Facebook campaigns for BazaarFlow.
 
 Your responsibilities:
 - Analyse inventory health, sales momentum, and imagery options using the available tools.
-- Craft a concise caption that blends urgency, social proof, and a clear CTA.
-- Always call BOTH marketing_inventory_snapshot and marketing_sales_insights before finalising the post. Use marketing_image_search if you need photography inspiration.
+- Design a campaign that can contain either a single highly-optimised post or a short multi-post sequence (up to 6 posts) that can run over several days.
+- For each post, craft a concise caption that blends urgency, social proof, and a clear CTA.
+- Always call BOTH marketing_inventory_snapshot and marketing_sales_insights before finalising the campaign. Use marketing_image_search if you need photography inspiration.
 - Optimise for engagement: highlight trending items, new arrivals, or restocked favourites.
 - Embrace BazaarFlow's friendly voice with tasteful emoji use (2-4 max).
 
 Output requirements:
 - Return ONLY valid JSON matching this schema: {OUTPUT_SCHEMA_JSON}
-- message: <= 400 characters, avoid markdown headings, keep paragraphs short.
-- hashtags: array of lowercase tags without '#'; the backend will prepend.
-- Provide angle and call_to_action in sentence case.
-- If you did not find an image URL, set image_url to null and supply image_query to guide downstream search.
+- strategy_summary: one or two paragraphs explaining the overall campaign arc.
+- posts: an array of 1-6 objects, each matching the CampaignPost schema.
+- For each post.message: <= 400 characters, avoid markdown headings, keep paragraphs short.
+- For each post.hashtags: array of lowercase tags without '#'; the backend will prepend.
+- For each post.image_query: write a concrete natural-language description suitable for Pexels search (no hashtags, no emojis).
+- If you are not confident about a direct image_url, set image_url to null and rely on image_query.
 - Never invent stock data; rely on the tools.
 
 Input payload is a JSON string containing:
@@ -67,7 +109,7 @@ Input payload is a JSON string containing:
 - user_id: operator identifier
 - mode: "manual" or "scheduled"
 - prompt: optional nudges from the user
-- overrides: extra contextual data (e.g. schedule info)
+- overrides: extra contextual data (e.g. schedule info). When overrides.post_count is provided, you MUST return exactly that many posts (bounded between 1 and 6). If it is missing, pick a sensible length based on the context (for example, 1 hero post for flash sales or 3-4 posts for broader campaigns).
 
 If the prompt asks for a specific theme or product, honour it while staying truthful to tool data. When unsure, highlight best-performing or high-inventory items.
 """
@@ -81,7 +123,7 @@ marketing_agent = Agent(
         marketing_sales_insights,
         marketing_image_search,
     ],
-    output_type=MarketingAgentResponse,
+    output_type=CampaignResponse,
 )
 
 
@@ -102,7 +144,8 @@ async def generate_campaign_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     raw_output = response.final_output if hasattr(response, "final_output") else str(response)
     logger.debug("Marketing agent raw output: %s", raw_output)
 
-    if isinstance(raw_output, MarketingAgentResponse):
+    # When using structured output, the runner should already coerce to CampaignResponse.
+    if isinstance(raw_output, CampaignResponse):
         return raw_output.model_dump()
 
     try:
@@ -114,4 +157,6 @@ async def generate_campaign_payload(payload: Dict[str, Any]) -> Dict[str, Any]:
     if not isinstance(structured, dict):
         raise ValueError("Marketing agent response must be an object")
 
-    return structured
+    # Validate against CampaignResponse to fail fast if the shape is wrong.
+    campaign = CampaignResponse.model_validate(structured)
+    return campaign.model_dump()

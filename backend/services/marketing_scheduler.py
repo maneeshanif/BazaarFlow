@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple, Protocol
 from zoneinfo import ZoneInfo
 
 from ..lib import list_schedules
+from ..lib import marketing_scheduled_repository as scheduled_repo
 from .marketing_service import marketing_service
 
 logger = logging.getLogger(__name__)
@@ -118,17 +119,42 @@ class MarketingScheduler:
     async def _tick(self) -> None:
         now_utc = datetime.now(timezone.utc)
         records = self._load_schedules()
-        if not records:
+        if records:
+            tasks = [self._maybe_trigger(record, now_utc) for record in records]
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            for record, result in zip(records, results):
+                if isinstance(result, Exception):
+                    logger.exception(
+                        "Failed to evaluate schedule for account %s",
+                        record.account_id,
+                        exc_info=result,
+                    )
+
+        # Additionally, look for any pending scheduled posts that are due
+        # and dispatch them via the campaign runner if it supports the
+        # publish_scheduled_post interface.
+        pending_posts = scheduled_repo.list_pending_scheduled_posts(now_iso=now_utc.isoformat())
+        if not pending_posts:
             return
-        tasks = [self._maybe_trigger(record, now_utc) for record in records]
-        results = await asyncio.gather(*tasks, return_exceptions=True)
-        for record, result in zip(records, results):
-            if isinstance(result, Exception):
-                logger.exception(
-                    "Failed to evaluate schedule for account %s",
-                    record.account_id,
-                    exc_info=result,
-                )
+
+        if not hasattr(self._campaign_runner, "publish_scheduled_post"):
+            logger.debug("Campaign runner does not support publish_scheduled_post; skipping scheduled posts dispatch")
+            return
+
+        for record in pending_posts:
+            scheduled_post_id = record.get("scheduled_post_id")
+            if not isinstance(scheduled_post_id, str):
+                continue
+            async with self._semaphore:
+                try:
+                    logger.info("Publishing scheduled marketing post %s", scheduled_post_id)
+                    # type: ignore[call-arg]
+                    await asyncio.get_running_loop().run_in_executor(
+                        None,
+                        lambda spid=scheduled_post_id: self._campaign_runner.publish_scheduled_post(scheduled_post_id=spid),
+                    )
+                except Exception:  # pragma: no cover - defensive guard
+                    logger.exception("Failed to publish scheduled post %s", scheduled_post_id)
 
     def _load_schedules(self) -> List[ScheduleRecord]:
         payload: List[ScheduleRecord] = []

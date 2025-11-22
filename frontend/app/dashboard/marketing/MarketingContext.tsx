@@ -104,6 +104,17 @@ interface CampaignSummary {
   postsWithInsights: number;
 }
 
+interface GeneratedCampaignPostSummary {
+  facebook: unknown;
+  post: MarketingPost;
+}
+
+interface GeneratedCampaignResult {
+  campaign_id: string;
+  strategy_summary?: string;
+  posts: GeneratedCampaignPostSummary[];
+}
+
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
 export const MAX_SCHEDULE_TIMES = 3;
 export const defaultTimes = ["09:00", "13:00"];
@@ -253,6 +264,9 @@ interface MarketingContextValue {
   savingCredentials: boolean;
   lastRefreshedAt: Date | null;
   postsAutoRefreshIntervalMs: number;
+  lastGeneratedCampaign: GeneratedCampaignResult | null;
+  postCount: number;
+  setPostCount: Dispatch<SetStateAction<number>>;
 }
 
 const MarketingContext = createContext<MarketingContextValue | undefined>(undefined);
@@ -287,6 +301,8 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
   const [postsLoading, setPostsLoading] = useState(false);
   const [lastRefreshedAt, setLastRefreshedAt] = useState<Date | null>(null);
   const [deletingPostId, setDeletingPostId] = useState<string | null>(null);
+  const [lastGeneratedCampaign, setLastGeneratedCampaign] = useState<GeneratedCampaignResult | null>(null);
+  const [postCount, setPostCount] = useState<number>(3);
 
   const postsAutoRefreshIntervalMs = 30000;
 
@@ -451,13 +467,22 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
     }
     setPublishing(true);
     try {
+  const baseOverrides = parseOverridesInput();
+  const clampedPostCount = clamp(postCount, 1, 6);
       const response = await axios.post(`${API_BASE_URL}/api/marketing/accounts/${selectedAccountId}/campaign`, {
         user_id: scheduleForm.userId,
         prompt: manualPrompt || undefined,
-        overrides: parseOverridesInput(),
+        overrides: { ...baseOverrides, post_count: clampedPostCount },
       });
-      const result = response.data.result;
-      toast.success("Campaign published to Facebook");
+      const result: GeneratedCampaignResult = response.data.result;
+
+      const postCountFromResult = Array.isArray(result.posts) ? result.posts.length : 0;
+      toast.success(
+        postCountFromResult > 1
+          ? `Campaign published to Facebook with ${postCountFromResult} posts`
+          : "Campaign published to Facebook",
+      );
+      setLastGeneratedCampaign(result);
       triggerConfetti();
       setManualPrompt("");
       await fetchPosts(selectedAccountId);
@@ -470,7 +495,7 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setPublishing(false);
     }
-  }, [fetchPosts, manualPrompt, parseOverridesInput, scheduleForm.userId, selectedAccountId, triggerConfetti]);
+  }, [fetchPosts, manualPrompt, parseOverridesInput, scheduleForm.userId, selectedAccountId, triggerConfetti, postCount]);
 
   const handleCredentialsSubmit = useCallback(
     async (event: React.FormEvent) => {
@@ -870,6 +895,9 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
     savingCredentials,
     lastRefreshedAt,
     postsAutoRefreshIntervalMs,
+    lastGeneratedCampaign,
+    postCount,
+    setPostCount,
   };
 
   return <MarketingContext.Provider value={value}>{children}</MarketingContext.Provider>;

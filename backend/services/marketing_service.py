@@ -30,6 +30,7 @@ from ..lib import (
     update_post_insights,
     upsert_facebook_account,
 )
+from ..lib import marketing_scheduled_repository as scheduled_repo
 from .inventory_service import inventory_analytics_service
 from .sales_service import list_orders
 
@@ -176,6 +177,156 @@ class MarketingService:
         )
         mark_schedule_triggered(account_id, triggered_at=triggered_at)
         return result
+
+    async def create_scheduled_campaign(
+        self,
+        *,
+        account_id: str,
+        user_id: str,
+        prompt: Optional[str],
+        overrides: Optional[Dict[str, Any]],
+        posts_with_times: List[Dict[str, Any]],
+    ) -> Dict[str, Any]:
+        """Persist a scheduled campaign made up of already-generated posts.
+
+        posts_with_times should be a list of dicts containing:
+        - post_payload: CampaignPost-like dict from the agent
+        - scheduled_at: ISO 8601 timestamp (ideally in UTC)
+        """
+
+        account = self._require_account(account_id)
+        if not posts_with_times:
+            raise ValueError("Provide at least one post to schedule")
+
+        # Normalise overrides and ensure we do not mutate the caller's dict.
+        prepared_overrides = self._prepare_overrides(overrides)
+
+        now = datetime.now(timezone.utc)
+        normalised_posts: List[Dict[str, Any]] = []
+        for idx, item in enumerate(posts_with_times):
+            payload = dict(item.get("post_payload") or {})
+            scheduled_at_raw = str(item.get("scheduled_at") or "").strip()
+            if not scheduled_at_raw:
+                raise ValueError(f"scheduled_at is required for post index {idx}")
+            try:
+                scheduled_at = datetime.fromisoformat(scheduled_at_raw)
+            except ValueError as exc:
+                raise ValueError(f"Invalid scheduled_at for post index {idx}: {scheduled_at_raw}") from exc
+            if scheduled_at.tzinfo is None:
+                scheduled_at = scheduled_at.replace(tzinfo=timezone.utc)
+            if scheduled_at <= now:
+                raise ValueError(f"scheduled_at must be in the future for post index {idx}")
+
+            normalised_posts.append(
+                {
+                    "post_payload": payload,
+                    "scheduled_at": scheduled_at.isoformat(),
+                }
+            )
+
+        # Use the campaign's own strategy summary if present for better UI grouping.
+        strategy_summary = None
+        if normalised_posts:
+            first_payload = normalised_posts[0]["post_payload"]
+            raw_campaign = first_payload.get("raw_campaign") if isinstance(first_payload, dict) else None
+            if isinstance(raw_campaign, dict):
+                summary_candidate = raw_campaign.get("strategy_summary")
+                if isinstance(summary_candidate, str):
+                    strategy_summary = summary_candidate
+
+        created = scheduled_repo.create_scheduled_campaign(
+            account_id=account["account_id"],
+            user_id=user_id,
+            prompt=prompt,
+            strategy_summary=strategy_summary,
+            overrides=prepared_overrides,
+            posts_with_times=normalised_posts,
+        )
+        return created
+
+    def publish_scheduled_post(self, *, scheduled_post_id: str) -> Dict[str, Any]:
+        """Publish a single scheduled post and update its status.
+
+        This reuses the same Facebook and Pexels logic as _publish_campaign
+        but operates on a ScheduledPost record.
+        """
+
+        record = scheduled_repo.get_scheduled_post(scheduled_post_id=scheduled_post_id)
+        if not record:
+            raise ValueError(f"No scheduled post found for id {scheduled_post_id}")
+
+        if record.get("status") != "pending":
+            raise ValueError(f"Scheduled post {scheduled_post_id} is not pending")
+
+        account = self._require_account(record["account_id"])
+        manager = self._build_manager(account)
+
+        post_payload = dict(record.get("post_payload") or {})
+
+        message = (post_payload.get("message") or "").strip()
+        hashtags = post_payload.get("hashtags") or []
+        product_sku = post_payload.get("product_sku")
+        call_to_action = (post_payload.get("call_to_action") or "").strip() or None
+        image_url = post_payload.get("image_url")
+        image_query = post_payload.get("image_query")
+
+        if not image_url:
+            resolved_query = image_query or self._select_image_query(
+                campaign=post_payload,
+                prompt=None,
+                overrides=record.get("overrides") or {},
+            )
+            image_url = self._fetch_image(resolved_query)
+            if image_url:
+                post_payload["image_url"] = image_url
+                if resolved_query:
+                    post_payload.setdefault("image_query", resolved_query)
+
+        if call_to_action:
+            message_with_cta = f"{message}\n\n{call_to_action}" if message else call_to_action
+        else:
+            message_with_cta = message
+
+        formatted_message = self._compose_message(message=message_with_cta, hashtags=hashtags)
+
+        try:
+            if image_url:
+                post_request = ImagePostRequest(message=formatted_message, image_url=image_url)
+                response = manager.create_image_post(post_request)
+            else:
+                post_request = TextPostRequest(message=formatted_message)
+                response = manager.create_text_post(post_request)
+        except (FacebookAPIError, PostCreationError) as exc:
+            logger.error("Failed to publish scheduled marketing post via Facebook: %s", exc)
+            scheduled_repo.mark_scheduled_post_failed(scheduled_post_id=scheduled_post_id, error=str(exc))
+            raise
+
+        record_post = record_marketing_post(
+            account_id=record["account_id"],
+            user_id=record["user_id"],
+            facebook_post_id=response.post_id,
+            message=formatted_message,
+            image_url=image_url,
+            product_sku=product_sku,
+            hashtags=hashtags,
+            angle=post_payload.get("title"),
+            source="scheduled_campaign",
+            extra={
+                "scheduled_campaign_id": record["scheduled_campaign_id"],
+                "scheduled_post_id": scheduled_post_id,
+                "scheduled_at": record.get("scheduled_at"),
+            },
+        )
+
+        scheduled_repo.mark_scheduled_post_posted(
+            scheduled_post_id=scheduled_post_id,
+            facebook_post_id=response.post_id,
+        )
+
+        return {
+            "facebook": response.model_dump(),
+            "post": record_post,
+        }
 
     def get_recent_posts(self, account_id: str, *, limit: int = 20) -> List[Dict[str, Any]]:
         posts = list_marketing_posts(account_id, limit=limit)
@@ -417,6 +568,16 @@ class MarketingService:
         if not self._agent_runner:
             raise RuntimeError("Marketing agent runner is not configured")
 
+        # Extract an optional post_count hint from overrides, clamped to a safe range.
+        raw_post_count = overrides.get("post_count") if isinstance(overrides, dict) else None
+        try:
+            post_count_hint = int(raw_post_count) if raw_post_count is not None else None
+        except (TypeError, ValueError):
+            post_count_hint = None
+
+        if post_count_hint is not None:
+            post_count_hint = max(1, min(post_count_hint, 6))
+
         payload = {
             "account": account,
             "user_id": user_id,
@@ -424,11 +585,24 @@ class MarketingService:
             "prompt": prompt,
             "overrides": overrides,
         }
+        # Surface the post_count hint in the payload the agent sees so it can honour it.
+        if post_count_hint is not None:
+            payload["post_count"] = post_count_hint
         campaign = await self._agent_runner(payload)
         if not isinstance(campaign, dict):
             raise ValueError("Agent runner must return a mapping")
-        if not campaign.get("message"):
-            raise ValueError("Campaign payload requires a message")
+
+        # Expect a campaign payload shaped like CampaignResponse
+        posts = campaign.get("posts")
+        if not isinstance(posts, list) or not posts:
+            raise ValueError("Marketing agent must return at least one post in the campaign")
+
+        if len(posts) > 6:
+            raise ValueError("Marketing agent must not return more than 6 posts in the campaign")
+
+        if post_count_hint is not None and len(posts) != post_count_hint:
+            raise ValueError("Marketing agent did not honour the requested post_count")
+
         return campaign
 
     def _publish_campaign(
@@ -441,53 +615,114 @@ class MarketingService:
         prompt: Optional[str],
         overrides: Optional[Dict[str, Any]],
     ) -> Dict[str, Any]:
+        """Publish all posts for a generated campaign.
+
+        The campaign payload is expected to follow the CampaignResponse
+        structure returned by the marketing agent:
+
+        {
+            "strategy_summary": "...",
+            "posts": [
+                {
+                    "title": "...",
+                    "message": "...",
+                    "hashtags": ["..."],
+                    "image_query": "...",
+                    "image_url": null,
+                    "product_sku": null,
+                    "call_to_action": "...",
+                    "day_offset": 0
+                },
+                ...
+            ]
+        }
+        """
+
         manager = self._build_manager(account)
 
-        message = campaign.get("message", "").strip()
-        hashtags = campaign.get("hashtags") or []
-        angle = campaign.get("angle")
-        product_sku = campaign.get("product_sku")
-        image_url = campaign.get("image_url")
+        strategy_summary = campaign.get("strategy_summary")
+        posts = campaign.get("posts") or []
+        if not isinstance(posts, list) or not posts:
+            raise ValueError("Campaign payload must include a non-empty 'posts' array")
 
-        if not image_url:
-            image_query = self._select_image_query(
-                campaign=campaign,
-                prompt=prompt,
-                overrides=overrides or {},
-            )
-            if not image_query:
-                image_query = angle or product_sku or account.get("page_name")
-            image_url = self._fetch_image(image_query)
-            if image_url:
-                campaign["image_url"] = image_url
-                if image_query:
-                    campaign.setdefault("image_query", image_query)
+        # Use a shared campaign identifier so posts can be grouped later in the UI.
+        campaign_id = campaign.get("campaign_id") or f"cmp_{account.get('account_id')}_{datetime.now(timezone.utc).isoformat()}"
 
-        formatted_message = self._compose_message(message=message, hashtags=hashtags)
-        try:
-            if image_url:
-                post_request = ImagePostRequest(message=formatted_message, image_url=image_url)
-                response = manager.create_image_post(post_request)
+        published_posts: List[Dict[str, Any]] = []
+        for idx, post in enumerate(posts):
+            if not isinstance(post, dict):
+                logger.warning("Skipping malformed campaign post at index %s: %r", idx, post)
+                continue
+
+            # Per-post fields coming from the agent
+            message = (post.get("message") or "").strip()
+            hashtags = post.get("hashtags") or []
+            product_sku = post.get("product_sku")
+            call_to_action = (post.get("call_to_action") or "").strip() or None
+            image_url = post.get("image_url")
+            image_query = post.get("image_query")
+
+            # If the agent did not supply an image_url, resolve via Pexels using
+            # the explicit image_query first, then fall back to legacy inference.
+            if not image_url:
+                resolved_query = image_query or self._select_image_query(
+                    campaign=post,
+                    prompt=prompt,
+                    overrides=overrides or {},
+                )
+                image_url = self._fetch_image(resolved_query)
+                if image_url:
+                    post["image_url"] = image_url
+                    if resolved_query:
+                        post.setdefault("image_query", resolved_query)
+
+            # Compose final message by appending CTA and hashtags.
+            if call_to_action:
+                message_with_cta = f"{message}\n\n{call_to_action}" if message else call_to_action
             else:
-                post_request = TextPostRequest(message=formatted_message)
-                response = manager.create_text_post(post_request)
-        except (FacebookAPIError, PostCreationError) as exc:
-            logger.error("Failed to publish marketing campaign via Facebook: %s", exc)
-            raise
+                message_with_cta = message
 
-        record = record_marketing_post(
-            account_id=account["account_id"],
-            user_id=user_id,
-            facebook_post_id=response.post_id,
-            message=formatted_message,
-            image_url=image_url,
-            product_sku=product_sku,
-            hashtags=hashtags,
-            angle=angle,
-            source=source,
-            extra={"campaign": campaign},
-        )
-        return {"post": record, "facebook": response.model_dump()}
+            formatted_message = self._compose_message(message=message_with_cta, hashtags=hashtags)
+
+            try:
+                if image_url:
+                    post_request = ImagePostRequest(message=formatted_message, image_url=image_url)
+                    response = manager.create_image_post(post_request)
+                else:
+                    post_request = TextPostRequest(message=formatted_message)
+                    response = manager.create_text_post(post_request)
+            except (FacebookAPIError, PostCreationError) as exc:
+                logger.error("Failed to publish marketing campaign post via Facebook: %s", exc)
+                raise
+
+            record = record_marketing_post(
+                account_id=account["account_id"],
+                user_id=user_id,
+                facebook_post_id=response.post_id,
+                message=formatted_message,
+                image_url=image_url,
+                product_sku=product_sku,
+                hashtags=hashtags,
+                angle=post.get("title"),
+                source=source,
+                extra={
+                    "campaign_id": campaign_id,
+                    "strategy_summary": strategy_summary,
+                    "campaign_post_index": idx,
+                    "raw_campaign": campaign,
+                },
+            )
+
+            published_posts.append({
+                "facebook": response.model_dump(),
+                "post": record,
+            })
+
+        return {
+            "campaign_id": campaign_id,
+            "strategy_summary": strategy_summary,
+            "posts": published_posts,
+        }
 
     def _select_image_query(
         self,

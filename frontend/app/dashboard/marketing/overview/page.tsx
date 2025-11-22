@@ -19,6 +19,8 @@ export default function MarketingOverviewPage() {
     setOverridesInput,
     handleManualCampaign,
     publishing,
+    postCount,
+    setPostCount,
     insightsSummary,
     lastRefreshedAt,
     postsAutoRefreshIntervalMs,
@@ -73,6 +75,23 @@ export default function MarketingOverviewPage() {
                   placeholder="Highlight the new gaming laptops with a Ramadan bundle."
                   rows={4}
                 />
+              </div>
+              <div>
+                <label className="flex items-center justify-between text-sm font-medium text-slate-600 dark:text-slate-400 mb-1">
+                  <span>Number of posts</span>
+                  <span className="text-xs text-slate-500">16 posts</span>
+                </label>
+                <input
+                  type="range"
+                  min={1}
+                  max={6}
+                  value={postCount}
+                  onChange={(event) => setPostCount(Number(event.target.value) || 1)}
+                  className="w-full"
+                />
+                <p className="mt-1 text-xs text-slate-500">
+                  The agent will generate <span className="font-semibold">{postCount}</span> post{postCount === 1 ? "" : "s"} for this campaign.
+                </p>
               </div>
               <div>
                 <label className="flex items-center gap-2 text-sm font-medium text-slate-600 dark:text-slate-400">
