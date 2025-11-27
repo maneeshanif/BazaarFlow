@@ -1385,5 +1385,487 @@
     "created_at": "2025-11-22T08:09:44.928188+00:00",
     "updated_at": "2025-11-22T08:09:44.928188+00:00",
     "insights": null
+  },
+  {
+    "record_id": "3073ceb4-2199-4b41-a549-af4aafce9631",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118512025036166",
+    "message": "Winter is here and so are our MEGA DEALS! \u2744\ufe0f Get up to 50% off on jackets, hats, and gloves this weekend only. Stay warm and stylish without breaking the bank! \ud83d\udcb0\n\nShop now and save!\n\n#deals #sale #winteressentials #winterfashion #wintersale",
+    "image_url": "https://images.pexels.com/photos/5040609/pexels-photo-5040609.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "wintersale",
+      "winterfashion",
+      "sale",
+      "deals",
+      "winteressentials"
+    ],
+    "angle": "Mega Winter Sale Starts Now!",
+    "source": "scheduled_campaign",
+    "extra": {
+      "scheduled_campaign_id": "scmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_1763815392",
+      "scheduled_post_id": "sp_scmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_1763815392_0",
+      "scheduled_at": "2025-11-22T16:54:00+00:00"
+    },
+    "created_at": "2025-11-22T16:54:34.284603+00:00",
+    "updated_at": "2025-11-22T16:54:34.284603+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "30cffc8f-9450-412d-9f6a-edd8c75d9b44",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118512877036166",
+    "message": "Our best-selling tech gadget is flying off the shelves! \ud83d\ude80 Don't miss out on this must-have device. See what all the buzz is about! \ud83d\ude09\n\nShop now and upgrade your tech!\n\n#bestseller #musthave #techgadget #trendingtech",
+    "image_url": null,
+    "product_sku": null,
+    "hashtags": [
+      "techgadget",
+      "bestseller",
+      "musthave",
+      "trendingtech"
+    ],
+    "angle": "Top Seller Alert!",
+    "source": "scheduled_campaign",
+    "extra": {
+      "scheduled_campaign_id": "scmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_1763830730",
+      "scheduled_post_id": "sp_scmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_1763830730_0",
+      "scheduled_at": "2025-11-22T17:01:00+00:00"
+    },
+    "created_at": "2025-11-22T17:01:31.468343+00:00",
+    "updated_at": "2025-11-22T17:01:31.468343+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "89b31a7b-f9eb-4df2-967a-307f27691a60",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118512937036166",
+    "message": "\"This gadget has changed my life!\" - John D. See why our customers are raving about our tech products. Join the community! \ud83d\udc4d\n\nRead reviews and shop now!\n\n#customerreview #happycustomer #techcommunity #techtestimonial",
+    "image_url": "https://images.pexels.com/photos/4087268/pexels-photo-4087268.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "customerreview",
+      "techtestimonial",
+      "happycustomer",
+      "techcommunity"
+    ],
+    "angle": "Customer Love \u2764\ufe0f",
+    "source": "scheduled_campaign",
+    "extra": {
+      "scheduled_campaign_id": "scmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_1763830730",
+      "scheduled_post_id": "sp_scmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_1763830730_2",
+      "scheduled_at": "2025-11-22T17:01:00+00:00"
+    },
+    "created_at": "2025-11-22T17:01:35.273970+00:00",
+    "updated_at": "2025-11-22T17:01:35.273970+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "cde222f2-cd14-4c4b-8a1d-c733cfff9d41",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118514863036166",
+    "message": "Craving something quick and tasty? \ud83d\ude09 Our new fast food menu is here to satisfy your hunger! \ud83d\udd25 From juicy burgers to crispy fries, we've got it all. Order now and treat yourself! \ud83d\ude0b\n\nOrder now and enjoy!\n\n#burgers #fastfood #fries #newmenu #ordernow",
+    "image_url": null,
+    "product_sku": null,
+    "hashtags": [
+      "fastfood",
+      "newmenu",
+      "burgers",
+      "fries",
+      "ordernow"
+    ],
+    "angle": "New Fast Food Alert! \ud83c\udf54\ud83c\udf5f",
+    "source": "scheduled_campaign",
+    "extra": {
+      "scheduled_campaign_id": "scmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_1763831309",
+      "scheduled_post_id": "sp_scmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_1763831309_0",
+      "scheduled_at": "2025-11-22T17:10:00+00:00"
+    },
+    "created_at": "2025-11-22T17:10:17.032689+00:00",
+    "updated_at": "2025-11-22T17:10:17.032689+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "9ba4f745-7a9a-452c-8b54-c76e91adffe4",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118523815036166",
+    "message": "Gear up for winter with our new collection of jackets, hats, and gloves! \u2744\ufe0f Stay warm and stylish all season long. Limited stock available, so shop now! \ud83d\udd25\n\nShop the new collection now!\n\n#newcollection #shopnow #staywarm #winterfashion #winterstyle",
+    "image_url": "https://images.pexels.com/photos/6500181/pexels-photo-6500181.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "winterfashion",
+      "newcollection",
+      "winterstyle",
+      "staywarm",
+      "shopnow"
+    ],
+    "angle": "Winter is Coming!",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T18:28:30.740626+00:00",
+      "strategy_summary": "This campaign focuses on promoting our new winter collection, including jackets, winter hats, and gloves. The posts will highlight the warmth, style, and availability of these items, encouraging customers to prepare for the winter season by purchasing our products. The posts are designed to create a sense of urgency and highlight the benefits of shopping with us.",
+      "campaign_post_index": 0,
+      "raw_campaign": {
+        "strategy_summary": "This campaign focuses on promoting our new winter collection, including jackets, winter hats, and gloves. The posts will highlight the warmth, style, and availability of these items, encouraging customers to prepare for the winter season by purchasing our products. The posts are designed to create a sense of urgency and highlight the benefits of shopping with us.",
+        "posts": [
+          {
+            "title": "Winter is Coming!",
+            "message": "Gear up for winter with our new collection of jackets, hats, and gloves! \u2744\ufe0f Stay warm and stylish all season long. Limited stock available, so shop now! \ud83d\udd25",
+            "hashtags": [
+              "winterfashion",
+              "newcollection",
+              "winterstyle",
+              "staywarm",
+              "shopnow"
+            ],
+            "image_query": "winter fashion, jacket, hat, gloves",
+            "image_url": "https://images.pexels.com/photos/6500181/pexels-photo-6500181.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Shop the new collection now!",
+            "day_offset": 0
+          },
+          {
+            "title": "Cozy Winter Hats",
+            "message": "Stay cozy and stylish with our new winter hats! \ud83e\udde3 Available in a variety of colors and styles. Perfect for keeping warm on chilly days. Get yours today!",
+            "hashtags": [
+              "winterhats",
+              "winteraccessories",
+              "staycozy",
+              "newarrivals",
+              "winterstyle"
+            ],
+            "image_query": "winter hat, knitted hat, winter fashion",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Browse our hat collection!",
+            "day_offset": 1
+          },
+          {
+            "title": "Warm Winter Jackets",
+            "message": "Brave the cold with our new range of winter jackets! \ud83e\udde5 Designed for maximum warmth and style. Don't let winter catch you unprepared. Shop now and stay warm!",
+            "hashtags": [
+              "winterjackets",
+              "winterouterwear",
+              "staywarm",
+              "winterfashion",
+              "newcollection"
+            ],
+            "image_query": "winter jacket, warm clothing, winter fashion",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Explore our jacket selection!",
+            "day_offset": 2
+          },
+          {
+            "title": "Winter Glove Collection",
+            "message": "Keep your hands warm and protected with our new winter glove collection! \ud83e\udde4 Available in different sizes and materials. Perfect for any winter activity. Shop now and feel the warmth!",
+            "hashtags": [
+              "wintergloves",
+              "winteraccessories",
+              "staywarm",
+              "newcollection",
+              "winterstyle"
+            ],
+            "image_query": "winter gloves, warm gloves, winter fashion",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Shop our glove collection today!",
+            "day_offset": 3
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T18:28:36.854892+00:00",
+    "updated_at": "2025-11-22T18:28:36.854892+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "237807e3-9c3d-4048-8b65-944baa5975ab",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118523875036166",
+    "message": "Stay cozy and stylish with our new winter hats! \ud83e\udde3 Available in a variety of colors and styles. Perfect for keeping warm on chilly days. Get yours today!\n\nBrowse our hat collection!\n\n#newarrivals #staycozy #winteraccessories #winterhats #winterstyle",
+    "image_url": "https://images.pexels.com/photos/246804/pexels-photo-246804.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "winterhats",
+      "winteraccessories",
+      "staycozy",
+      "newarrivals",
+      "winterstyle"
+    ],
+    "angle": "Cozy Winter Hats",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T18:28:30.740626+00:00",
+      "strategy_summary": "This campaign focuses on promoting our new winter collection, including jackets, winter hats, and gloves. The posts will highlight the warmth, style, and availability of these items, encouraging customers to prepare for the winter season by purchasing our products. The posts are designed to create a sense of urgency and highlight the benefits of shopping with us.",
+      "campaign_post_index": 1,
+      "raw_campaign": {
+        "strategy_summary": "This campaign focuses on promoting our new winter collection, including jackets, winter hats, and gloves. The posts will highlight the warmth, style, and availability of these items, encouraging customers to prepare for the winter season by purchasing our products. The posts are designed to create a sense of urgency and highlight the benefits of shopping with us.",
+        "posts": [
+          {
+            "title": "Winter is Coming!",
+            "message": "Gear up for winter with our new collection of jackets, hats, and gloves! \u2744\ufe0f Stay warm and stylish all season long. Limited stock available, so shop now! \ud83d\udd25",
+            "hashtags": [
+              "winterfashion",
+              "newcollection",
+              "winterstyle",
+              "staywarm",
+              "shopnow"
+            ],
+            "image_query": "winter fashion, jacket, hat, gloves",
+            "image_url": "https://images.pexels.com/photos/6500181/pexels-photo-6500181.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Shop the new collection now!",
+            "day_offset": 0
+          },
+          {
+            "title": "Cozy Winter Hats",
+            "message": "Stay cozy and stylish with our new winter hats! \ud83e\udde3 Available in a variety of colors and styles. Perfect for keeping warm on chilly days. Get yours today!",
+            "hashtags": [
+              "winterhats",
+              "winteraccessories",
+              "staycozy",
+              "newarrivals",
+              "winterstyle"
+            ],
+            "image_query": "winter hat, knitted hat, winter fashion",
+            "image_url": "https://images.pexels.com/photos/246804/pexels-photo-246804.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Browse our hat collection!",
+            "day_offset": 1
+          },
+          {
+            "title": "Warm Winter Jackets",
+            "message": "Brave the cold with our new range of winter jackets! \ud83e\udde5 Designed for maximum warmth and style. Don't let winter catch you unprepared. Shop now and stay warm!",
+            "hashtags": [
+              "winterjackets",
+              "winterouterwear",
+              "staywarm",
+              "winterfashion",
+              "newcollection"
+            ],
+            "image_query": "winter jacket, warm clothing, winter fashion",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Explore our jacket selection!",
+            "day_offset": 2
+          },
+          {
+            "title": "Winter Glove Collection",
+            "message": "Keep your hands warm and protected with our new winter glove collection! \ud83e\udde4 Available in different sizes and materials. Perfect for any winter activity. Shop now and feel the warmth!",
+            "hashtags": [
+              "wintergloves",
+              "winteraccessories",
+              "staywarm",
+              "newcollection",
+              "winterstyle"
+            ],
+            "image_query": "winter gloves, warm gloves, winter fashion",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Shop our glove collection today!",
+            "day_offset": 3
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T18:28:40.680917+00:00",
+    "updated_at": "2025-11-22T18:28:40.680917+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "abec2d37-28a4-4713-ba63-aa994397f863",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118523935036166",
+    "message": "Brave the cold with our new range of winter jackets! \ud83e\udde5 Designed for maximum warmth and style. Don't let winter catch you unprepared. Shop now and stay warm!\n\nExplore our jacket selection!\n\n#newcollection #staywarm #winterfashion #winterjackets #winterouterwear",
+    "image_url": "https://images.pexels.com/photos/6667921/pexels-photo-6667921.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "winterjackets",
+      "winterouterwear",
+      "staywarm",
+      "winterfashion",
+      "newcollection"
+    ],
+    "angle": "Warm Winter Jackets",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T18:28:30.740626+00:00",
+      "strategy_summary": "This campaign focuses on promoting our new winter collection, including jackets, winter hats, and gloves. The posts will highlight the warmth, style, and availability of these items, encouraging customers to prepare for the winter season by purchasing our products. The posts are designed to create a sense of urgency and highlight the benefits of shopping with us.",
+      "campaign_post_index": 2,
+      "raw_campaign": {
+        "strategy_summary": "This campaign focuses on promoting our new winter collection, including jackets, winter hats, and gloves. The posts will highlight the warmth, style, and availability of these items, encouraging customers to prepare for the winter season by purchasing our products. The posts are designed to create a sense of urgency and highlight the benefits of shopping with us.",
+        "posts": [
+          {
+            "title": "Winter is Coming!",
+            "message": "Gear up for winter with our new collection of jackets, hats, and gloves! \u2744\ufe0f Stay warm and stylish all season long. Limited stock available, so shop now! \ud83d\udd25",
+            "hashtags": [
+              "winterfashion",
+              "newcollection",
+              "winterstyle",
+              "staywarm",
+              "shopnow"
+            ],
+            "image_query": "winter fashion, jacket, hat, gloves",
+            "image_url": "https://images.pexels.com/photos/6500181/pexels-photo-6500181.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Shop the new collection now!",
+            "day_offset": 0
+          },
+          {
+            "title": "Cozy Winter Hats",
+            "message": "Stay cozy and stylish with our new winter hats! \ud83e\udde3 Available in a variety of colors and styles. Perfect for keeping warm on chilly days. Get yours today!",
+            "hashtags": [
+              "winterhats",
+              "winteraccessories",
+              "staycozy",
+              "newarrivals",
+              "winterstyle"
+            ],
+            "image_query": "winter hat, knitted hat, winter fashion",
+            "image_url": "https://images.pexels.com/photos/246804/pexels-photo-246804.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Browse our hat collection!",
+            "day_offset": 1
+          },
+          {
+            "title": "Warm Winter Jackets",
+            "message": "Brave the cold with our new range of winter jackets! \ud83e\udde5 Designed for maximum warmth and style. Don't let winter catch you unprepared. Shop now and stay warm!",
+            "hashtags": [
+              "winterjackets",
+              "winterouterwear",
+              "staywarm",
+              "winterfashion",
+              "newcollection"
+            ],
+            "image_query": "winter jacket, warm clothing, winter fashion",
+            "image_url": "https://images.pexels.com/photos/6667921/pexels-photo-6667921.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Explore our jacket selection!",
+            "day_offset": 2
+          },
+          {
+            "title": "Winter Glove Collection",
+            "message": "Keep your hands warm and protected with our new winter glove collection! \ud83e\udde4 Available in different sizes and materials. Perfect for any winter activity. Shop now and feel the warmth!",
+            "hashtags": [
+              "wintergloves",
+              "winteraccessories",
+              "staywarm",
+              "newcollection",
+              "winterstyle"
+            ],
+            "image_query": "winter gloves, warm gloves, winter fashion",
+            "image_url": null,
+            "product_sku": null,
+            "call_to_action": "Shop our glove collection today!",
+            "day_offset": 3
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T18:28:44.761656+00:00",
+    "updated_at": "2025-11-22T18:28:44.761656+00:00",
+    "insights": null
+  },
+  {
+    "record_id": "968901bd-99b4-4b53-a7a1-6f87dff43130",
+    "account_id": "605efa5a-2e7a-4fa0-bb52-0fe98f73a083",
+    "user_id": "admin",
+    "facebook_post_id": "837535619434131_122118523989036166",
+    "message": "Keep your hands warm and protected with our new winter glove collection! \ud83e\udde4 Available in different sizes and materials. Perfect for any winter activity. Shop now and feel the warmth!\n\nShop our glove collection today!\n\n#newcollection #staywarm #winteraccessories #wintergloves #winterstyle",
+    "image_url": "https://images.pexels.com/photos/6567209/pexels-photo-6567209.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+    "product_sku": null,
+    "hashtags": [
+      "wintergloves",
+      "winteraccessories",
+      "staywarm",
+      "newcollection",
+      "winterstyle"
+    ],
+    "angle": "Winter Glove Collection",
+    "source": "manual",
+    "extra": {
+      "campaign_id": "cmp_605efa5a-2e7a-4fa0-bb52-0fe98f73a083_2025-11-22T18:28:30.740626+00:00",
+      "strategy_summary": "This campaign focuses on promoting our new winter collection, including jackets, winter hats, and gloves. The posts will highlight the warmth, style, and availability of these items, encouraging customers to prepare for the winter season by purchasing our products. The posts are designed to create a sense of urgency and highlight the benefits of shopping with us.",
+      "campaign_post_index": 3,
+      "raw_campaign": {
+        "strategy_summary": "This campaign focuses on promoting our new winter collection, including jackets, winter hats, and gloves. The posts will highlight the warmth, style, and availability of these items, encouraging customers to prepare for the winter season by purchasing our products. The posts are designed to create a sense of urgency and highlight the benefits of shopping with us.",
+        "posts": [
+          {
+            "title": "Winter is Coming!",
+            "message": "Gear up for winter with our new collection of jackets, hats, and gloves! \u2744\ufe0f Stay warm and stylish all season long. Limited stock available, so shop now! \ud83d\udd25",
+            "hashtags": [
+              "winterfashion",
+              "newcollection",
+              "winterstyle",
+              "staywarm",
+              "shopnow"
+            ],
+            "image_query": "winter fashion, jacket, hat, gloves",
+            "image_url": "https://images.pexels.com/photos/6500181/pexels-photo-6500181.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Shop the new collection now!",
+            "day_offset": 0
+          },
+          {
+            "title": "Cozy Winter Hats",
+            "message": "Stay cozy and stylish with our new winter hats! \ud83e\udde3 Available in a variety of colors and styles. Perfect for keeping warm on chilly days. Get yours today!",
+            "hashtags": [
+              "winterhats",
+              "winteraccessories",
+              "staycozy",
+              "newarrivals",
+              "winterstyle"
+            ],
+            "image_query": "winter hat, knitted hat, winter fashion",
+            "image_url": "https://images.pexels.com/photos/246804/pexels-photo-246804.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Browse our hat collection!",
+            "day_offset": 1
+          },
+          {
+            "title": "Warm Winter Jackets",
+            "message": "Brave the cold with our new range of winter jackets! \ud83e\udde5 Designed for maximum warmth and style. Don't let winter catch you unprepared. Shop now and stay warm!",
+            "hashtags": [
+              "winterjackets",
+              "winterouterwear",
+              "staywarm",
+              "winterfashion",
+              "newcollection"
+            ],
+            "image_query": "winter jacket, warm clothing, winter fashion",
+            "image_url": "https://images.pexels.com/photos/6667921/pexels-photo-6667921.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Explore our jacket selection!",
+            "day_offset": 2
+          },
+          {
+            "title": "Winter Glove Collection",
+            "message": "Keep your hands warm and protected with our new winter glove collection! \ud83e\udde4 Available in different sizes and materials. Perfect for any winter activity. Shop now and feel the warmth!",
+            "hashtags": [
+              "wintergloves",
+              "winteraccessories",
+              "staywarm",
+              "newcollection",
+              "winterstyle"
+            ],
+            "image_query": "winter gloves, warm gloves, winter fashion",
+            "image_url": "https://images.pexels.com/photos/6567209/pexels-photo-6567209.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+            "product_sku": null,
+            "call_to_action": "Shop our glove collection today!",
+            "day_offset": 3
+          }
+        ]
+      }
+    },
+    "created_at": "2025-11-22T18:28:48.890627+00:00",
+    "updated_at": "2025-11-22T18:28:48.890627+00:00",
+    "insights": null
   }
 ]

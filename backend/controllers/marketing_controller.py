@@ -26,13 +26,15 @@ class AccountCreateRequest(BaseModel):
 
 
 class ScheduleRequest(BaseModel):
-    user_id: str = Field(..., min_length=1)
+    # user_id is optional in dev; backend will fall back to a dev user
+    user_id: Optional[str] = None
     times: list[str] = Field(..., min_items=1, max_items=3)
     timezone_name: str = Field(default="UTC", min_length=1)
 
 
 class ManualCampaignRequest(BaseModel):
-    user_id: str = Field(..., min_length=1)
+    # user_id is optional in dev; backend will fall back to a dev user
+    user_id: Optional[str] = None
     prompt: Optional[str] = None
     overrides: Dict[str, Any] = Field(default_factory=dict)
 
@@ -72,12 +74,14 @@ class ManualCampaignRequest(BaseModel):
 
 
 class ScheduledTriggerRequest(BaseModel):
-    user_id: str = Field(..., min_length=1)
+    # user_id is optional in dev; backend will fall back to a dev user
+    user_id: Optional[str] = None
     triggered_at: Optional[str] = None
 
 
 class ScheduledPreviewRequest(BaseModel):
-    user_id: str = Field(..., min_length=1)
+    # user_id is optional in dev; backend will fall back to a dev user
+    user_id: Optional[str] = None
     prompt: Optional[str] = None
     post_count: int = Field(default=3, ge=1, le=6)
     overrides: Dict[str, Any] = Field(default_factory=dict)
@@ -86,7 +90,8 @@ class ScheduledPreviewRequest(BaseModel):
 
 
 class ScheduledCreateRequest(BaseModel):
-    user_id: str = Field(..., min_length=1)
+    # user_id is optional in dev; backend will fall back to a dev user
+    user_id: Optional[str] = None
     prompt: Optional[str] = None
     overrides: Dict[str, Any] = Field(default_factory=dict)
     posts: list[Dict[str, Any]] = Field(
@@ -97,6 +102,23 @@ class ScheduledCreateRequest(BaseModel):
     )
 
     _normalise_overrides = ManualCampaignRequest._normalise_overrides
+
+
+class ScheduledPostUpdateRequest(BaseModel):
+    message: Optional[str] = None
+    hashtags: Optional[list[str]] = None
+    call_to_action: Optional[str] = None
+    image_url: Optional[str] = None
+    product_sku: Optional[str] = None
+    scheduled_at: Optional[str] = Field(
+        default=None,
+        description="New scheduled_at time as ISO 8601 (UTC preferred)",
+    )
+
+
+class ScheduledCampaignUpdateRequest(BaseModel):
+    strategy_summary: Optional[str] = None
+    status: Optional[str] = None
 
 
 class CommentReplyPayload(BaseModel):
@@ -155,8 +177,18 @@ async def put_schedule(account_id: str, payload: ScheduleRequest):
 async def get_schedule(account_id: str):
     schedule = marketing_service.fetch_schedule(account_id)
     if not schedule:
-        raise HTTPException(status_code=404, detail="Schedule not configured")
-    return {"ok": True, "schedule": schedule}
+        return {
+            "ok": True,
+            "schedule": {
+                "account_id": account_id,
+                "user_id": None,
+                "times": [],
+                "timezone": "UTC",
+                "last_triggered_at": None,
+                "configured": False,
+            },
+        }
+    return {"ok": True, "schedule": {**schedule, "configured": True}}
 
 
 @router.post("/accounts/{account_id}/campaign")
@@ -266,6 +298,18 @@ async def list_posts(account_id: str, limit: int = Query(default=20, ge=1, le=10
     return {"ok": True, "posts": posts}
 
 
+@router.get("/accounts/{account_id}/scheduled/activity")
+async def get_scheduled_activity(account_id: str):
+    """Return scheduled posts for the activity dashboard.
+
+    The payload exposes raw scheduled post records so the frontend can
+    group and render them alongside recently published campaigns.
+    """
+
+    payload = marketing_service.list_scheduled_activity(account_id)
+    return {"ok": True, **payload}
+
+
 @router.post("/accounts/{account_id}/posts/{facebook_post_id}/insights")
 async def refresh_post_insights(account_id: str, facebook_post_id: str):
     try:
@@ -279,6 +323,82 @@ async def refresh_post_insights(account_id: str, facebook_post_id: str):
     if not updated:
         raise HTTPException(status_code=404, detail="Post not found")
     return {"ok": True, "post": updated}
+
+
+@router.patch("/accounts/{account_id}/scheduled/posts/{scheduled_post_id}")
+async def patch_scheduled_post(account_id: str, scheduled_post_id: str, payload: ScheduledPostUpdateRequest):
+    """Update a pending scheduled post's content or scheduled time.
+
+    For now we trust account_id as a routing component and do not cross-check
+    it against the stored record, but this can be tightened later if needed.
+    """
+
+    try:
+        post_payload: Dict[str, Any] = {}
+        if payload.message is not None:
+            post_payload["message"] = payload.message
+        if payload.hashtags is not None:
+            post_payload["hashtags"] = payload.hashtags
+        if payload.call_to_action is not None:
+            post_payload["call_to_action"] = payload.call_to_action
+        if payload.image_url is not None:
+            post_payload["image_url"] = payload.image_url
+        if payload.product_sku is not None:
+            post_payload["product_sku"] = payload.product_sku
+
+        updated = marketing_service.update_scheduled_post(
+            scheduled_post_id=scheduled_post_id,
+            post_payload=post_payload or None,
+            scheduled_at=payload.scheduled_at,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    return {"ok": True, "post": updated}
+
+
+@router.patch("/accounts/{account_id}/scheduled/campaigns/{scheduled_campaign_id}")
+async def patch_scheduled_campaign(
+    account_id: str,
+    scheduled_campaign_id: str,
+    payload: ScheduledCampaignUpdateRequest,
+):
+    """Update simple metadata for a scheduled campaign (e.g. strategy summary)."""
+
+    try:
+        updated = marketing_service.update_scheduled_campaign(
+            scheduled_campaign_id=scheduled_campaign_id,
+            strategy_summary=payload.strategy_summary,
+            status=payload.status,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    return {"ok": True, "campaign": updated}
+
+
+@router.delete("/accounts/{account_id}/scheduled/posts/{scheduled_post_id}")
+async def delete_scheduled_post(account_id: str, scheduled_post_id: str):
+    """Remove a pending scheduled post from the queue."""
+
+    try:
+        marketing_service.delete_scheduled_post(scheduled_post_id=scheduled_post_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    return {"ok": True}
+
+
+@router.delete("/accounts/{account_id}/scheduled/campaigns/{scheduled_campaign_id}")
+async def delete_scheduled_campaign(account_id: str, scheduled_campaign_id: str):
+    """Remove a scheduled campaign and all of its scheduled posts."""
+
+    try:
+        marketing_service.delete_scheduled_campaign(scheduled_campaign_id=scheduled_campaign_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    return {"ok": True}
 
 
 @router.get("/accounts/{account_id}/posts/{facebook_post_id}/comments")

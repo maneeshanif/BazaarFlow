@@ -369,6 +369,8 @@ interface MarketingContextValue {
       scheduled_at?: string;
     },
   ) => Promise<ScheduledPostRecord | null>;
+  deleteScheduledPost: (scheduledPostId: string) => Promise<boolean>;
+  deleteScheduledCampaign: (scheduledCampaignId: string) => Promise<boolean>;
 }
 
 const MarketingContext = createContext<MarketingContextValue | undefined>(undefined);
@@ -568,6 +570,54 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
         const detail = axios.isAxiosError(error) ? error.response?.data?.detail : undefined;
         toast.error(detail || "Unable to update scheduled post");
         return null;
+      }
+    },
+    [selectedAccountId],
+  );
+
+  const deleteScheduledPost = useCallback(
+    async (scheduledPostId: string): Promise<boolean> => {
+      if (!selectedAccountId) {
+        toast.error("Select an account first");
+        return false;
+      }
+
+      try {
+        await axios.delete(
+          `${API_BASE_URL}/api/marketing/accounts/${selectedAccountId}/scheduled/posts/${scheduledPostId}`,
+        );
+        setScheduledPosts((prev) => prev.filter((record) => record.scheduled_post_id !== scheduledPostId));
+        toast.success("Scheduled post removed");
+        return true;
+      } catch (error) {
+        console.error("Failed to delete scheduled post", error);
+        const detail = axios.isAxiosError(error) ? error.response?.data?.detail : undefined;
+        toast.error(detail || "Unable to delete scheduled post");
+        return false;
+      }
+    },
+    [selectedAccountId],
+  );
+
+  const deleteScheduledCampaign = useCallback(
+    async (scheduledCampaignId: string): Promise<boolean> => {
+      if (!selectedAccountId) {
+        toast.error("Select an account first");
+        return false;
+      }
+
+      try {
+        await axios.delete(
+          `${API_BASE_URL}/api/marketing/accounts/${selectedAccountId}/scheduled/campaigns/${scheduledCampaignId}`,
+        );
+        setScheduledPosts((prev) => prev.filter((record) => record.scheduled_campaign_id !== scheduledCampaignId));
+        toast.success("Scheduled campaign removed");
+        return true;
+      } catch (error) {
+        console.error("Failed to delete scheduled campaign", error);
+        const detail = axios.isAxiosError(error) ? error.response?.data?.detail : undefined;
+        toast.error(detail || "Unable to delete scheduled campaign");
+        return false;
       }
     },
     [selectedAccountId],
@@ -1206,6 +1256,8 @@ export function MarketingProvider({ children }: { children: React.ReactNode }) {
   scheduledPosts,
   scheduledPostsLoading,
   updateScheduledPost,
+    deleteScheduledPost,
+    deleteScheduledCampaign,
   };
 
   return <MarketingContext.Provider value={value}>{children}</MarketingContext.Provider>;

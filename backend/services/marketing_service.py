@@ -31,6 +31,7 @@ from ..lib import (
     upsert_facebook_account,
 )
 from ..lib import marketing_scheduled_repository as scheduled_repo
+from ..lib import user_repository
 from .inventory_service import inventory_analytics_service
 from .sales_service import list_orders
 
@@ -103,6 +104,20 @@ class MarketingService:
     def get_accounts(self, *, user_id: Optional[str] = None) -> List[Dict[str, Any]]:
         return list_facebook_accounts(user_id)
 
+    # Small helper for development to fall back to a dev user when none
+    # is provided. This keeps production behaviour unchanged while
+    # allowing local workflows without a full auth stack.
+    def _resolve_user_id(self, explicit: Optional[str]) -> str:
+        if explicit and explicit.strip():
+            return explicit.strip()
+
+        env_default = os.getenv("BAZAARFLOW_DEV_USER_ID")
+        dev = user_repository.get_default_dev_user(env_value=env_default)
+        if dev and isinstance(dev.get("user_id"), str):
+            return str(dev["user_id"])
+
+        raise ValueError("Missing user_id and no dev default configured")
+
     # ------------------------------------------------------------------
     # Scheduling utilities
     # ------------------------------------------------------------------
@@ -110,13 +125,19 @@ class MarketingService:
         self,
         *,
         account_id: str,
-        user_id: str,
+        user_id: Optional[str],
         times: List[str],
         timezone_name: str = "UTC",
     ) -> Dict[str, Any]:
         if not times:
             raise ValueError("Provide at least one posting time")
-        return save_schedule(account_id=account_id, user_id=user_id, times=times, timezone_name=timezone_name)
+        resolved_user_id = self._resolve_user_id(user_id)
+        return save_schedule(
+            account_id=account_id,
+            user_id=resolved_user_id,
+            times=times,
+            timezone_name=timezone_name,
+        )
 
     def fetch_schedule(self, account_id: str) -> Optional[Dict[str, Any]]:
         return get_schedule(account_id)
@@ -128,22 +149,23 @@ class MarketingService:
         self,
         *,
         account_id: str,
-        user_id: str,
+        user_id: Optional[str],
         prompt: Optional[str] = None,
         overrides: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         account = self._require_account(account_id)
+        resolved_user_id = self._resolve_user_id(user_id)
         prepared_overrides = self._prepare_overrides(overrides)
         campaign = await self._generate_campaign(
             account=account,
-            user_id=user_id,
+            user_id=resolved_user_id,
             mode="manual",
             prompt=prompt,
             overrides=prepared_overrides,
         )
         return self._publish_campaign(
             account=account,
-            user_id=user_id,
+            user_id=resolved_user_id,
             campaign=campaign,
             source="manual",
             prompt=prompt,
@@ -154,22 +176,23 @@ class MarketingService:
         self,
         *,
         account_id: str,
-        user_id: str,
+        user_id: Optional[str],
         triggered_at: Optional[str] = None,
     ) -> Dict[str, Any]:
         account = self._require_account(account_id)
+        resolved_user_id = self._resolve_user_id(user_id)
         schedule = get_schedule(account_id)
         prepared_overrides = self._prepare_overrides({"schedule": schedule} if schedule else None)
         campaign = await self._generate_campaign(
             account=account,
-            user_id=user_id,
+            user_id=resolved_user_id,
             mode="scheduled",
             prompt=None,
             overrides=prepared_overrides,
         )
         result = self._publish_campaign(
             account=account,
-            user_id=user_id,
+            user_id=resolved_user_id,
             campaign=campaign,
             source="scheduled",
             prompt=None,
@@ -182,7 +205,7 @@ class MarketingService:
         self,
         *,
         account_id: str,
-        user_id: str,
+        user_id: Optional[str],
         prompt: Optional[str],
         overrides: Optional[Dict[str, Any]],
         posts_with_times: List[Dict[str, Any]],
@@ -195,6 +218,7 @@ class MarketingService:
         """
 
         account = self._require_account(account_id)
+        resolved_user_id = self._resolve_user_id(user_id)
         if not posts_with_times:
             raise ValueError("Provide at least one post to schedule")
 
@@ -236,7 +260,7 @@ class MarketingService:
 
         created = scheduled_repo.create_scheduled_campaign(
             account_id=account["account_id"],
-            user_id=user_id,
+            user_id=resolved_user_id,
             prompt=prompt,
             strategy_summary=strategy_summary,
             overrides=prepared_overrides,
@@ -374,6 +398,128 @@ class MarketingService:
                     )
 
         return posts
+
+    def list_scheduled_activity(self, account_id: str) -> Dict[str, Any]:
+        """Return scheduled posts for an account for activity views.
+
+        Posts are sorted by their scheduled_at timestamp in ascending
+        order so that the next posts to go out appear first.
+        """
+
+        records = scheduled_repo.list_scheduled_posts_for_account(account_id=account_id)
+        # Sort by scheduled_at as ISO 8601 strings; invalid or missing
+        # values fall to the end.
+        def _sort_key(record: Dict[str, Any]) -> str:
+            value = record.get("scheduled_at")
+            return value if isinstance(value, str) else "\uffff"
+
+        ordered = sorted(records, key=_sort_key)
+        return {"posts": ordered}
+
+    def update_scheduled_post(
+        self,
+        *,
+        scheduled_post_id: str,
+        post_payload: Optional[Dict[str, Any]] = None,
+        scheduled_at: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Update a pending scheduled post's payload and/or scheduled time.
+
+        Only posts in the pending state are editable. scheduled_at must be a
+        valid ISO 8601 timestamp in the future.
+        """
+
+        record = scheduled_repo.get_scheduled_post(scheduled_post_id=scheduled_post_id)
+        if not record:
+            raise ValueError(f"No scheduled post found for id {scheduled_post_id}")
+
+        if record.get("status") != "pending":
+            raise ValueError("Only pending scheduled posts can be edited")
+
+        updates: Dict[str, Any] = {}
+
+        if scheduled_at is not None:
+            scheduled_at_str = str(scheduled_at).strip()
+            if not scheduled_at_str:
+                raise ValueError("scheduled_at cannot be empty")
+            try:
+                parsed = datetime.fromisoformat(scheduled_at_str)
+            except ValueError as exc:
+                raise ValueError(f"Invalid scheduled_at value: {scheduled_at_str}") from exc
+            if parsed.tzinfo is None:
+                parsed = parsed.replace(tzinfo=timezone.utc)
+            now = datetime.now(timezone.utc)
+            if parsed <= now:
+                raise ValueError("scheduled_at must be in the future")
+            updates["scheduled_at"] = parsed.isoformat()
+
+        if post_payload is not None:
+            if not isinstance(post_payload, dict):
+                raise ValueError("post_payload must be an object")
+            updates["post_payload"] = post_payload
+
+        updated = scheduled_repo.update_scheduled_post(
+            scheduled_post_id=scheduled_post_id,
+            updates=updates,
+        )
+        if not updated:
+            raise ValueError(f"Scheduled post {scheduled_post_id} could not be updated")
+
+        return updated
+
+    def update_scheduled_campaign(
+        self,
+        *,
+        scheduled_campaign_id: str,
+        strategy_summary: Optional[str] = None,
+        status: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Update simple metadata for a scheduled campaign."""
+
+        updates: Dict[str, Any] = {}
+        if strategy_summary is not None:
+            updates["strategy_summary"] = strategy_summary
+        if status is not None:
+            updates["status"] = status
+
+        if not updates:
+            raise ValueError("No fields to update")
+
+        updated = scheduled_repo.update_scheduled_campaign(
+            scheduled_campaign_id=scheduled_campaign_id,
+            updates=updates,
+        )
+        if not updated:
+            raise ValueError(f"Scheduled campaign {scheduled_campaign_id} not found")
+
+        return updated
+
+    def delete_scheduled_post(self, *, scheduled_post_id: str) -> bool:
+        """Delete a scheduled post from the queue.
+
+        This does not affect any already-published Facebook content; it simply
+        removes the pending record so it will not be picked up by the
+        scheduler.
+        """
+
+        record = scheduled_repo.get_scheduled_post(scheduled_post_id=scheduled_post_id)
+        if not record:
+            raise ValueError(f"No scheduled post found for id {scheduled_post_id}")
+        if record.get("status") != "pending":
+            raise ValueError("Only pending scheduled posts can be deleted")
+
+        removed = scheduled_repo.delete_scheduled_post(scheduled_post_id=scheduled_post_id)
+        if not removed:
+          raise ValueError(f"Scheduled post {scheduled_post_id} could not be deleted")
+        return True
+
+    def delete_scheduled_campaign(self, *, scheduled_campaign_id: str) -> bool:
+        """Delete a scheduled campaign and all its posts."""
+
+        removed = scheduled_repo.delete_scheduled_campaign(scheduled_campaign_id=scheduled_campaign_id)
+        if not removed:
+            raise ValueError(f"Scheduled campaign {scheduled_campaign_id} not found")
+        return True
 
     def refresh_post_insights(self, *, account_id: str, facebook_post_id: str) -> Optional[Dict[str, Any]]:
         account = self._require_account(account_id)
