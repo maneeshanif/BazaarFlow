@@ -7,6 +7,8 @@ from typing import Dict, List, Optional, Tuple
 import json
 from datetime import datetime
 
+from .notification_service import notification_service
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_DATASET = BASE_DIR / "data" / "inventory_items.json"
 
@@ -211,6 +213,9 @@ class InventoryAnalyticsService:
         items = [dict(item) for item in self._ensure_cache()]
         index, item = self._locate_item(sku=sku, product_name=product_name)
 
+        # Keep a copy for threshold comparison
+        previous_item = dict(item)
+
         current_stock = int(item.get("stock", 0))
         if quantity > current_stock:
             product_label = item.get("name") or sku or product_name or "product"
@@ -221,6 +226,10 @@ class InventoryAnalyticsService:
         updated_item = {**item, "stock": current_stock - quantity}
         items[index] = updated_item
         self._write_all(items)
+
+        # Emit notifications if thresholds were crossed
+        self._emit_threshold_notifications(previous_item, updated_item)
+
         return updated_item
 
     def _write_all(self, items: List[dict]) -> None:
@@ -249,16 +258,131 @@ class InventoryAnalyticsService:
     def update_item(self, sku: str, item_data: dict) -> Optional[dict]:
         """Update an existing inventory item."""
         items = self._ensure_cache().copy()
-        
+
         for i, item in enumerate(items):
             if item.get("sku") == sku:
+                previous_item = dict(item)
                 # Update fields but keep SKU
                 updated_item = {**item, **item_data, "sku": sku}
                 items[i] = updated_item
                 self._write_all(items)
+
+                # Emit notifications when stock/reorder thresholds change
+                self._emit_threshold_notifications(previous_item, updated_item)
+
                 return updated_item
         
         return None
+
+    def add_stock(self, sku: str, quantity: int) -> Optional[dict]:
+        """Increase stock for an item and emit threshold notifications if needed."""
+
+        if quantity <= 0:
+            raise ValueError("Quantity must be at least 1")
+
+        items = self._ensure_cache().copy()
+
+        for i, item in enumerate(items):
+            if item.get("sku") == sku:
+                previous_item = dict(item)
+                current_stock = int(item.get("stock", 0))
+                updated_item = {**item, "stock": current_stock + quantity}
+                items[i] = updated_item
+                self._write_all(items)
+
+                # Adding stock might move an item out of a low/out-of-stock state.
+                # We currently only emit notifications when entering low/out-of-stock,
+                # so no notification is required here, but we keep the hook for
+                # symmetry or future use.
+                self._emit_threshold_notifications(previous_item, updated_item)
+
+                return updated_item
+
+        return None
+
+    def delete_item(self, sku: str) -> Optional[dict]:
+        """Delete an item from inventory dataset."""
+
+        items = self._ensure_cache().copy()
+        deleted: Optional[dict] = None
+        remaining: List[dict] = []
+        for item in items:
+            if item.get("sku") == sku and deleted is None:
+                deleted = dict(item)
+                continue
+            remaining.append(item)
+
+        if deleted is None:
+            return None
+
+        self._write_all(remaining)
+        return deleted
+
+    def get_item_by_sku(self, sku: str) -> Optional[dict]:
+        """Fetch a single inventory item by SKU."""
+
+        for item in self._ensure_cache():
+            if item.get("sku") == sku:
+                return dict(item)
+        return None
+
+    def _emit_threshold_notifications(self, previous: dict, updated: dict) -> None:
+        """Compare previous vs updated and create notifications on threshold crossings.
+
+        Rules:
+        - When an item moves from in_stock -> low_stock: create a low-stock warning.
+        - When an item moves into out_of_stock from any other bucket: create an
+          out-of-stock error notification.
+        """
+
+        try:
+            prev_stock = int(previous.get("stock", 0))
+            prev_reorder = int(previous.get("reorder_point", 0))
+            new_stock = int(updated.get("stock", 0))
+            new_reorder = int(updated.get("reorder_point", 0))
+
+            prev_bucket = self._classify_bucket(prev_stock, prev_reorder)
+            new_bucket = self._classify_bucket(new_stock, new_reorder)
+
+            if prev_bucket == new_bucket:
+                return
+
+            name = updated.get("name") or previous.get("name") or "Unknown item"
+            sku = updated.get("sku") or previous.get("sku")
+
+            metadata = {
+                "sku": sku,
+                "name": name,
+                "previous_stock": prev_stock,
+                "new_stock": new_stock,
+                "reorder_point": new_reorder,
+                "bucket_from": prev_bucket,
+                "bucket_to": new_bucket,
+            }
+
+            if new_bucket == "low_stock" and prev_bucket == "in_stock":
+                title = f"Low stock: {name}"
+                message = f"Only {new_stock} unit(s) left. Reorder point: {new_reorder}."
+                notification_service.create_notification(
+                    type="inventory_low_stock",
+                    title=title,
+                    message=message,
+                    severity="warning",
+                    metadata=metadata,
+                )
+            elif new_bucket == "out_of_stock" and prev_bucket != "out_of_stock":
+                title = f"Out of stock: {name}"
+                message = "This item has run out of stock. Consider updating incoming shipments."
+                notification_service.create_notification(
+                    type="inventory_out_of_stock",
+                    title=title,
+                    message=message,
+                    severity="error",
+                    metadata=metadata,
+                )
+        except Exception:
+            # Notifications must never break core inventory flows.
+            return
 
     def add_stock(self, sku: str, quantity: int) -> Optional[dict]:
         """Add stock to an existing item."""

@@ -18,6 +18,7 @@ from .controllers.inventory_controller import router as inventory_router
 from .controllers.marketing_controller import router as marketing_router
 from .controllers.logs_controller import router as logs_router
 from .controllers.vapi_controller import router as vapi_router
+from .controllers.notifications_controller import router as notifications_router
 from .services.marketing_scheduler import marketing_scheduler
 from .utils.live_logs import configure_live_logging
 
@@ -81,6 +82,7 @@ app.include_router(inventory_router)
 app.include_router(marketing_router)
 app.include_router(logs_router)
 app.include_router(vapi_router)
+app.include_router(notifications_router)
 
 @app.get("/health")
 async def healthcheck():
