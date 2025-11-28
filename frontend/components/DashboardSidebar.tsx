@@ -50,6 +50,11 @@ const menuItems = [
     url: "/dashboard/marketing",
     icon: Megaphone,
   },
+  {
+    title: "Customer Support",
+    url: "/dashboard/support",
+    icon: MessageCircle,
+  },
 ];
 
 export function DashboardSidebar() {
