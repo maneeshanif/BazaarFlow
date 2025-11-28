@@ -252,11 +252,17 @@ class MarketingScheduler:
 
     @staticmethod
     def _safe_zone(timezone_name: str) -> ZoneInfo:
+        # For this deployment, Pakistan is the primary market, so when a
+        # timezone is missing or unrecognised we fall back to Asia/Karachi.
+        safe_default = "Asia/Karachi"
+        name_clean = (timezone_name or "").strip()
+        if not name_clean or name_clean.lower() in {"local", "pakistan", "pk"}:
+            return ZoneInfo(safe_default)
         try:
-            return ZoneInfo(timezone_name)
+            return ZoneInfo(name_clean)
         except Exception:
-            logger.warning("Unknown timezone '%s', defaulting to UTC", timezone_name)
-            return ZoneInfo("UTC")
+            logger.warning("Unknown timezone '%s', defaulting to %s", timezone_name, safe_default)
+            return ZoneInfo(safe_default)
 marketing_scheduler = MarketingScheduler(
     poll_interval=_float_env("MARKETING_SCHEDULER_POLL_SECONDS", 30.0),
     trigger_window_seconds=_int_env("MARKETING_SCHEDULER_TRIGGER_WINDOW_SECONDS", 90),

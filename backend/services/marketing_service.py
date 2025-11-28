@@ -10,6 +10,8 @@ from typing import Any, Awaitable, Callable, Dict, List, Optional
 
 import requests
 
+from zoneinfo import ZoneInfo
+
 from ..config.fb_config import FacebookConfig
 from ..facebook_manager import FacebookManager
 from ..models.fb_model import CommentReplyRequest, ImagePostRequest, PostInsights, TextPostRequest
@@ -36,6 +38,8 @@ from .inventory_service import inventory_analytics_service
 from .sales_service import list_orders
 
 logger = logging.getLogger(__name__)
+
+PAKISTAN_TZ = ZoneInfo("Asia/Karachi")
 
 PEXELS_SEARCH_ENDPOINT = "https://api.pexels.com/v1/search"
 _DEFAULT_PEXELS_TIMEOUT = 10
@@ -121,6 +125,28 @@ class MarketingService:
     # ------------------------------------------------------------------
     # Scheduling utilities
     # ------------------------------------------------------------------
+    @staticmethod
+    def _parse_scheduled_at(value: str, *, default_tz: ZoneInfo = PAKISTAN_TZ) -> datetime:
+        """Parse a scheduled_at string and normalise to UTC.
+
+        - If the string is timezone-aware, convert it to UTC.
+        - If it is naive, interpret it as local Pakistan time (Asia/Karachi)
+          and then convert to UTC. This matches the primary user base
+          expectation while keeping storage/logic in UTC.
+        """
+
+        raw = (value or "").strip()
+        if not raw:
+            raise ValueError("scheduled_at is required")
+        try:
+            dt = datetime.fromisoformat(raw)
+        except ValueError as exc:
+            raise ValueError(f"Invalid scheduled_at: {raw}") from exc
+
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=default_tz)
+        return dt.astimezone(timezone.utc)
+
     def configure_schedule(
         self,
         *,
@@ -232,12 +258,11 @@ class MarketingService:
             scheduled_at_raw = str(item.get("scheduled_at") or "").strip()
             if not scheduled_at_raw:
                 raise ValueError(f"scheduled_at is required for post index {idx}")
-            try:
-                scheduled_at = datetime.fromisoformat(scheduled_at_raw)
-            except ValueError as exc:
-                raise ValueError(f"Invalid scheduled_at for post index {idx}: {scheduled_at_raw}") from exc
-            if scheduled_at.tzinfo is None:
-                scheduled_at = scheduled_at.replace(tzinfo=timezone.utc)
+
+            # Interpret naive timestamps as Pakistan local time (Asia/Karachi)
+            # and convert everything to UTC for storage and comparison.
+            scheduled_at = self._parse_scheduled_at(scheduled_at_raw, default_tz=PAKISTAN_TZ)
+
             if scheduled_at <= now:
                 raise ValueError(f"scheduled_at must be in the future for post index {idx}")
 
