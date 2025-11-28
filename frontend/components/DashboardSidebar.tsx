@@ -23,6 +23,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { NotificationCenter } from "@/components/NotificationCenter";
 
 const menuItems = [
   {
@@ -133,8 +134,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       <div className="min-h-screen flex w-full bg-slate-50 dark:bg-slate-900">
         <DashboardSidebar />
         <main className="flex-1 overflow-auto">
-          <div className="sticky top-0 z-10 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-4">
+          <div className="sticky top-0 z-10 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-6 py-4 flex items-center justify-between gap-4">
             <SidebarTrigger className="text-slate-900 dark:text-white" />
+            <NotificationCenter />
           </div>
           <div className="p-6">
             {children}
