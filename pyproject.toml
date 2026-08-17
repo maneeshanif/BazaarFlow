@@ -1,0 +1,59 @@
+[project]
+name = "bazaarflow"
+version = "2.0.0"
+description = "BazaarFlow — WhatsApp multi-tenant AI sales platform"
+readme = "README.md"
+requires-python = ">=3.12"
+
+dependencies = [
+    # -- Web framework ---------------------------------------------------------
+    "fastapi[standard]>=0.120.1",
+    "uvicorn[standard]>=0.30.0",
+    "httpx>=0.27.0",
+
+    # -- Database (SQLAlchemy 2.0 async + Supabase PostgreSQL) -----------------
+    "sqlalchemy>=2.0.0",
+    "alembic>=1.13.0",
+    "asyncpg>=0.29.0",           # PostgreSQL async driver (Supabase)
+    "aiosqlite>=0.20.0",         # SQLite fallback for local dev
+
+    # -- Settings & Validation -------------------------------------------------
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+
+    # -- AI / Agents -----------------------------------------------------------
+    "openai-agents>=0.4.1",
+    "openai>=1.30.0",
+
+    # -- WhatsApp / Meta -------------------------------------------------------
+    "pywa[fastapi]>=3.4.0",
+
+    # -- MCP Tools -------------------------------------------------------------
+    "fastmcp>=2.13.0",
+
+    # -- HTTP & Utilities ------------------------------------------------------
+    "requests>=2.32.3",
+    "python-jose[cryptography]>=3.3.0",  # JWT auth
+    "passlib[bcrypt]>=1.7.4",            # password hashing
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.27.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
