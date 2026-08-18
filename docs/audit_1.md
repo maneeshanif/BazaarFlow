@@ -587,3 +587,155 @@ docker compose exec backend sh
 
 **Total old routes: 43 | Total new routes: 45 (43 + 2 new auth routes)**
 
+
+---
+
+## ?? Summary Scorecard
+
+| Dimension | v1 (Old) | v2 (Current MVC) | v3 (Planned) |
+|---|---|---|---|
+| **Architecture** | Flat scripts | MVC | Domain-driven + middleware |
+| **Database** | JSON files | SQLAlchemy 2.0 async | + CRUD layer + read-only engine |
+| **Config** | `os.getenv()` | Pydantic BaseSettings | + per-env config classes |
+| **Routing** | Mixed in `app.py` | Domain routers | + versioned API (`/api/v1/`) |
+| **Auth** | None | Stubs (JWT planned) | Full JWT + RBAC + `security.py` |
+| **Migrations** | None | Alembic ready | First migration committed |
+| **Tests** | 22 tests (not wired) | 22 migrated | + pytest-asyncio + httpx test client |
+| **Docker** | None | Dockerfile + compose | + Nginx + prod compose |
+| **Package mgr** | requirements.txt | uv | uv (same) |
+| **Monitoring** | Live logs only | Live logs | + Sentry + structured JSON logs |
+
+---
+
+## ??? Version 3 — Production-Grade Folder Structure (Planned)
+
+> Inspired by mature production FastAPI projects with similar domain scope
+> (multi-tenant AI + real-time messaging + marketing automation + voice support).
+> This version adds a CRUD layer, middleware, CLI tools, prompts folder, and versioned API.
+
+### What changes from v2 ? v3
+
+| Layer | v2 (current) | v3 (planned) |
+|---|---|---|
+| **API versioning** | `/api/vendors` | `/api/v1/vendors` |
+| **CRUD layer** | None (services touch DB directly) | `app/crud/` — one file per entity |
+| **Middleware** | Only CORS | + request logging, rate limiting |
+| **Prompts** | Hardcoded in agent files | `app/prompts/` — `.md` templates |
+| **CLI** | None | `app/cli/` — seed, migrate, export |
+| **Schemas** | One file per domain | + `common.py` (pagination, error shapes) |
+| **Database** | Single async engine | + read-only engine for analytics |
+| **Security** | Stub JWT | Full `app/core/security.py` — JWT + passlib |
+| **Config** | Single `Settings` class | Per-environment subclasses (Dev/Prod/Test) |
+| **Monitoring** | `live_logs.py` | + Sentry + structured JSON logs |
+
+### Planned v3 Structure
+
+```
+c:/code/BazaarFlow/
+|
++-- app/
+|   +-- main.py
+|   +-- runner.py
+|   |
+|   +-- api/
+|   |   +-- controllers/           <- same flat controllers (unchanged)
+|   |   |   +-- auth_controller.py
+|   |   |   +-- chat_controller.py
+|   |   |   +-- inventory_controller.py
+|   |   |   +-- logs_controller.py
+|   |   |   +-- marketing_controller.py
+|   |   |   +-- sales_controller.py
+|   |   |   +-- support_controller.py
+|   |   |   +-- vendors_controller.py
+|   |   |   +-- webhook_controller.py
+|   |   +-- routers/
+|   |       +-- main_router.py
+|   |       +-- v1/                <- NEW versioned router group
+|   |
+|   +-- core/
+|   |   +-- settings.py            <- upgraded: Dev/Prod/Test subclasses
+|   |   +-- security.py            <- NEW: JWT create/verify + passlib
+|   |   +-- database.py
+|   |   +-- database_ro.py         <- NEW: read-only engine for analytics
+|   |   +-- dependencies.py
+|   |   +-- exceptions.py
+|   |
+|   +-- crud/                      <- NEW: thin DB access (no business logic)
+|   |   +-- crud_vendor.py
+|   |   +-- crud_customer.py
+|   |   +-- crud_message.py
+|   |   +-- crud_order.py
+|   |   +-- crud_inventory.py
+|   |   +-- crud_marketing.py
+|   |   +-- crud_support.py
+|   |   +-- crud_user.py
+|   |
+|   +-- models/                    <- same 9 ORM models (unchanged)
+|   +-- schemas/
+|   |   +-- common.py              <- NEW: PaginatedResponse, ErrorDetail
+|   |   +-- user.py / vendor.py / customer.py / ...
+|   |
+|   +-- middleware/                <- NEW
+|   |   +-- request_logger.py      <- logs method, path, status, latency
+|   |   +-- rate_limiter.py        <- per-IP or per-vendor rate limiting
+|   |
+|   +-- prompts/                   <- NEW: all LLM prompt templates as files
+|   |   +-- sales/system_prompt.md
+|   |   +-- finance/system_prompt.md
+|   |   +-- inventory/system_prompt.md
+|   |   +-- marketing/system_prompt.md
+|   |
+|   +-- agents/                    <- same (unchanged)
+|   +-- services/                  <- same (unchanged)
+|   +-- repositories/              <- bridges to crud/ during JSON->DB migration
+|   +-- integrations/              <- same (unchanged)
+|   |
+|   +-- utils/
+|   |   +-- live_logs.py
+|   |   +-- agent_hooks.py
+|   |   +-- logger.py              <- upgraded: structured JSON output
+|   |   +-- diagnose.py
+|   |   +-- streaming.py           <- NEW: SSE streaming helpers for chat
+|   |
+|   +-- cli/                       <- NEW: management commands
+|   |   +-- seed.py                <- seeds DB from old JSON files
+|   |   +-- export.py              <- exports orders/inventory to CSV
+|   |
+|   +-- mcp_server/                <- same (unchanged)
+|
++-- alembic/
+|   +-- versions/
+|   |   +-- 0001_initial_schema.py <- first autogenerated migration
+|   +-- env.py / script.py.mako
+|
++-- tests/
+|   +-- unit/                      <- 22 migrated tests
+|   +-- integration/               <- NEW: httpx TestClient tests per controller
+|   +-- conftest.py                <- NEW: shared fixtures (async DB, test client)
+|
++-- docs/audit_1.md
++-- scripts/seed_from_json.py      <- migrates old JSON data to Supabase
++-- frontend/                      <- unchanged Next.js app
++-- backend/                       <- OLD: delete after smoke test passes
++-- docker-compose.yml
++-- alembic.ini
++-- pyproject.toml                 <- uv-managed
++-- progress.md
++-- .env.example
+```
+
+### v3 Key additions explained
+
+| Addition | Why it matters |
+|---|---|
+| `app/crud/` | Separates "how to talk to the DB" from "what the business rule is" — services call crud, crud calls SQLAlchemy |
+| `app/core/security.py` | Centralises JWT creation/verification and password hashing — auth is never duplicated |
+| `app/core/database_ro.py` | Read-only connection for analytics/logs — never accidentally writes from a query endpoint |
+| `app/middleware/request_logger.py` | Every request gets method, path, vendor_id, latency logged — replaces manual `live_logs.py` calls |
+| `app/prompts/` | LLM prompts as files — editable without redeploying, version-controlled, easy to A/B test |
+| `app/cli/seed.py` | `python -m app.cli.seed` migrates old JSON ? Supabase in one shot |
+| `tests/integration/` | httpx `AsyncClient` against a test DB — verifies actual HTTP responses, not just unit logic |
+
+---
+
+*Last updated: 2026-08-18 | Versions: v1 (legacy) ? v2 (current MVC) ? v3 (planned production)*
