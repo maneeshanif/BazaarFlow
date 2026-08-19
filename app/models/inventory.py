@@ -1,4 +1,4 @@
-"""InventoryItem ORM model — product catalog per vendor."""
+"""InventoryItem ORM model ï¿½ product catalog per vendor."""
 from __future__ import annotations
 from sqlalchemy import String, ForeignKey, Numeric, Integer, Text
 from sqlalchemy.orm import Mapped, mapped_column

@@ -51,7 +51,7 @@ class Base(DeclarativeBase):
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    """FastAPI dependency — yields a database session per request."""
+    """FastAPI dependency ï¿½ yields a database session per request."""
     async with AsyncSessionLocal() as session:
         try:
             yield session

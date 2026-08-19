@@ -1,4 +1,4 @@
-"""BazaarFlow FastAPI application — MVC production entrypoint.
+"""BazaarFlow FastAPI application - Production-ready MVC entrypoint.
 
 Run with:
     uvicorn app.main:app --reload --port 8000
@@ -13,7 +13,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routers.main_router import main_router
+from app.api.routers.v1 import api_v1_router
 from app.core.settings import settings
+from app.middleware.request_logger import RequestLoggerMiddleware
+from app.middleware.rate_limiter import RateLimiterMiddleware
 from app.utils.live_logs import configure_live_logging
 
 configure_live_logging(logging.DEBUG)
@@ -31,13 +34,18 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="BazaarFlow API",
-    version="2.0.0",
-    description="BazaarFlow — WhatsApp multi-tenant AI sales platform",
+    version="3.0.0",
+    description="BazaarFlow - WhatsApp multi-tenant AI sales & marketing platform",
     docs_url="/docs",
     redoc_url="/redoc",
     lifespan=lifespan,
 )
 
+# Custom Middlewares
+app.add_middleware(RequestLoggerMiddleware)
+app.add_middleware(RateLimiterMiddleware, limit=200, window=60)
+
+# CORS Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.FRONTEND_ORIGIN] if settings.is_production else ["*"],
@@ -46,10 +54,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Single include — main_router aggregates everything
+# Mount Routers (both base /api routes and /api/v1 versioned routes)
 app.include_router(main_router)
+app.include_router(api_v1_router)
 
 
 @app.get("/health", tags=["health"])
 async def healthcheck():
-    return {"status": "ok", "env": settings.APP_ENV}
+    return {
+        "status": "healthy",
+        "app": "BazaarFlow",
+        "version": "3.0.0",
+        "env": settings.APP_ENV,
+    }

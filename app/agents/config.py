@@ -1,6 +1,6 @@
 """Shared Gemini / OpenAI-compatible client for all agents.
 
-All agents MUST import from here — never create their own client.
+All agents MUST import from here ï¿½ never create their own client.
 """
 from __future__ import annotations
 from openai import AsyncOpenAI

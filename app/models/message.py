@@ -1,4 +1,4 @@
-"""Message ORM model — inbound/outbound WhatsApp chat transcripts."""
+"""Message ORM model ï¿½ inbound/outbound WhatsApp chat transcripts."""
 from __future__ import annotations
 import enum
 from sqlalchemy import String, ForeignKey, Text, Enum as SAEnum

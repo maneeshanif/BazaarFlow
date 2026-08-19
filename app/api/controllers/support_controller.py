@@ -1,4 +1,4 @@
-"""VAPI webhook endpoint — exact port of backend/controllers/vapi_controller.py"""
+"""VAPI webhook endpoint ï¿½ exact port of backend/controllers/vapi_controller.py"""
 from __future__ import annotations
 from typing import Any, Dict, Optional
 import logging

@@ -1,4 +1,4 @@
-"""SupportTicket ORM model — VAPI voice support tickets."""
+"""SupportTicket ORM model ï¿½ VAPI voice support tickets."""
 from __future__ import annotations
 from sqlalchemy import String, Text
 from sqlalchemy.orm import Mapped, mapped_column

@@ -1,4 +1,4 @@
-"""Chat endpoints — exact port of backend/controllers/chat_controller.py
+"""Chat endpoints ï¿½ exact port of backend/controllers/chat_controller.py
 
 Old full paths (prefix /api was added in app.py):
   POST /api/chat/sales

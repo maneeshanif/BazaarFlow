@@ -1,4 +1,4 @@
-"""Sales endpoints — exact port of backend/controllers/sales_controller.py"""
+"""Sales endpoints ï¿½ exact port of backend/controllers/sales_controller.py"""
 from __future__ import annotations
 from typing import Optional
 
@@ -21,7 +21,7 @@ class SalesForm(BaseModel):
     notes: Optional[str] = Field(None, description="Extra delivery instructions")
 
 
-@router.post("", response_class=JSONResponse)
+@router.post("/", response_class=JSONResponse)
 async def create_sales_order(form: SalesForm):
     try:
         # TODO: delegate to app.services.sales_service.save_order
@@ -32,7 +32,7 @@ async def create_sales_order(form: SalesForm):
         raise HTTPException(status_code=500, detail=str(exc))
 
 
-@router.get("", response_class=JSONResponse)
+@router.get("/", response_class=JSONResponse)
 async def get_sales_orders():
     # TODO: delegate to app.services.sales_service.list_orders
     return JSONResponse(status_code=200, content={"ok": True, "orders": []})

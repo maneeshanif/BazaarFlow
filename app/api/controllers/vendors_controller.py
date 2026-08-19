@@ -1,4 +1,4 @@
-"""Vendor endpoints — exact port of backend/controllers/vendors_controller.py"""
+"""Vendor endpoints ï¿½ exact port of backend/controllers/vendors_controller.py"""
 from __future__ import annotations
 from typing import Any, Dict, List, Optional
 import logging
@@ -47,13 +47,13 @@ def _mask_token(token: Optional[str]) -> Optional[str]:
     return f"***{token[-4:]}" if len(token) > 4 else "***"
 
 
-@router.get("", response_model=List[VendorResponse])
+@router.get("/", response_model=List[VendorResponse])
 async def list_vendors():
     # TODO: replace with DB query via SQLAlchemy
     return []
 
 
-@router.post("", response_model=VendorResponse, status_code=201)
+@router.post("/", response_model=VendorResponse, status_code=201)
 async def create_vendor(payload: VendorCreatePayload):
     # TODO: replace with DB insert
     pass

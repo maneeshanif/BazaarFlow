@@ -1,4 +1,4 @@
-"""Vendor ORM model — one vendor = one WhatsApp Business account."""
+"""Vendor ORM model ï¿½ one vendor = one WhatsApp Business account."""
 from __future__ import annotations
 from sqlalchemy import String, ForeignKey, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship

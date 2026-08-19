@@ -4,7 +4,7 @@ Usage:
     from app.core.settings import settings
     print(settings.DATABASE_URL)
 
-All variables are validated at startup — missing required vars raise an error
+All variables are validated at startup ï¿½ missing required vars raise an error
 instead of silently returning None.
 """
 
@@ -62,5 +62,5 @@ class Settings(BaseSettings):
         return self.DATABASE_URL.startswith("sqlite")
 
 
-# Singleton — import this everywhere
+# Singleton ï¿½ import this everywhere
 settings = Settings()

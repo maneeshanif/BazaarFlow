@@ -1,4 +1,4 @@
-"""Customer ORM model — per-vendor customer record."""
+"""Customer ORM model ï¿½ per-vendor customer record."""
 from __future__ import annotations
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column

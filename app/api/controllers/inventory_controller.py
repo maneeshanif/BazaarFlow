@@ -1,4 +1,4 @@
-"""Inventory endpoints — exact port of backend/controllers/inventory_controller.py"""
+"""Inventory endpoints ï¿½ exact port of backend/controllers/inventory_controller.py"""
 from __future__ import annotations
 from typing import Optional
 
@@ -34,7 +34,7 @@ class AddStockRequest(BaseModel):
     quantity: int
 
 
-@router.get("")
+@router.get("/")
 async def get_inventory():
     """Get all inventory items."""
     # TODO: delegate to app.services.inventory_service
@@ -48,7 +48,7 @@ async def get_inventory_item(sku: str):
     raise HTTPException(status_code=404, detail=f"Item with SKU {sku} not found")
 
 
-@router.post("", status_code=201)
+@router.post("/", status_code=201)
 async def create_inventory_item(item: InventoryItemCreate):
     """Create a new inventory item."""
     try:

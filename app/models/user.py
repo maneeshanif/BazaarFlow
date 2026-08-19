@@ -1,4 +1,4 @@
-"""User ORM model — supports multi-role auth."""
+"""User ORM model ï¿½ supports multi-role auth."""
 from __future__ import annotations
 import enum
 from sqlalchemy import String, Enum as SAEnum

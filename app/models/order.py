@@ -1,4 +1,4 @@
-"""Order ORM model — sales orders captured via WhatsApp agent."""
+"""Order ORM model ï¿½ sales orders captured via WhatsApp agent."""
 from __future__ import annotations
 from sqlalchemy import String, ForeignKey, Text, Numeric, Integer
 from sqlalchemy.orm import Mapped, mapped_column

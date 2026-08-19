@@ -1,4 +1,4 @@
-"""WhatsApp webhook — exact port of backend/controllers/webhook_controller.py"""
+"""WhatsApp webhook ï¿½ exact port of backend/controllers/webhook_controller.py"""
 from __future__ import annotations
 import logging
 

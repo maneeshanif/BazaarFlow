@@ -1,4 +1,4 @@
-"""FacebookAccount ORM model — connected FB pages per vendor."""
+"""FacebookAccount ORM model ï¿½ connected FB pages per vendor."""
 from __future__ import annotations
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
