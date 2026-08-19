@@ -9,12 +9,20 @@ env/
 build/
 dist/
 *.egg-info/
+.pytest_cache/
+
+# Databases (local SQLite)
+*.db
+*.sqlite
+*.sqlite3
 
 # Ignore local env files (keep secrets out of git)
 .env
+.env.local
 
 # IDEs
 .vscode/
+.idea/
 
 # Node / frontend
 node_modules/
@@ -22,3 +30,4 @@ node_modules/
 
 # OS
 .DS_Store
+Thumbs.db
