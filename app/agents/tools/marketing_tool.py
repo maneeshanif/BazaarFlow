@@ -1,7 +1,7 @@
+from __future__ import annotations
 from app.core.settings import settings
 """Utility tools used by the marketing agent for data gathering."""
 
-from __future__ import annotations
 
 import json
 import os

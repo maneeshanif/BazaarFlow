@@ -1,7 +1,7 @@
+from __future__ import annotations
 from app.core.settings import settings
 """Domain logic for marketing automation flows."""
 
-from __future__ import annotations
 
 import logging
 import os
@@ -1188,7 +1188,7 @@ class MarketingService:
             lambda g, t: f"Thanks, {g}! We'd love to help with {t}. Message us on WhatsApp at {number} so we can share everything.",
             lambda g, t: f"Hi {g}! Let's continue this on WhatsApp for the full details. Send us a quick message at {number}.",
             lambda g, t: f"Hey {g}, appreciate your comment. WhatsApp us at {number} and we'll walk you through it.",
-            lambda g, t: f"{g.capitalize()}, thanks for reaching out. Our team replies fastest on WhatsApp—drop us a note at {number}.",
+            lambda g, t: f"{g.capitalize()}, thanks for reaching out. Our team replies fastest on WhatsAppâ€”drop us a note at {number}.",
             lambda g, t: f"Great to hear from you, {g}! For everything about {t}, ping us on WhatsApp at {number} and we'll help right away.",
         ]
 

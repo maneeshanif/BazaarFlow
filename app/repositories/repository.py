@@ -1,7 +1,7 @@
-from app.core.settings import settings
 """Domain helpers for the JSON-backed MVP data store."""
 
 from __future__ import annotations
+from app.core.settings import settings
 
 import os
 from datetime import datetime, timezone

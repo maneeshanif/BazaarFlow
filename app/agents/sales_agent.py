@@ -1,4 +1,3 @@
-from app.core.settings import settings
 
 import logging
 

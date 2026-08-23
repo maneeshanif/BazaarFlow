@@ -1,7 +1,7 @@
-from app.core.settings import settings
 """Thin wrapper around the WhatsApp Business Cloud API."""
 
 from __future__ import annotations
+from app.core.settings import settings
 
 import logging
 import os
@@ -31,7 +31,7 @@ def _endpoint(phone_number_id: str) -> str:
 def _mask_token(token: str) -> str:
     if len(token) <= 8:
         return "***"
-    return f"{token[:4]}…{token[-4:]}"
+    return f"{token[:4]}â€¦{token[-4:]}"
 
 
 def _extract_whatsapp_error(response: httpx.Response) -> Tuple[str, Dict[str, Any]]:

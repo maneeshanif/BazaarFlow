@@ -1,4 +1,3 @@
-from app.core.settings import settings
 """Inventory agent configuration using the OpenAI Agents SDK."""
 import logging
 import os

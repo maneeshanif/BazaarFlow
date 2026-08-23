@@ -13,8 +13,8 @@ from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 try:
-    from .config.fb_config import FacebookConfig, get_config
-    from .models.fb_model import (
+    from .fb_config import FacebookConfig, get_config
+    from .fb_model import (
         TextPostRequest,
         ImagePostRequest,
         VideoPostRequest,
@@ -32,12 +32,7 @@ try:
         ReactionBreakdown,
         InsightPeriod,
     )
-    from .src.exceptions import (
-        FacebookAPIError,
-        InvalidCredentialsError,
-        PostCreationError,
-        ImageUploadError,
-    )
+    
 except ImportError:  # pragma: no cover - fallback for script-style imports
     from config.fb_config import FacebookConfig, get_config
     from models.fb_model import (

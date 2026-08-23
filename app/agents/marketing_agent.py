@@ -1,7 +1,7 @@
+from __future__ import annotations
 from app.core.settings import settings
 """Marketing automation agent orchestrated through the Agents SDK."""
 
-from __future__ import annotations
 
 import json
 import logging
