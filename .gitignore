@@ -31,3 +31,6 @@ node_modules/
 # OS
 .DS_Store
 Thumbs.db
+
+# Old backend backup (local only)
+backend/
