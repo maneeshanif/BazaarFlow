@@ -3,12 +3,13 @@
 ## Done
 
 - 2026-08-24: Fixed all 69-module import chain — resolved 7 issues:
-  - rom __future__ ordering in marketing_service, marketing_agent, marketing_tool, repository, whatsapp, finance/inventory/sales/marketing agents
-  - pp/repositories/__init__.py now re-exports all public API (delete_facebook_account, etc.)
-  - pp/integrations/facebook_manager.py relative imports fixed (.config.fb_config → .fb_config)
-  - pp/agents/config.py lazy-init prevents import failure when GEMINI_API_KEY is unset
-  - Added 	zdata==2026.3 to pyproject.toml for ZoneInfo('Asia/Karachi') on Windows
+  - Fixed `from __future__` ordering in marketing_service, marketing_agent, marketing_tool, repository, whatsapp, finance/inventory/sales/marketing agents
+  - `app/repositories/__init__.py` now re-exports all public API (delete_facebook_account, etc.)
+  - `app/integrations/facebook_manager.py` relative imports fixed (.config.fb_config → .fb_config)
+  - `app/agents/config.py` lazy-init prevents import failure when GEMINI_API_KEY is unset
+  - Added `tzdata==2026.3` to `pyproject.toml` for `ZoneInfo('Asia/Karachi')` on Windows
   - Integration tests: 5/5 passing on Python 3.14.3
+- 2026-08-24: **Old backend untracked** — Untracked and ignored `backend/` folder to keep it local-only (removed from git repository tracking on `feat/mvc-architecture` branch).
 - 2026-08-17: **Backend architecture audit** â€” full side-by-side comparison of old flat structure vs new MVC boilerplate written to `docs/audit_1.md`
 - 2026-08-17: **Root restructure** â€” eliminated `backend/` wrapper; backend now lives at root level (`app/`, `alembic/`, `pyproject.toml`)
 - 2026-08-17: **MVC folder structure** â€” created `app/` following `fastapi-starter-boilerplate` pattern with `api/controllers/`, `api/routers/`, `core/`, `models/`, `schemas/`, `agents/`, `services/`, `repositories/`, `integrations/`, `utils/`, `mcp_server/`
@@ -51,4 +52,4 @@
 - **Meta / WhatsApp credentials**: `META_VERIFY_TOKEN`, `FACEBOOK_PAGE_ID`, `FACEBOOK_ACCESS_TOKEN` needed in `.env` before webhook goes live
 - **VAPI credentials**: `VAPI_API_KEY` + `VAPI_WEBHOOK_SECRET` + `NEXT_PUBLIC_VAPI_PUBLIC_KEY` needed in `.env` for voice support
 - **Pexels API key**: `PEXELS_API_KEY` needed in `.env` for AI-generated marketing post images
-- **`backend/` folder deletion**: old backend kept intact as safety net; safe to remove once full production smoke testing is complete
+- **`backend/` folder status**: old backend has been untracked and ignored (local-only backup); safe to remove permanently once full production smoke testing is complete
