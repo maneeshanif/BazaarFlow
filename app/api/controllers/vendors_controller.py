@@ -1,10 +1,26 @@
-"""Vendor endpoints � exact port of backend/controllers/vendors_controller.py"""
+"""Vendor endpoints - exact port of backend/controllers/vendors_controller.py"""
 from __future__ import annotations
 from typing import Any, Dict, List, Optional
 import logging
 
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
+
+from app.repositories import (
+    list_vendors,
+    upsert_vendor,
+    get_vendor,
+    list_customers,
+    list_messages,
+    update_vendor_settings,
+    record_message,
+    upsert_customer,
+)
+from app.services.whatsapp import (
+    validate_phone_number,
+    send_text_message,
+    WhatsAppAPIError,
+)
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -48,46 +64,170 @@ def _mask_token(token: Optional[str]) -> Optional[str]:
 
 
 @router.get("/", response_model=List[VendorResponse])
-async def list_vendors():
-    # TODO: replace with DB query via SQLAlchemy
-    return []
+async def get_all_vendors():
+    vendors = list_vendors()
+    return [
+        VendorResponse(
+            vendor_id=vendor["vendor_id"],
+            phone_number_id=vendor.get("phone_number_id", ""),
+            name=vendor.get("name"),
+            waba_id=vendor.get("waba_id"),
+        )
+        for vendor in vendors
+    ]
 
 
 @router.post("/", response_model=VendorResponse, status_code=201)
-async def create_vendor(payload: VendorCreatePayload):
-    # TODO: replace with DB insert
-    pass
+async def create_new_vendor(payload: VendorCreatePayload):
+    vendor = upsert_vendor(
+        phone_number_id=payload.phone_number_id,
+        name=payload.name,
+    )
+    return VendorResponse(
+        vendor_id=vendor["vendor_id"],
+        phone_number_id=vendor["phone_number_id"],
+        name=vendor.get("name"),
+        waba_id=vendor.get("waba_id"),
+    )
 
 
 @router.get("/{vendor_id}/customers")
 async def list_vendor_customers(vendor_id: str):
-    # TODO: query customers table filtered by vendor_id
-    return {"customers": []}
+    vendor = get_vendor(vendor_id)
+    if not vendor:
+        raise HTTPException(status_code=404, detail="Vendor not found")
+    customers = list_customers(vendor_id)
+    return {"customers": customers}
 
 
 @router.get("/{vendor_id}/customers/{customer_phone}/messages")
 async def list_customer_messages(vendor_id: str, customer_phone: str):
-    normalized = _normalize_phone(customer_phone)
-    # TODO: query messages table
-    return {"messages": []}
+    vendor = get_vendor(vendor_id)
+    if not vendor:
+        raise HTTPException(status_code=404, detail="Vendor not found")
+    normalized_phone = _normalize_phone(customer_phone)
+    search_number = normalized_phone or customer_phone
+    messages = list_messages(vendor_id, search_number)
+    if not messages and normalized_phone and normalized_phone != customer_phone:
+        messages = list_messages(vendor_id, customer_phone)
+    return {"messages": messages}
 
 
 @router.get("/{vendor_id}/settings", response_model=VendorSettingsResponse)
 async def get_vendor_settings(vendor_id: str):
-    # TODO: query vendor from DB
-    raise HTTPException(status_code=404, detail="Vendor not found")
+    vendor = get_vendor(vendor_id)
+    if not vendor:
+        raise HTTPException(status_code=404, detail="Vendor not found")
+    settings_val = vendor.get("settings", {})
+    return VendorSettingsResponse(
+        vendor_id=vendor["vendor_id"],
+        phone_number_id=vendor.get("phone_number_id"),
+        waba_id=vendor.get("waba_id"),
+        facebook_app_id=settings_val.get("facebook_app_id"),
+        has_access_token=bool(vendor.get("access_token")),
+        access_token_suffix=_mask_token(vendor.get("access_token")),
+    )
 
 
 @router.post("/{vendor_id}/settings", response_model=VendorSettingsResponse)
-async def update_vendor_settings(vendor_id: str, payload: VendorSettingsPayload, request: Request):
-    # TODO: validate Meta credentials then upsert vendor settings
-    raise HTTPException(status_code=501, detail="Not yet implemented")
+async def update_vendor_settings_endpoint(vendor_id: str, payload: VendorSettingsPayload, request: Request):
+    http_client = request.app.state.http_client
+    try:
+        await validate_phone_number(
+            client=http_client,
+            phone_number_id=payload.phone_number_id,
+            access_token=payload.access_token,
+        )
+    except Exception as exc:
+        logger.warning("Meta validation failed: %s", exc)
+        raise HTTPException(status_code=400, detail="Meta API validation failed") from exc
+
+    try:
+        updated = update_vendor_settings(
+            vendor_id,
+            phone_number_id=payload.phone_number_id,
+            waba_id=payload.waba_id,
+            access_token=payload.access_token,
+            settings={"facebook_app_id": payload.facebook_app_id} if payload.facebook_app_id else None,
+        )
+    except KeyError:
+        existing_vendor = get_vendor(vendor_id)
+        updated = upsert_vendor(
+            phone_number_id=payload.phone_number_id,
+            name=existing_vendor.get("name") if existing_vendor else f"Vendor {payload.phone_number_id}",
+            waba_id=payload.waba_id,
+            access_token=payload.access_token,
+            settings={"facebook_app_id": payload.facebook_app_id} if payload.facebook_app_id else None,
+        )
+
+    return VendorSettingsResponse(
+        vendor_id=updated["vendor_id"],
+        phone_number_id=updated.get("phone_number_id"),
+        waba_id=updated.get("waba_id"),
+        facebook_app_id=updated.get("settings", {}).get("facebook_app_id"),
+        has_access_token=True,
+        access_token_suffix=_mask_token(updated.get("access_token")),
+    )
 
 
 @router.post("/{vendor_id}/customers/{customer_phone}/messages")
 async def send_vendor_message(vendor_id: str, customer_phone: str, payload: SendMessagePayload, request: Request):
-    normalized = _normalize_phone(customer_phone)
-    if not normalized:
+    vendor = get_vendor(vendor_id)
+    if not vendor:
+        raise HTTPException(status_code=404, detail="Vendor not found")
+    access_token = vendor.get("access_token")
+    phone_number_id = vendor.get("phone_number_id")
+    if not access_token or not phone_number_id:
+        raise HTTPException(status_code=400, detail="Vendor is missing phone credentials")
+
+    normalized_phone = _normalize_phone(customer_phone)
+    if not normalized_phone:
         raise HTTPException(status_code=400, detail="Customer phone number must contain digits")
-    # TODO: send via meta_whatsapp integration + record message
-    raise HTTPException(status_code=501, detail="Not yet implemented")
+
+    http_client = request.app.state.http_client
+    upsert_customer(vendor_id, phone=normalized_phone)
+    try:
+        response = await send_text_message(
+            client=http_client,
+            phone_number_id=phone_number_id,
+            access_token=access_token,
+            to=normalized_phone,
+            body=payload.text,
+        )
+    except WhatsAppAPIError as exc:
+        failure_payload = {
+            "status": "send_failed",
+            "source": "whatsapp_api",
+            "error": exc.payload,
+        }
+        if exc.status_code is not None:
+            failure_payload["http_status"] = exc.status_code
+        record_message(
+            vendor_id=vendor_id,
+            customer_phone=normalized_phone,
+            direction="outbound",
+            text=payload.text,
+            raw_payload=failure_payload,
+        )
+        status_code = exc.status_code or 502
+        raise HTTPException(status_code=status_code, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Failed to send message via WhatsApp API: %s", exc)
+        record_message(
+            vendor_id=vendor_id,
+            customer_phone=normalized_phone,
+            direction="outbound",
+            text=payload.text,
+            raw_payload={"status": "send_failed", "source": "unexpected_error", "error": str(exc)},
+        )
+        raise HTTPException(status_code=502, detail="Failed to send WhatsApp message") from exc
+
+    record_message(
+        vendor_id=vendor_id,
+        customer_phone=normalized_phone,
+        direction="outbound",
+        text=payload.text,
+        raw_payload=response,
+    )
+
+    return {"status": "sent", "response": response}

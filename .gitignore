@@ -34,3 +34,7 @@ Thumbs.db
 
 # Old backend backup (local only)
 backend/
+
+# Runtime databases
+db/
+app/db/

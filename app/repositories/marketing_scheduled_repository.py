@@ -14,8 +14,11 @@ from typing import Any, Dict, List, Optional
 from .json_store import JsonStore
 
 
-_SCHEDULED_CAMPAIGNS_PATH = "db/marketing_scheduled_campaigns.json"
-_SCHEDULED_POSTS_PATH = "db/marketing_scheduled_posts.json"
+from pathlib import Path
+
+_DB_ROOT = Path(__file__).resolve().parent.parent / "db"
+_SCHEDULED_CAMPAIGNS_PATH = _DB_ROOT / "marketing_scheduled_campaigns.json"
+_SCHEDULED_POSTS_PATH = _DB_ROOT / "marketing_scheduled_posts.json"
 
 
 @dataclass

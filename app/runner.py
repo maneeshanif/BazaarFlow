@@ -15,8 +15,8 @@ from typing import Any, Dict, Optional
 
 from agents import Runner, SQLiteSession  # type: ignore[import-not-found]
 
-from .my_agents.sales_agent import sales_agent
-from .lib import repository
+from app.agents.sales_agent import sales_agent
+from app.repositories import repository
 from .utils.agent_hooks import AgentTurnLogger
 
 logger = logging.getLogger(__name__)

@@ -1,10 +1,12 @@
-"""Sales endpoints � exact port of backend/controllers/sales_controller.py"""
+"""Sales endpoints - exact port of backend/controllers/sales_controller.py"""
 from __future__ import annotations
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
+
+from app.services.sales_service import save_order, list_orders
 
 router = APIRouter()
 
@@ -24,8 +26,8 @@ class SalesForm(BaseModel):
 @router.post("/", response_class=JSONResponse)
 async def create_sales_order(form: SalesForm):
     try:
-        # TODO: delegate to app.services.sales_service.save_order
-        return JSONResponse(status_code=201, content={"ok": True, "order": form.model_dump()})
+        record = save_order(form.model_dump())
+        return JSONResponse(status_code=201, content={"ok": True, "order": record})
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except Exception as exc:
@@ -34,5 +36,5 @@ async def create_sales_order(form: SalesForm):
 
 @router.get("/", response_class=JSONResponse)
 async def get_sales_orders():
-    # TODO: delegate to app.services.sales_service.list_orders
-    return JSONResponse(status_code=200, content={"ok": True, "orders": []})
+    items = list_orders()
+    return JSONResponse(status_code=200, content={"ok": True, "orders": items})
