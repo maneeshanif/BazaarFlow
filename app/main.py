@@ -10,11 +10,12 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 import httpx
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routers.main_router import main_router
 from app.api.routers.v1 import api_v1_router
+from app.core.auth import public_route
 from app.core.settings import settings
 from app.middleware.rate_limiter import RateLimiterMiddleware
 from app.middleware.request_logger import RequestLoggerMiddleware
@@ -60,7 +61,7 @@ app.include_router(main_router)
 app.include_router(api_v1_router)
 
 
-@app.get("/health", tags=["health"])
+@app.get("/health", tags=["health"], dependencies=[Depends(public_route)])
 async def healthcheck() -> dict[str, str]:
     return {
         "status": "healthy",

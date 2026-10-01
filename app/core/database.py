@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from typing import Any, AsyncGenerator
 
+from sqlalchemy.engine import make_url
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -17,21 +18,31 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import DeclarativeBase
 
-from app.core.settings import settings
+from app.core.settings import settings, to_async_url
 
 
 def _build_engine() -> AsyncEngine:
-    url = settings.DATABASE_URL
+    url = to_async_url(settings.DATABASE_URL)
     connect_args: dict[str, Any] = {}
+    kwargs: dict[str, Any] = {}
 
     if settings.is_sqlite:
         # SQLite needs check_same_thread disabled for async
         connect_args = {"check_same_thread": False}
+    else:
+        # Supabase's transaction pooler (port 6543) does not support prepared statements, so
+        # asyncpg's statement cache must be off (PRD §3.8, RK-09).
+        connect_args = {"statement_cache_size": 0}
+        kwargs = {"pool_pre_ping": True, "pool_size": 5, "max_overflow": 5}
+        url = make_url(url).update_query_dict({"prepared_statement_cache_size": "0"}).render_as_string(
+            hide_password=False
+        )
 
     return create_async_engine(
         url,
         echo=not settings.is_production,
         connect_args=connect_args,
+        **kwargs,
     )
 
 

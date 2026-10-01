@@ -1,17 +1,18 @@
 """Order ORM model � sales orders captured via WhatsApp agent."""
 from __future__ import annotations
 
-from sqlalchemy import ForeignKey, Integer, String, Text
+import uuid
+
+from sqlalchemy import ForeignKey, Integer, String, Text, Uuid
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
-from app.models.common import BaseModelMixin
+from app.models.common import BaseModelMixin, TenantMixin
 
 
-class Order(BaseModelMixin, Base):
+class Order(BaseModelMixin, TenantMixin, Base):
     __tablename__ = "orders"
-    vendor_id: Mapped[str] = mapped_column(String(36), ForeignKey("vendors.id"), nullable=False, index=True)
-    customer_id: Mapped[str] = mapped_column(String(36), ForeignKey("customers.id"), nullable=True)
+    customer_id: Mapped[uuid.UUID | None] = mapped_column(Uuid, ForeignKey("customers.id"), nullable=True)
     customer_name: Mapped[str] = mapped_column(String(255), nullable=True)
     customer_phone: Mapped[str] = mapped_column(String(30), nullable=True)
     product_name: Mapped[str] = mapped_column(String(255), nullable=False)

@@ -1,10 +1,11 @@
 """Data export CLI command.
 
-Exports database tables (Orders, Inventory, Customers) to CSV or JSON.
+Exports one tenant's data (Orders, Inventory, Customers) to CSV or JSON. The tenant id is required
+because row-level security hides every other tenant's rows (PRD §3.5).
 
 Usage:
-    python -m app.cli.export --table inventory --format csv
-    python -m app.cli.export --table orders --format json
+    python -m app.cli.export --tenant-id <uuid> --table inventory --format csv
+    python -m app.cli.export --tenant-id <uuid> --table orders --format json
 """
 from __future__ import annotations
 
@@ -13,12 +14,13 @@ import asyncio
 import csv
 import json
 import logging
+import uuid
 from pathlib import Path
 from typing import Any, List
 
 from sqlalchemy import select
 
-from app.core.database import AsyncSessionLocal
+from app.core.tenancy import tenant_session
 from app.models.customer import Customer
 from app.models.inventory import InventoryItem
 from app.models.order import Order
@@ -27,12 +29,14 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger("bazaarflow.export")
 
 
-async def export_data(table_name: str, export_format: str, output_path: str | None = None) -> None:
-    async with AsyncSessionLocal() as session:
+async def export_data(
+    tenant_id: uuid.UUID, table_name: str, export_format: str, output_path: str | None = None
+) -> None:
+    async with tenant_session(tenant_id) as session:
         records: List[dict[str, Any]] = []
 
         if table_name == "inventory":
-            result = await session.execute(select(InventoryItem))
+            result = await session.execute(select(InventoryItem).where(InventoryItem.tenant_id == tenant_id))
             items = result.scalars().all()
             records = [
                 {
@@ -45,12 +49,12 @@ async def export_data(table_name: str, export_format: str, output_path: str | No
                 for item in items
             ]
         elif table_name == "orders":
-            result = await session.execute(select(Order))
+            result = await session.execute(select(Order).where(Order.tenant_id == tenant_id))
             orders = result.scalars().all()
             records = [
                 {
                     "id": str(order.id),
-                    "vendor_id": str(order.vendor_id),
+                    "tenant_id": str(order.tenant_id),
                     "product_name": order.product_name,
                     "quantity": order.quantity,
                     "payment_status": order.payment_status,
@@ -59,12 +63,12 @@ async def export_data(table_name: str, export_format: str, output_path: str | No
                 for order in orders
             ]
         elif table_name == "customers":
-            result = await session.execute(select(Customer))
+            result = await session.execute(select(Customer).where(Customer.tenant_id == tenant_id))
             customers = result.scalars().all()
             records = [
                 {
                     "id": str(c.id),
-                    "vendor_id": str(c.vendor_id),
+                    "tenant_id": str(c.tenant_id),
                     "name": c.name,
                     "phone": c.phone,
                 }
@@ -96,12 +100,13 @@ async def export_data(table_name: str, export_format: str, output_path: str | No
 
 def main():
     parser = argparse.ArgumentParser(description="Export BazaarFlow database data")
+    parser.add_argument("--tenant-id", type=uuid.UUID, required=True, help="Tenant whose data to export")
     parser.add_argument("--table", choices=["inventory", "orders", "customers"], required=True, help="Table to export")
     parser.add_argument("--format", choices=["csv", "json"], default="csv", help="Export format (default: csv)")
     parser.add_argument("--output", default=None, help="Output file path")
     args = parser.parse_args()
 
-    asyncio.run(export_data(args.table, args.format, args.output))
+    asyncio.run(export_data(args.tenant_id, args.table, args.format, args.output))
 
 
 if __name__ == "__main__":

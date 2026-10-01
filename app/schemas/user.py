@@ -1,29 +1,61 @@
-"""User request/response schemas."""
+"""User, auth and tenant-membership request/response schemas."""
 from __future__ import annotations
 
-from pydantic import BaseModel, EmailStr
+from uuid import UUID
 
-from app.models.user import UserRole
+from pydantic import BaseModel, EmailStr, Field
+
+from app.models.tenant import TenantRole
 
 
-class UserCreate(BaseModel):
+class RegisterRequest(BaseModel):
+    """PRD F-002: create an account and its first shop in one step."""
+
+    full_name: str = Field(min_length=2, max_length=80)
     email: EmailStr
-    password: str
-    name: str | None = None
-    role: UserRole = UserRole.vendor
+    password: str = Field(min_length=8, max_length=128)
+    shop_name: str = Field(min_length=2, max_length=80)
+    phone: str = Field(pattern=r"^\+[1-9][0-9]{7,14}$")
+    city: str | None = Field(default=None, max_length=60)
+    accept_terms: bool
 
-class UserOut(BaseModel):
-    id: str
-    email: str
-    name: str | None
-    role: UserRole
-    is_active: bool
-    model_config = {"from_attributes": True}
+
+class LoginRequest(BaseModel):
+    """PRD F-001. ``tenant_id`` is only needed when the user belongs to more than one tenant."""
+
+    email: EmailStr
+    password: str = Field(min_length=1, max_length=128)
+    tenant_id: UUID | None = None
+
+
+class SwitchTenantRequest(BaseModel):
+    tenant_id: UUID
+
+
+class TenantMembershipOut(BaseModel):
+    tenant_id: UUID
+    tenant_name: str
+    role: TenantRole
+
 
 class TokenOut(BaseModel):
     access_token: str
     token_type: str = "bearer"
+    tenant_id: UUID
+    role: TenantRole
 
-class LoginRequest(BaseModel):
-    email: EmailStr
-    password: str
+
+class UserOut(BaseModel):
+    id: UUID
+    email: str
+    name: str | None
+    is_active: bool
+    is_platform_admin: bool
+    model_config = {"from_attributes": True}
+
+
+class MeOut(BaseModel):
+    user: UserOut
+    tenant_id: UUID
+    role: TenantRole
+    memberships: list[TenantMembershipOut]

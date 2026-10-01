@@ -1,4 +1,4 @@
-"""CRUD operations for the User entity."""
+"""CRUD operations for the User entity (global table: users belong to tenants via memberships)."""
 from __future__ import annotations
 
 from typing import Optional
@@ -9,7 +9,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import hash_password
 from app.models.user import User
-from app.schemas.user import UserCreate
 
 
 async def get_user_by_id(db: AsyncSession, user_id: UUID) -> Optional[User]:
@@ -18,16 +17,13 @@ async def get_user_by_id(db: AsyncSession, user_id: UUID) -> Optional[User]:
 
 
 async def get_user_by_email(db: AsyncSession, email: str) -> Optional[User]:
-    result = await db.execute(select(User).where(User.email == email))
+    result = await db.execute(select(User).where(User.email == email.lower()))
     return result.scalar_one_or_none()
 
 
-async def create_user(db: AsyncSession, data: UserCreate) -> User:
-    user = User(
-        email=data.email,
-        hashed_password=hash_password(data.password),
-    )
+async def create_user(db: AsyncSession, email: str, password: str, name: str | None = None) -> User:
+    user = User(email=email.lower(), hashed_password=hash_password(password), name=name)
     db.add(user)
-    await db.commit()
+    await db.flush()
     await db.refresh(user)
     return user

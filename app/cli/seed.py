@@ -1,129 +1,101 @@
-"""Database seeding CLI command.
+"""Database seeding CLI: one demo tenant with an owner, inventory and customers.
 
-Migrates data from legacy JSON files (backend/db/, backend/data/) or seeds sample data
-into the configured SQLAlchemy database.
+Loads the v1 sample inventory from ``app/data/inventory_items.json`` into the demo tenant (the
+"demo tenant" backfill of PRD §12.4). Idempotent: running it twice does nothing the second time.
 
 Usage:
-    python -m app.cli.seed
+    DEMO_USER_PASSWORD=... python -m app.cli.seed      # password is generated and printed once if unset
 """
+
 from __future__ import annotations
 
 import asyncio
 import json
 import logging
+import os
+import secrets
 import uuid
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from sqlalchemy import select
 
-from app.core.database import AsyncSessionLocal, Base, engine
 from app.core.security import hash_password
+from app.core.tenancy import tenant_session
+from app.models.customer import Customer
 from app.models.inventory import InventoryItem
+from app.models.tenant import AuditLog, Membership, Tenant, TenantRole
 from app.models.user import User
-from app.models.vendor import Vendor
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger("bazaarflow.seed")
 
-ROOT_DIR = Path(__file__).resolve().parent.parent.parent
-BACKEND_DB_DIR = ROOT_DIR / "backend" / "db"
-BACKEND_DATA_DIR = ROOT_DIR / "backend" / "data"
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+DEMO_SLUG = "demo-retail"
+DEMO_EMAIL = "demo@bazaarflow.app"
 
 
-def load_json(filepath: Path) -> List[Dict[str, Any]]:
-    if filepath.exists():
-        try:
-            with open(filepath, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                return data if isinstance(data, list) else [data]
-        except Exception as e:
-            logger.warning("Could not read %s: %s", filepath, e)
-    return []
+def _load_json(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    with path.open(encoding="utf-8") as handle:
+        data = json.load(handle)
+    return data if isinstance(data, list) else []
+
+
+_FALLBACK_INVENTORY = [
+    {"sku": "SHIRT-001", "name": "Classic Oxford Shirt", "price": "2500 PKR", "stock_count": 50, "category": "Apparel"},
+    {"sku": "JEANS-002", "name": "Slim Fit Denim", "price": "3800 PKR", "stock_count": 30, "category": "Apparel"},
+    {"sku": "SHOES-003", "name": "Leather Loafers", "price": "5500 PKR", "stock_count": 15, "category": "Footwear"},
+]
 
 
 async def seed_database() -> None:
-    """Run the database seeding process."""
-    logger.info("Initializing database tables...")
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    from app.core import database
 
-    async with AsyncSessionLocal() as session:
-        # 1. Seed Users
-        existing_user = await session.execute(select(User))
-        user = existing_user.scalars().first()
-        if not user:
-            logger.info("Seeding users...")
-            users_data = load_json(BACKEND_DB_DIR / "users.json")
-            if not users_data:
-                users_data = [
-                    {"email": "admin@bazaarflow.com", "password": "adminpassword123"}
-                ]
-            for u in users_data:
-                user = User(
-                    email=u.get("email", "admin@bazaarflow.com"),
-                    hashed_password=hash_password(u.get("password", "adminpassword123")),
-                )
-                session.add(user)
-            await session.commit()
-            await session.refresh(user)
-            logger.info("Users seeded.")
+    tenant_id = uuid.uuid4()
+    user_id = uuid.uuid4()
 
-        user_id = str(user.id) if user else str(uuid.uuid4())
+    # Idempotency check needs the user's own context: a tenantless session sees no tenant rows.
+    async with database.AsyncSessionLocal() as probe:
+        existing_user = (await probe.execute(select(User).where(User.email == DEMO_EMAIL))).scalar_one_or_none()
+    if existing_user is not None:
+        logger.info("Demo data already present; nothing to do.")
+        return
 
-        # 2. Seed Vendors
-        existing_vendor = await session.execute(select(Vendor))
-        vendor = existing_vendor.scalars().first()
-        if not vendor:
-            logger.info("Seeding vendors...")
-            vendors_data = load_json(BACKEND_DB_DIR / "vendors.json")
-            if not vendors_data:
-                vendors_data = [
-                    {
-                        "name": "BazaarFlow Demo Store",
-                        "phone_number_id": "100234567890",
-                        "settings": {"currency": "PKR", "auto_reply": True},
-                    }
-                ]
-            for v in vendors_data:
-                vendor = Vendor(
-                    user_id=user_id,
-                    name=v.get("name", "Demo Vendor"),
-                    phone_number_id=v.get("phone_number_id", v.get("phone_number", "100234567890")),
-                    settings=v.get("settings", {}),
-                )
-                session.add(vendor)
-            await session.commit()
-            await session.refresh(vendor)
-            logger.info("Vendors seeded.")
+    password = os.environ.get("DEMO_USER_PASSWORD") or secrets.token_urlsafe(12)
+    async with tenant_session(tenant_id, user_id) as session:
+        session.add(User(id=user_id, email=DEMO_EMAIL, hashed_password=hash_password(password), name="Demo Owner"))
+        session.add(Tenant(id=tenant_id, name="Demo Retail", slug=DEMO_SLUG, plan="demo", owner_phone="+920000000000"))
+        await session.flush()
+        session.add(Membership(tenant_id=tenant_id, user_id=user_id, role=TenantRole.owner.value))
 
-        vendor_id = str(vendor.id) if vendor else str(uuid.uuid4())
-
-        # 3. Seed Inventory
-        existing_inv = await session.execute(select(InventoryItem))
-        if not existing_inv.scalars().first():
-            logger.info("Seeding inventory items...")
-            inv_data = load_json(BACKEND_DATA_DIR / "inventory_items.json")
-            if not inv_data:
-                inv_data = [
-                    {"sku": "SHIRT-001", "name": "Classic Oxford Shirt", "price": "2500 PKR", "stock_count": 50, "category": "Apparel"},
-                    {"sku": "JEANS-002", "name": "Slim Fit Denim", "price": "3800 PKR", "stock_count": 30, "category": "Apparel"},
-                    {"sku": "SHOES-003", "name": "Leather Loafers", "price": "5500 PKR", "stock_count": 15, "category": "Footwear"},
-                ]
-            for item in inv_data:
-                inv_obj = InventoryItem(
-                    vendor_id=vendor_id,
+        inventory = _load_json(DATA_DIR / "inventory_items.json") or _FALLBACK_INVENTORY
+        for item in inventory:
+            session.add(
+                InventoryItem(
+                    tenant_id=tenant_id,
                     sku=item.get("sku", f"SKU-{uuid.uuid4().hex[:6].upper()}"),
                     name=item.get("name", "Sample Product"),
                     price=str(item.get("price", "0")),
                     stock_count=int(item.get("stock_count", item.get("stock_level", 0))),
                     category=item.get("category", "General"),
                 )
-                session.add(inv_obj)
-            await session.commit()
-            logger.info("Inventory items seeded.")
+            )
+        for phone, name in (("+923001000001", "Ali Raza"), ("+923001000002", "Sara Khan")):
+            session.add(Customer(tenant_id=tenant_id, phone=phone, name=name))
+        session.add(
+            AuditLog(
+                tenant_id=tenant_id,
+                actor_type="system",
+                action="seed.demo_tenant",
+                entity="tenant",
+                entity_id=str(tenant_id),
+            )
+        )
 
-        logger.info("Database seeding completed successfully!")
+    logger.info("Seeded demo tenant %s (%s items).", DEMO_SLUG, len(inventory))
+    logger.info("Demo login: %s / %s", DEMO_EMAIL, password)
 
 
 if __name__ == "__main__":

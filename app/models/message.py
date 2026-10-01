@@ -2,23 +2,23 @@
 from __future__ import annotations
 
 import enum
+import uuid
 
 from sqlalchemy import Enum as SAEnum
-from sqlalchemy import ForeignKey, String, Text
+from sqlalchemy import ForeignKey, String, Text, Uuid
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
-from app.models.common import BaseModelMixin
+from app.models.common import BaseModelMixin, TenantMixin
 
 
 class MessageDirection(str, enum.Enum):
     inbound = "inbound"
     outbound = "outbound"
 
-class Message(BaseModelMixin, Base):
+class Message(BaseModelMixin, TenantMixin, Base):
     __tablename__ = "messages"
-    vendor_id: Mapped[str] = mapped_column(String(36), ForeignKey("vendors.id"), nullable=False, index=True)
-    customer_id: Mapped[str] = mapped_column(String(36), ForeignKey("customers.id"), nullable=True)
+    customer_id: Mapped[uuid.UUID | None] = mapped_column(Uuid, ForeignKey("customers.id"), nullable=True)
     phone: Mapped[str] = mapped_column(String(30), nullable=False)
     direction: Mapped[MessageDirection] = mapped_column(SAEnum(MessageDirection), nullable=False)
     text: Mapped[str] = mapped_column(Text, nullable=True)

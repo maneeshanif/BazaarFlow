@@ -1,16 +1,16 @@
 """Customer ORM model � per-vendor customer record."""
 from __future__ import annotations
 
-from sqlalchemy import ForeignKey, String
+from sqlalchemy import String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
-from app.models.common import BaseModelMixin
+from app.models.common import BaseModelMixin, TenantMixin
 
 
-class Customer(BaseModelMixin, Base):
+class Customer(BaseModelMixin, TenantMixin, Base):
     __tablename__ = "customers"
-    vendor_id: Mapped[str] = mapped_column(String(36), ForeignKey("vendors.id"), nullable=False, index=True)
+    __table_args__ = (UniqueConstraint("tenant_id", "phone", name="uq_customers_tenant_phone"),)
     phone: Mapped[str] = mapped_column(String(30), nullable=False)
     name: Mapped[str] = mapped_column(String(255), nullable=True)
     email: Mapped[str] = mapped_column(String(255), nullable=True)

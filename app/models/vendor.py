@@ -1,20 +1,18 @@
-"""Vendor ORM model � one vendor = one WhatsApp Business account."""
+"""Vendor ORM model - a supplier the shop buys from (v1 'vendor' = tenant, see tenant.py)."""
 from __future__ import annotations
 
-from typing import Any
+from decimal import Decimal
 
-from sqlalchemy import JSON, ForeignKey, String
+from sqlalchemy import Numeric, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
-from app.models.common import BaseModelMixin
+from app.models.common import BaseModelMixin, TenantMixin
 
 
-class Vendor(BaseModelMixin, Base):
+class Vendor(BaseModelMixin, TenantMixin, Base):
     __tablename__ = "vendors"
-    user_id: Mapped[str] = mapped_column(String(36), ForeignKey("users.id"), nullable=False, index=True)
+
     name: Mapped[str] = mapped_column(String(255), nullable=False)
-    phone_number_id: Mapped[str] = mapped_column(String(100), nullable=True)
-    waba_id: Mapped[str] = mapped_column(String(100), nullable=True)
-    access_token: Mapped[str] = mapped_column(String(512), nullable=True)
-    settings: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)
+    phone: Mapped[str | None] = mapped_column(String(30), nullable=True)
+    balance: Mapped[Decimal] = mapped_column(Numeric(14, 2), default=Decimal("0.00"), nullable=False)

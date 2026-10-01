@@ -155,6 +155,13 @@ lane_api() {
   step "api: ruff" uv run ruff check .
   step "api: mypy" uv run mypy .
   step "api: pytest" uv run pytest -q
+  # Real-Postgres tests (RLS, auth, schema rules) need Docker; CI always has it.
+  if docker_up; then
+    step "api: postgres tests (RLS, auth, schema rules)" uv run pytest -m pg -q
+  else
+    echo "⚠ api: Docker not running — Postgres/RLS tests SKIPPED (CI will run them)."
+    SKIPPED+=("api: postgres tests")
+  fi
 }
 
 # Migrations must (1) apply cleanly to an empty database, (2) match the SQLAlchemy models (`alembic check`), (3) round-trip (downgrade base, upgrade head).

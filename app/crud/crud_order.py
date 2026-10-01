@@ -1,4 +1,9 @@
-"""CRUD operations for the Order entity."""
+"""CRUD operations for the Order entity.
+
+Every function takes the ``tenant_id`` explicitly and filters on it. This is defense in depth on top
+of Postgres row-level security (PRD §3.5). Functions flush but never commit: the request dependency
+owns the transaction so the transaction-local ``app.tenant_id`` setting stays in force.
+"""
 from __future__ import annotations
 
 from typing import Any, List
@@ -10,19 +15,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.order import Order
 
 
-async def get_all_orders(db: AsyncSession) -> List[Order]:
-    result = await db.execute(select(Order))
+async def get_orders(db: AsyncSession, tenant_id: UUID) -> List[Order]:
+    result = await db.execute(select(Order).where(Order.tenant_id == tenant_id))
     return list(result.scalars().all())
 
 
-async def get_orders_by_vendor(db: AsyncSession, vendor_id: UUID) -> List[Order]:
-    result = await db.execute(select(Order).where(Order.vendor_id == vendor_id))
-    return list(result.scalars().all())
-
-
-async def create_order(db: AsyncSession, **kwargs: Any) -> Order:
-    order = Order(**kwargs)
+async def create_order(db: AsyncSession, tenant_id: UUID, **kwargs: Any) -> Order:
+    order = Order(tenant_id=tenant_id, **kwargs)
     db.add(order)
-    await db.commit()
+    await db.flush()
     await db.refresh(order)
     return order

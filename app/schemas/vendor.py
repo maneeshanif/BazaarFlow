@@ -1,29 +1,26 @@
-"""Vendor request/response schemas."""
+"""Vendor (supplier) request/response schemas."""
 from __future__ import annotations
 
-from typing import Any
+from decimal import Decimal
+from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class VendorCreate(BaseModel):
-    name: str
-    phone_number_id: str | None = None
-    waba_id: str | None = None
-    access_token: str | None = None
+    name: str = Field(min_length=2, max_length=255)
+    phone: str | None = Field(default=None, max_length=30)
+
 
 class VendorUpdate(BaseModel):
-    name: str | None = None
-    phone_number_id: str | None = None
-    waba_id: str | None = None
-    access_token: str | None = None
-    settings: dict[str, Any] | None = None
+    name: str | None = Field(default=None, min_length=2, max_length=255)
+    phone: str | None = Field(default=None, max_length=30)
+
 
 class VendorOut(BaseModel):
-    id: str
-    user_id: str
+    id: UUID
+    tenant_id: UUID
     name: str
-    phone_number_id: str | None
-    waba_id: str | None
-    settings: dict[str, Any]
+    phone: str | None
+    balance: Decimal
     model_config = {"from_attributes": True}

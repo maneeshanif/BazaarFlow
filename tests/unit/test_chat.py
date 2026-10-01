@@ -1,16 +1,25 @@
 """
 Tests for the chat controller
 """
+import uuid
+
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from app.api.controllers.chat_controller import router
+from app.core.auth import get_principal
+from app.core.tenancy import Principal
+from app.models.tenant import TenantRole
 from app.services.chat_service import chat_service
 
 # Create a test FastAPI app
 app = FastAPI()
 app.include_router(router)
+# These tests build their own app, so give it the same authenticated caller as tests/unit/conftest.py
+app.dependency_overrides[get_principal] = lambda: Principal(
+    user_id=uuid.uuid4(), tenant_id=uuid.uuid4(), role=TenantRole.owner
+)
 
 client = TestClient(app)
 

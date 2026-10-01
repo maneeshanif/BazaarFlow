@@ -3,9 +3,10 @@ from __future__ import annotations
 
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
+from app.core.auth import MANAGER_UP, require_role
 from app.services.inventory_service import inventory_analytics_service
 
 router = APIRouter()
@@ -53,7 +54,7 @@ async def get_inventory_item(sku: str):
     return {"ok": True, "item": item}
 
 
-@router.post("/", status_code=201)
+@router.post("/", status_code=201, dependencies=[Depends(require_role(*MANAGER_UP))])
 async def create_inventory_item(item: InventoryItemCreate):
     """Create a new inventory item."""
     try:
@@ -65,7 +66,7 @@ async def create_inventory_item(item: InventoryItemCreate):
         raise HTTPException(status_code=500, detail=f"Failed to create item: {str(e)}")
 
 
-@router.put("/{sku}")
+@router.put("/{sku}", dependencies=[Depends(require_role(*MANAGER_UP))])
 async def update_inventory_item(sku: str, item: InventoryItemUpdate):
     """Update an existing inventory item."""
     try:
@@ -80,7 +81,7 @@ async def update_inventory_item(sku: str, item: InventoryItemUpdate):
         raise HTTPException(status_code=500, detail=f"Failed to update item: {str(e)}")
 
 
-@router.patch("/{sku}/add-stock")
+@router.patch("/{sku}/add-stock", dependencies=[Depends(require_role(*MANAGER_UP))])
 async def add_stock_to_item(sku: str, request: AddStockRequest):
     """Add stock to an existing inventory item."""
     try:
@@ -100,7 +101,7 @@ async def add_stock_to_item(sku: str, request: AddStockRequest):
         raise HTTPException(status_code=500, detail=f"Failed to add stock: {str(e)}")
 
 
-@router.delete("/{sku}")
+@router.delete("/{sku}", dependencies=[Depends(require_role(*MANAGER_UP))])
 async def delete_inventory_item(sku: str):
     """Delete an inventory item by SKU."""
     try:

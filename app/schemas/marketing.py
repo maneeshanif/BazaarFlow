@@ -2,20 +2,20 @@
 from __future__ import annotations
 
 from datetime import datetime
+from uuid import UUID
 
 from pydantic import BaseModel
 
 
 class MarketingPostCreate(BaseModel):
-    vendor_id: str
     title: str | None = None
     message: str | None = None
     hashtags: str | None = None
     image_url: str | None = None
 
 class MarketingPostOut(BaseModel):
-    id: str
-    vendor_id: str
+    id: UUID
+    tenant_id: UUID
     title: str | None
     message: str | None
     image_url: str | None
@@ -23,14 +23,13 @@ class MarketingPostOut(BaseModel):
     model_config = {"from_attributes": True}
 
 class ScheduledCampaignCreate(BaseModel):
-    vendor_id: str
     title: str | None = None
     message: str | None = None
     scheduled_at: datetime | None = None
 
 class ScheduledCampaignOut(BaseModel):
-    id: str
-    vendor_id: str
+    id: UUID
+    tenant_id: UUID
     title: str | None
     message: str | None
     scheduled_at: datetime | None

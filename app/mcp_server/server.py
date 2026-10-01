@@ -12,9 +12,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 # Initialize the MCP server
-mcp = FastMCP(name="BazaarFlow Sales Tools", stateless_http=False,
-    json_response=True, # Generally easier for HTTP clients if they don't need full SSE parsing
-    )
+mcp = FastMCP(name="BazaarFlow Sales Tools")
 
 # Product database
 PRODUCTS_DB = {
@@ -136,4 +134,4 @@ def get_product_by_category(category: str) -> str:
 
 if __name__ == "__main__":
     logger.info("Starting BazaarFlow MCP server on port 8001")
-    mcp.run(transport="http", host="0.0.0.0", port=8001)
+    mcp.run(transport="http", host="0.0.0.0", port=8001, stateless_http=False, json_response=True)

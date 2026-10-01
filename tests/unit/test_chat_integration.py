@@ -2,6 +2,8 @@
 Integration tests for the sales agent chat functionality
 """
 
+import uuid
+
 import pytest
 from agents import Runner, SQLiteSession
 from fastapi import FastAPI
@@ -9,10 +11,17 @@ from fastapi.testclient import TestClient
 
 from app.agents.sales_agent import sales_agent
 from app.api.controllers.chat_controller import router
+from app.core.auth import get_principal
+from app.core.tenancy import Principal
+from app.models.tenant import TenantRole
 
 # Create a test FastAPI app
 app = FastAPI()
 app.include_router(router)
+# These tests build their own app, so give it the same authenticated caller as tests/unit/conftest.py
+app.dependency_overrides[get_principal] = lambda: Principal(
+    user_id=uuid.uuid4(), tenant_id=uuid.uuid4(), role=TenantRole.owner
+)
 
 client = TestClient(app)
 

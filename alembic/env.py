@@ -10,13 +10,16 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
 from app.core.database import Base
-from app.core.settings import settings
+from app.core.settings import settings, to_async_url
 
 # Import all models so Alembic can autogenerate migrations
 from app.models import *  # noqa: F401, F403
 
 config = context.config
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+
+
+# Migrations use the direct connection as the `migrator` role (PRD §3.8); '%' must be escaped for configparser.
+config.set_main_option("sqlalchemy.url", to_async_url(settings.migrations_url).replace("%", "%%"))
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
@@ -33,7 +36,7 @@ def run_migrations_offline() -> None:
 
 
 def do_run_migrations(connection: Connection) -> None:
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(connection=connection, target_metadata=target_metadata, compare_type=True)
     with context.begin_transaction():
         context.run_migrations()
 

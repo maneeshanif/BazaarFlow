@@ -1,19 +1,20 @@
 """Customer request/response schemas."""
 from __future__ import annotations
 
+from uuid import UUID
+
 from pydantic import BaseModel
 
 
 class CustomerCreate(BaseModel):
-    vendor_id: str
     phone: str
     name: str | None = None
     email: str | None = None
     address: str | None = None
 
 class CustomerOut(BaseModel):
-    id: str
-    vendor_id: str
+    id: UUID
+    tenant_id: UUID
     phone: str
     name: str | None
     email: str | None

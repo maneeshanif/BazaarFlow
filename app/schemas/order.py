@@ -1,11 +1,12 @@
 """Order request/response schemas."""
 from __future__ import annotations
 
+from uuid import UUID
+
 from pydantic import BaseModel
 
 
 class OrderCreate(BaseModel):
-    vendor_id: str
     customer_name: str | None = None
     customer_phone: str | None = None
     product_name: str
@@ -15,8 +16,8 @@ class OrderCreate(BaseModel):
     notes: str | None = None
 
 class OrderOut(BaseModel):
-    id: str
-    vendor_id: str
+    id: UUID
+    tenant_id: UUID
     customer_name: str | None
     customer_phone: str | None
     product_name: str

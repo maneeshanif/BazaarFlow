@@ -1,11 +1,12 @@
 """Inventory request/response schemas."""
 from __future__ import annotations
 
+from uuid import UUID
+
 from pydantic import BaseModel
 
 
 class InventoryItemCreate(BaseModel):
-    vendor_id: str
     sku: str | None = None
     name: str
     category: str | None = None
@@ -16,8 +17,8 @@ class InventoryItemCreate(BaseModel):
     description: str | None = None
 
 class InventoryItemOut(BaseModel):
-    id: str
-    vendor_id: str
+    id: UUID
+    tenant_id: UUID
     sku: str | None
     name: str
     category: str | None

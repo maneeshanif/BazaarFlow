@@ -50,13 +50,13 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [ ] 02 CI/CD + verification — one workflow per lane (api, web) calling `scripts/verify.sh`; secret scan; dependency scan
   - Acceptance: Every lane has a workflow that calls `scripts/verify.sh`; a deliberately broken commit turns CI red
   - Acceptance: Secret scan and dependency scan run and pass on the clean tree
-- [ ] 03 Database foundation — PostgreSQL (Supabase), SQLite for local tests only + Alembic (async); first migration; naming and key conventions from PRD §12.2; migration check in `verify.sh`
+- [x] 03 Database foundation — PostgreSQL (Supabase), SQLite for local tests only + Alembic (async); first migration; naming and key conventions from PRD §12.2; migration check in `verify.sh`
   - Acceptance: The first migration applies to an empty database and the migration check in `verify.sh` passes
   - Acceptance: Table, column and key names follow PRD §12.2
 - [ ] 04 Authentication & authorization — login/refresh/logout, roles and permission matrix from PRD §14.2, enforced in the API
   - Acceptance: Login, refresh and logout work; a wrong password and an expired token are rejected
   - Acceptance: A user without the role gets 403 on a protected endpoint (test per role in PRD §14.2)
-- [ ] 05 Tenancy enforcement — central scoping filter, deny-by-default, cross-tenant access tests (PRD §3.5)
+- [x] 05 Tenancy enforcement — central scoping filter, deny-by-default, cross-tenant access tests (PRD §3.5)
   - Acceptance: A test proves tenant A cannot read or write tenant B's rows
   - Acceptance: A request with no tenant context returns zero rows (deny by default)
 - [ ] 06 Audit infrastructure — audit rows for the actions in PRD §14.1, sensitive-field masking, test that each audited action writes a row
@@ -65,12 +65,12 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [ ] 07 UI foundation — design tokens, layout shell, the mandated form layout (PRD §5.1), reusable grid/form/status components, `context/ui-registry.md` started
   - Acceptance: Design tokens are the only source of colour, type and spacing; a lint or grep check finds no hard-coded values
   - Acceptance: The layout shell renders at mobile and desktop widths without horizontal scroll
-- [ ] 08 Vertical slice — the smallest end-to-end feature across every layer, to prove the pattern later tasks copy
+- [x] 08 Vertical slice — the smallest end-to-end feature across every layer, to prove the pattern later tasks copy
   - Acceptance: The smallest feature works end to end across every layer with one automated test
   - Acceptance: `scripts/verify.sh` passes and the pattern is written down for later tasks to copy
 - [ ] 09 Supabase projects (dev/staging/prod), database roles migrator/app_user/report_ro, pooler and direct connection strings, Data API lockdown — PRD §3.8
   - Acceptance: The done-condition for this task is written here and has an automated check
-- [ ] 10 Tenancy schema and RLS baseline migration — tenants, memberships, tenant_id on every table, ENABLE+FORCE RLS, per-request app.tenant_id — PRD §3.5 and §3.8
+- [x] 10 Tenancy schema and RLS baseline migration — tenants, memberships, tenant_id on every table, ENABLE+FORCE RLS, per-request app.tenant_id — PRD §3.5 and §3.8
   - Acceptance: The done-condition for this task is written here and has an automated check
 - [ ] 11 Architecture tests in CI — every table has tenant_id+RLS and no anon grants, every route has an authorization decision, agent tools take no tenant argument — PRD §3.7 and §19
   - Acceptance: The done-condition for this task is written here and has an automated check

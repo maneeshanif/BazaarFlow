@@ -5,10 +5,10 @@ from sqlalchemy import String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
-from app.models.common import BaseModelMixin
+from app.models.common import BaseModelMixin, TenantMixin
 
 
-class SupportTicket(BaseModelMixin, Base):
+class SupportTicket(BaseModelMixin, TenantMixin, Base):
     __tablename__ = "support_tickets"
     contact: Mapped[str] = mapped_column(String(255), nullable=True)
     issue_summary: Mapped[str] = mapped_column(String(500), nullable=True)

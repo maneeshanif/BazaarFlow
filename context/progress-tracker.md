@@ -7,10 +7,10 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 0 — Foundation: spec harness, CI (`verify.sh`), Supabase projects and roles (§3.8), Data API lockdown, Alembic baseline, tenancy tables, RLS, JWT claims, role dependencies, architecture tests, secret hygiene (remove committed DSN script)
-**Last completed:** —
-**In progress:** —
-**Next:** 00 Architecture Decision Record + sign-off
-**Blockers:** None
+**Last completed:** 10 Tenancy schema and RLS baseline (also 03 database foundation, 05 tenancy enforcement, 08 vertical slice)
+**In progress:** Phase 0 remainder: 04 (refresh/logout), 06 (audit coverage), 11 (tool-isolation test), 12 (.env.example), 09 (needs Supabase credentials)
+**Next:** 00 ADR sign-off (owner), then 09 Supabase projects using docs/operations/supabase-setup.md
+**Blockers:** Supabase credentials (09); read access to .env.example is denied to the agent, so the owner must add the new variables
 
 ---
 
@@ -19,14 +19,14 @@ Update this file after every completed task. Anyone reading it should immediatel
 - [ ] 00 Architecture Decision Record + sign-off
 - [ ] 01 Repo scaffold
 - [ ] 02 CI/CD + verification
-- [ ] 03 Database foundation
+- [x] 03 Database foundation
 - [ ] 04 Authentication & authorization
-- [ ] 05 Tenancy enforcement
+- [x] 05 Tenancy enforcement
 - [ ] 06 Audit infrastructure
 - [ ] 07 UI foundation
-- [ ] 08 Vertical slice
+- [x] 08 Vertical slice
 - [ ] 09 Supabase projects (dev/staging/prod), database roles migrator/app_…
-- [ ] 10 Tenancy schema and RLS baseline migration
+- [x] 10 Tenancy schema and RLS baseline migration
 - [ ] 11 Architecture tests in CI
 - [ ] 12 Secret hygiene
 - [ ] 13 Channel adapter interface (connect, send, receive, verify_webhook)…
