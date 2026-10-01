@@ -35,6 +35,12 @@ class TimestampMixin:
     )
 
 
+class SoftDeleteMixin:
+    """Catalog and party tables are never hard-deleted: ``deleted_at`` marks them gone (PRD §12.2)."""
+
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
 class BaseModelMixin(UUIDMixin, TimestampMixin):
     """Combines UUID PK + timestamps. Use as base for all models."""
 

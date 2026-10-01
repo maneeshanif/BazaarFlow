@@ -6,6 +6,8 @@ tenant filter -> Postgres RLS as the backstop -> audit row for every write.
 
 from __future__ import annotations
 
+from uuid import UUID
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -55,22 +57,17 @@ async def delete_customer(
     principal: Principal = Depends(require_role(*MANAGER_UP)),
     db: AsyncSession = Depends(get_tenant_db),
 ) -> None:
-    from uuid import UUID
-
     try:
         cid = UUID(customer_id)
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found") from exc
-    customers = await crud_customer.get_customers(db, principal.tenant_id)
-    target = next((c for c in customers if c.id == cid), None)
-    if target is None:
+    if not await crud_customer.soft_delete_customer(db, principal.tenant_id, cid):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
-    await db.delete(target)
     record_audit(
         db,
         "customer.deleted",
         tenant_id=principal.tenant_id,
         actor_id=principal.user_id,
         entity="customer",
-        entity_id=customer_id,
+        entity_id=cid,
     )

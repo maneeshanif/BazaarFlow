@@ -50,7 +50,7 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [ ] 02 CI/CD + verification — one workflow per lane (api, web) calling `scripts/verify.sh`; secret scan; dependency scan
   - Acceptance: Every lane has a workflow that calls `scripts/verify.sh`; a deliberately broken commit turns CI red
   - Acceptance: Secret scan and dependency scan run and pass on the clean tree
-- [ ] 03 Database foundation — PostgreSQL (Supabase), SQLite for local tests only + Alembic (async); first migration; naming and key conventions from PRD §12.2; migration check in `verify.sh`
+- [x] 03 Database foundation — PostgreSQL (Supabase), SQLite for local tests only + Alembic (async); first migration; naming and key conventions from PRD §12.2; migration check in `verify.sh`
   - Acceptance: The first migration applies to an empty database and the migration check in `verify.sh` passes
   - Acceptance: Table, column and key names follow PRD §12.2
 - [ ] 04 Authentication & authorization — login/refresh/logout, roles and permission matrix from PRD §14.2, enforced in the API

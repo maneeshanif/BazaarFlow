@@ -13,8 +13,10 @@ import asyncio
 import json
 import logging
 import os
+import re
 import secrets
 import uuid
+from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
@@ -33,6 +35,12 @@ logger = logging.getLogger("bazaarflow.seed")
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 DEMO_SLUG = "demo-retail"
 DEMO_EMAIL = "demo@bazaarflow.app"
+
+
+def _money(value: Any) -> Decimal | None:
+    """'2500 PKR' / 2500 / '1,299.50' -> Decimal; None when there is no number."""
+    match = re.search(r"\d[\d,]*(?:\.\d+)?", str(value))
+    return Decimal(match.group(0).replace(",", "")).quantize(Decimal("0.01")) if match else None
 
 
 def _load_json(path: Path) -> list[dict[str, Any]]:
@@ -77,7 +85,7 @@ async def seed_database() -> None:
                     tenant_id=tenant_id,
                     sku=item.get("sku", f"SKU-{uuid.uuid4().hex[:6].upper()}"),
                     name=item.get("name", "Sample Product"),
-                    price=str(item.get("price", "0")),
+                    price=_money(item.get("price", "0")),
                     stock_count=int(item.get("stock_count", item.get("stock_level", 0))),
                     category=item.get("category", "General"),
                 )

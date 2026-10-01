@@ -19,7 +19,7 @@ Update this file after every completed task. Anyone reading it should immediatel
 - [ ] 00 Architecture Decision Record + sign-off
 - [ ] 01 Repo scaffold
 - [ ] 02 CI/CD + verification
-- [ ] 03 Database foundation
+- [x] 03 Database foundation
 - [ ] 04 Authentication & authorization
 - [ ] 05 Tenancy enforcement
 - [ ] 06 Audit infrastructure

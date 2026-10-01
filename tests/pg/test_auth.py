@@ -166,3 +166,26 @@ async def test_switch_tenant_requires_membership(client: AsyncClient) -> None:
     assert res.status_code == 403
     same = await client.post("/api/v1/auth/switch-tenant", json={"tenant_id": a["tenant_id"]}, headers=bearer(a))
     assert same.status_code == 200
+
+
+async def test_platform_admin_role_is_required_for_operator_routes(client: AsyncClient, app_engine: AsyncEngine) -> None:
+    """PRD §14.2: platform_admin may use operator routes; an owner (a tenant role) may not."""
+    owner = await register(client, "Shop A")
+    assert (await client.get("/api/logs/", headers=bearer(owner))).status_code == 403
+
+    email = f"operator-{uuid.uuid4().hex[:8]}@example.com"
+    await _add_member(app_engine, owner, email, "staff")
+    session = AsyncSession(app_engine)
+    await session.begin()
+    try:
+        await apply_context(session, tenant_id=uuid.UUID(owner["tenant_id"]))
+        await session.execute(text("UPDATE users SET is_platform_admin = true WHERE email = :e"), {"e": email})
+        await session.commit()
+    finally:
+        await session.close()
+
+    operator = (await client.post("/api/v1/auth/login", json={"email": email, "password": "staff-password-1"})).json()
+    assert _claims(operator["access_token"])["pa"] is True
+    assert (await client.get("/api/logs/", headers=bearer(operator))).status_code == 200
+    # being a platform admin does not grant tenant powers: this operator is still only `staff` in that tenant
+    assert (await client.get("/api/vendors/", headers=bearer(operator))).status_code == 403

@@ -4,24 +4,27 @@ Every function takes the ``tenant_id`` explicitly and filters on it. This is def
 of Postgres row-level security (PRD §3.5). Functions flush but never commit: the request dependency
 owns the transaction so the transaction-local ``app.tenant_id`` setting stays in force.
 """
+
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from typing import Any, List, Optional
 from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.crud.soft_delete import live
 from app.models.vendor import Vendor
 
 
 async def get_vendors(db: AsyncSession, tenant_id: UUID) -> List[Vendor]:
-    result = await db.execute(select(Vendor).where(Vendor.tenant_id == tenant_id))
+    result = await db.execute(select(Vendor).where(Vendor.tenant_id == tenant_id, live(Vendor)))
     return list(result.scalars().all())
 
 
 async def get_vendor_by_id(db: AsyncSession, tenant_id: UUID, vendor_id: UUID) -> Optional[Vendor]:
-    result = await db.execute(select(Vendor).where(Vendor.tenant_id == tenant_id, Vendor.id == vendor_id))
+    result = await db.execute(select(Vendor).where(Vendor.tenant_id == tenant_id, Vendor.id == vendor_id, live(Vendor)))
     return result.scalar_one_or_none()
 
 
@@ -37,6 +40,6 @@ async def delete_vendor(db: AsyncSession, tenant_id: UUID, vendor_id: UUID) -> b
     vendor = await get_vendor_by_id(db, tenant_id, vendor_id)
     if not vendor:
         return False
-    await db.delete(vendor)
+    vendor.deleted_at = datetime.now(timezone.utc)
     await db.flush()
     return True

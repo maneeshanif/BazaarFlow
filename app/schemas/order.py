@@ -1,6 +1,7 @@
 """Order request/response schemas."""
 from __future__ import annotations
 
+from decimal import Decimal
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -11,7 +12,7 @@ class OrderCreate(BaseModel):
     customer_phone: str | None = None
     product_name: str
     quantity: int = 1
-    budget: str | None = None
+    budget: Decimal | None = None
     delivery_address: str | None = None
     notes: str | None = None
 
@@ -22,7 +23,7 @@ class OrderOut(BaseModel):
     customer_phone: str | None
     product_name: str
     quantity: int
-    budget: str | None
+    budget: Decimal | None
     payment_status: str
     delivery_address: str | None
     notes: str | None

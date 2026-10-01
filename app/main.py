@@ -10,8 +10,10 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 import httpx
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from sqlalchemy.orm.exc import StaleDataError
 
 from app.api.routers.main_router import main_router
 from app.api.routers.v1 import api_v1_router
@@ -42,6 +44,15 @@ app = FastAPI(
     redoc_url="/redoc",
     lifespan=lifespan,
 )
+
+@app.exception_handler(StaleDataError)
+async def stale_data_handler(_request: Request, _exc: StaleDataError) -> JSONResponse:
+    """Another request changed the same row first (optimistic concurrency, PRD §12.2): reload and retry."""
+    return JSONResponse(
+        status_code=409,
+        content={"detail": "The record was changed by someone else. Reload it and try again."},
+    )
+
 
 # Custom Middlewares
 app.add_middleware(RequestLoggerMiddleware)

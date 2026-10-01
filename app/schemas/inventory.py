@@ -1,6 +1,7 @@
 """Inventory request/response schemas."""
 from __future__ import annotations
 
+from decimal import Decimal
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -11,7 +12,7 @@ class InventoryItemCreate(BaseModel):
     name: str
     category: str | None = None
     stock_count: int = 0
-    price: str | None = None
+    price: Decimal | None = None
     incoming_units: int = 0
     min_threshold: int = 0
     description: str | None = None
@@ -23,7 +24,7 @@ class InventoryItemOut(BaseModel):
     name: str
     category: str | None
     stock_count: int
-    price: str | None
+    price: Decimal | None
     incoming_units: int
     min_threshold: int
     model_config = {"from_attributes": True}

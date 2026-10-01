@@ -2,8 +2,9 @@
 from __future__ import annotations
 
 import uuid
+from decimal import Decimal
 
-from sqlalchemy import ForeignKey, Integer, String, Text, Uuid
+from sqlalchemy import ForeignKey, Integer, Numeric, String, Text, Uuid
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -17,7 +18,9 @@ class Order(BaseModelMixin, TenantMixin, Base):
     customer_phone: Mapped[str] = mapped_column(String(30), nullable=True)
     product_name: Mapped[str] = mapped_column(String(255), nullable=False)
     quantity: Mapped[int] = mapped_column(Integer, default=1)
-    budget: Mapped[str] = mapped_column(String(100), nullable=True)
+    budget: Mapped[Decimal | None] = mapped_column(Numeric(14, 2), nullable=True)
     payment_status: Mapped[str] = mapped_column(String(50), default="pending")
     delivery_address: Mapped[str] = mapped_column(Text, nullable=True)
     notes: Mapped[str] = mapped_column(Text, nullable=True)
+    version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
+    __mapper_args__ = {"version_id_col": version}

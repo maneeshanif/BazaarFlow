@@ -21,6 +21,7 @@ from typing import Any, List
 from sqlalchemy import select
 
 from app.core.tenancy import tenant_session
+from app.crud.soft_delete import live
 from app.models.customer import Customer
 from app.models.inventory import InventoryItem
 from app.models.order import Order
@@ -36,7 +37,7 @@ async def export_data(
         records: List[dict[str, Any]] = []
 
         if table_name == "inventory":
-            result = await session.execute(select(InventoryItem).where(InventoryItem.tenant_id == tenant_id))
+            result = await session.execute(select(InventoryItem).where(InventoryItem.tenant_id == tenant_id, live(InventoryItem)))
             items = result.scalars().all()
             records = [
                 {
@@ -63,7 +64,7 @@ async def export_data(
                 for order in orders
             ]
         elif table_name == "customers":
-            result = await session.execute(select(Customer).where(Customer.tenant_id == tenant_id))
+            result = await session.execute(select(Customer).where(Customer.tenant_id == tenant_id, live(Customer)))
             customers = result.scalars().all()
             records = [
                 {
@@ -87,7 +88,7 @@ async def export_data(
 
         if export_format == "json":
             with open(file_path, "w", encoding="utf-8") as f:
-                json.dump(records, f, indent=2)
+                json.dump(records, f, indent=2, default=str)
             logger.info("Exported %d records to %s", len(records), file_path)
         elif export_format == "csv":
             keys = records[0].keys()
