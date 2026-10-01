@@ -50,39 +50,42 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [ ] 02 CI/CD + verification — one workflow per lane (api, web) calling `scripts/verify.sh`; secret scan; dependency scan
   - Acceptance: Every lane has a workflow that calls `scripts/verify.sh`; a deliberately broken commit turns CI red
   - Acceptance: Secret scan and dependency scan run and pass on the clean tree
-- [x] 03 Database foundation — PostgreSQL (Supabase), SQLite for local tests only + Alembic (async); first migration; naming and key conventions from PRD §12.2; migration check in `verify.sh`
+- [ ] 03 Database foundation — PostgreSQL (Supabase), SQLite for local tests only + Alembic (async); first migration; naming and key conventions from PRD §12.2; migration check in `verify.sh`
   - Acceptance: The first migration applies to an empty database and the migration check in `verify.sh` passes
   - Acceptance: Table, column and key names follow PRD §12.2
-- [x] 04 Authentication & authorization — login/refresh/logout, roles and permission matrix from PRD §14.2, enforced in the API
+- [ ] 04 Authentication & authorization — login/refresh/logout, roles and permission matrix from PRD §14.2, enforced in the API
   - Acceptance: Login, refresh and logout work; a wrong password and an expired token are rejected
   - Acceptance: A user without the role gets 403 on a protected endpoint (test per role in PRD §14.2)
-- [x] 05 Tenancy enforcement — central scoping filter, deny-by-default, cross-tenant access tests (PRD §3.5)
+- [ ] 05 Tenancy enforcement — central scoping filter, deny-by-default, cross-tenant access tests (PRD §3.5)
   - Acceptance: A test proves tenant A cannot read or write tenant B's rows
   - Acceptance: A request with no tenant context returns zero rows (deny by default)
-- [x] 06 Audit infrastructure — audit rows for the actions in PRD §14.1, sensitive-field masking, test that each audited action writes a row
+- [ ] 06 Audit infrastructure — audit rows for the actions in PRD §14.1, sensitive-field masking, test that each audited action writes a row
   - Acceptance: Each audited action in PRD §14.1 writes exactly one audit row (one test per action)
   - Acceptance: Sensitive fields are masked in the stored row
 - [ ] 07 UI foundation — design tokens, layout shell, the mandated form layout (PRD §5.1), reusable grid/form/status components, `context/ui-registry.md` started
   - Acceptance: Design tokens are the only source of colour, type and spacing; a lint or grep check finds no hard-coded values
   - Acceptance: The layout shell renders at mobile and desktop widths without horizontal scroll
-- [x] 08 Vertical slice — the smallest end-to-end feature across every layer, to prove the pattern later tasks copy
+- [ ] 08 Vertical slice — the smallest end-to-end feature across every layer, to prove the pattern later tasks copy
   - Acceptance: The smallest feature works end to end across every layer with one automated test
   - Acceptance: `scripts/verify.sh` passes and the pattern is written down for later tasks to copy
 - [ ] 09 Supabase projects (dev/staging/prod), database roles migrator/app_user/report_ro, pooler and direct connection strings, Data API lockdown — PRD §3.8
   - Acceptance: The done-condition for this task is written here and has an automated check
-- [x] 10 Tenancy schema and RLS baseline migration — tenants, memberships, tenant_id on every table, ENABLE+FORCE RLS, per-request app.tenant_id — PRD §3.5 and §3.8
+- [ ] 10 Tenancy schema and RLS baseline migration — tenants, memberships, tenant_id on every table, ENABLE+FORCE RLS, per-request app.tenant_id — PRD §3.5 and §3.8
   - Acceptance: The done-condition for this task is written here and has an automated check
-- [x] 11 Architecture tests in CI — every table has tenant_id+RLS and no anon grants, every route has an authorization decision, agent tools take no tenant argument — PRD §3.7 and §19
+- [ ] 11 Architecture tests in CI — every table has tenant_id+RLS and no anon grants, every route has an authorization decision, agent tools take no tenant argument — PRD §3.7 and §19
   - Acceptance: The done-condition for this task is written here and has an automated check
 - [ ] 12 Secret hygiene — remove default SECRET_KEY fallback in settings (fail fast when unset outside tests), .env.example complete, gitleaks passing — PRD RK-06
   - Acceptance: The done-condition for this task is written here and has an automated check
-- [x] 13 Channel adapter interface (connect, send, receive, verify_webhook) with a fake adapter for tests — PRD §3.7 constraint 11
+- [ ] 13 Channel adapter interface (connect, send, receive, verify_webhook) with a fake adapter for tests — PRD §3.7 constraint 11
   - Acceptance: The done-condition for this task is written here and has an automated check
-- [x] 14 Agent tool layer inside the API process: tools call services with a tenant-scoped context, approvals via agent_actions — PRD §36.2-36.4
+- [ ] 14 Agent tool layer inside the API process: tools call services with a tenant-scoped context, approvals via agent_actions — PRD §36.2-36.4
   - Acceptance: The done-condition for this task is written here and has an automated check
-- [x] 17 Fix the double-prefixed v1 routes (/api/v1/api/...) and consolidate router mounting in app/api/routers
-  - Acceptance: No path starts with /api/v1/api (architecture test over the OpenAPI paths)
-  - Acceptance: only auth and customers are mounted under /api/v1; legacy routers keep /api/...
+- [ ] 15 Rewrite the 19 quarantined tests (pytest markers legacy_port and live) against app.* and tenant-scoped data, then remove both markers from addopts
+  - Acceptance: The done-condition for this task is written here and has an automated check
+- [ ] 16 Burn down the mypy legacy override list in pyproject.toml module by module until strict passes everywhere
+  - Acceptance: The done-condition for this task is written here and has an automated check
+- [ ] 17 Fix the double-prefixed v1 routes (/api/v1/api/...) and consolidate router mounting in app/api/routers
+  - Acceptance: The done-condition for this task is written here and has an automated check
 - [ ] 18 Scaffold the web app with the chosen framework, strict TypeScript, lint and format [web-app pack]
   - Acceptance: Fresh clone installs and builds
   - Acceptance: lint and typecheck run in the fast tier
@@ -250,11 +253,6 @@ Exit gate: A new visitor signs up, adds a product, records a sale by chat, sees 
 - [ ] 69 Consent notice, redaction and retention [voice-agents pack]
   - Acceptance: The notice plays
   - Acceptance: a transcript in the test set contains no personal data after redaction
-- [ ] 93 Port each legacy module's tests and types as it moves to the database (replaces Phase 0 tasks 15 and 16)
-  - Acceptance: when a module (inventory, sales, finance, marketing, vendors, chat, webhook) moves to tenant-scoped DB access, its quarantined tests (markers legacy_port, live) are rewritten against app.* and pass in the default run
-  - Acceptance: its modules leave the mypy ignore_errors list in pyproject.toml and pass strict
-- [ ] 94 Remove the legacy_port marker, the live-test exclusion and the mypy override list once the last module has moved
-  - Acceptance: pyproject.toml has no legacy_port marker and no [[tool.mypy.overrides]] ignore_errors block, and verify.sh passes
 
 Each task: confirm the acceptance criteria (`/architect` turns them into failing tests first), then build, then `bash scripts/verify.sh`, then `/review`.
 
