@@ -1,16 +1,19 @@
 """Alembic migration environment - async SQLAlchemy with Supabase PostgreSQL."""
 from __future__ import annotations
+
 import asyncio
 from logging.config import fileConfig
+
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
+
 from alembic import context
+from app.core.database import Base
+from app.core.settings import settings
 
 # Import all models so Alembic can autogenerate migrations
 from app.models import *  # noqa: F401, F403
-from app.core.database import Base
-from app.core.settings import settings
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
