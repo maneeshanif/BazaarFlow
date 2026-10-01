@@ -1,0 +1,12 @@
+{
+  "psql": ["docker", "compose", "exec", "-T", "db", "psql", "-U", "{{DB_USER}}", "-d", "{{DB_NAME}}"],
+  "cwd": "{{INFRA_DIR}}",
+  "diagrams": [
+    {
+      "name": "{{CONTEXT_NAME}}",
+      "output": "{{context_slug}}.md",
+      "template": "{{context_slug}}.template.md",
+      "tables": { "{{CONTEXT_NAME}}": ["table_one", "table_two"] }
+    }
+  ]
+}

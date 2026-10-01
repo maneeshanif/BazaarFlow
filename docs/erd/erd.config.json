@@ -1,0 +1,57 @@
+{
+  "diagrams": [
+    {
+      "name": "Tenancy and security",
+      "output": "tenancy-security.md",
+      "template": "tenancy-security.template.md",
+      "tables": {
+        "Tenancy and security": [
+          "tenants",
+          "users",
+          "memberships",
+          "tenant_integrations",
+          "audit_logs"
+        ]
+      }
+    },
+    {
+      "name": "Catalog, sales and finance",
+      "output": "catalog-sales-finance.md",
+      "template": "catalog-sales-finance.template.md",
+      "tables": {
+        "Catalog, sales and finance": [
+          "products",
+          "inventory_items",
+          "stock_movements",
+          "vendors",
+          "customers",
+          "orders",
+          "order_items",
+          "payments",
+          "ledger_entries",
+          "purchase_orders"
+        ]
+      }
+    },
+    {
+      "name": "Conversations, marketing and AI",
+      "output": "conversations-marketing-ai.md",
+      "template": "conversations-marketing-ai.template.md",
+      "tables": {
+        "Conversations, marketing and AI": [
+          "conversations",
+          "messages",
+          "support_tickets",
+          "voice_calls",
+          "facebook_accounts",
+          "marketing_posts",
+          "scheduled_campaigns",
+          "agent_actions",
+          "agent_runs",
+          "automations",
+          "automation_runs"
+        ]
+      }
+    }
+  ]
+}

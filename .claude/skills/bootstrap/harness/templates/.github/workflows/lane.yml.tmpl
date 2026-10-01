@@ -1,0 +1,32 @@
+name: {{LANE}}
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "{{LANE_PATH}}/**"
+      - ".github/workflows/{{LANE}}.yml"
+      - "scripts/verify.sh"
+  pull_request:
+    branches: [main]
+    paths:
+      - "{{LANE_PATH}}/**"
+      - ".github/workflows/{{LANE}}.yml"
+      - "scripts/verify.sh"
+
+concurrency:
+  group: {{LANE}}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: verify.sh --lane {{LANE}}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # {{SETUP_STEPS}}: bootstrap replaces this line with the toolchain setup for the lane
+      #   (actions/setup-dotnet, actions/setup-node, astral-sh/setup-uv, actions/setup-go).
+      - name: Verify
+        run: bash scripts/verify.sh --lane {{LANE}}

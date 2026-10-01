@@ -1,0 +1,8 @@
+---
+description: Project process - read AGENTS.md and context/ before any work; verification is scripts/verify.sh
+alwaysApply: true
+---
+
+Before doing anything in this repository, read `AGENTS.md` and follow it. It defines the read-first order for `context/`,
+the source-of-truth rules, the non-negotiable constraints, and how "done" is decided (`bash scripts/verify.sh`).
+Do not weaken or skip a verification step to make it pass.

@@ -1,0 +1,38 @@
+# /bootstrap keeps only the ecosystems the project uses and fixes each `directory`.
+version: 2
+updates:
+  # @ecosystem:dotnet
+  - package-ecosystem: "nuget"
+    directory: "/{{API_DIR}}"
+    schedule:
+      interval: "weekly"
+
+  # @ecosystem:node
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # @ecosystem:python
+  - package-ecosystem: "uv"
+    directory: "/{{PY_DIR}}"
+    schedule:
+      interval: "weekly"
+
+  # @ecosystem:go
+  - package-ecosystem: "gomod"
+    directory: "/{{GO_DIR}}"
+    schedule:
+      interval: "weekly"
+
+  # @ecosystem:docker
+  - package-ecosystem: "docker"
+    directory: "/{{INFRA_DIR}}/dockerfiles"
+    schedule:
+      interval: "weekly"
+
+  # @ecosystem:always
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
