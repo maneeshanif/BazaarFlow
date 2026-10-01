@@ -155,6 +155,7 @@ lane_api() {
   step "api: ruff" uv run ruff check .
   step "api: mypy" uv run mypy .
   step "api: pytest" uv run pytest -q
+  slow_step "api: dependency audit" uv run pip-audit --progress-spinner off --skip-editable
   # Real-Postgres tests (RLS, auth, schema rules) need Docker; CI always has it.
   if docker_up; then
     step "api: postgres tests (RLS, auth, schema rules)" uv run pytest -m pg -q
@@ -213,6 +214,7 @@ lane_web() {
   has_script typecheck && step "web: typecheck" npm run --silent typecheck
   [ -f tsconfig.json ] && ! has_script typecheck && step "web: tsc" npx tsc --noEmit
   has_script test && step "web: test" npm run --silent test
+  slow_step "web: dependency audit" npm audit --audit-level=high
   has_script build && slow_step "web: build" npm run --silent build
   return 0
 }

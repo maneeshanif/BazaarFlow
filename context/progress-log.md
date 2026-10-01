@@ -28,3 +28,8 @@ Append-only history. Never edit or delete a line. The short status lives in `pro
 
 ## 2026-10-02 — Process correction (Phase 0)
 The owner pointed out that Phase 0 was not being built task by task. Audit of what happened: tasks 03-06, 08, 10, 11, 13, 14 and 17 were implemented in batches and ticked without `/review`; tasks 15 and 16 were removed from the plan without approval; task 17's criteria were written after the work; tasks 10, 11, 13, 14 never had real acceptance criteria; tasks 06 and 08 were ticked although their written criteria were not met. All ticks were cleared and the plan was restored to its state before those edits. From here: one task at a time, in order, each with /architect (criteria first), failing tests, build, `verify.sh --slow`, `/review`, a checkpoint commit, then the tick.
+
+## 2026-10-02 — Task 02 (CI/CD + verification), partly verified
+- Verified: every lane has a workflow calling `scripts/verify.sh --lane <lane>` (tests/architecture/test_ci_workflows.py); a deliberate lint error makes `verify.sh` exit 1; secret scan and actionlint run in CI.
+- Added `pip-audit` and `npm audit` as slow-tier verify.sh steps. `pip-audit` found pyjwt/urllib3/ecdsa issues: upgraded pyjwt and urllib3 and replaced `python-jose` (which pulled the unfixable `ecdsa`) with PyJWT; the Python audit now reports nothing.
+- NOT passing: gitleaks finds 22 leaks in history (see "Needs a human"), and `npm audit` has 3 findings that need a Next.js bump. Task 02 stays open.

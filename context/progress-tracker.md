@@ -137,3 +137,15 @@ _From PRD §0.4. Resolve or escalate before the task that depends on it._
 - Q-004 Is Urdu (RTL) UI required at launch or phase 3? (blocks §16, phase 3)
 - Q-005 Do retailers need GST/sales-tax invoices with FBR codes at launch? (blocks §34, phase 4)
 - Q-006 Pricing plans and limits (messages, AI calls, voice minutes) once the demo ends. (blocks §26, phase 4)
+
+---
+
+## Needs a human
+
+| Task | Question | Why it blocks |
+| --- | --- | --- |
+| 00 | Do you approve `docs/adr/0001-stack-decision.md`? | Criterion 2 is the developer's sign-off |
+| 01 / 12 | May the agent read `.env.example` (it holds no values)? Or add the new keys listed in `docs/operations/env-vars.md` yourself | The agent is denied read access, so "every variable with an empty value" cannot be verified |
+| 02 | **Real secrets are in git history**: a Google/Gemini API key in two old `.env` commits (91373c3, a0d2bcf) and tokens in `backend/db/facebook_accounts.json` (32f9fa4) and `backend/db/vendors.json` (a022ae6). The repo's remote is GitHub. Rotate those keys. Then choose: (a) a gitleaks baseline so CI only flags new leaks, or (b) rewrite history (destructive; force-push) | The secret-scan criterion cannot pass while history holds live secrets. The other gitleaks hits (tests with `EAAtest123...`) are fake fixtures |
+| 02 | `npm audit` finds 1 critical + 12 high. Everything except 3 findings clears with `npm audit fix`; the last 3 (`next` critical, `postcss`, `sharp`) need `next` >= 16.3.8. May I bump Next 16.0.0 -> 16.3.8? It edits `frontend/package.json` and the lockfile, which also hold your uncommitted Sentry changes | The dependency-scan criterion cannot pass without it |
+| 02 | A push to GitHub is needed to see CI actually turn red/green | The agent never pushes without your say |

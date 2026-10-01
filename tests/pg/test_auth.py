@@ -5,9 +5,9 @@ from __future__ import annotations
 import uuid
 from datetime import timedelta
 
+import jwt
 import pytest
 from httpx import AsyncClient
-from jose import jwt
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 

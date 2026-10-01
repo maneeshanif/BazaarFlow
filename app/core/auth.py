@@ -11,9 +11,9 @@ import uuid
 from collections.abc import AsyncIterator, Awaitable, Callable
 from typing import Any
 
+import jwt
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from jose import JWTError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -61,7 +61,7 @@ async def get_principal(
         raise _UNAUTHENTICATED
     try:
         claims = verify_token(credentials.credentials)
-    except JWTError as exc:
+    except jwt.PyJWTError as exc:
         raise _UNAUTHENTICATED from exc
     return _principal_from_claims(claims)
 

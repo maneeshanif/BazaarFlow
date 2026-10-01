@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
 import bcrypt
-from jose import jwt
+import jwt
 
 from app.core.settings import settings
 
@@ -64,7 +64,7 @@ def verify_token(token: str) -> dict[str, Any]:
     """Decode and validate a JWT.
 
     Returns the decoded payload dict.
-    Raises jose.JWTError on invalid / expired tokens.
+    Raises jwt.PyJWTError on invalid / expired tokens.
     """
     payload: dict[str, Any] = jwt.decode(token, settings.SECRET_KEY, algorithms=[_ALGORITHM])
     return payload
