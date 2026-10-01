@@ -1,6 +1,7 @@
 """CRUD operations for the Customer entity."""
 from __future__ import annotations
-from typing import List, Optional
+
+from typing import Any, List, Optional
 from uuid import UUID
 
 from sqlalchemy import select
@@ -26,7 +27,7 @@ async def get_customer_by_phone(
 
 
 async def upsert_customer(
-    db: AsyncSession, vendor_id: UUID, phone: str, **kwargs
+    db: AsyncSession, vendor_id: UUID, phone: str, **kwargs: Any
 ) -> Customer:
     customer = await get_customer_by_phone(db, vendor_id, phone)
     if customer:

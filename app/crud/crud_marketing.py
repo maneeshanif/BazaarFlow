@@ -1,6 +1,7 @@
 """CRUD operations for MarketingPost and ScheduledCampaign entities."""
 from __future__ import annotations
-from typing import List
+
+from typing import Any, List
 from uuid import UUID
 
 from sqlalchemy import select
@@ -25,7 +26,7 @@ async def get_campaigns_by_vendor(
     return list(result.scalars().all())
 
 
-async def create_post(db: AsyncSession, **kwargs) -> MarketingPost:
+async def create_post(db: AsyncSession, **kwargs: Any) -> MarketingPost:
     post = MarketingPost(**kwargs)
     db.add(post)
     await db.commit()

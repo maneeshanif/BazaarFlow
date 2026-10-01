@@ -4,8 +4,10 @@ These are decorated with the SDK's @function_tool so the agent runtime
 can call them as tools. Keep this module simple and focused on product
 lookups (uses the MCP server PRODUCTS_DB).
 """
-from agents import function_tool
 from typing import List
+
+from agents import function_tool
+
 from app.mcp_server.server import PRODUCTS_DB
 
 

@@ -1,25 +1,26 @@
 """Vendor endpoints - exact port of backend/controllers/vendors_controller.py"""
 from __future__ import annotations
-from typing import Any, Dict, List, Optional
+
 import logging
+from typing import List, Optional
 
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from app.repositories import (
-    list_vendors,
-    upsert_vendor,
     get_vendor,
     list_customers,
     list_messages,
-    update_vendor_settings,
+    list_vendors,
     record_message,
+    update_vendor_settings,
     upsert_customer,
+    upsert_vendor,
 )
 from app.services.whatsapp import (
-    validate_phone_number,
-    send_text_message,
     WhatsAppAPIError,
+    send_text_message,
+    validate_phone_number,
 )
 
 logger = logging.getLogger(__name__)

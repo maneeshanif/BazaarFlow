@@ -1,10 +1,15 @@
 """Message ORM model � inbound/outbound WhatsApp chat transcripts."""
 from __future__ import annotations
+
 import enum
-from sqlalchemy import String, ForeignKey, Text, Enum as SAEnum
+
+from sqlalchemy import Enum as SAEnum
+from sqlalchemy import ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
+
 from app.core.database import Base
 from app.models.common import BaseModelMixin
+
 
 class MessageDirection(str, enum.Enum):
     inbound = "inbound"

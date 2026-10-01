@@ -2,8 +2,8 @@ import json
 
 import pytest
 
-from services import sales_service
-from services.inventory_service import InventoryAnalyticsService
+from app.services import sales_service
+from app.services.inventory_service import InventoryAnalyticsService
 
 
 @pytest.fixture

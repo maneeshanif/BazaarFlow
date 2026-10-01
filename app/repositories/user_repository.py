@@ -13,7 +13,6 @@ from typing import Any, Dict, List, Optional
 
 from .json_store import JsonStore
 
-
 _DB_PATH = Path(__file__).resolve().parent.parent / "db" / "users.json"
 _USERS_STORE = JsonStore(_DB_PATH, default_factory=list)
 

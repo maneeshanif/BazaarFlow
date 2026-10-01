@@ -1,13 +1,11 @@
-import sys
 from pathlib import Path
 
 import pytest
 
 HERE = Path(__file__).resolve().parent
-BACKEND_DIR = HERE.parent
-sys.path.insert(0, str(BACKEND_DIR))
+BACKEND_DIR = HERE.parents[1] / "app"  # app/data holds the JSON fixtures
 
-from services.finance_service import FinanceAnalyticsService
+from app.services.finance_service import FinanceAnalyticsService
 
 
 @pytest.fixture(scope="module")

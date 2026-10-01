@@ -1,11 +1,9 @@
 
 import logging
 
+from agents import Agent, set_tracing_disabled
 
-from agents import Agent
 from app.agents.model import model
-
-from agents import set_tracing_disabled
 
 from .finance_agent import finance_agent
 from .inventory_agent import inventory_agent

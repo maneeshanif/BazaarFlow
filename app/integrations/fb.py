@@ -37,19 +37,15 @@ from typing import Any, Dict, Iterable, Optional
 from dotenv import load_dotenv
 from pydantic import ValidationError
 
-from src import (
-    FacebookManager,
-    InsightPeriod,
-    ImagePostRequest,
-    TextPostRequest,
-    load_config,
-)
-from src.exceptions import (
+from app.core.exceptions import (
     FacebookAPIError,
     ImageUploadError,
     InvalidCredentialsError,
     PostCreationError,
 )
+from app.integrations.facebook_manager import FacebookManager
+from app.integrations.fb_config import load_config
+from app.integrations.fb_model import ImagePostRequest, InsightPeriod, TextPostRequest
 
 DEFAULT_OUTPUT_FILE = "last_post_engagement.json"
 DEFAULT_COMMENT_LIMIT = 100

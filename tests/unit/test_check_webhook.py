@@ -4,7 +4,6 @@
 import asyncio
 import json
 import os
-import sys
 
 import httpx
 
@@ -110,7 +109,7 @@ async def check_webhook_setup():
                 for tunnel in tunnels:
                     public_url = tunnel.get("public_url", "")
                     if public_url.startswith("https"):
-                        print(f"   ✅ ngrok tunnel active!")
+                        print("   ✅ ngrok tunnel active!")
                         print(f"      Public URL: {public_url}")
                         print()
                         print("   📋 Use this URL in Meta webhook:")

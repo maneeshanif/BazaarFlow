@@ -7,8 +7,9 @@ Old full paths (prefix /api was added in app.py):
   GET  /api/health/chat
 """
 from __future__ import annotations
-from typing import Optional
+
 import logging
+from typing import Optional
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel

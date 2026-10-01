@@ -6,11 +6,11 @@ without calling any LLMs.
 """
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from datetime import datetime
-import json
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional
+from typing import Dict, List, Optional
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_DATASET = BASE_DIR / "data" / "finance_transactions.json"

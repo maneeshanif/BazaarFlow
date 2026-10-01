@@ -2,8 +2,9 @@
 from types import SimpleNamespace
 
 import pytest
-from services.chat_service import ChatService, chat_service
-from agents import SQLiteSession, Runner
+from agents import Runner, SQLiteSession
+
+from app.services.chat_service import ChatService, chat_service
 
 
 @pytest.fixture(autouse=True)

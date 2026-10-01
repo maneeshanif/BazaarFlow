@@ -3,18 +3,18 @@ Test script for BazaarFlow MCP Server tools
 Run this to verify all tools are working correctly
 """
 
-import sys
 import os
+import sys
 
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from mcp_server.server import (
-    lookup_product, 
-    list_all_products, 
-    get_product_by_price_range, 
+    PRODUCTS_DB,
     get_product_by_category,
-    PRODUCTS_DB
+    get_product_by_price_range,
+    list_all_products,
+    lookup_product,
 )
 
 
@@ -71,7 +71,7 @@ def test_get_product_by_category():
     
     # Test invalid category
     result = get_product_by_category("invalid")
-    print(f"\nCategory: 'invalid'")
+    print("\nCategory: 'invalid'")
     print(result)
 
 

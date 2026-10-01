@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, Query
+
 from app.utils.live_logs import get_recent_logs
 
 router = APIRouter()

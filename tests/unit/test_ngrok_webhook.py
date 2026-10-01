@@ -1,6 +1,7 @@
 """Send a test webhook to verify the flow is working."""
 
 import asyncio
+
 import httpx
 
 # Use the actual ngrok URL
@@ -57,8 +58,8 @@ async def test_webhook():
             print("=" * 60)
             print()
             print(f"📡 ngrok URL: {NGROK_URL}")
-            print(f"📱 Test Customer: 923001234567")
-            print(f"💬 Test Message: 'i want to check product availability'")
+            print("📱 Test Customer: 923001234567")
+            print("💬 Test Message: 'i want to check product availability'")
             print()
             
             # Test via ngrok (simulates Meta webhook)

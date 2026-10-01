@@ -1,13 +1,13 @@
 """Thin wrapper around the WhatsApp Business Cloud API."""
 
 from __future__ import annotations
-from app.core.settings import settings
 
 import logging
-import os
 from typing import Any, Dict, Optional, Tuple
 
 import httpx  # type: ignore[import-not-found]
+
+from app.core.settings import settings
 
 logger = logging.getLogger(__name__)
 

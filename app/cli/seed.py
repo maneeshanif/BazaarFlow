@@ -11,19 +11,17 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import uuid
 from pathlib import Path
 from typing import Any, Dict, List
-import uuid
 
 from sqlalchemy import select
-from app.core.database import AsyncSessionLocal, engine, Base
+
+from app.core.database import AsyncSessionLocal, Base, engine
+from app.core.security import hash_password
+from app.models.inventory import InventoryItem
 from app.models.user import User
 from app.models.vendor import Vendor
-from app.models.customer import Customer
-from app.models.inventory import InventoryItem
-from app.models.order import Order
-from app.models.support import SupportTicket
-from app.core.security import hash_password
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger("bazaarflow.seed")

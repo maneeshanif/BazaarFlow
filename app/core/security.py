@@ -5,12 +5,11 @@ Usage:
 """
 from __future__ import annotations
 
-import os
 from datetime import datetime, timedelta, timezone
-from typing import Optional
+from typing import Any, Optional
 
 import bcrypt
-from jose import JWTError, jwt
+from jose import jwt
 
 from app.core.settings import settings
 
@@ -45,7 +44,7 @@ _ALGORITHM = "HS256"
 def create_access_token(
     subject: str,
     expires_delta: Optional[timedelta] = None,
-    extra_claims: Optional[dict] = None,
+    extra_claims: Optional[dict[str, Any]] = None,
 ) -> str:
     """Create a signed JWT.
 
@@ -57,14 +56,15 @@ def create_access_token(
     expire = datetime.now(timezone.utc) + (
         expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
-    payload: dict = {"sub": str(subject), "exp": expire, **(extra_claims or {})}
-    return jwt.encode(payload, settings.SECRET_KEY, algorithm=_ALGORITHM)
+    payload: dict[str, Any] = {"sub": str(subject), "exp": expire, **(extra_claims or {})}
+    return str(jwt.encode(payload, settings.SECRET_KEY, algorithm=_ALGORITHM))
 
 
-def verify_token(token: str) -> dict:
+def verify_token(token: str) -> dict[str, Any]:
     """Decode and validate a JWT.
 
     Returns the decoded payload dict.
     Raises jose.JWTError on invalid / expired tokens.
     """
-    return jwt.decode(token, settings.SECRET_KEY, algorithms=[_ALGORITHM])
+    payload: dict[str, Any] = jwt.decode(token, settings.SECRET_KEY, algorithms=[_ALGORITHM])
+    return payload

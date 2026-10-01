@@ -1,13 +1,14 @@
 """
 Integration tests for the sales agent chat functionality
 """
+
 import pytest
-from fastapi.testclient import TestClient
-from fastapi import FastAPI
-from controllers.chat_controller import router
-from my_agents.sales_agent import sales_agent
 from agents import Runner, SQLiteSession
-import asyncio
+from fastapi import FastAPI
+from fastapi.testclient import TestClient
+
+from app.agents.sales_agent import sales_agent
+from app.api.controllers.chat_controller import router
 
 # Create a test FastAPI app
 app = FastAPI()
@@ -76,6 +77,7 @@ def test_conversation_continuation():
     # The agent should understand the context of the previous conversation
 
 @pytest.mark.asyncio
+@pytest.mark.live
 async def test_direct_sales_agent_runner():
     """Test the sales agent directly using Runner"""
     session = SQLiteSession(session_id="direct_test")

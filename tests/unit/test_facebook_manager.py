@@ -11,21 +11,14 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any, Dict, List
 
-import sys
-
-
-TEST_ROOT = Path(__file__).resolve().parents[1]
-if str(TEST_ROOT) not in sys.path:
-    sys.path.insert(0, str(TEST_ROOT))
-
 import pytest
 
-from config.fb_config import FacebookConfig
-from src.exceptions import FacebookAPIError, ImageUploadError, PostCreationError
-from facebook_manager import FacebookManager
-from models.fb_model import (
-    CommentReplyRequest,
+from app.core.exceptions import FacebookAPIError, ImageUploadError, PostCreationError
+from app.integrations.facebook_manager import FacebookManager
+from app.integrations.fb_config import FacebookConfig
+from app.integrations.fb_model import (
     CommentReactionRequest,
+    CommentReplyRequest,
     ImagePostRequest,
     InsightPeriod,
     ReactionType,
@@ -131,6 +124,7 @@ def test_create_image_post_from_file(manager: FacebookManager, monkeypatch: pyte
     assert mime_type == "image/jpeg"
 
 
+@pytest.mark.legacy_port
 def test_create_image_post_with_missing_file(manager: FacebookManager) -> None:
     with pytest.raises(ImageUploadError):
         manager.create_image_post(ImagePostRequest(image_path="/does/not/exist.jpg"))
@@ -266,6 +260,7 @@ def test_extract_keywords_helper(manager: FacebookManager) -> None:
     assert len(keywords) <= 3
 
 
+@pytest.mark.legacy_port
 def test_get_post_insights_handles_missing_shares(
     manager: FacebookManager, monkeypatch: pytest.MonkeyPatch
 ) -> None:

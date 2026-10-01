@@ -1,19 +1,13 @@
-import sys
-from pathlib import Path
 import json
 
 import pytest
 from fastapi.testclient import TestClient
 
+import app.main as app_module
 
 # Ensure backend package dir is importable
-HERE = Path(__file__).resolve().parent
-BACKEND_DIR = HERE.parent
-sys.path.insert(0, str(BACKEND_DIR))
-
-import app as app_module
-import services.inventory_service as inventory_service
-import services.sales_service as sales_service
+import app.services.inventory_service as inventory_service
+import app.services.sales_service as sales_service
 
 
 class DummyResp:
@@ -56,9 +50,8 @@ def sales_test_env(tmp_path, monkeypatch):
 
 def test_create_and_list_sales(monkeypatch, sales_test_env):
     # Replace wa to avoid network calls during app startup
-    monkeypatch.setattr(app_module, "wa", DummyWA())
 
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
 
     payload = {
         "customer_name": "Test User",

@@ -34,8 +34,10 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "mypy>=2.3.1",
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.0",
+    "ruff>=0.16.10",
 ]
 
 [build-system]
@@ -48,3 +50,59 @@ packages = ["app"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+addopts = "-m 'not live and not legacy_port'"
+markers = [
+    "live: calls a real external service (LLM, Meta, Twilio); run explicitly with -m live",
+    "legacy_port: v1-era test that no longer matches the migrated app/ code; to be rewritten (build-plan task) - run with -m legacy_port",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+extend-exclude = [
+    "backend", "frontend", ".claude", ".codex", ".gemini", ".cursor", ".agent",
+    "skills", "scripts", "docs", "context", "alembic/versions",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "S608"]
+ignore = ["E501", "B008", "B904", "B007", "B905"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+plugins = []
+exclude = ['^backend/', '^frontend/', '^[.]claude/', '^[.]codex/', '^[.]gemini/', '^[.]cursor/', '^[.]agent/', '^skills/', '^scripts/', '^docs/', '^alembic/versions/', '^[.]venv/']
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["F401"]
+"tests/**" = ["E402"]
+"app/agents/**" = ["E402"]
+"app/services/**" = ["E402"]
+"app/integrations/**" = ["E402"]
+"app/repositories/**" = ["E402"]
+
+[[tool.mypy.overrides]]
+module = ["jose", "jose.*"]
+ignore_missing_imports = true
+
+# Legacy v1 modules and tests that are not strict-clean yet. Strict stays ON for everything
+# else (app.core, app.crud, app.models, app.schemas, app.middleware, app.main, app.utils.logger).
+# Burn this list down module by module (build-plan task "Burn down mypy legacy list"); never add to it.
+[[tool.mypy.overrides]]
+module = [
+    "app.services.*",
+    "app.repositories.*",
+    "app.integrations.*",
+    "app.agents.*",
+    "app.api.controllers.*",
+    "app.mcp_server.*",
+    "app.cli.*",
+    "app.runner",
+    "app.utils.diagnose",
+    "app.utils.agent_hooks",
+    "app.utils.live_logs",
+    "app.utils.streaming",
+    "tests.*",
+]
+ignore_errors = true

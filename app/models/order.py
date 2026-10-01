@@ -1,9 +1,12 @@
 """Order ORM model � sales orders captured via WhatsApp agent."""
 from __future__ import annotations
-from sqlalchemy import String, ForeignKey, Text, Numeric, Integer
+
+from sqlalchemy import ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
+
 from app.core.database import Base
 from app.models.common import BaseModelMixin
+
 
 class Order(BaseModelMixin, Base):
     __tablename__ = "orders"

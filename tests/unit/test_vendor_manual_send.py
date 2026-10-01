@@ -2,19 +2,14 @@
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient  # type: ignore[import-not-found]
 
-HERE = Path(__file__).resolve().parent
-BACKEND_DIR = HERE.parent
-sys.path.insert(0, str(BACKEND_DIR))
-
-import app as app_module
-from lib import repository  # type: ignore[import-not-found]
-from services.whatsapp import WhatsAppAPIError  # type: ignore[import-not-found]
+import app.main as app_module
+from app.repositories import repository  # type: ignore[import-not-found]
+from app.services.whatsapp import WhatsAppAPIError  # type: ignore[import-not-found]
 
 
 @pytest.fixture(autouse=True)
@@ -38,13 +33,14 @@ def vendor_id():
     return vendor["vendor_id"]
 
 
+@pytest.mark.legacy_port
 def test_manual_send_normalizes_phone(client, vendor_id, monkeypatch):
     async def fake_send_text_message(**kwargs):
         fake_send_text_message.kwargs = kwargs  # type: ignore[attr-defined]
         return {"status": "sent"}
 
     monkeypatch.setattr(
-        "services.whatsapp.send_text_message",
+        "app.services.whatsapp.send_text_message",
         fake_send_text_message,
     )
 
@@ -55,7 +51,7 @@ def test_manual_send_normalizes_phone(client, vendor_id, monkeypatch):
     assert response.status_code == 200, response.text
     assert response.json()["status"] == "sent"
 
-    called_to = getattr(fake_send_text_message, "kwargs")["to"]  # type: ignore[index]
+    called_to = fake_send_text_message.kwargs["to"]  # type: ignore[index]
     assert called_to == "923001234567"
 
     messages = repository.list_messages(vendor_id, "923001234567")
@@ -63,6 +59,7 @@ def test_manual_send_normalizes_phone(client, vendor_id, monkeypatch):
     assert messages[-1]["direction"] == "outbound"
 
 
+@pytest.mark.legacy_port
 def test_manual_send_surfaces_whatsapp_error(client, vendor_id, monkeypatch):
     async def failing_send_text_message(**kwargs):
         raise WhatsAppAPIError(
@@ -72,7 +69,7 @@ def test_manual_send_surfaces_whatsapp_error(client, vendor_id, monkeypatch):
         )
 
     monkeypatch.setattr(
-        "services.whatsapp.send_text_message",
+        "app.services.whatsapp.send_text_message",
         failing_send_text_message,
     )
 

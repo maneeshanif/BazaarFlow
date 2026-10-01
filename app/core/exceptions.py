@@ -22,6 +22,14 @@ class PostCreationError(FacebookAPIError):
     """Raised when a Facebook post cannot be created."""
 
 
+class ImageUploadError(FacebookAPIError):
+    """Raised when an image cannot be uploaded to Facebook."""
+
+
+class InvalidCredentialsError(FacebookAPIError):
+    """Raised when Facebook credentials are missing or rejected."""
+
+
 class TokenRefreshError(FacebookAPIError):
     """Raised when an access token cannot be refreshed."""
 

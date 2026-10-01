@@ -4,14 +4,15 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import os
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
-import os
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Protocol
+from typing import Any, Dict, List, Optional, Protocol, Sequence, Tuple
 from zoneinfo import ZoneInfo
 
-from app.repositories.marketing_scheduled_repository import list_schedules
 from app.repositories import marketing_scheduled_repository as scheduled_repo
+from app.repositories.marketing_repository import list_schedules
+
 from .marketing_service import marketing_service
 
 logger = logging.getLogger(__name__)

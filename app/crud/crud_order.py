@@ -1,6 +1,7 @@
 """CRUD operations for the Order entity."""
 from __future__ import annotations
-from typing import List
+
+from typing import Any, List
 from uuid import UUID
 
 from sqlalchemy import select
@@ -19,7 +20,7 @@ async def get_orders_by_vendor(db: AsyncSession, vendor_id: UUID) -> List[Order]
     return list(result.scalars().all())
 
 
-async def create_order(db: AsyncSession, **kwargs) -> Order:
+async def create_order(db: AsyncSession, **kwargs: Any) -> Order:
     order = Order(**kwargs)
     db.add(order)
     await db.commit()

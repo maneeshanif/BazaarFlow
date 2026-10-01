@@ -1,6 +1,7 @@
 """Test script to simulate a WhatsApp message coming in via webhook."""
 
 import asyncio
+
 import httpx
 
 API_BASE = "http://localhost:8000"

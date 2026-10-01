@@ -4,9 +4,10 @@ Provides centralized logging configuration and custom formatters.
 """
 import logging
 import os
-from typing import Optional
+from typing import Any, Optional
 
-def setup_logger(name: str = None) -> logging.Logger:
+
+def setup_logger(name: Optional[str] = None) -> logging.Logger:
     """
     Configure and return a logger with consistent formatting and level.
     
@@ -39,7 +40,7 @@ def setup_logger(name: str = None) -> logging.Logger:
     
     return logger
 
-def log_webhook_event(logger: logging.Logger, event_type: str, details: Optional[dict] = None):
+def log_webhook_event(logger: logging.Logger, event_type: str, details: Optional[dict[str, Any]] = None) -> None:
     """
     Log webhook related events with consistent formatting.
     
@@ -51,7 +52,7 @@ def log_webhook_event(logger: logging.Logger, event_type: str, details: Optional
     details = details or {}
     logger.info(f"[WhatsApp Webhook] {event_type} | {details}")
 
-def log_message_event(logger: logging.Logger, event_type: str, user_id: str, details: Optional[dict] = None):
+def log_message_event(logger: logging.Logger, event_type: str, user_id: str, details: Optional[dict[str, Any]] = None) -> None:
     """
     Log message handling events with consistent formatting.
     

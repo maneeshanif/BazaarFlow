@@ -1,9 +1,12 @@
 """Customer ORM model � per-vendor customer record."""
 from __future__ import annotations
-from sqlalchemy import String, ForeignKey
+
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
+
 from app.core.database import Base
 from app.models.common import BaseModelMixin
+
 
 class Customer(BaseModelMixin, Base):
     __tablename__ = "customers"

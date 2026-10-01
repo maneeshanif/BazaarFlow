@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 from app.core.settings import settings
+
 """Utility tools used by the marketing agent for data gathering."""
 
 
 import json
-import os
 from collections import Counter
 from typing import Any, Dict, List
 

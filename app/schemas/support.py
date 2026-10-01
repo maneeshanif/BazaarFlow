@@ -1,6 +1,8 @@
 """Support ticket request/response schemas."""
 from __future__ import annotations
+
 from pydantic import BaseModel
+
 
 class SupportTicketCreate(BaseModel):
     contact: str | None = None

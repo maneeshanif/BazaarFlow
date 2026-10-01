@@ -11,12 +11,13 @@ from __future__ import annotations
 
 import json
 import logging
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from agents import Runner, SQLiteSession  # type: ignore[import-not-found]
 
 from app.agents.sales_agent import sales_agent
 from app.repositories import repository
+
 from .utils.agent_hooks import AgentTurnLogger
 
 logger = logging.getLogger(__name__)
@@ -153,7 +154,7 @@ async def runner_hook(
             session=session,
             hooks=AgentTurnLogger(),
         )
-    except Exception as e:
+    except Exception:
         logger.exception("Agent crash. Returning fallback message.")
         return {"reply_text": _FALLBACK_REPLY, "action": "reply"}
 

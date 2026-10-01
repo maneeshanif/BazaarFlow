@@ -1,7 +1,8 @@
 """VAPI webhook endpoint � exact port of backend/controllers/vapi_controller.py"""
 from __future__ import annotations
-from typing import Any, Dict, Optional
+
 import logging
+from typing import Any, Dict, Optional
 
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel
@@ -43,7 +44,7 @@ async def vapi_webhook(
         return {"success": True, "message": None}
 
     tool_name = message.functionCall.name
-    args = message.functionCall.arguments or {}
+    _args = message.functionCall.arguments or {}  # TODO: pass to dispatch_tool_call
     logger.info("Handling VAPI function call: %s", tool_name)
 
     # TODO: delegate to app.services.vapi_service.dispatch_tool_call(tool_name, args)

@@ -1,9 +1,8 @@
 """Server-Sent Events (SSE) streaming helpers for chat endpoints."""
 from __future__ import annotations
 
-import asyncio
 import json
-from typing import Any, AsyncGenerator
+from typing import AsyncGenerator
 
 from fastapi.responses import StreamingResponse
 

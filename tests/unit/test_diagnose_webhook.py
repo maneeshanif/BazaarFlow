@@ -5,7 +5,6 @@ Tests if Meta can reach your webhook and if messages are being processed.
 """
 
 import asyncio
-import json
 import sys
 
 import httpx
@@ -92,10 +91,10 @@ async def test_complete_webhook_flow():
                 for tunnel in tunnels:
                     public_url = tunnel.get("public_url", "")
                     if public_url.startswith("https"):
-                        print(f"   ✅ ngrok tunnel active")
+                        print("   ✅ ngrok tunnel active")
                         print(f"   🌐 Public URL: {public_url}")
                         print()
-                        print(f"   📋 Use this in Meta webhook:")
+                        print("   📋 Use this in Meta webhook:")
                         print(f"      {public_url}/webhook")
                         results.append(("ngrok Active", True))
                         break

@@ -1,14 +1,15 @@
 """CRUD operations for the User entity."""
 from __future__ import annotations
+
 from typing import Optional
 from uuid import UUID
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.security import hash_password
 from app.models.user import User
 from app.schemas.user import UserCreate
-from app.core.security import hash_password
 
 
 async def get_user_by_id(db: AsyncSession, user_id: UUID) -> Optional[User]:

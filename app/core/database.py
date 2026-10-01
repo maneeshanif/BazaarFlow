@@ -7,9 +7,10 @@ Automatically uses:
 
 from __future__ import annotations
 
-from typing import AsyncGenerator
+from typing import Any, AsyncGenerator
 
 from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
@@ -19,9 +20,9 @@ from sqlalchemy.orm import DeclarativeBase
 from app.core.settings import settings
 
 
-def _build_engine():
+def _build_engine() -> AsyncEngine:
     url = settings.DATABASE_URL
-    connect_args = {}
+    connect_args: dict[str, Any] = {}
 
     if settings.is_sqlite:
         # SQLite needs check_same_thread disabled for async

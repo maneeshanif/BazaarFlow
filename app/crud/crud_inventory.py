@@ -1,6 +1,7 @@
 """CRUD operations for the InventoryItem entity."""
 from __future__ import annotations
-from typing import List, Optional
+
+from typing import Any, List, Optional
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -18,7 +19,7 @@ async def get_item_by_sku(db: AsyncSession, sku: str) -> Optional[InventoryItem]
     return result.scalar_one_or_none()
 
 
-async def create_item(db: AsyncSession, **kwargs) -> InventoryItem:
+async def create_item(db: AsyncSession, **kwargs: Any) -> InventoryItem:
     item = InventoryItem(**kwargs)
     db.add(item)
     await db.commit()
@@ -26,7 +27,7 @@ async def create_item(db: AsyncSession, **kwargs) -> InventoryItem:
     return item
 
 
-async def update_item(db: AsyncSession, sku: str, **kwargs) -> Optional[InventoryItem]:
+async def update_item(db: AsyncSession, sku: str, **kwargs: Any) -> Optional[InventoryItem]:
     item = await get_item_by_sku(db, sku)
     if not item:
         return None

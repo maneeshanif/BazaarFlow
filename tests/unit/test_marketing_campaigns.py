@@ -7,7 +7,7 @@ from typing import Any, Dict
 
 import pytest
 
-from backend.services.marketing_service import MarketingService
+from app.services.marketing_service import MarketingService
 
 
 @pytest.mark.asyncio
@@ -39,6 +39,7 @@ async def test_generate_campaign_allows_single_post(monkeypatch):
 
 
 @pytest.mark.asyncio
+@pytest.mark.legacy_port
 async def test_publish_campaign_records_multiple_posts(monkeypatch):
     """_publish_campaign should loop through all posts and record them with a shared campaign_id."""
 
@@ -68,7 +69,7 @@ async def test_publish_campaign_records_multiple_posts(monkeypatch):
         recorded.append(kwargs)
         return {"record_id": f"rec_{len(recorded)}", **kwargs}
 
-    monkeypatch.setattr("backend.services.marketing_service.record_marketing_post", fake_record_marketing_post)
+    monkeypatch.setattr("app.services.marketing_service.record_marketing_post", fake_record_marketing_post)
 
     service = MarketingService(facebook_manager_factory=fake_factory)  # type: ignore[arg-type]
 
@@ -102,7 +103,7 @@ def test_scheduler_calls_trigger_scheduled_campaign(monkeypatch):
     This is a light-weight behavioural check to ensure the wiring remains intact.
     """
 
-    from backend.services.marketing_scheduler import MarketingScheduler
+    from app.services.marketing_scheduler import MarketingScheduler
 
     class DummyRunner:
         def __init__(self) -> None:
@@ -122,10 +123,12 @@ def test_scheduler_calls_trigger_scheduled_campaign(monkeypatch):
             }
         ]
 
-    monkeypatch.setattr("backend.services.marketing_scheduler.list_schedules", fake_list_schedules)
+    monkeypatch.setattr("app.services.marketing_scheduler.list_schedules", fake_list_schedules)
 
     runner = DummyRunner()
-    scheduler = MarketingScheduler(campaign_runner=runner)
+    # The slot is built from the current HH:MM (seconds truncated), so the matching window must
+    # cover a full minute plus a rollover or the test passes only in the first 45 s of each minute.
+    scheduler = MarketingScheduler(campaign_runner=runner, matching_window_seconds=90)
 
     # Run a single tick synchronously
     import asyncio

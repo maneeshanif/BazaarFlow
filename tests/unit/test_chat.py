@@ -2,10 +2,11 @@
 Tests for the chat controller
 """
 import pytest
-from fastapi.testclient import TestClient
 from fastapi import FastAPI
-from controllers.chat_controller import router
-from services.chat_service import chat_service
+from fastapi.testclient import TestClient
+
+from app.api.controllers.chat_controller import router
+from app.services.chat_service import chat_service
 
 # Create a test FastAPI app
 app = FastAPI()
@@ -13,6 +14,7 @@ app.include_router(router)
 
 client = TestClient(app)
 
+@pytest.mark.live
 def test_chat_sales_endpoint():
     """Test the chat/sales endpoint"""
     response = client.post("/chat/sales", json={
@@ -59,6 +61,7 @@ def test_chat_sales_endpoint_special_characters():
     assert "response" in data
     assert isinstance(data["response"], str)
 
+@pytest.mark.live
 def test_health_endpoint():
     """Test the health endpoint"""
     response = client.get("/health/chat")
@@ -74,6 +77,7 @@ def test_chat_service_initialization():
     assert hasattr(chat_service, 'create_session')
 
 @pytest.mark.asyncio
+@pytest.mark.live
 async def test_chat_service_process_message():
     """Test the chat service directly"""
     response_text, session_id = await chat_service.process_message(

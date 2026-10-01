@@ -7,8 +7,8 @@ Run this to check your configuration and identify common problems.
 
 import os
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 from dotenv import load_dotenv
 
@@ -118,7 +118,7 @@ def check_token_expiration():
             if "expired" in error_str or "session" in error_str:
                 print_status("Facebook access token has EXPIRED", "ERROR")
                 print(f"  → Error: {e}")
-                print(f"  → Generate a new token at: https://developers.facebook.com/tools/explorer/")
+                print("  → Generate a new token at: https://developers.facebook.com/tools/explorer/")
                 return False
             
             elif "invalid" in error_str or "190" in error_str:

@@ -7,15 +7,16 @@ from typing import Any, Dict, List
 
 import pytest
 
-from backend.lib import marketing_scheduled_repository as scheduled_repo
-from backend.services.marketing_scheduler import MarketingScheduler
-from backend.services.marketing_service import MarketingService
+from app.repositories import marketing_scheduled_repository as scheduled_repo
+from app.services.marketing_scheduler import MarketingScheduler
+from app.services.marketing_service import MarketingService
 
 
 def _make_iso(dt: datetime) -> str:
   return dt.replace(microsecond=0).isoformat()
 
 
+@pytest.mark.legacy_port
 def test_repository_create_and_list_pending(monkeypatch, tmp_path):
   """Repository should persist campaigns and return only due pending posts."""
 
@@ -69,6 +70,7 @@ def test_repository_create_and_list_pending(monkeypatch, tmp_path):
   assert due[0]["post_payload"]["message"] == "m1"
 
 
+@pytest.mark.legacy_port
 def test_mark_post_posted_and_failed(monkeypatch, tmp_path):
   """Status updates should flip scheduled posts from pending to posted/failed."""
 
@@ -117,6 +119,7 @@ def test_mark_post_posted_and_failed(monkeypatch, tmp_path):
 
 
 @pytest.mark.asyncio
+@pytest.mark.legacy_port
 async def test_create_scheduled_campaign_validates_future_times(monkeypatch):
   """MarketingService.create_scheduled_campaign should reject past times."""
 
@@ -162,7 +165,7 @@ async def test_scheduler_publishes_pending_posts(monkeypatch):
     }
   ]
 
-  monkeypatch.setattr("backend.services.marketing_scheduler.list_schedules", fake_list_schedules)
+  monkeypatch.setattr("app.services.marketing_scheduler.list_schedules", fake_list_schedules)
   monkeypatch.setattr(scheduled_repo, "list_pending_scheduled_posts", lambda now_iso: pending, raising=False)
 
   scheduler = MarketingScheduler(campaign_runner=DummyRunner())

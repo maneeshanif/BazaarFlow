@@ -5,6 +5,8 @@ write to the database.
 """
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
+
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from app.core.settings import settings
@@ -30,7 +32,7 @@ AsyncROSession = async_sessionmaker(
 )
 
 
-async def get_ro_db():
+async def get_ro_db() -> AsyncIterator[AsyncSession]:
     """FastAPI dependency � yields a read-only DB session."""
     async with AsyncROSession() as session:
         yield session

@@ -1,6 +1,7 @@
 """CRUD operations for the Vendor entity."""
 from __future__ import annotations
-from typing import List, Optional
+
+from typing import Any, List, Optional
 from uuid import UUID
 
 from sqlalchemy import select
@@ -19,7 +20,7 @@ async def get_vendor_by_id(db: AsyncSession, vendor_id: UUID) -> Optional[Vendor
     return result.scalar_one_or_none()
 
 
-async def create_vendor(db: AsyncSession, **kwargs) -> Vendor:
+async def create_vendor(db: AsyncSession, **kwargs: Any) -> Vendor:
     vendor = Vendor(**kwargs)
     db.add(vendor)
     await db.commit()

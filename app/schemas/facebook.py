@@ -1,6 +1,8 @@
 """Facebook account request/response schemas."""
 from __future__ import annotations
+
 from pydantic import BaseModel
+
 
 class FacebookAccountCreate(BaseModel):
     vendor_id: str

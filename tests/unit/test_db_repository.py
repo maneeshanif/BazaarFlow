@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest  # type: ignore[import-not-found]
 
-from backend.lib import repository
+from app.repositories import repository
 
 
 def _configure(tmp_path: Path) -> None:

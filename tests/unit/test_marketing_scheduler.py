@@ -4,7 +4,7 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from backend.services.marketing_scheduler import MarketingScheduler, ScheduleRecord
+from app.services.marketing_scheduler import MarketingScheduler, ScheduleRecord
 
 
 class StubRunner:

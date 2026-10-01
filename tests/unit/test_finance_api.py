@@ -1,18 +1,11 @@
-import sys
-from pathlib import Path
+import importlib
 from types import SimpleNamespace
 
-import pytest
 from fastapi.testclient import TestClient
-import importlib
 
-HERE = Path(__file__).resolve().parent
-BACKEND_DIR = HERE.parent
-sys.path.insert(0, str(BACKEND_DIR))
+import app.main as app_module
 
-import app as app_module
-
-chat_service_module = importlib.import_module("services.chat_service")
+chat_service_module = importlib.import_module("app.services.chat_service")
 
 
 class DummyResp:
@@ -25,10 +18,6 @@ class DummyWA:
         return DummyResp()
 
 
-@pytest.fixture(autouse=True)
-def patch_wa(monkeypatch):
-    monkeypatch.setattr(app_module, "wa", DummyWA())
-
 
 def test_finance_chat_endpoint(monkeypatch):
     async def fake_run(*args, **kwargs):
@@ -36,7 +25,7 @@ def test_finance_chat_endpoint(monkeypatch):
 
     monkeypatch.setattr(chat_service_module.Runner, "run", fake_run)
 
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
 
     payload = {"message": "Show payment status"}
 

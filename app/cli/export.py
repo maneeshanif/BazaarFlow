@@ -17,11 +17,11 @@ from pathlib import Path
 from typing import Any, List
 
 from sqlalchemy import select
+
 from app.core.database import AsyncSessionLocal
+from app.models.customer import Customer
 from app.models.inventory import InventoryItem
 from app.models.order import Order
-from app.models.customer import Customer
-from app.models.vendor import Vendor
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger("bazaarflow.export")

@@ -6,6 +6,7 @@ Run with:
 from __future__ import annotations
 
 import logging
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 import httpx
@@ -15,8 +16,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routers.main_router import main_router
 from app.api.routers.v1 import api_v1_router
 from app.core.settings import settings
-from app.middleware.request_logger import RequestLoggerMiddleware
 from app.middleware.rate_limiter import RateLimiterMiddleware
+from app.middleware.request_logger import RequestLoggerMiddleware
 from app.utils.live_logs import configure_live_logging
 
 configure_live_logging(logging.DEBUG)
@@ -24,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     logger.info("BazaarFlow starting up (env=%s)", settings.APP_ENV)
     app.state.http_client = httpx.AsyncClient(timeout=30.0)
     yield
@@ -60,7 +61,7 @@ app.include_router(api_v1_router)
 
 
 @app.get("/health", tags=["health"])
-async def healthcheck():
+async def healthcheck() -> dict[str, str]:
     return {
         "status": "healthy",
         "app": "BazaarFlow",

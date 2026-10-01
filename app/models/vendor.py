@@ -1,9 +1,14 @@
 """Vendor ORM model � one vendor = one WhatsApp Business account."""
 from __future__ import annotations
-from sqlalchemy import String, ForeignKey, JSON
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from typing import Any
+
+from sqlalchemy import JSON, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column
+
 from app.core.database import Base
 from app.models.common import BaseModelMixin
+
 
 class Vendor(BaseModelMixin, Base):
     __tablename__ = "vendors"
@@ -12,4 +17,4 @@ class Vendor(BaseModelMixin, Base):
     phone_number_id: Mapped[str] = mapped_column(String(100), nullable=True)
     waba_id: Mapped[str] = mapped_column(String(100), nullable=True)
     access_token: Mapped[str] = mapped_column(String(512), nullable=True)
-    settings: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
+    settings: Mapped[dict[str, Any]] = mapped_column(JSON, default=dict, nullable=False)

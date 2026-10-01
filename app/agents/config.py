@@ -4,8 +4,9 @@ All agents MUST import from here — never create their own client.
 """
 from __future__ import annotations
 
-from app.core.settings import settings
 from openai import AsyncOpenAI
+
+from app.core.settings import settings
 
 # Build a client lazily so import does not fail when GEMINI_API_KEY is unset.
 _gemini_client: AsyncOpenAI | None = None

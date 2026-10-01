@@ -8,8 +8,8 @@ as well as any structured data you'd like to log or inspect.
 
 from __future__ import annotations
 
-from typing import Any, Dict, Optional
 import logging
+from typing import Any, Dict, Optional
 
 from app.repositories.json_store import JsonStore
 

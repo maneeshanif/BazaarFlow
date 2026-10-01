@@ -12,6 +12,7 @@ from typing import Awaitable, Callable
 from fastapi import Request, Response
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.types import ASGIApp
 
 # {key: [(timestamp), ...]}
 _windows: dict[str, list[float]] = defaultdict(list)
@@ -24,7 +25,7 @@ _WINDOW = 60  # seconds
 class RateLimiterMiddleware(BaseHTTPMiddleware):
     """Per-IP sliding-window rate limiter."""
 
-    def __init__(self, app, limit: int = _LIMIT, window: int = _WINDOW) -> None:
+    def __init__(self, app: ASGIApp, limit: int = _LIMIT, window: int = _WINDOW) -> None:
         super().__init__(app)
         self.limit = limit
         self.window = window

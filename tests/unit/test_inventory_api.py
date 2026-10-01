@@ -1,19 +1,13 @@
 """Test inventory management API endpoints."""
-import sys
-from pathlib import Path
-from types import SimpleNamespace
 import importlib
+from types import SimpleNamespace
 
 import pytest
 from fastapi.testclient import TestClient
 
-HERE = Path(__file__).resolve().parent
-BACKEND_DIR = HERE.parent
-sys.path.insert(0, str(BACKEND_DIR))
+import app.main as app_module
 
-import app as app_module
-
-chat_service_module = importlib.import_module("services.chat_service")
+chat_service_module = importlib.import_module("app.services.chat_service")
 
 
 class DummyResp:
@@ -26,10 +20,6 @@ class DummyWA:
         return DummyResp()
 
 
-@pytest.fixture(autouse=True)
-def patch_wa(monkeypatch):
-    monkeypatch.setattr(app_module, "wa", DummyWA())
-
 
 def test_inventory_chat_endpoint(monkeypatch):
     async def fake_run(*args, **kwargs):
@@ -37,7 +27,7 @@ def test_inventory_chat_endpoint(monkeypatch):
 
     monkeypatch.setattr(chat_service_module.Runner, "run", fake_run)
 
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
 
     payload = {"message": "Show low stock"}
 
@@ -52,7 +42,7 @@ def test_inventory_chat_endpoint(monkeypatch):
 
 def test_get_all_inventory():
     """Test GET /api/inventory - should return all items."""
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
     response = client.get("/api/inventory")
     assert response.status_code == 200
     data = response.json()
@@ -64,7 +54,7 @@ def test_get_all_inventory():
 
 def test_get_inventory_item():
     """Test GET /api/inventory/{sku} - should return specific item."""
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
     # First get all items to find a valid SKU
     response = client.get("/api/inventory")
     items = response.json()["items"]
@@ -81,14 +71,15 @@ def test_get_inventory_item():
 
 def test_get_nonexistent_item():
     """Test GET /api/inventory/{sku} with invalid SKU - should return 404."""
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
     response = client.get("/api/inventory/INVALID-SKU-123")
     assert response.status_code == 404
 
 
+@pytest.mark.legacy_port
 def test_create_inventory_item():
     """Test POST /api/inventory - should create new item."""
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
     new_item = {
         "sku": "TEST-CREATE-001",
         "name": "Test Product",
@@ -112,7 +103,7 @@ def test_create_inventory_item():
 
 def test_create_duplicate_sku():
     """Test POST /api/inventory with duplicate SKU - should return 400."""
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
     # Get existing SKU
     response = client.get("/api/inventory")
     items = response.json()["items"]
@@ -134,7 +125,7 @@ def test_create_duplicate_sku():
 
 def test_update_inventory_item():
     """Test PUT /api/inventory/{sku} - should update item fields."""
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
     # First create a test item
     test_sku = "TEST-UPDATE-001"
     new_item = {
@@ -166,15 +157,16 @@ def test_update_inventory_item():
 
 def test_update_nonexistent_item():
     """Test PUT /api/inventory/{sku} with invalid SKU - should return 404."""
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
     updates = {"name": "Test"}
     response = client.put("/api/inventory/INVALID-SKU-999", json=updates)
     assert response.status_code == 404
 
 
+@pytest.mark.legacy_port
 def test_add_stock():
     """Test PATCH /api/inventory/{sku}/add-stock - should increment stock."""
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
     # First create a test item
     test_sku = "TEST-STOCK-001"
     new_item = {
@@ -205,7 +197,7 @@ def test_add_stock():
 
 def test_add_stock_invalid_quantity():
     """Test PATCH /api/inventory/{sku}/add-stock with negative quantity - should return 400."""
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
     response = client.get("/api/inventory")
     items = response.json()["items"]
     
@@ -220,7 +212,7 @@ def test_add_stock_invalid_quantity():
 
 def test_add_stock_nonexistent_item():
     """Test PATCH /api/inventory/{sku}/add-stock with invalid SKU - should return 404."""
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
     response = client.patch(
         "/api/inventory/INVALID-SKU-777/add-stock",
         json={"quantity": 10}
@@ -230,7 +222,7 @@ def test_add_stock_nonexistent_item():
 
 def test_delete_inventory_item():
     """Test DELETE /api/inventory/{sku} - should remove existing item."""
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
 
     test_sku = "TEST-DELETE-001"
     new_item = {
@@ -257,6 +249,6 @@ def test_delete_inventory_item():
 
 def test_delete_nonexistent_item():
     """Test DELETE /api/inventory/{sku} with invalid SKU - should return 404."""
-    client = TestClient(app_module.fastapi_app)
+    client = TestClient(app_module.app)
     response = client.delete("/api/inventory/INVALID-SKU-DELETE")
     assert response.status_code == 404

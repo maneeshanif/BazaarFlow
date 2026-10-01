@@ -1,6 +1,7 @@
 """Auth endpoints � login, register, token."""
-from fastapi import APIRouter, Depends, HTTPException, status
-from app.schemas.user import LoginRequest, UserCreate, UserOut, TokenOut
+from fastapi import APIRouter, HTTPException, status
+
+from app.schemas.user import LoginRequest, TokenOut, UserCreate, UserOut
 
 router = APIRouter()
 

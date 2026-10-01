@@ -1,7 +1,10 @@
 """Marketing request/response schemas."""
 from __future__ import annotations
+
 from datetime import datetime
+
 from pydantic import BaseModel
+
 
 class MarketingPostCreate(BaseModel):
     vendor_id: str

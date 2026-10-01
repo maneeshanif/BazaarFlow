@@ -1,9 +1,12 @@
 """InventoryItem ORM model � product catalog per vendor."""
 from __future__ import annotations
-from sqlalchemy import String, ForeignKey, Numeric, Integer, Text
+
+from sqlalchemy import ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
+
 from app.core.database import Base
 from app.models.common import BaseModelMixin
+
 
 class InventoryItem(BaseModelMixin, Base):
     __tablename__ = "inventory_items"

@@ -1,12 +1,13 @@
 """Sales endpoints - exact port of backend/controllers/sales_controller.py"""
 from __future__ import annotations
+
 from typing import Optional
 
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-from app.services.sales_service import save_order, list_orders
+from app.services.sales_service import list_orders, save_order
 
 router = APIRouter()
 

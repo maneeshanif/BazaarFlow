@@ -22,11 +22,12 @@ Routes ported (22 total):
   POST   /accounts/{account_id}/posts/{facebook_post_id}/comments/{comment_id}/reply
 """
 from __future__ import annotations
-from typing import Any, Dict, List, Optional
-import logging
 
-from fastapi import APIRouter, HTTPException, Query
-from pydantic import BaseModel, Field, field_validator
+import logging
+from typing import Any, Dict, List, Optional
+
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 router = APIRouter()

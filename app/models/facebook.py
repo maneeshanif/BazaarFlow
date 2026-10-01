@@ -1,9 +1,12 @@
 """FacebookAccount ORM model � connected FB pages per vendor."""
 from __future__ import annotations
-from sqlalchemy import String, ForeignKey
+
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column
+
 from app.core.database import Base
 from app.models.common import BaseModelMixin
+
 
 class FacebookAccount(BaseModelMixin, Base):
     __tablename__ = "facebook_accounts"

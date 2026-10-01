@@ -1,18 +1,15 @@
 """Inventory agent configuration using the OpenAI Agents SDK."""
 import logging
-import os
 
-from agents import Agent
+from agents import Agent, set_tracing_disabled
+
 from app.agents.model import model
-
-from agents import set_tracing_disabled
-
 from app.agents.tools.inventory_tool import (
-    inventory_stock_overview,
-    inventory_restock_alerts,
     inventory_category_summary,
-    inventory_search_items,
     inventory_customer_catalog,
+    inventory_restock_alerts,
+    inventory_search_items,
+    inventory_stock_overview,
 )
 
 logger = logging.getLogger(__name__)

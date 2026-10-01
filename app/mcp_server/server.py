@@ -3,8 +3,10 @@ BazaarFlow MCP Server
 Provides product lookup and sales tools for the sales agent
 """
 
-from fastmcp import FastMCP
 import logging
+
+from fastmcp import FastMCP
+
 # Configure basic logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -133,10 +135,5 @@ def get_product_by_category(category: str) -> str:
 
 
 if __name__ == "__main__":
-    port = 8001
-    streamable_http_app = mcp_app.streamable_http_app()
-    logger.info(f"Starting {streamable_http_app}")
-    import uvicorn
-    # uvicorn.run(streamable_http_app, host="0.0.0.0", port=port)
-    # start with hot reload
-    uvicorn.run("mood_server:mcp_app.streamable_http_app", host="0.0.0.0", port=port, reload=True)
+    logger.info("Starting BazaarFlow MCP server on port 8001")
+    mcp.run(transport="http", host="0.0.0.0", port=8001)

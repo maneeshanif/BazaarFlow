@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     # -- Application -----------------------------------------------------------
     APP_ENV: str = "development"
     SECRET_KEY: str = "change-me-in-production"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     FRONTEND_ORIGIN: str = "http://localhost:3000"
 
     # -- Database (Supabase PostgreSQL / SQLite fallback) ----------------------

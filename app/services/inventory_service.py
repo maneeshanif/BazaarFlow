@@ -1,11 +1,11 @@
 """Inventory analytics utilities used by the inventory agent."""
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
+from datetime import datetime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
-import json
-from datetime import datetime
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_DATASET = BASE_DIR / "data" / "inventory_items.json"

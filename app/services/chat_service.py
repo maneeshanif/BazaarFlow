@@ -1,15 +1,15 @@
 """Session-aware chat helpers for agent-backed conversations."""
 from __future__ import annotations
 
-from typing import Dict, Optional
 import logging
 import sys
+from typing import Dict, Optional
 
 from agents import Runner, SQLiteSession, enable_verbose_stdout_logging
 
-from app.agents.sales_agent import sales_agent
 from app.agents.finance_agent import finance_agent
 from app.agents.inventory_agent import inventory_agent
+from app.agents.sales_agent import sales_agent
 
 logger = logging.getLogger(__name__)
 

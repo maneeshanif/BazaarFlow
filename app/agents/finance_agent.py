@@ -1,18 +1,17 @@
 from app.core.settings import settings
+
 """Finance agent orchestrated via the OpenAI Agents SDK."""
 import logging
-import os
 
-from agents import Agent, AsyncOpenAI, OpenAIChatCompletionsModel
+from agents import Agent, AsyncOpenAI, OpenAIChatCompletionsModel, set_tracing_disabled
 from dotenv import find_dotenv, load_dotenv
 
 from app.agents.tools.finance_tool import (
-    payment_status_overview,
-    payment_method_breakdown,
-    recent_pending_payments,
     create_customer_order,
+    payment_method_breakdown,
+    payment_status_overview,
+    recent_pending_payments,
 )
-from agents import set_tracing_disabled
 
 logger = logging.getLogger(__name__)
 

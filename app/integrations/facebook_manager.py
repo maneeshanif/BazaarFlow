@@ -5,61 +5,39 @@ Handles Facebook Graph API interactions for posting content
 
 import logging
 import re
-from typing import Optional, Dict, Any, List
-from pathlib import Path
 from collections import Counter
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-try:
-    from .fb_config import FacebookConfig, get_config
-    from .fb_model import (
-        TextPostRequest,
-        ImagePostRequest,
-        VideoPostRequest,
-        FacebookPostResponse,
-        FacebookErrorResponse,
-        PostType,
-        CommentData,
-        CommentsResponse,
-        CommentReplyRequest,
-        CommentReactionRequest,
-        CommentActionResponse,
-        ReactionType,
-        PostInsights,
-        PageInsights,
-        ReactionBreakdown,
-        InsightPeriod,
-    )
-    
-except ImportError:  # pragma: no cover - fallback for script-style imports
-    from config.fb_config import FacebookConfig, get_config
-    from models.fb_model import (
-        TextPostRequest,
-        ImagePostRequest,
-        VideoPostRequest,
-        FacebookPostResponse,
-        FacebookErrorResponse,
-        PostType,
-        CommentData,
-        CommentsResponse,
-        CommentReplyRequest,
-        CommentReactionRequest,
-        CommentActionResponse,
-        ReactionType,
-        PostInsights,
-        PageInsights,
-        ReactionBreakdown,
-        InsightPeriod,
-    )
-    from src.exceptions import (
-        FacebookAPIError,
-        InvalidCredentialsError,
-        PostCreationError,
-        ImageUploadError,
-    )
-
+from app.core.exceptions import (
+    FacebookAPIError,
+    ImageUploadError,
+    InvalidCredentialsError,
+    PostCreationError,
+)
+from app.integrations.fb_config import FacebookConfig, get_config
+from app.integrations.fb_model import (  # noqa: F401 - re-exported for callers
+    CommentActionResponse,
+    CommentData,
+    CommentReactionRequest,
+    CommentReplyRequest,
+    CommentsResponse,
+    FacebookErrorResponse,
+    FacebookPostResponse,
+    ImagePostRequest,
+    InsightPeriod,
+    PageInsights,
+    PostInsights,
+    PostType,
+    ReactionBreakdown,
+    ReactionType,
+    TextPostRequest,
+    VideoPostRequest,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -1065,8 +1043,8 @@ class FacebookManager:
         Returns:
             List of dictionaries with 'keyword' and 'count' keys
         """
-        from collections import Counter
         import re
+        from collections import Counter
         
         # Common stop words to filter out
         stop_words = {

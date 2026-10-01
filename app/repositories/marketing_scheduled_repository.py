@@ -7,14 +7,12 @@ operations needed by the marketing scheduler.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from .json_store import JsonStore
-
-
-from pathlib import Path
 
 _DB_ROOT = Path(__file__).resolve().parent.parent / "db"
 _SCHEDULED_CAMPAIGNS_PATH = _DB_ROOT / "marketing_scheduled_campaigns.json"
@@ -119,14 +117,14 @@ def create_scheduled_campaign(
             current = list(rows or [])
             next_rows: list[Dict[str, Any]] = []
             for existing in current:
-                if existing.get("scheduled_post_id") == scheduled_post_id:
+                if existing.get("scheduled_post_id") == scheduled_post_id:  # noqa: B023 - called immediately in the same iteration
                     continue
                 next_rows.append(existing)
-            row_dict = asdict(record)
+            row_dict = asdict(record)  # noqa: B023 - called immediately in the same iteration
             next_rows.append(row_dict)
             return next_rows, row_dict
 
-        _post_store.update(_upsert_post)
+        _post_store.update(_upsert_post)  # noqa: B023 - invoked immediately in this iteration
         scheduled_posts.append(asdict(record))
 
     return {

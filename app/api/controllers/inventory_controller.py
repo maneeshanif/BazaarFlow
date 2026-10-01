@@ -1,8 +1,10 @@
 """Inventory management API endpoints."""
 from __future__ import annotations
+
+from typing import Optional
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import Optional
 
 from app.services.inventory_service import inventory_analytics_service
 

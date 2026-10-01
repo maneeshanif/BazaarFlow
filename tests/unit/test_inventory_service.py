@@ -1,13 +1,11 @@
-import sys
 from pathlib import Path
 
 import pytest
 
 HERE = Path(__file__).resolve().parent
-BACKEND_DIR = HERE.parent
-sys.path.insert(0, str(BACKEND_DIR))
+BACKEND_DIR = HERE.parents[1] / "app"  # app/data holds the JSON fixtures
 
-from services.inventory_service import InventoryAnalyticsService
+from app.services.inventory_service import InventoryAnalyticsService
 
 
 @pytest.fixture(scope="module")
@@ -16,6 +14,7 @@ def inventory_service():
     return InventoryAnalyticsService(data_path=data_path)
 
 
+@pytest.mark.legacy_port
 def test_stock_health(inventory_service):
     overview = inventory_service.get_stock_health()
 
@@ -35,6 +34,7 @@ def test_stock_health_detail(inventory_service):
     assert "iPhone 15" in in_stock_names
 
 
+@pytest.mark.legacy_port
 def test_category_breakdown(inventory_service):
     breakdown = inventory_service.get_category_breakdown()
 
@@ -48,6 +48,7 @@ def test_category_breakdown(inventory_service):
     assert breakdown["audio"]["total_units"] == 18
 
 
+@pytest.mark.legacy_port
 def test_restock_queue(inventory_service):
     queue = inventory_service.get_restock_queue(limit=3)
 

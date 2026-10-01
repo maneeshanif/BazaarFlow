@@ -1,5 +1,6 @@
 """WhatsApp webhook � exact port of backend/controllers/webhook_controller.py"""
 from __future__ import annotations
+
 import logging
 
 from fastapi import APIRouter, Request

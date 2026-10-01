@@ -5,8 +5,8 @@ from typing import Any, Dict
 import httpx  # type: ignore[import-not-found]
 import pytest  # type: ignore[import-not-found]
 
-from backend.app import app
-from backend.lib import repository
+from app.main import app
+from app.repositories import repository
 
 
 @pytest.fixture(autouse=True)
@@ -16,6 +16,7 @@ def _set_db_root(tmp_path):
 
 
 @pytest.mark.asyncio
+@pytest.mark.legacy_port
 async def test_inbound_webhook_process(monkeypatch):
     vendor = repository.upsert_vendor(
         phone_number_id="12345",
@@ -30,8 +31,8 @@ async def test_inbound_webhook_process(monkeypatch):
         fake_send_text_message.called_with = kwargs  # type: ignore[attr-defined]
         return {"messages": [{"id": "wamid.reply"}]}
 
-    monkeypatch.setattr("backend.runner.runner_hook", fake_runner_hook)
-    monkeypatch.setattr("backend.services.whatsapp.send_text_message", fake_send_text_message)
+    monkeypatch.setattr("app.runner.runner_hook", fake_runner_hook)
+    monkeypatch.setattr("app.services.whatsapp.send_text_message", fake_send_text_message)
 
     payload = {
         "entry": [
@@ -62,7 +63,7 @@ async def test_inbound_webhook_process(monkeypatch):
         ]
     }
 
-    async with httpx.AsyncClient(app=app, base_url="http://test") as client:
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
         response = await client.post("/webhook", json=payload)
 
     assert response.status_code == 200
@@ -70,12 +71,13 @@ async def test_inbound_webhook_process(monkeypatch):
     assert len(messages) == 2  # inbound + outbound
     assert messages[0]["direction"] == "inbound"
     assert messages[1]["direction"] == "outbound"
-    assert getattr(fake_send_text_message, "called_with")["body"] == "Hello back!"
+    assert fake_send_text_message.called_with["body"] == "Hello back!"
 
 
 @pytest.mark.asyncio
+@pytest.mark.legacy_port
 async def test_webhook_verification():
-    async with httpx.AsyncClient(app=app, base_url="http://test") as client:
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get(
             "/webhook",
             params={"hub.mode": "subscribe", "hub.verify_token": "test123", "hub.challenge": "abc"},

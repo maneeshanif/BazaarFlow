@@ -1,40 +1,40 @@
 from __future__ import annotations
+
 from app.core.settings import settings
+
 """Domain logic for marketing automation flows."""
 
 
 import logging
-import os
 import re
 from datetime import datetime, timezone
 from typing import Any, Awaitable, Callable, Dict, List, Optional
+from zoneinfo import ZoneInfo
 
 import requests
 
-from zoneinfo import ZoneInfo
-
-from app.integrations.fb_config import FacebookConfig
-from app.integrations.facebook_manager import FacebookManager
-from app.integrations.fb_model import CommentReplyRequest, ImagePostRequest, PostInsights, TextPostRequest
 from app.core.exceptions import FacebookAPIError, PostCreationError
-
+from app.integrations.facebook_manager import FacebookManager
+from app.integrations.fb_config import FacebookConfig
+from app.integrations.fb_model import CommentReplyRequest, ImagePostRequest, PostInsights, TextPostRequest
 from app.repositories import (
     delete_facebook_account,
     delete_marketing_post,
+    get_comment_reply,
     get_facebook_account,
     get_schedule,
     list_facebook_accounts,
     list_marketing_posts,
     mark_schedule_triggered,
-    get_comment_reply,
     record_comment_reply,
     record_marketing_post,
     save_schedule,
     update_post_insights,
     upsert_facebook_account,
+    user_repository,
 )
 from app.repositories import marketing_scheduled_repository as scheduled_repo
-from app.repositories import user_repository
+
 from .inventory_service import inventory_analytics_service
 from .sales_service import list_orders
 
