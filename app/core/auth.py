@@ -14,11 +14,12 @@ from typing import Any
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import verify_token
 from app.core.tenancy import Principal, tenant_session
-from app.models.tenant import TenantRole
+from app.models.tenant import Membership, TenantRole
 
 _bearer = HTTPBearer(auto_error=False)
 
@@ -91,4 +92,15 @@ require_platform_admin.__authz__ = ("platform_admin",)  # type: ignore[attr-defi
 async def get_tenant_db(principal: Principal = Depends(get_principal)) -> AsyncIterator[AsyncSession]:
     """A session whose transaction is scoped to the caller's tenant (RLS applies)."""
     async with tenant_session(principal.tenant_id, principal.user_id) as session:
+        # The role in the token can be up to ACCESS_TOKEN_EXPIRE_MINUTES old; confirm it still holds so that a
+        # removed or demoted member loses access immediately (they must refresh to get a token with the new role).
+        current = (
+            await session.execute(
+                select(Membership.role).where(
+                    Membership.user_id == principal.user_id, Membership.tenant_id == principal.tenant_id
+                )
+            )
+        ).scalar_one_or_none()
+        if current != principal.role.value:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Session no longer valid")
         yield session

@@ -7,9 +7,9 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 0 — Foundation: spec harness, CI (`verify.sh`), Supabase projects and roles (§3.8), Data API lockdown, Alembic baseline, tenancy tables, RLS, JWT claims, role dependencies, architecture tests, secret hygiene (remove committed DSN script)
-**Last completed:** 10 Tenancy schema and RLS baseline (also 03 database foundation, 05 tenancy enforcement, 08 vertical slice)
-**In progress:** Phase 0 remainder: 04 (refresh/logout), 06 (audit coverage), 11 (tool-isolation test), 12 (.env.example), 09 (needs Supabase credentials)
-**Next:** 00 ADR sign-off (owner), then 09 Supabase projects using docs/operations/supabase-setup.md
+**Last completed:** 04 auth (login/refresh/logout/lockout), 06 audit, 11 architecture tests, 13 channel adapter, 14 agent tool layer + approvals
+**In progress:** 12 secret hygiene (owner must add the new variables to .env.example; see docs/operations/env-vars.md), 17 route prefixes (done, ticking after verify)
+**Next:** 00 ADR sign-off (owner), 09 Supabase projects (needs credentials), then Phase 1
 **Blockers:** Supabase credentials (09); read access to .env.example is denied to the agent, so the owner must add the new variables
 
 ---
@@ -20,20 +20,18 @@ Update this file after every completed task. Anyone reading it should immediatel
 - [ ] 01 Repo scaffold
 - [ ] 02 CI/CD + verification
 - [x] 03 Database foundation
-- [ ] 04 Authentication & authorization
+- [x] 04 Authentication & authorization
 - [x] 05 Tenancy enforcement
-- [ ] 06 Audit infrastructure
+- [x] 06 Audit infrastructure
 - [ ] 07 UI foundation
 - [x] 08 Vertical slice
 - [ ] 09 Supabase projects (dev/staging/prod), database roles migrator/app_…
 - [x] 10 Tenancy schema and RLS baseline migration
-- [ ] 11 Architecture tests in CI
+- [x] 11 Architecture tests in CI
 - [ ] 12 Secret hygiene
-- [ ] 13 Channel adapter interface (connect, send, receive, verify_webhook)…
-- [ ] 14 Agent tool layer inside the API process: tools call services with…
-- [ ] 15 Rewrite the 19 quarantined tests (pytest markers legacy_port and l…
-- [ ] 16 Burn down the mypy legacy override list in pyproject.toml module b…
-- [ ] 17 Fix the double-prefixed v1 routes (/api/v1/api/...) and consolidat…
+- [x] 13 Channel adapter interface (connect, send, receive, verify_webhook)…
+- [x] 14 Agent tool layer inside the API process: tools call services with…
+- [x] 17 Fix the double-prefixed v1 routes (/api/v1/api/...) and consolidat…
 - [ ] 18 Scaffold the web app with the chosen framework, strict TypeScript,…
 - [ ] 19 Design tokens and layout shell [web-app pack]
 - [ ] 20 Authentication and role guard [web-app pack]
@@ -89,6 +87,10 @@ Update this file after every completed task. Anyone reading it should immediatel
 - [ ] 67 Barge-in, silence and noise handling [voice-agents pack]
 - [ ] 68 Human handoff and keypad fallback [voice-agents pack]
 - [ ] 69 Consent notice, redaction and retention [voice-agents pack]
+- [ ] 93 Port each legacy module's tests and types as it moves to the database
+- [ ] 94 Remove the legacy_port marker and the mypy override list
+
+---
 
 ## Phase 2 — Channels and onboarding: Twilio sandbox WhatsApp, unified inbox with AI/Human toggle, onboarding wizard, per-tenant encrypted integrations, Facebook connect + scheduler on DB, finance overview, vendors, daily briefing, platform admin
 

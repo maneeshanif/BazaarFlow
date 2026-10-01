@@ -9,10 +9,10 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.audit import record_audit
 from app.core.auth import ALL_ROLES, MANAGER_UP, get_tenant_db, require_role
 from app.core.tenancy import Principal
 from app.crud import crud_customer
-from app.models.tenant import AuditLog
 from app.schemas.customer import CustomerCreate, CustomerOut
 
 router = APIRouter()
@@ -38,15 +38,13 @@ async def create_customer(
     customer = await crud_customer.upsert_customer(
         db, principal.tenant_id, body.phone, name=body.name, email=body.email, address=body.address
     )
-    db.add(
-        AuditLog(
-            tenant_id=principal.tenant_id,
-            actor_type="user",
-            actor_id=str(principal.user_id),
-            action="customer.created",
-            entity="customer",
-            entity_id=str(customer.id),
-        )
+    record_audit(
+        db,
+        "customer.created",
+        tenant_id=principal.tenant_id,
+        actor_id=principal.user_id,
+        entity="customer",
+        entity_id=customer.id,
     )
     return CustomerOut.model_validate(customer)
 
@@ -68,13 +66,11 @@ async def delete_customer(
     if target is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Customer not found")
     await db.delete(target)
-    db.add(
-        AuditLog(
-            tenant_id=principal.tenant_id,
-            actor_type="user",
-            actor_id=str(principal.user_id),
-            action="customer.deleted",
-            entity="customer",
-            entity_id=customer_id,
-        )
+    record_audit(
+        db,
+        "customer.deleted",
+        tenant_id=principal.tenant_id,
+        actor_id=principal.user_id,
+        entity="customer",
+        entity_id=customer_id,
     )

@@ -20,6 +20,7 @@ from tests.pg.conftest import bearer, register
 pytestmark = pytest.mark.pg
 
 TENANT_TABLES = [
+    "agent_actions",
     "customers",
     "facebook_accounts",
     "inventory_items",

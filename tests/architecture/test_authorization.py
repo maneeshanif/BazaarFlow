@@ -59,14 +59,23 @@ def test_only_expected_routes_are_public() -> None:
     allowed_prefixes = (
         "/health",
         "/api/health",
-        "/api/v1/api/health",
         "/auth/register",
         "/auth/login",
         "/api/v1/auth/register",
         "/api/v1/auth/login",
+        "/api/v1/auth/refresh",
+        "/api/v1/auth/logout",
+        "/auth/refresh",
+        "/auth/logout",
         "/webhook",
         "/vapi/webhook",
-        "/api/v1/vapi/webhook",
     )
     unexpected = [p for p in public if not p.startswith(allowed_prefixes)]
     assert not unexpected, f"Unexpected public routes: {unexpected}"
+
+
+def test_versioned_routes_are_not_double_prefixed_and_only_real_v1_routers_are_mounted() -> None:
+    paths = {path for path, _methods, _dep in _all_routes()}
+    assert not [p for p in paths if p.startswith("/api/v1/api")], "legacy routers must not be mounted under /api/v1"
+    v1_areas = {p.split("/")[3] for p in paths if p.startswith("/api/v1/")}
+    assert v1_areas <= {"auth", "customers"}, f"unexpected /api/v1 areas: {v1_areas}"

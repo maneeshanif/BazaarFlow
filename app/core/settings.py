@@ -39,6 +39,9 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     SECRET_KEY: str = ""
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 14
+    LOGIN_MAX_FAILURES: int = 5
+    LOGIN_LOCKOUT_MINUTES: int = 15
     FRONTEND_ORIGIN: str = "http://localhost:3000"
 
     # -- Database (Supabase PostgreSQL / SQLite fallback) ----------------------

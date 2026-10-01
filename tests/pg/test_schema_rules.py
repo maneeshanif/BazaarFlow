@@ -20,6 +20,8 @@ GLOBAL_TABLES = {
     "users": "identity is global; tenants reach users through memberships",
     "tenants": "the isolation boundary itself; RLS is keyed on its own id",
     "alembic_version": "migration bookkeeping",
+    "refresh_tokens": "auth bookkeeping read before a tenant is known; token stored as a SHA-256 hash",
+    "login_attempts": "lockout counters keyed by a hash of the e-mail, read before a tenant is known",
 }
 
 
@@ -50,7 +52,7 @@ async def test_every_table_has_forced_rls_and_a_policy(admin_conn: asyncpg.Conne
     assert set(Base.metadata.tables) <= set(by_name), "model tables missing from the migrated database"
     bad = []
     for name in Base.metadata.tables:
-        if name == "users":
+        if name in {"users", "refresh_tokens", "login_attempts"}:
             continue
         r = by_name[name]
         if not (r["relrowsecurity"] and r["relforcerowsecurity"] and r["policies"] >= 1):

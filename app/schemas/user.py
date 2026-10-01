@@ -28,6 +28,10 @@ class LoginRequest(BaseModel):
     tenant_id: UUID | None = None
 
 
+class RefreshRequest(BaseModel):
+    refresh_token: str = Field(min_length=20, max_length=200)
+
+
 class SwitchTenantRequest(BaseModel):
     tenant_id: UUID
 
@@ -40,6 +44,7 @@ class TenantMembershipOut(BaseModel):
 
 class TokenOut(BaseModel):
     access_token: str
+    refresh_token: str
     token_type: str = "bearer"
     tenant_id: UUID
     role: TenantRole
