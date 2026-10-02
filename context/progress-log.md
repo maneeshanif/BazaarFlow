@@ -67,3 +67,8 @@ The owner pointed out that Phase 0 was not being built task by task. Audit of wh
 - Guards: /dashboard any member; marketing and support owner+manager; settings owner. Sign-in honours `next` (open-redirect safe).
 - The real-stack e2e (Postgres, API, Next, Playwright) caught a tight refresh loop on a stale build that tripped refresh-token reuse detection and logged the user out; fixed with the 5 s floor. One unexplained 33 s stall in a single run did not recur (8/8 on rerun).
 - Caveat: two tabs refreshing at the same moment can trigger reuse detection and sign one out (safe direction). Legacy pages still call the shared JSON store routes (/api/sales etc.); they now carry the token but are not tenant-scoped until rebuilt in phase 1.
+
+## 2026-10-02 - Task 25 (OpenAPI contract and generated client)
+- `uv run python -m app.cli.export_openapi` writes contracts/openapi.json (sorted, deterministic) for the production surface only; legacy JSON-store routes are excluded. `cd frontend && npm run gen:api` generates lib/api/schema.d.ts with openapi-typescript. Two tests fail on drift (contract vs code; TS vs contract, byte for byte). Mutation: widening a password max_length without regenerating fails the suite.
+- Observation: the contract still lists /auth/* (unprefixed duplicates of /api/v1/auth/*), /webhook, /webhook/test and /vapi/webhook. The unprefixed /auth/* copies look like leftovers; remove when the web client no longer needs them (the web uses /api/v1 via the BFF).
+- Not yet done: no web code consumes the generated types (pages still call legacy routes); first consumer arrives with the first rebuilt page in phase 1.

@@ -14,7 +14,8 @@
     "check:tokens": "node scripts/check-tokens.mjs",
     "test:e2e": "playwright test",
     "format:check": "prettier --check components/app components/form lib/auth \"app/api/auth\" \"app/(marketing)/sign-in\" lib/format.ts lib/navigation.ts lib/status.ts tests/ui e2e scripts/check-tokens.mjs \"app/(app)\" vitest.config.ts playwright.config.ts",
-    "format": "prettier --write components/app components/form lib/auth \"app/api/auth\" \"app/(marketing)/sign-in\" lib/format.ts lib/navigation.ts lib/status.ts tests/ui e2e scripts/check-tokens.mjs \"app/(app)\" vitest.config.ts playwright.config.ts"
+    "format": "prettier --write components/app components/form lib/auth \"app/api/auth\" \"app/(marketing)/sign-in\" lib/format.ts lib/navigation.ts lib/status.ts tests/ui e2e scripts/check-tokens.mjs \"app/(app)\" vitest.config.ts playwright.config.ts",
+    "gen:api": "openapi-typescript ../contracts/openapi.json -o lib/api/schema.d.ts"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",
@@ -65,6 +66,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.0.0",
     "jsdom": "^29.1.1",
+    "openapi-typescript": "^7.13.0",
     "postcss": "^8.4.31",
     "prettier": "^3.9.9",
     "tailwindcss": "^3.3.0",

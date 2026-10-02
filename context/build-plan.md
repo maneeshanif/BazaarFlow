@@ -121,8 +121,9 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
   - Acceptance: Login works
   - Acceptance: a role without access gets 403
   - Acceptance: one test per role
-- [ ] 25 OpenAPI contract and generated client with a drift check [backend-api pack]
-  - Acceptance: The drift check fails when an endpoint changes without regeneration
+- [x] 25 OpenAPI contract and generated client with a drift check [backend-api pack]
+  - Acceptance: the drift check fails when an endpoint changes without regeneration (tests/architecture/test_openapi_contract.py; mutation-checked)
+  - Acceptance: TypeScript client types are generated from contracts/openapi.json and checked byte for byte
 - [ ] 26 Vendor accounts, sandbox access and credentials in the secret manager [integrations pack]
   - Acceptance: A sandbox call succeeds from the dev environment
   - Acceptance: no credential is in the repository
