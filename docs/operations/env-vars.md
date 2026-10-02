@@ -5,8 +5,9 @@ prepared this change is not allowed to read that file, so the owner should add t
 
 | Variable | Used by | Notes |
 | --- | --- | --- |
-| `APP_ENV` | API | `development`, `test`, `staging`, `production`. In `staging`/`production` the API refuses to start without `SECRET_KEY`. |
-| `SECRET_KEY` | API | JWT signing key. Long random string. *(behaviour changed: no insecure default outside development)* |
+| `APP_ENV` | API | `development`, `test`, `staging`, `production` |
+| `SECRET_KEY` | API | JWT signing key. Long random string. **The API refuses to start without it** (only `APP_ENV=test` gets a throwaway key) |
+| `ALLOW_INSECURE_DEV_SECRET` | API | *new*. Local development only: `true` lets the API start without `SECRET_KEY`. Ignored in `production`/`staging` |
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | API | *new*, default 30 |
 | `REFRESH_TOKEN_EXPIRE_DAYS` | API | *new*, default 14 |
 | `LOGIN_MAX_FAILURES` / `LOGIN_LOCKOUT_MINUTES` | API | *new*, defaults 5 / 15 |

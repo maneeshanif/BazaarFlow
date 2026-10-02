@@ -38,15 +38,14 @@ The second migration enables and forces row-level security on every business tab
 from Supabase's `anon` and `authenticated` roles (the Data API roles). Never edit the schema in the Supabase
 dashboard: `alembic check` in CI will flag the drift.
 
-## 5. Verify the lockdown
-In the SQL editor:
-```sql
-SELECT relname, relrowsecurity, relforcerowsecurity FROM pg_class
- WHERE relkind = 'r' AND relnamespace = 'public'::regnamespace ORDER BY 1;   -- all true except users, alembic_version
-SELECT has_table_privilege('anon', 'public.customers', 'SELECT');             -- false
+## 5. Verify the lockdown (automated)
+```bash
+uv run python -m app.cli.check_database --admin-url "postgresql://postgres:<pw>@db.<ref>.supabase.co:5432/postgres"
 ```
-Also run Supabase's security advisor and fix any finding before launch. In project settings, disable the
-Data API if the option is available (the app never uses it).
+It checks the three roles (no superuser / bypassrls), that every business table has ENABLE + FORCE row level
+security and a policy, that `anon` and `authenticated` have no privileges, and that `audit_logs` is append-only.
+It exits 1 and lists every problem otherwise. Also run Supabase's security advisor and fix any finding before
+launch; in project settings, disable the Data API if the option is available (the app never uses it).
 
 ## 6. Seed the demo tenant (optional)
 ```bash

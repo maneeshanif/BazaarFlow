@@ -18,8 +18,9 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.security import verify_token
-from app.core.tenancy import Principal, tenant_session
+from app.core.tenancy import Principal, anonymous_session, tenant_session
 from app.models.tenant import Membership, TenantRole
+from app.models.user import User
 
 _bearer = HTTPBearer(auto_error=False)
 
@@ -63,7 +64,32 @@ async def get_principal(
         claims = verify_token(credentials.credentials)
     except jwt.PyJWTError as exc:
         raise _UNAUTHENTICATED from exc
-    return _principal_from_claims(claims)
+    principal = _principal_from_claims(claims)
+    await _confirm_still_valid(principal)
+    return principal
+
+
+async def _confirm_still_valid(principal: Principal) -> None:
+    """The token can be up to ACCESS_TOKEN_EXPIRE_MINUTES old: confirm the database still agrees.
+
+    A deactivated user, a removed or demoted member, or a platform-admin flag that was withdrawn all lose access on
+    the very next request, on every route (they must refresh to get a token that reflects the new state).
+    """
+    async with anonymous_session(user_id=principal.user_id) as session:
+        row = (
+            await session.execute(
+                select(Membership.role, User.is_active, User.is_platform_admin)
+                .join(User, User.id == Membership.user_id)
+                .where(Membership.user_id == principal.user_id, Membership.tenant_id == principal.tenant_id)
+            )
+        ).first()
+    if (
+        row is None
+        or not row.is_active
+        or row.role != principal.role.value
+        or bool(row.is_platform_admin) != principal.is_platform_admin
+    ):
+        raise _UNAUTHENTICATED
 
 
 def require_role(*roles: TenantRole) -> Callable[..., Awaitable[Principal]]:
@@ -90,17 +116,10 @@ require_platform_admin.__authz__ = ("platform_admin",)  # type: ignore[attr-defi
 
 
 async def get_tenant_db(principal: Principal = Depends(get_principal)) -> AsyncIterator[AsyncSession]:
-    """A session whose transaction is scoped to the caller's tenant (RLS applies)."""
+    """A session whose transaction is scoped to the caller's tenant (RLS applies).
+
+    Use it as ``Depends(get_tenant_db, scope="function")`` so the transaction commits before the response is
+    sent; an architecture test enforces this.
+    """
     async with tenant_session(principal.tenant_id, principal.user_id) as session:
-        # The role in the token can be up to ACCESS_TOKEN_EXPIRE_MINUTES old; confirm it still holds so that a
-        # removed or demoted member loses access immediately (they must refresh to get a token with the new role).
-        current = (
-            await session.execute(
-                select(Membership.role).where(
-                    Membership.user_id == principal.user_id, Membership.tenant_id == principal.tenant_id
-                )
-            )
-        ).scalar_one_or_none()
-        if current != principal.role.value:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Session no longer valid")
         yield session

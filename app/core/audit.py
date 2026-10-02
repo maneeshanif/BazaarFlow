@@ -7,6 +7,7 @@ from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.request_context import current_request_id
 from app.models.tenant import AuditLog
 
 _SENSITIVE_PARTS = ("password", "token", "secret", "authorization", "credential", "api_key", "apikey")
@@ -53,7 +54,7 @@ def record_audit(
         entity_id=str(entity_id) if entity_id is not None else None,
         before_json=mask_sensitive(before) if before is not None else None,
         after_json=mask_sensitive(after) if after is not None else None,
-        request_id=request_id,
+        request_id=request_id or current_request_id(),
     )
     session.add(row)
     return row

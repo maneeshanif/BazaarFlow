@@ -53,38 +53,48 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [x] 03 Database foundation — PostgreSQL (Supabase), SQLite for local tests only + Alembic (async); first migration; naming and key conventions from PRD §12.2; migration check in `verify.sh`
   - Acceptance: The first migration applies to an empty database and the migration check in `verify.sh` passes
   - Acceptance: Table, column and key names follow PRD §12.2
-- [ ] 04 Authentication & authorization — login/refresh/logout, roles and permission matrix from PRD §14.2, enforced in the API
+- [x] 04 Authentication & authorization — login/refresh/logout, roles and permission matrix from PRD §14.2, enforced in the API
   - Acceptance: Login, refresh and logout work; a wrong password and an expired token are rejected
   - Acceptance: A user without the role gets 403 on a protected endpoint (test per role in PRD §14.2)
-- [ ] 05 Tenancy enforcement — central scoping filter, deny-by-default, cross-tenant access tests (PRD §3.5)
+- [x] 05 Tenancy enforcement — central scoping filter, deny-by-default, cross-tenant access tests (PRD §3.5)
   - Acceptance: A test proves tenant A cannot read or write tenant B's rows
   - Acceptance: A request with no tenant context returns zero rows (deny by default)
-- [ ] 06 Audit infrastructure — audit rows for the actions in PRD §14.1, sensitive-field masking, test that each audited action writes a row
-  - Acceptance: Each audited action in PRD §14.1 writes exactly one audit row (one test per action)
+- [x] 06 Audit infrastructure — audit rows for the actions in PRD §14.1, sensitive-field masking, test that each audited action writes a row
+  - Acceptance: Each audited action in PRD §14.1 writes exactly one audit row (one test per action); §14.1 actions whose feature does not exist yet are listed with their phase in tests/pg/test_audit_actions.py (NOT_YET_BUILT) and get their test in the task that builds them
   - Acceptance: Sensitive fields are masked in the stored row
 - [ ] 07 UI foundation — design tokens, layout shell, the mandated form layout (PRD §5.1), reusable grid/form/status components, `context/ui-registry.md` started
   - Acceptance: Design tokens are the only source of colour, type and spacing; a lint or grep check finds no hard-coded values
   - Acceptance: The layout shell renders at mobile and desktop widths without horizontal scroll
-- [ ] 08 Vertical slice — the smallest end-to-end feature across every layer, to prove the pattern later tasks copy
+- [x] 08 Vertical slice — the smallest end-to-end feature across every layer, to prove the pattern later tasks copy
   - Acceptance: The smallest feature works end to end across every layer with one automated test
-  - Acceptance: `scripts/verify.sh` passes and the pattern is written down for later tasks to copy
+  - Acceptance: `scripts/verify.sh` passes and the pattern is written down for later tasks to copy (docs/design/vertical-slice-pattern.md)
 - [ ] 09 Supabase projects (dev/staging/prod), database roles migrator/app_user/report_ro, pooler and direct connection strings, Data API lockdown — PRD §3.8
-  - Acceptance: The done-condition for this task is written here and has an automated check
-- [ ] 10 Tenancy schema and RLS baseline migration — tenants, memberships, tenant_id on every table, ENABLE+FORCE RLS, per-request app.tenant_id — PRD §3.5 and §3.8
-  - Acceptance: The done-condition for this task is written here and has an automated check
-- [ ] 11 Architecture tests in CI — every table has tenant_id+RLS and no anon grants, every route has an authorization decision, agent tools take no tenant argument — PRD §3.7 and §19
-  - Acceptance: The done-condition for this task is written here and has an automated check
+  - Acceptance: `docs/operations/supabase-setup.md` describes the dev/staging/prod setup, role provisioning and both connection strings
+  - Acceptance: `app.cli.provision_db` creates migrator/app_user/report_ro and `app.cli.check_database` passes on a provisioned, migrated database (tests/pg/test_check_database.py)
+  - Acceptance: `uv run python -m app.cli.check_database --admin-url <dev project>` passes against the real Supabase dev project (needs credentials)
+- [x] 10 Tenancy schema and RLS baseline migration — tenants, memberships, tenant_id on every table, ENABLE+FORCE RLS, per-request app.tenant_id — PRD §3.5 and §3.8
+  - Acceptance: Migrations create tenants and memberships and a tenant_id column on every business table (tests/architecture/test_data_conventions.py, tests/pg/test_schema_rules.py)
+  - Acceptance: Every business table has ENABLE + FORCE row level security with a fail-closed policy keyed on app.tenant_id; migrations apply, match the models and round-trip (`verify.sh --slow --lane api-db`)
+  - Acceptance: The API sets app.tenant_id per request transaction (tests/pg/test_rls.py: no context sees nothing, a tenant sees only its own rows)
+- [x] 11 Architecture tests in CI — every table has tenant_id+RLS and no anon grants, every route has an authorization decision, agent tools take no tenant argument — PRD §3.7 and §19
+  - Acceptance: Every table has tenant_id + forced RLS + a policy, and anon/authenticated have no grants (tests/pg/test_schema_rules.py)
+  - Acceptance: Every route has an explicit authorization decision and only the expected routes are public (tests/architecture/test_authorization.py)
+  - Acceptance: No agent tool takes a tenant/user/role argument (tests/architecture/test_agent_tools.py) and these tests run in the `api` CI lane (verify.sh with Docker)
 - [ ] 12 Secret hygiene — remove default SECRET_KEY fallback in settings (fail fast when unset outside tests), .env.example complete, gitleaks passing — PRD RK-06
-  - Acceptance: The done-condition for this task is written here and has an automated check
-- [ ] 13 Channel adapter interface (connect, send, receive, verify_webhook) with a fake adapter for tests — PRD §3.7 constraint 11
-  - Acceptance: The done-condition for this task is written here and has an automated check
-- [ ] 14 Agent tool layer inside the API process: tools call services with a tenant-scoped context, approvals via agent_actions — PRD §36.2-36.4
-  - Acceptance: The done-condition for this task is written here and has an automated check
+  - Acceptance: The API refuses to start without SECRET_KEY unless APP_ENV=test or ALLOW_INSECURE_DEV_SECRET is set outside production (tests/unit/test_settings_secret.py)
+  - Acceptance: `.env.example` lists every variable in docs/operations/env-vars.md with an empty value
+  - Acceptance: gitleaks passes on the full history in CI and locally
+- [x] 13 Channel adapter interface (connect, send, receive, verify_webhook) with a fake adapter for tests — PRD §3.7 constraint 11
+  - Acceptance: A ChannelAdapter interface with connect, send, receive and verify_webhook exists, with an in-memory fake that passes the interface check, idempotent sends and signature verification (tests/unit/test_audit_and_channels.py)
+  - Acceptance: Provider SDKs and hard-coded provider hosts appear only in app/integrations, apart from a shrink-only legacy list (tests/architecture/test_provider_isolation.py)
+- [x] 14 Agent tool layer inside the API process: tools call services with a tenant-scoped context, approvals via agent_actions — PRD §36.2-36.4
+  - Acceptance: Agent tools receive tenant, user and role from a server-side ToolContext; the catalog rejects tools that take them as arguments or write without an approval level (tests/architecture/test_agent_tools.py)
+  - Acceptance: Agent writes go through agent_actions: request, approve/reject, execute exactly once with the stored payload hash, expire, all audited and tenant-isolated (tests/pg/test_approvals.py, tests/pg/test_review_fixes.py)
 - [ ] 15 Rewrite the 19 quarantined tests (pytest markers legacy_port and live) against app.* and tenant-scoped data, then remove both markers from addopts
   - Acceptance: The done-condition for this task is written here and has an automated check
 - [ ] 16 Burn down the mypy legacy override list in pyproject.toml module by module until strict passes everywhere
   - Acceptance: The done-condition for this task is written here and has an automated check
-- [ ] 17 Fix the double-prefixed v1 routes (/api/v1/api/...) and consolidate router mounting in app/api/routers
+- [x] 17 Fix the double-prefixed v1 routes (/api/v1/api/...) and consolidate router mounting in app/api/routers
   - Acceptance: The done-condition for this task is written here and has an automated check
 - [ ] 18 Scaffold the web app with the chosen framework, strict TypeScript, lint and format [web-app pack]
   - Acceptance: Fresh clone installs and builds

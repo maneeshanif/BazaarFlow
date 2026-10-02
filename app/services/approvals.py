@@ -37,12 +37,12 @@ def _now() -> datetime:
     return datetime.now(timezone.utc)
 
 
-async def _get(ctx: ToolContext, action_id: uuid.UUID) -> AgentAction:
-    action = (
-        await ctx.session.execute(
-            select(AgentAction).where(AgentAction.tenant_id == ctx.tenant_id, AgentAction.id == action_id)
-        )
-    ).scalar_one_or_none()
+async def _get(ctx: ToolContext, action_id: uuid.UUID, *, lock: bool = False) -> AgentAction:
+    stmt = select(AgentAction).where(AgentAction.tenant_id == ctx.tenant_id, AgentAction.id == action_id)
+    if lock:
+        # FOR UPDATE serialises concurrent decide/execute calls on the same action (no double execution)
+        stmt = stmt.with_for_update()
+    action = (await ctx.session.execute(stmt)).scalar_one_or_none()
     if action is None:
         raise ApprovalError("action not found")
     return action
@@ -78,7 +78,7 @@ async def request_action(
         actor_id=agent,
         entity="agent_action",
         entity_id=action.id,
-        after={"tool": tool, "summary": action.summary},
+        after={"tool": tool, "summary": action.summary, "payload_hash": action.payload_hash},
     )
     return action
 
@@ -86,12 +86,11 @@ async def request_action(
 async def decide(ctx: ToolContext, action_id: uuid.UUID, *, approve: bool, note: str | None = None) -> AgentAction:
     if ctx.role not in (TenantRole.owner, TenantRole.manager):
         raise PermissionError("only an owner or manager can decide an approval")
-    action = await _get(ctx, action_id)
+    action = await _get(ctx, action_id, lock=True)
     if action.status != ActionStatus.pending.value:
         raise ApprovalError(f"action is {action.status}, not pending")
     if action.expires_at is not None and action.expires_at <= _now():
-        action.status = ActionStatus.expired.value
-        await ctx.session.flush()
+        # Refuse without writing: raising rolls the transaction back, so persisting the expiry is the sweep's job.
         raise ApprovalError("action expired")
     action.status = ActionStatus.approved.value if approve else ActionStatus.rejected.value
     action.decided_by = ctx.user_id
@@ -112,8 +111,13 @@ async def decide(ctx: ToolContext, action_id: uuid.UUID, *, approve: bool, note:
 async def execute(
     ctx: ToolContext, action_id: uuid.UUID, executor: Callable[[dict[str, Any]], Awaitable[None]]
 ) -> AgentAction:
-    """Run an approved action's stored payload through ``executor``; marks it executed or failed."""
-    action = await _get(ctx, action_id)
+    """Run an approved action's stored payload through ``executor``; marks it executed or failed.
+
+    The executor runs inside a savepoint, so if it fails none of its partial writes survive.
+    """
+    if ctx.role not in (TenantRole.owner, TenantRole.manager):
+        raise PermissionError("only an owner or manager can execute an approved action")
+    action = await _get(ctx, action_id, lock=True)
     if action.status != ActionStatus.approved.value:
         raise ApprovalError(f"action is {action.status}, not approved")
     if payload_hash(action.payload_json) != action.payload_hash:
@@ -121,7 +125,8 @@ async def execute(
         await ctx.session.flush()
         raise ApprovalError("payload no longer matches the approved hash")
     try:
-        await executor(action.payload_json)
+        async with ctx.session.begin_nested():
+            await executor(action.payload_json)
     except Exception as exc:
         action.status = ActionStatus.failed.value
         action.decision_note = f"execution failed: {type(exc).__name__}"
@@ -136,5 +141,35 @@ async def execute(
         actor_type="system",
         entity="agent_action",
         entity_id=action.id,
+        after={"status": action.status, "payload_hash": action.payload_hash},
     )
     return action
+
+
+async def expire_due(ctx: ToolContext) -> int:
+    """Mark pending actions past their expiry as ``expired`` (one audit row each); returns how many."""
+    due = (
+        (
+            await ctx.session.execute(
+                select(AgentAction).where(
+                    AgentAction.tenant_id == ctx.tenant_id,
+                    AgentAction.status == ActionStatus.pending.value,
+                    AgentAction.expires_at <= _now(),
+                )
+            )
+        )
+        .scalars()
+        .all()
+    )
+    for action in due:
+        action.status = ActionStatus.expired.value
+        record_audit(
+            ctx.session,
+            "agent.action_expired",
+            tenant_id=ctx.tenant_id,
+            actor_type="system",
+            entity="agent_action",
+            entity_id=action.id,
+        )
+    await ctx.session.flush()
+    return len(due)

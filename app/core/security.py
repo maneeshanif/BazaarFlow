@@ -5,6 +5,7 @@ Usage:
 """
 from __future__ import annotations
 
+import asyncio
 from datetime import datetime, timedelta, timezone
 from typing import Any, Optional
 
@@ -33,6 +34,16 @@ def verify_password(plain: str, hashed: str) -> bool:
         return bcrypt.checkpw(pwd_bytes, hashed_bytes)
     except Exception:
         return False
+
+
+async def ahash_password(plain: str) -> str:
+    """``hash_password`` on a worker thread: bcrypt takes ~100-300 ms and must not block the event loop."""
+    return await asyncio.to_thread(hash_password, plain)
+
+
+async def averify_password(plain: str, hashed: str) -> bool:
+    """``verify_password`` on a worker thread."""
+    return await asyncio.to_thread(verify_password, plain, hashed)
 
 
 # ---------------------------------------------------------------------------

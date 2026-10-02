@@ -31,7 +31,7 @@ Each rule ends with `— enforced by: <check>`.
 
 8. **Every route has an explicit authorization decision** (`require_role(...)` or `public`). — enforced by: architecture test that enumerates the router and fails on undecided routes
 9. **Agent tools take tenant and user from the server-side context, never from model-supplied arguments**, and writes above tenant limits create an `agent_actions` approval row. — enforced by: architecture test over the tool catalog + AI tests (PRD §36.20)
-10. **Messaging providers are used only through the channel adapter interface** (`connect`, `send`, `receive`, `verify_webhook`). — enforced by: ruff import rule banning provider SDK imports outside `app/integrations/`
+10. **Messaging providers are used only through the channel adapter interface** (`connect`, `send`, `receive`, `verify_webhook`). — enforced by: `tests/architecture/test_provider_isolation.py` (provider SDK imports and hosts outside `app/integrations/`, with a shrink-only legacy list)
 11. **Storage buckets are private; object paths start with the tenant id; access is by API-issued signed URL.** — enforced by: integration test on the storage service + review layer 2
 12. **Schema changes ship only as Alembic migrations in the same PR.** — enforced by: `verify.sh --lane api-db` (`alembic check`)
 13. **No `service_role` or other production credential in agent or developer environments, the browser bundle or `NEXT_PUBLIC_*`.** — enforced by: secret scan (`security.yml`) + `.env.example` review

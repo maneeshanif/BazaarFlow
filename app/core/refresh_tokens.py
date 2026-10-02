@@ -47,7 +47,10 @@ class RefreshError(Exception):
 
 async def rotate(session: AsyncSession, raw: str) -> tuple[RefreshToken, str]:
     """Validate ``raw``, revoke it, and return the old row plus a fresh raw token for the same session."""
-    row = (await session.execute(select(RefreshToken).where(RefreshToken.token_hash == _hash(raw)))).scalar_one_or_none()
+    # FOR UPDATE: two concurrent refreshes with the same token must not both succeed (theft detection relies on it)
+    row = (
+        await session.execute(select(RefreshToken).where(RefreshToken.token_hash == _hash(raw)).with_for_update())
+    ).scalar_one_or_none()
     if row is None:
         raise RefreshError("unknown token")
     if row.revoked_at is not None:
@@ -72,7 +75,9 @@ async def rotate(session: AsyncSession, raw: str) -> tuple[RefreshToken, str]:
 
 async def revoke(session: AsyncSession, raw: str) -> RefreshToken | None:
     """Revoke one token (logout). Unknown tokens are ignored so logout is idempotent."""
-    row = (await session.execute(select(RefreshToken).where(RefreshToken.token_hash == _hash(raw)))).scalar_one_or_none()
+    row = (
+        await session.execute(select(RefreshToken).where(RefreshToken.token_hash == _hash(raw)).with_for_update())
+    ).scalar_one_or_none()
     if row is not None and row.revoked_at is None:
         row.revoked_at = _now()
         await session.flush()

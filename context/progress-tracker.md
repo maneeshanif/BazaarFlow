@@ -7,10 +7,16 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 0 — Foundation: spec harness, CI (`verify.sh`), Supabase projects and roles (§3.8), Data API lockdown, Alembic baseline, tenancy tables, RLS, JWT claims, role dependencies, architecture tests, secret hygiene (remove committed DSN script)
-**Last completed:** — (nothing has passed the full task process yet; see the Phase 0 audit in progress-log.md)
-**In progress:** Phase 0, working strictly in task order: 00, 01, 02, ...
-**Next:** 00 ADR sign-off (needs the owner), then 01
+**Last completed:** 03, 04, 05, 06, 08, 10, 11, 13, 14, 17 (each with tests, `verify.sh --slow` and an independent code review)
+**In progress:** Phase 0, in task order (see Phase 0 status below)
+**Next:** 07 UI foundation, 15, 16; then the pack tasks once the decisions under Needs a human are made
 **Blockers:** 00 needs the owner's sign-off; 09 needs Supabase credentials; 26 needs vendor sandbox accounts
+
+### Phase 0 status
+
+**Phase 0: 10 of 34 tasks done, 24 left.** Blocked on the owner: 00, 01 (B), 02, 09, 12. Needs a decision: 22-24, 28, 31-33. Open work I can do: 07, 15, 16, 18-21, 25, 27, 29, 30.
+
+Done: 03, 04, 05, 06, 08, 10, 11, 13, 14, 17. Partly done: 01, 02, 12. Blocked on the owner: 00, 09, 26.
 
 ---
 
@@ -20,20 +26,20 @@ Update this file after every completed task. Anyone reading it should immediatel
 - [ ] 01 Repo scaffold
 - [ ] 02 CI/CD + verification
 - [x] 03 Database foundation
-- [ ] 04 Authentication & authorization
-- [ ] 05 Tenancy enforcement
-- [ ] 06 Audit infrastructure
+- [x] 04 Authentication & authorization
+- [x] 05 Tenancy enforcement
+- [x] 06 Audit infrastructure
 - [ ] 07 UI foundation
-- [ ] 08 Vertical slice
+- [x] 08 Vertical slice
 - [ ] 09 Supabase projects (dev/staging/prod), database roles migrator/app_…
-- [ ] 10 Tenancy schema and RLS baseline migration
-- [ ] 11 Architecture tests in CI
+- [x] 10 Tenancy schema and RLS baseline migration
+- [x] 11 Architecture tests in CI
 - [ ] 12 Secret hygiene
-- [ ] 13 Channel adapter interface (connect, send, receive, verify_webhook)…
-- [ ] 14 Agent tool layer inside the API process: tools call services with…
+- [x] 13 Channel adapter interface (connect, send, receive, verify_webhook)…
+- [x] 14 Agent tool layer inside the API process: tools call services with…
 - [ ] 15 Rewrite the 19 quarantined tests (pytest markers legacy_port and l…
 - [ ] 16 Burn down the mypy legacy override list in pyproject.toml module b…
-- [ ] 17 Fix the double-prefixed v1 routes (/api/v1/api/...) and consolidat…
+- [x] 17 Fix the double-prefixed v1 routes (/api/v1/api/...) and consolidat…
 - [ ] 18 Scaffold the web app with the chosen framework, strict TypeScript,…
 - [ ] 19 Design tokens and layout shell [web-app pack]
 - [ ] 20 Authentication and role guard [web-app pack]
@@ -122,30 +128,22 @@ Update this file after every completed task. Anyone reading it should immediatel
 
 - [ ] 92 (no forms, dashboards or integrations are assigned to this phase i…
 
-
-## History
-
-Finished work, decisions and rulings are appended to `context/progress-log.md` (append-only). Keep this file short: update the status block and tick the checklist, nothing else.
-
 ## Open Questions
 
-_From PRD §0.4. Resolve or escalate before the task that depends on it._
-
-- Q-001 Which Pakistani data-protection and tax rules (FBR POS integration, PECA, draft Personal Data Protection law) apply at paid launch? (blocks §34, phase 4)
-- Q-002 Meta Tech Provider application: who holds the verified Meta Business account, and what is the lead time? (blocks I-002, phase 2)
-- Q-003 Which LLM provider and model is the production default (Gemini vs OpenAI), and what per-tenant monthly AI spend cap applies? (blocks §36.18, phase 1)
-- Q-004 Is Urdu (RTL) UI required at launch or phase 3? (blocks §16, phase 3)
-- Q-005 Do retailers need GST/sales-tax invoices with FBR codes at launch? (blocks §34, phase 4)
-- Q-006 Pricing plans and limits (messages, AI calls, voice minutes) once the demo ends. (blocks §26, phase 4)
+Q-001 to Q-006 are in PRD §0.4; none blocks Phase 0. Resolve or escalate before the task that depends on each.
 
 ---
 
 ## Needs a human
 
-| Task | Question | Why it blocks |
-| --- | --- | --- |
-| 00 | Do you approve `docs/adr/0001-stack-decision.md`? | Criterion 2 is the developer's sign-off |
-| 01 / 12 | May the agent read `.env.example` (it holds no values)? Or add the new keys listed in `docs/operations/env-vars.md` yourself | The agent is denied read access, so "every variable with an empty value" cannot be verified |
-| 02 | **Real secrets are in git history**: a Google/Gemini API key in two old `.env` commits (91373c3, a0d2bcf) and tokens in `backend/db/facebook_accounts.json` (32f9fa4) and `backend/db/vendors.json` (a022ae6). The repo's remote is GitHub. Rotate those keys. Then choose: (a) a gitleaks baseline so CI only flags new leaks, or (b) rewrite history (destructive; force-push) | The secret-scan criterion cannot pass while history holds live secrets. The other gitleaks hits (tests with `EAAtest123...`) are fake fixtures |
-| 02 | `npm audit` finds 1 critical + 12 high. Everything except 3 findings clears with `npm audit fix`; the last 3 (`next` critical, `postcss`, `sharp`) need `next` >= 16.3.8. May I bump Next 16.0.0 -> 16.3.8? It edits `frontend/package.json` and the lockfile, which also hold your uncommitted Sentry changes | The dependency-scan criterion cannot pass without it |
-| 02 | A push to GitHub is needed to see CI actually turn red/green | The agent never pushes without your say |
+Details and options for each item are in `context/progress-log.md` (entry "Needs a human, 2026-10-02").
+
+| Task | Question |
+| --- | --- |
+| 00 | Approve `docs/adr/0001-stack-decision.md`? |
+| 01, 12 | Let the agent read `.env.example` (no values in it), or add the keys from `docs/operations/env-vars.md` yourself |
+| 02, 12 | Rotate the Google/Gemini key and the Facebook/Meta tokens found in git history, then choose: gitleaks baseline or history rewrite |
+| 02 | Bump `next` 16.0.0 -> >= 16.3.8 (clears 1 critical + 12 high npm findings; touches the files holding your Sentry edits) |
+| 02 | Push the branch so CI can run |
+| 09 | Supabase dev project credentials |
+| 22-24, 28, 31-33 | Skip, merge or keep the pack tasks that duplicate or contradict the PRD |

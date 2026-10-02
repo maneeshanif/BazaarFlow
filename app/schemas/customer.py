@@ -3,14 +3,16 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class CustomerCreate(BaseModel):
-    phone: str
-    name: str | None = None
-    email: str | None = None
-    address: str | None = None
+    """Limits match the column sizes, so over-long input is a 422 and never a database error."""
+
+    phone: str = Field(pattern=r"^\+?[0-9]{7,20}$")
+    name: str | None = Field(default=None, max_length=255)
+    email: str | None = Field(default=None, max_length=255)
+    address: str | None = Field(default=None, max_length=512)
 
 class CustomerOut(BaseModel):
     id: UUID

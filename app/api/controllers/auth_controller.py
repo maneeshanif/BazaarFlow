@@ -16,7 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core import refresh_tokens
 from app.core.audit import mask_email, record_audit
 from app.core.auth import ALL_ROLES, public_route, require_role
-from app.core.security import create_access_token, hash_password, verify_password
+from app.core.security import ahash_password, averify_password, create_access_token, hash_password
 from app.core.settings import settings
 from app.core.tenancy import Principal, anonymous_session, apply_context
 from app.models.security import LoginAttempt
@@ -68,13 +68,14 @@ async def register(body: RegisterRequest) -> TokenOut:
     user_id = uuid.uuid4()
     tenant_id = uuid.uuid4()
     email = body.email.lower()
+    password_hash = await ahash_password(body.password)  # before the transaction: bcrypt is slow
     try:
         async with anonymous_session() as session:
             # The tenants policy is keyed on the row's own id, so the context is set before inserting it.
             await apply_context(session, tenant_id=tenant_id, user_id=user_id)
             if (await session.execute(select(User.id).where(User.email == email))).first() is not None:
                 raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")
-            user = User(id=user_id, email=email, hashed_password=hash_password(body.password), name=body.full_name)
+            user = User(id=user_id, email=email, hashed_password=password_hash, name=body.full_name)
             session.add(user)
             session.add(
                 Tenant(
@@ -106,11 +107,11 @@ async def login(body: LoginRequest) -> TokenOut:
     """Verify credentials, pick the tenant, return tokens carrying ``tenant_id`` and ``role``."""
     email = body.email.lower()
     email_hash = _email_hash(email)
-    failure: HTTPException | None = None
-    result: TokenOut | None = None
     window_start = datetime.now(timezone.utc) - timedelta(minutes=settings.LOGIN_LOCKOUT_MINUTES)
 
+    # 1) short read-only transaction: housekeeping, lockout state and the user row (no bcrypt while it is open)
     async with anonymous_session() as session:
+        await session.execute(delete(LoginAttempt).where(LoginAttempt.created_at < window_start))  # purge old rows
         recent_failures = (
             await session.execute(
                 select(func.count())
@@ -122,53 +123,61 @@ async def login(body: LoginRequest) -> TokenOut:
                 )
             )
         ).scalar_one()
-        if recent_failures >= settings.LOGIN_MAX_FAILURES:
+        user = (await session.execute(select(User).where(User.email == email))).scalar_one_or_none()
+
+    locked = recent_failures >= settings.LOGIN_MAX_FAILURES
+    credentials_ok = False
+    if not locked:  # 2) the slow hash runs on a worker thread, outside any transaction
+        valid = await averify_password(body.password, user.hashed_password if user else _DUMMY_HASH)
+        credentials_ok = bool(user is not None and valid and user.is_active)
+
+    failure: HTTPException | None = None
+    result: TokenOut | None = None
+    async with anonymous_session() as session:  # 3) write the outcome
+        if locked:
             failure = HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail="Too many failed attempts; try again later",
                 headers={"Retry-After": str(settings.LOGIN_LOCKOUT_MINUTES * 60)},
             )
+        elif not credentials_ok or user is None:
+            session.add(LoginAttempt(email_hash=email_hash, succeeded=False))
+            record_audit(session, "auth.login_failed", tenant_id=None, after={"email": mask_email(email)})
+            failure = _INVALID
         else:
-            user = (await session.execute(select(User).where(User.email == email))).scalar_one_or_none()
-            valid = verify_password(body.password, user.hashed_password if user else _DUMMY_HASH)
-            if user is None or not valid or not user.is_active:
-                session.add(LoginAttempt(email_hash=email_hash, succeeded=False))
-                record_audit(session, "auth.login_failed", tenant_id=None, after={"email": mask_email(email)})
-                failure = _INVALID
+            await apply_context(session, user_id=user.id)
+            rows = (
+                await session.execute(
+                    select(Membership.tenant_id, Membership.role, Tenant.name)
+                    .join(Tenant, Tenant.id == Membership.tenant_id)
+                    .where(Membership.user_id == user.id)
+                    .order_by(Tenant.name)
+                )
+            ).all()
+            chosen = None
+            if body.tenant_id is not None:
+                chosen = next((r for r in rows if r.tenant_id == body.tenant_id), None)
+                if chosen is None:
+                    failure = HTTPException(status.HTTP_403_FORBIDDEN, "Not a member of that tenant")
+            elif len(rows) == 1:
+                chosen = rows[0]
+            elif len(rows) > 1:
+                failure = HTTPException(
+                    status_code=status.HTTP_409_CONFLICT,
+                    detail={
+                        "code": "tenant_required",
+                        "tenants": [{"tenant_id": str(r.tenant_id), "tenant_name": r.name} for r in rows],
+                    },
+                )
             else:
-                await apply_context(session, user_id=user.id)
-                rows = (
-                    await session.execute(
-                        select(Membership.tenant_id, Membership.role, Tenant.name)
-                        .join(Tenant, Tenant.id == Membership.tenant_id)
-                        .where(Membership.user_id == user.id)
-                        .order_by(Tenant.name)
-                    )
-                ).all()
-                chosen = None
-                if body.tenant_id is not None:
-                    chosen = next((r for r in rows if r.tenant_id == body.tenant_id), None)
-                    if chosen is None:
-                        failure = HTTPException(status.HTTP_403_FORBIDDEN, "Not a member of that tenant")
-                elif len(rows) == 1:
-                    chosen = rows[0]
-                elif len(rows) > 1:
-                    failure = HTTPException(
-                        status_code=status.HTTP_409_CONFLICT,
-                        detail={
-                            "code": "tenant_required",
-                            "tenants": [{"tenant_id": str(r.tenant_id), "tenant_name": r.name} for r in rows],
-                        },
-                    )
-                else:
-                    failure = HTTPException(status.HTTP_403_FORBIDDEN, "No tenant for this account")
-                if chosen is not None:
-                    await session.execute(
-                        delete(LoginAttempt).where(LoginAttempt.email_hash == email_hash, LoginAttempt.succeeded.is_(False))
-                    )
-                    await apply_context(session, tenant_id=chosen.tenant_id)
-                    record_audit(session, "auth.login", tenant_id=chosen.tenant_id, actor_id=user.id)
-                    result = await _tokens(session, user, chosen.tenant_id, TenantRole(chosen.role))
+                failure = HTTPException(status.HTTP_403_FORBIDDEN, "No tenant for this account")
+            if chosen is not None:
+                await session.execute(
+                    delete(LoginAttempt).where(LoginAttempt.email_hash == email_hash, LoginAttempt.succeeded.is_(False))
+                )
+                await apply_context(session, tenant_id=chosen.tenant_id)
+                record_audit(session, "auth.login", tenant_id=chosen.tenant_id, actor_id=user.id)
+                result = await _tokens(session, user, chosen.tenant_id, TenantRole(chosen.role))
 
     if failure is not None:
         raise failure

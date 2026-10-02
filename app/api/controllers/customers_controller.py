@@ -9,6 +9,7 @@ from __future__ import annotations
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.audit import record_audit
@@ -23,7 +24,7 @@ router = APIRouter()
 @router.get("/", response_model=list[CustomerOut])
 async def list_customers(
     principal: Principal = Depends(require_role(*ALL_ROLES)),
-    db: AsyncSession = Depends(get_tenant_db),
+    db: AsyncSession = Depends(get_tenant_db, scope="function"),
 ) -> list[CustomerOut]:
     customers = await crud_customer.get_customers(db, principal.tenant_id)
     return [CustomerOut.model_validate(c) for c in customers]
@@ -33,13 +34,16 @@ async def list_customers(
 async def create_customer(
     body: CustomerCreate,
     principal: Principal = Depends(require_role(*ALL_ROLES)),
-    db: AsyncSession = Depends(get_tenant_db),
+    db: AsyncSession = Depends(get_tenant_db, scope="function"),
 ) -> CustomerOut:
     if await crud_customer.get_customer_by_phone(db, principal.tenant_id, body.phone):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Customer with this phone already exists")
-    customer = await crud_customer.upsert_customer(
-        db, principal.tenant_id, body.phone, name=body.name, email=body.email, address=body.address
-    )
+    try:
+        customer = await crud_customer.upsert_customer(
+            db, principal.tenant_id, body.phone, name=body.name, email=body.email, address=body.address
+        )
+    except IntegrityError as exc:  # a concurrent request created the same phone first
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Customer with this phone already exists") from exc
     record_audit(
         db,
         "customer.created",
@@ -55,7 +59,7 @@ async def create_customer(
 async def delete_customer(
     customer_id: str,
     principal: Principal = Depends(require_role(*MANAGER_UP)),
-    db: AsyncSession = Depends(get_tenant_db),
+    db: AsyncSession = Depends(get_tenant_db, scope="function"),
 ) -> None:
     try:
         cid = UUID(customer_id)

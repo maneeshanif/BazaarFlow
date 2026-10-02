@@ -38,6 +38,8 @@ class Settings(BaseSettings):
     # -- Application -----------------------------------------------------------
     APP_ENV: str = "development"
     SECRET_KEY: str = ""
+    # Local development only: lets the API start without SECRET_KEY using a throwaway key. Ignored in production/staging.
+    ALLOW_INSECURE_DEV_SECRET: bool = False
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 14
     LOGIN_MAX_FAILURES: int = 5
@@ -78,11 +80,18 @@ class Settings(BaseSettings):
         """Fail fast when no signing key is configured in a real environment (PRD §14, RK-06)."""
         if self.SECRET_KEY:
             return self
-        if self.APP_ENV in {"production", "staging"}:
-            raise ValueError("SECRET_KEY must be set when APP_ENV is production or staging")
-        _log.warning("SECRET_KEY is not set; using an insecure development key (APP_ENV=%s)", self.APP_ENV)
-        self.SECRET_KEY = _DEV_SECRET
-        return self
+        if self.APP_ENV == "test":
+            self.SECRET_KEY = _DEV_SECRET
+            return self
+        if self.ALLOW_INSECURE_DEV_SECRET and self.APP_ENV not in {"production", "staging"}:
+            _log.warning("SECRET_KEY is not set; using an insecure development key (ALLOW_INSECURE_DEV_SECRET)")
+            self.SECRET_KEY = _DEV_SECRET
+            return self
+        # Fail closed for every other environment name (typos such as "prod" included): a signing key that is
+        # public in the repository would let anyone forge an owner or platform-admin token.
+        raise ValueError(
+            "SECRET_KEY must be set (for local development you can set ALLOW_INSECURE_DEV_SECRET=true instead)"
+        )
 
     @property
     def migrations_url(self) -> str:
