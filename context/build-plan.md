@@ -127,8 +127,8 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [ ] 26 Vendor accounts, sandbox access and credentials in the secret manager [integrations pack]
   - Acceptance: A sandbox call succeeds from the dev environment
   - Acceptance: no credential is in the repository
-- [ ] 27 Integration skill: install an upstream one or generate a project-local one [integrations pack]
-  - Acceptance: The skill cites the vendor documentation URL and date
+- [x] 27 Integration skill: install an upstream one or generate a project-local one [integrations pack]
+  - Acceptance: the skill cites the vendor documentation URL and date (.claude/skills/integration-twilio-whatsapp/SKILL.md: two Twilio URLs, read 2026-10-03)
 - [ ] 28 Agent service skeleton, separate from the API, with no database credentials [agents pack]
   - Acceptance: The service starts
   - Acceptance: its environment contains no database variable (checked by a test)

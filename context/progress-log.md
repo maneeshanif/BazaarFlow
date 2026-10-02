@@ -88,3 +88,6 @@ The owner pointed out that Phase 0 was not being built task by task. Audit of wh
 - Honest limit: a replay tests our wiring, schemas and guards, not whether the live model still picks the same tool. Re-record with RecordingModel (needs GEMINI_API_KEY from the owner) when the prompt or model changes. Not run live here.
 - The order case encodes the known gap from task 29: it asserts the order tool is flagged as approval-required; the runtime still executes it directly.
 - The 45-minute pytest wall time seen once was a machine stall (second time); individual tests finish in seconds and pytest-timeout is 300 s.
+
+## 2026-10-03 - Task 27 (integration skill)
+- Project-local skill for the Twilio WhatsApp sandbox (PRD A-004), citing the sandbox and webhook-signing pages with the read date. The pages were read through a summarising fetch, so a few facts are marked (verify) in the skill. Nothing has run against the real service; that needs the Twilio account from task 26.
