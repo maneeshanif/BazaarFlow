@@ -49,7 +49,7 @@ SAMPLE_WEBHOOK_PAYLOAD = {
 }
 
 
-async def test_webhook():
+async def test_webhook() -> None:
     """Send a test webhook event to the backend."""
     async with httpx.AsyncClient(timeout=30.0) as client:
         try:

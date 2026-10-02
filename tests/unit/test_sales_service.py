@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 import pytest
 
@@ -7,7 +8,7 @@ from app.services.inventory_service import InventoryAnalyticsService
 
 
 @pytest.fixture
-def configured_sales_service(tmp_path, monkeypatch):
+def configured_sales_service(tmp_path: Any, monkeypatch: Any) -> Any:
     inventory_file = tmp_path / "inventory.json"
     inventory_data = [
         {
@@ -33,7 +34,7 @@ def configured_sales_service(tmp_path, monkeypatch):
     return orders_file
 
 
-def test_save_order_reserves_stock(configured_sales_service):
+def test_save_order_reserves_stock(configured_sales_service: Any) -> None:
     result = sales_service.save_order(
         {
             "customer_name": "Customer",
@@ -53,7 +54,7 @@ def test_save_order_reserves_stock(configured_sales_service):
     assert stored[0]["quantity"] == 2
 
 
-def test_save_order_prevents_over_selling(configured_sales_service):
+def test_save_order_prevents_over_selling(configured_sales_service: Any) -> None:
     with pytest.raises(ValueError) as excinfo:
         sales_service.save_order(
             {

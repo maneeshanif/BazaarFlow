@@ -1,5 +1,6 @@
 import importlib
 from types import SimpleNamespace
+from typing import Any
 
 from fastapi.testclient import TestClient
 
@@ -9,18 +10,18 @@ chat_service_module = importlib.import_module("app.services.chat_service")
 
 
 class DummyResp:
-    def __init__(self):
+    def __init__(self) -> None:
         self.id = "dummy-startup-id"
 
 
 class DummyWA:
-    async def send_message(self, *args, **kwargs):
+    async def send_message(self, *args: Any, **kwargs: Any) -> Any:
         return DummyResp()
 
 
 
-def test_finance_chat_endpoint(monkeypatch):
-    async def fake_run(*args, **kwargs):
+def test_finance_chat_endpoint(monkeypatch: Any) -> None:
+    async def fake_run(*args: Any, **kwargs: Any) -> Any:
         return SimpleNamespace(final_output="Payment Status Summary:\n• Paid: 7 txns")
 
     monkeypatch.setattr(chat_service_module.Runner, "run", fake_run)

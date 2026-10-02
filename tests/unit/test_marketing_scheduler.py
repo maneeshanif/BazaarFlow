@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timedelta, timezone
+from typing import Any, cast
 
 import pytest
 
@@ -8,17 +9,17 @@ from app.services.marketing_scheduler import MarketingScheduler, ScheduleRecord
 
 
 class StubRunner:
-    def __init__(self):
+    def __init__(self) -> None:
         self.calls: list[tuple[str, str, str | None]] = []
 
-    async def trigger_scheduled_campaign(self, *, account_id: str, user_id: str, triggered_at: str | None = None):  # type: ignore[override]
+    async def trigger_scheduled_campaign(self, *, account_id: str, user_id: str, triggered_at: str | None = None) -> None:
         self.calls.append((account_id, user_id, triggered_at))
 
 
 @pytest.mark.asyncio
-async def test_scheduler_triggers_matching_slot():
+async def test_scheduler_triggers_matching_slot() -> None:
     runner = StubRunner()
-    scheduler = MarketingScheduler(campaign_runner=runner)
+    scheduler = MarketingScheduler(campaign_runner=cast(Any, runner))
     record = ScheduleRecord(
         account_id="acct-1",
         user_id="user-1",
@@ -28,7 +29,7 @@ async def test_scheduler_triggers_matching_slot():
     )
 
     now = datetime(2024, 1, 1, 9, 0, tzinfo=timezone.utc)
-    await scheduler._maybe_trigger(record, now)  # type: ignore[attr-defined]
+    await scheduler._maybe_trigger(record, now)
 
     assert len(runner.calls) == 1
     account_id, user_id, triggered_at = runner.calls[0]
@@ -38,9 +39,9 @@ async def test_scheduler_triggers_matching_slot():
 
 
 @pytest.mark.asyncio
-async def test_scheduler_skips_when_recently_triggered():
+async def test_scheduler_skips_when_recently_triggered() -> None:
     runner = StubRunner()
-    scheduler = MarketingScheduler(campaign_runner=runner)
+    scheduler = MarketingScheduler(campaign_runner=cast(Any, runner))
     now = datetime(2024, 1, 1, 9, 0, tzinfo=timezone.utc)
 
     recent_record = ScheduleRecord(
@@ -51,7 +52,7 @@ async def test_scheduler_skips_when_recently_triggered():
         last_triggered_at=(now - timedelta(seconds=45)).isoformat(),
     )
 
-    await scheduler._maybe_trigger(recent_record, now)  # type: ignore[attr-defined]
+    await scheduler._maybe_trigger(recent_record, now)
     assert runner.calls == []
 
     stale_record = ScheduleRecord(
@@ -62,5 +63,5 @@ async def test_scheduler_skips_when_recently_triggered():
         last_triggered_at=(now - timedelta(hours=3)).isoformat(),
     )
 
-    await scheduler._maybe_trigger(stale_record, now)  # type: ignore[attr-defined]
+    await scheduler._maybe_trigger(stale_record, now)
     assert len(runner.calls) == 1

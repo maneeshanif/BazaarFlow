@@ -8,6 +8,7 @@ callers.
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -38,7 +39,7 @@ def fake_config() -> FacebookConfig:
 
 
 @pytest.fixture()
-def manager(fake_config: FacebookConfig) -> FacebookManager:
+def manager(fake_config: FacebookConfig) -> Iterator[FacebookManager]:
     """Instantiate the manager with the fake configuration and close afterwards."""
 
     mgr = FacebookManager(config=fake_config)
@@ -83,7 +84,7 @@ def test_create_image_post_from_url(manager: FacebookManager, monkeypatch: pytes
     monkeypatch.setattr(FacebookManager, "_make_request", fake_request, raising=False)
 
     response = manager.create_image_post(
-        ImagePostRequest(image_url="https://example.com/image.jpg", message="Check our new product")
+        ImagePostRequest.model_validate({"image_url": "https://example.com/image.jpg", "message": "Check our new product"})
     )
 
     assert response.post_id == "123456789012345_98765"

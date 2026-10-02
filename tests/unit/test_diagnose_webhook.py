@@ -10,7 +10,7 @@ import sys
 import httpx
 
 
-async def test_complete_webhook_flow():
+async def test_complete_webhook_flow() -> None:
     """Run all webhook tests."""
     
     print("🔍 COMPLETE WEBHOOK DIAGNOSTICS")

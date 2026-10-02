@@ -19,6 +19,10 @@ from app.models import *  # noqa: F403 - register every model on Base.metadata
 
 TABLES: dict[str, Table] = dict(Base.metadata.tables)
 
+
+def _is_tz(column_type: object) -> bool:
+    return isinstance(column_type, DateTime) and bool(column_type.timezone)
+
 # Not tenant-owned by design (reason is the contract; see tests/pg/test_schema_rules.py).
 GLOBAL = {"users", "tenants", "refresh_tokens", "login_attempts"}
 # Append-only tables have no updated_at.
@@ -59,7 +63,7 @@ def test_timestamps_are_timezone_aware() -> None:
     for n, t in TABLES.items():
         wanted = ["created_at"] if n in APPEND_ONLY else ["created_at", "updated_at"]
         for col in wanted:
-            if col not in t.c or not (isinstance(t.c[col].type, DateTime) and t.c[col].type.timezone):
+            if col not in t.c or not _is_tz(t.c[col].type):
                 bad.append(f"{n}.{col}")
     assert not bad, f"missing or naive timestamps: {bad}"
 
@@ -82,7 +86,7 @@ def test_catalog_and_party_tables_are_soft_deleted() -> None:
         n
         for n in SOFT_DELETE
         if "deleted_at" not in TABLES[n].c
-        or not (isinstance(TABLES[n].c.deleted_at.type, DateTime) and TABLES[n].c.deleted_at.type.timezone)
+        or not _is_tz(TABLES[n].c.deleted_at.type)
         or TABLES[n].c.deleted_at.nullable is not True
     ]
     assert not bad, f"soft delete (nullable timestamptz deleted_at) missing on: {sorted(bad)}"

@@ -1,7 +1,7 @@
 """Inventory management API endpoints."""
 from __future__ import annotations
 
-from typing import Optional
+from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
@@ -39,14 +39,14 @@ class AddStockRequest(BaseModel):
 
 
 @router.get("/")
-async def get_inventory():
+async def get_inventory() -> Any:
     """Get all inventory items."""
     items = inventory_analytics_service.get_all_items()
     return {"ok": True, "items": items}
 
 
 @router.get("/{sku}")
-async def get_inventory_item(sku: str):
+async def get_inventory_item(sku: str) -> Any:
     """Get a specific inventory item by SKU."""
     item = inventory_analytics_service.get_item_by_sku(sku)
     if not item:
@@ -55,7 +55,7 @@ async def get_inventory_item(sku: str):
 
 
 @router.post("/", status_code=201, dependencies=[Depends(require_role(*MANAGER_UP))])
-async def create_inventory_item(item: InventoryItemCreate):
+async def create_inventory_item(item: InventoryItemCreate) -> Any:
     """Create a new inventory item."""
     try:
         created_item = inventory_analytics_service.create_item(item.model_dump())
@@ -67,7 +67,7 @@ async def create_inventory_item(item: InventoryItemCreate):
 
 
 @router.put("/{sku}", dependencies=[Depends(require_role(*MANAGER_UP))])
-async def update_inventory_item(sku: str, item: InventoryItemUpdate):
+async def update_inventory_item(sku: str, item: InventoryItemUpdate) -> Any:
     """Update an existing inventory item."""
     try:
         update_data = {k: v for k, v in item.model_dump().items() if v is not None}
@@ -82,7 +82,7 @@ async def update_inventory_item(sku: str, item: InventoryItemUpdate):
 
 
 @router.patch("/{sku}/add-stock", dependencies=[Depends(require_role(*MANAGER_UP))])
-async def add_stock_to_item(sku: str, request: AddStockRequest):
+async def add_stock_to_item(sku: str, request: AddStockRequest) -> Any:
     """Add stock to an existing inventory item."""
     try:
         if request.quantity <= 0:
@@ -102,7 +102,7 @@ async def add_stock_to_item(sku: str, request: AddStockRequest):
 
 
 @router.delete("/{sku}", dependencies=[Depends(require_role(*MANAGER_UP))])
-async def delete_inventory_item(sku: str):
+async def delete_inventory_item(sku: str) -> Any:
     """Delete an inventory item by SKU."""
     try:
         deleted_item = inventory_analytics_service.delete_item(sku)

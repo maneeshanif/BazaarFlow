@@ -4,7 +4,7 @@ from httpx import AsyncClient
 
 
 @pytest.mark.asyncio
-async def test_health_check(client: AsyncClient):
+async def test_health_check(client: AsyncClient) -> None:
     """Test the root /health endpoint."""
     response = await client.get("/health")
     assert response.status_code == 200
@@ -14,7 +14,7 @@ async def test_health_check(client: AsyncClient):
 
 
 @pytest.mark.asyncio
-async def test_vendors_endpoints(client: AsyncClient):
+async def test_vendors_endpoints(client: AsyncClient) -> None:
     """Test vendor listing and creation routes."""
     # List vendors
     response = await client.get("/api/vendors")
@@ -23,14 +23,14 @@ async def test_vendors_endpoints(client: AsyncClient):
 
 
 @pytest.mark.asyncio
-async def test_inventory_endpoints(client: AsyncClient):
+async def test_inventory_endpoints(client: AsyncClient) -> None:
     """Test inventory listing route."""
     response = await client.get("/api/inventory")
     assert response.status_code in (200, 501)
 
 
 @pytest.mark.asyncio
-async def test_logs_endpoint(client: AsyncClient):
+async def test_logs_endpoint(client: AsyncClient) -> None:
     """Test system logs retrieval route."""
     response = await client.get("/api/logs")
     assert response.status_code == 200
@@ -39,7 +39,7 @@ async def test_logs_endpoint(client: AsyncClient):
 
 
 @pytest.mark.asyncio
-async def test_webhook_test_endpoint(client: AsyncClient):
+async def test_webhook_test_endpoint(client: AsyncClient) -> None:
     """Test webhook test endpoint."""
     response = await client.get("/webhook/test")
     assert response.status_code == 200

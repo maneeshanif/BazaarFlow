@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, cast
 
 from .inventory_service import inventory_analytics_service
 
@@ -9,17 +9,17 @@ DATA_DIR.mkdir(parents=True, exist_ok=True)
 ORDERS_FILE = DATA_DIR / "sales_orders.json"
 
 
-def _read_all() -> list:
+def _read_all() -> list[Any]:
     if not ORDERS_FILE.exists():
         return []
     try:
         with ORDERS_FILE.open("r", encoding="utf-8") as f:
-            return json.load(f)
+            return cast("list[Any]", json.load(f))
     except Exception:
         return []
 
 
-def _write_all(items: list) -> None:
+def _write_all(items: list[Any]) -> None:
     with ORDERS_FILE.open("w", encoding="utf-8") as f:
         json.dump(items, f, ensure_ascii=False, indent=2)
 
@@ -64,5 +64,5 @@ def save_order(payload: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def list_orders() -> list:
+def list_orders() -> list[Any]:
     return _read_all()

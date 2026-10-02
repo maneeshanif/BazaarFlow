@@ -8,7 +8,7 @@ import os
 import httpx
 
 
-async def check_webhook_setup():
+async def check_webhook_setup() -> None:
     """Run comprehensive webhook diagnostics."""
     
     print("🔍 BazaarFlow Webhook Diagnostics")

@@ -3,13 +3,10 @@ Test script for BazaarFlow MCP Server tools
 Run this to verify all tools are working correctly
 """
 
-import os
-import sys
 
 # Add parent directory to path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from mcp_server.server import (
+from app.mcp_server.server import (
     PRODUCTS_DB,
     get_product_by_category,
     get_product_by_price_range,
@@ -18,7 +15,7 @@ from mcp_server.server import (
 )
 
 
-def test_lookup_product():
+def test_lookup_product() -> None:
     """Test lookup_product tool"""
     print("\n=== Testing lookup_product ===")
     
@@ -33,14 +30,14 @@ def test_lookup_product():
     print(f"Query: 'invalid' -> {result}")
 
 
-def test_list_all_products():
+def test_list_all_products() -> None:
     """Test list_all_products tool"""
     print("\n=== Testing list_all_products ===")
     result = list_all_products()
     print(result)
 
 
-def test_get_product_by_price_range():
+def test_get_product_by_price_range() -> None:
     """Test get_product_by_price_range tool"""
     print("\n=== Testing get_product_by_price_range ===")
     
@@ -58,7 +55,7 @@ def test_get_product_by_price_range():
         print(result)
 
 
-def test_get_product_by_category():
+def test_get_product_by_category() -> None:
     """Test get_product_by_category tool"""
     print("\n=== Testing get_product_by_category ===")
     
@@ -75,7 +72,7 @@ def test_get_product_by_category():
     print(result)
 
 
-def test_products_db():
+def test_products_db() -> None:
     """Verify PRODUCTS_DB structure"""
     print("\n=== Testing PRODUCTS_DB ===")
     print(f"Total products in database: {len(PRODUCTS_DB)}")
@@ -84,7 +81,7 @@ def test_products_db():
         print(f"  {key}: {product['name']} - ${product['price']} ({product['category']})")
 
 
-def main():
+def main() -> None:
     """Run all tests"""
     print("=" * 60)
     print("BazaarFlow MCP Server - Tool Testing")

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import uuid
 from datetime import timedelta
+from typing import Any
 
 import jwt
 import pytest
@@ -19,7 +20,7 @@ from tests.pg.conftest import bearer, register
 pytestmark = pytest.mark.pg
 
 
-def _claims(token: str) -> dict:
+def _claims(token: str) -> dict[str, Any]:
     return jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
 
 
@@ -93,7 +94,7 @@ async def test_expired_and_malformed_tokens_are_rejected(client: AsyncClient) ->
     assert (await client.get("/api/v1/auth/me")).status_code == 401
 
 
-async def _add_member(app_engine: AsyncEngine, owner: dict, email: str, role: str) -> None:
+async def _add_member(app_engine: AsyncEngine, owner: dict[str, Any], email: str, role: str) -> None:
     """Create a second user and give them a role in the owner's tenant (what the invite flow will do)."""
     from app.core.security import hash_password
 

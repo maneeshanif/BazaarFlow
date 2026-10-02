@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 import sys
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
 from agents import Runner, SQLiteSession, enable_verbose_stdout_logging
 
@@ -31,7 +31,7 @@ for handler in list(_agents_logger.handlers):
 class AgentChatService:
     """Manage chat sessions for a specific agent instance."""
 
-    def __init__(self, *, agent, session_prefix: str) -> None:
+    def __init__(self, *, agent: Any, session_prefix: str) -> None:
         self._agent = agent
         self._session_prefix = session_prefix
         self.active_sessions: Dict[str, SQLiteSession] = {}

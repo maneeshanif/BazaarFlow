@@ -10,6 +10,7 @@ The expected numbers can be derived by hand from the fixture:
 """
 import shutil
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -19,13 +20,13 @@ FIXTURE = Path(__file__).resolve().parents[1] / "data" / "inventory_items.json"
 
 
 @pytest.fixture
-def inventory_service(tmp_path):
+def inventory_service(tmp_path: Any) -> Any:
     data_path = tmp_path / "inventory_items.json"
     shutil.copy(FIXTURE, data_path)  # never read or write the shared fixture in place
     return InventoryAnalyticsService(data_path=data_path)
 
 
-def test_stock_health(inventory_service):
+def test_stock_health(inventory_service: Any) -> None:
     overview = inventory_service.get_stock_health()
 
     assert overview["in_stock"]["count"] == 4
@@ -38,13 +39,13 @@ def test_stock_health(inventory_service):
     assert overview["out_of_stock"]["total_units"] == 0
 
 
-def test_stock_health_detail(inventory_service):
+def test_stock_health_detail(inventory_service: Any) -> None:
     detail = inventory_service.get_stock_health_detail()
     in_stock_names = {item["name"] for item in detail["in_stock"]["items"]}
     assert "iPhone 15" in in_stock_names
 
 
-def test_category_breakdown(inventory_service):
+def test_category_breakdown(inventory_service: Any) -> None:
     breakdown = inventory_service.get_category_breakdown()
 
     assert breakdown["mobile"]["count"] == 3
@@ -57,7 +58,7 @@ def test_category_breakdown(inventory_service):
     assert breakdown["audio"]["total_units"] == 18
 
 
-def test_restock_queue(inventory_service):
+def test_restock_queue(inventory_service: Any) -> None:
     queue = inventory_service.get_restock_queue(limit=3)
 
     assert [item["sku"] for item in queue] == [
@@ -70,7 +71,7 @@ def test_restock_queue(inventory_service):
     assert queue[0]["incoming"] == 18
 
 
-def test_search_items_case_insensitive(inventory_service):
+def test_search_items_case_insensitive(inventory_service: Any) -> None:
     results = inventory_service.search_items("IPHONE")
     names = {item["name"] for item in results}
     assert "iPhone 15" in names

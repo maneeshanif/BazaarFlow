@@ -2,32 +2,34 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
-import httpx  # type: ignore[import-not-found]
-import pytest  # type: ignore[import-not-found]
+import httpx
+import pytest
 
 from app.main import app
 from app.repositories import repository
 
 
 @pytest.fixture(autouse=True)
-def _set_db_root(tmp_path):
+def _set_db_root(tmp_path: Any) -> Any:
     repository.configure_db_root(tmp_path)
     yield
 
 
 @pytest.mark.asyncio
-async def test_inbound_webhook_process(monkeypatch):
+async def test_inbound_webhook_process(monkeypatch: Any) -> None:
     vendor = repository.upsert_vendor(
         phone_number_id="12345",
         name="Demo Vendor",
         access_token="access-token-xyz",
     )
 
-    async def fake_runner_hook(**_: Dict[str, Any]):
+    async def fake_runner_hook(**_: Dict[str, Any]) -> Any:
         return {"reply_text": "Hello back!", "action": "reply"}
 
-    async def fake_send_text_message(**kwargs):
-        fake_send_text_message.called_with = kwargs  # type: ignore[attr-defined]
+    sent_messages: list[dict[str, Any]] = []
+
+    async def fake_send_text_message(**kwargs: Any) -> Any:
+        sent_messages.append(kwargs)
         return {"messages": [{"id": "wamid.reply"}]}
 
     monkeypatch.setattr("app.runner.runner_hook", fake_runner_hook)
@@ -70,11 +72,11 @@ async def test_inbound_webhook_process(monkeypatch):
     assert len(messages) == 2  # inbound + outbound
     assert messages[0]["direction"] == "inbound"
     assert messages[1]["direction"] == "outbound"
-    assert fake_send_text_message.called_with["body"] == "Hello back!"
+    assert sent_messages[0]["body"] == "Hello back!"
 
 
 @pytest.mark.asyncio
-async def test_webhook_verification():
+async def test_webhook_verification() -> None:
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get(
             "/webhook",
@@ -92,7 +94,7 @@ def _sign(secret: str, body: bytes) -> str:
 
 
 @pytest.mark.asyncio
-async def test_a_signed_webhook_is_accepted_and_a_bad_signature_is_rejected(monkeypatch):
+async def test_a_signed_webhook_is_accepted_and_a_bad_signature_is_rejected(monkeypatch: Any) -> None:
     from app.core.settings import settings
 
     monkeypatch.setattr(settings, "META_APP_SECRET", "app-secret")
@@ -107,7 +109,7 @@ async def test_a_signed_webhook_is_accepted_and_a_bad_signature_is_rejected(monk
 
 
 @pytest.mark.asyncio
-async def test_production_refuses_unsigned_webhooks_when_no_secret_is_configured(monkeypatch):
+async def test_production_refuses_unsigned_webhooks_when_no_secret_is_configured(monkeypatch: Any) -> None:
     from app.core.settings import settings
 
     monkeypatch.setattr(settings, "META_APP_SECRET", "")
@@ -118,7 +120,7 @@ async def test_production_refuses_unsigned_webhooks_when_no_secret_is_configured
 
 
 @pytest.mark.asyncio
-async def test_a_wrong_verify_token_is_a_403(monkeypatch):
+async def test_a_wrong_verify_token_is_a_403(monkeypatch: Any) -> None:
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
         res = await client.get("/webhook", params={"hub.mode": "subscribe", "hub.verify_token": "nope", "hub.challenge": "x"})
     assert res.status_code == 403

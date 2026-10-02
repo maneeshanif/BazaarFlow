@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import pytest
 from pydantic import ValidationError
 
 from app.core.settings import Settings
 
 
-def _settings(**kwargs: object) -> Settings:
+def _settings(**kwargs: Any) -> Settings:
     return Settings(_env_file=None, **kwargs)  # type: ignore[call-arg]
 
 

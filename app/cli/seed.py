@@ -51,7 +51,7 @@ def _load_json(path: Path) -> list[dict[str, Any]]:
     return data if isinstance(data, list) else []
 
 
-_FALLBACK_INVENTORY = [
+_FALLBACK_INVENTORY: list[dict[str, Any]] = [
     {"sku": "SHIRT-001", "name": "Classic Oxford Shirt", "price": "2500 PKR", "stock_count": 50, "category": "Apparel"},
     {"sku": "JEANS-002", "name": "Slim Fit Denim", "price": "3800 PKR", "stock_count": 30, "category": "Apparel"},
     {"sku": "SHOES-003", "name": "Leather Loafers", "price": "5500 PKR", "stock_count": 15, "category": "Footwear"},

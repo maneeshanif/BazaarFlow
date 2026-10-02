@@ -26,7 +26,7 @@ def _all_routes() -> list[tuple[str, set[str], Any]]:
     routes: list[tuple[str, set[str], Any]] = []
     for route in app.routes:
         if isinstance(route, APIRoute):
-            routes.append((route.path, set(route.methods), route.dependant))
+            routes.append((route.path, set(route.methods or []), route.dependant))
         elif hasattr(route, "effective_route_contexts"):
             for ctx in route.effective_route_contexts():
                 routes.append((ctx.path, set(ctx.methods), ctx.dependant))

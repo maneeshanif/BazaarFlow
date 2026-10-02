@@ -1,7 +1,7 @@
 """Sales endpoints - exact port of backend/controllers/sales_controller.py"""
 from __future__ import annotations
 
-from typing import Optional
+from typing import Any, Optional
 
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
@@ -25,7 +25,7 @@ class SalesForm(BaseModel):
 
 
 @router.post("/", response_class=JSONResponse)
-async def create_sales_order(form: SalesForm):
+async def create_sales_order(form: SalesForm) -> Any:
     try:
         record = save_order(form.model_dump())
         return JSONResponse(status_code=201, content={"ok": True, "order": record})
@@ -36,6 +36,6 @@ async def create_sales_order(form: SalesForm):
 
 
 @router.get("/", response_class=JSONResponse)
-async def get_sales_orders():
+async def get_sales_orders() -> Any:
     items = list_orders()
     return JSONResponse(status_code=200, content={"ok": True, "orders": items})

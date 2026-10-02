@@ -148,10 +148,10 @@ def test_the_marketing_scheduler_starts_and_stops_with_the_app(monkeypatch: pyte
     async def stop() -> None:
         events.append("stop")
 
-    from app import main
+    from app.services.marketing_scheduler import marketing_scheduler as scheduler
 
-    monkeypatch.setattr(main.marketing_scheduler, "start", start)
-    monkeypatch.setattr(main.marketing_scheduler, "stop", stop)
+    monkeypatch.setattr(scheduler, "start", start)
+    monkeypatch.setattr(scheduler, "stop", stop)
     monkeypatch.setattr(settings, "APP_ENV", "development")
     monkeypatch.setattr(settings, "MARKETING_SCHEDULER_ENABLED", True)
     with TestClient(real_app):
@@ -165,9 +165,9 @@ def test_the_scheduler_stays_off_when_disabled_or_under_test(monkeypatch: pytest
     async def start() -> None:
         events.append("start")
 
-    from app import main
+    from app.services.marketing_scheduler import marketing_scheduler as scheduler
 
-    monkeypatch.setattr(main.marketing_scheduler, "start", start)
+    monkeypatch.setattr(scheduler, "start", start)
     monkeypatch.setattr(settings, "APP_ENV", "development")
     monkeypatch.setattr(settings, "MARKETING_SCHEDULER_ENABLED", False)
     with TestClient(real_app):

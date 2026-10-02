@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import asyncio
-from typing import AsyncGenerator
+from typing import Any, AsyncGenerator
 
 import pytest
 import pytest_asyncio
@@ -32,7 +32,7 @@ TestingSessionLocal = async_sessionmaker(
 
 
 @pytest.fixture(scope="session")
-def event_loop():
+def event_loop() -> Any:
     """Create an instance of the default event loop for each test session."""
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
@@ -55,7 +55,7 @@ async def db_session() -> AsyncGenerator[AsyncSession, None]:
 @pytest_asyncio.fixture(scope="function")
 async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
     """FastAPI async HTTP test client with database dependency override."""
-    async def override_get_db():
+    async def override_get_db() -> Any:
         yield db_session
 
     app.dependency_overrides[get_db] = override_get_db

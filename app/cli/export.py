@@ -35,6 +35,7 @@ async def export_data(
 ) -> None:
     async with tenant_session(tenant_id) as session:
         records: List[dict[str, Any]] = []
+        result: Any
 
         if table_name == "inventory":
             result = await session.execute(select(InventoryItem).where(InventoryItem.tenant_id == tenant_id, live(InventoryItem)))
@@ -99,7 +100,7 @@ async def export_data(
             logger.info("Exported %d records to %s", len(records), file_path)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Export BazaarFlow database data")
     parser.add_argument("--tenant-id", type=uuid.UUID, required=True, help="Tenant whose data to export")
     parser.add_argument("--table", choices=["inventory", "orders", "customers"], required=True, help="Table to export")

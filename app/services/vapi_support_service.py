@@ -53,7 +53,7 @@ def handle_create_support_ticket(params: Dict[str, Any]) -> Dict[str, Any]:
         )
         return {"success": False, "responseMessage": msg}
 
-    def mutator(current: Dict[str, Any]):
+    def mutator(current: Dict[str, Any]) -> Any:
         tickets = current.get("tickets") or []
         if not isinstance(tickets, list):
             tickets = []

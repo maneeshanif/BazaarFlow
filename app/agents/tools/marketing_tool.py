@@ -109,7 +109,7 @@ def marketing_image_search(query: str, orientation: str = "square") -> Dict[str,
         }
 
     headers = {"Authorization": api_key}
-    params = {"query": query, "per_page": 3, "orientation": orientation}
+    params: dict[str, str | int] = {"query": query, "per_page": 3, "orientation": orientation}
     try:
         response = requests.get(
             PEXELS_SEARCH_ENDPOINT,

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest  # type: ignore[import-not-found]
+import pytest
 
 from app.repositories import repository
 

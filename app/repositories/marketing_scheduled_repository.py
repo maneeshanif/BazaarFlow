@@ -10,7 +10,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, cast
 
 from .json_store import JsonStore
 
@@ -185,7 +185,7 @@ def mark_scheduled_post_posted(*, scheduled_post_id: str, facebook_post_id: str)
                 next_rows.append(existing)
         return next_rows, updated
 
-    return _post_store.update(_mutator)
+    return cast("dict[str, Any] | None", _post_store.update(_mutator))
 
 
 def mark_scheduled_post_failed(*, scheduled_post_id: str, error: str) -> Optional[Dict[str, Any]]:
@@ -203,7 +203,7 @@ def mark_scheduled_post_failed(*, scheduled_post_id: str, error: str) -> Optiona
                 next_rows.append(existing)
         return next_rows, updated
 
-    return _post_store.update(_mutator)
+    return cast("dict[str, Any] | None", _post_store.update(_mutator))
 
 
 def get_scheduled_post(*, scheduled_post_id: str) -> Optional[Dict[str, Any]]:
@@ -212,7 +212,7 @@ def get_scheduled_post(*, scheduled_post_id: str) -> Optional[Dict[str, Any]]:
         return None
     for record in data:
         if record.get("scheduled_post_id") == scheduled_post_id:
-            return record
+            return cast("dict[str, Any] | None", record)
     return None
 
 
@@ -272,7 +272,7 @@ def update_scheduled_post(*, scheduled_post_id: str, updates: Dict[str, Any]) ->
 
         return next_rows, updated
 
-    return _post_store.update(_mutator)
+    return cast("dict[str, Any] | None", _post_store.update(_mutator))
 
 
 def update_scheduled_campaign(*, scheduled_campaign_id: str, updates: Dict[str, Any]) -> Optional[Dict[str, Any]]:
@@ -303,7 +303,7 @@ def update_scheduled_campaign(*, scheduled_campaign_id: str, updates: Dict[str, 
 
         return next_rows, updated
 
-    return _campaign_store.update(_mutator)
+    return cast("dict[str, Any] | None", _campaign_store.update(_mutator))
 
 
 def delete_scheduled_post(*, scheduled_post_id: str) -> bool:
@@ -323,7 +323,7 @@ def delete_scheduled_post(*, scheduled_post_id: str) -> bool:
             next_rows.append(existing)
         return next_rows, removed
 
-    return _post_store.update(_mutator)
+    return cast("bool", _post_store.update(_mutator))
 
 
 def delete_scheduled_campaign(*, scheduled_campaign_id: str) -> bool:

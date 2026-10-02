@@ -13,7 +13,7 @@ import json
 import logging
 from typing import Any, Dict
 
-from agents import Runner, SQLiteSession  # type: ignore[import-not-found]
+from agents import Runner, SQLiteSession
 
 from app.agents.sales_agent import sales_agent
 from app.repositories import repository

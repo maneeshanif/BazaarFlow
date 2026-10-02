@@ -1,4 +1,5 @@
 import json
+from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
@@ -11,17 +12,17 @@ import app.services.sales_service as sales_service
 
 
 class DummyResp:
-    def __init__(self):
+    def __init__(self) -> None:
         self.id = "dummy-startup-id"
 
 
 class DummyWA:
-    async def send_message(self, *args, **kwargs):
+    async def send_message(self, *args: Any, **kwargs: Any) -> Any:
         return DummyResp()
 
 
 @pytest.fixture
-def sales_test_env(tmp_path, monkeypatch):
+def sales_test_env(tmp_path: Any, monkeypatch: Any) -> Any:
     inventory_file = tmp_path / "inventory.json"
     inventory_payload = [
         {
@@ -48,7 +49,7 @@ def sales_test_env(tmp_path, monkeypatch):
     return orders_file
 
 
-def test_create_and_list_sales(monkeypatch, sales_test_env):
+def test_create_and_list_sales(monkeypatch: Any, sales_test_env: Any) -> None:
     # Replace wa to avoid network calls during app startup
 
     client = TestClient(app_module.app)

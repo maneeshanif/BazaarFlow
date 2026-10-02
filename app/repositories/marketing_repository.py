@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, cast, overload
 from uuid import uuid4
 
 from .json_store import JsonStore
@@ -85,6 +85,14 @@ def configure_marketing_root(root: Path | str) -> None:
 configure_marketing_root(_resolve_root())
 
 
+@overload
+def _copy(record: Dict[str, Any]) -> Dict[str, Any]: ...
+
+
+@overload
+def _copy(record: None) -> None: ...
+
+
 def _copy(record: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
     if record is None:
         return None
@@ -123,7 +131,7 @@ def upsert_facebook_account(
         doc.append(record)
         return doc, _copy(record)
 
-    return _FACEBOOK_ACCOUNTS_STORE.update(mutate)
+    return cast("dict[str, Any]", _FACEBOOK_ACCOUNTS_STORE.update(mutate))
 
 
 def list_facebook_accounts(user_id: Optional[str] = None) -> List[Dict[str, Any]]:
@@ -136,7 +144,7 @@ def list_facebook_accounts(user_id: Optional[str] = None) -> List[Dict[str, Any]
 def get_facebook_account(account_id: str) -> Optional[Dict[str, Any]]:
     for account in _FACEBOOK_ACCOUNTS_STORE.read():
         if account.get("account_id") == account_id:
-            return _copy(account)
+            return dict(account)
     return None
 
 
@@ -146,7 +154,7 @@ def delete_facebook_account(account_id: str) -> bool:
         doc[:] = [account for account in doc if account.get("account_id") != account_id]
         return doc, len(doc) < initial_len
 
-    return _FACEBOOK_ACCOUNTS_STORE.update(mutate)
+    return cast("bool", _FACEBOOK_ACCOUNTS_STORE.update(mutate))
 
 
 def save_schedule(
@@ -185,13 +193,13 @@ def save_schedule(
         doc.append(record)
         return doc, _copy(record)
 
-    return _SCHEDULES_STORE.update(mutate)
+    return cast("dict[str, Any]", _SCHEDULES_STORE.update(mutate))
 
 
 def get_schedule(account_id: str) -> Optional[Dict[str, Any]]:
     for schedule in _SCHEDULES_STORE.read():
         if schedule.get("account_id") == account_id:
-            return _copy(schedule)
+            return dict(schedule)
     return None
 
 
@@ -210,7 +218,7 @@ def mark_schedule_triggered(account_id: str, *, triggered_at: Optional[str] = No
                 return doc, _copy(schedule)
         return doc, None
 
-    return _SCHEDULES_STORE.update(mutate)
+    return cast("dict[str, Any] | None", _SCHEDULES_STORE.update(mutate))
 
 
 def record_marketing_post(
@@ -250,7 +258,7 @@ def record_marketing_post(
         doc.append(record)
         return doc, _copy(record)
 
-    return _POSTS_STORE.update(mutate)
+    return cast("dict[str, Any]", _POSTS_STORE.update(mutate))
 
 
 def list_marketing_posts(account_id: str, *, limit: int = 20) -> List[Dict[str, Any]]:
@@ -273,7 +281,7 @@ def update_post_insights(
                 return doc, _copy(record)
         return doc, None
 
-    return _POSTS_STORE.update(mutate)
+    return cast("dict[str, Any] | None", _POSTS_STORE.update(mutate))
 
 
 def delete_marketing_post(*, account_id: str, facebook_post_id: str) -> bool:
@@ -288,7 +296,7 @@ def delete_marketing_post(*, account_id: str, facebook_post_id: str) -> bool:
         ]
         return doc, len(doc) < initial_len
 
-    return _POSTS_STORE.update(mutate)
+    return cast("bool", _POSTS_STORE.update(mutate))
 
 
 def record_comment_reply(
@@ -322,7 +330,7 @@ def record_comment_reply(
         doc.append(entry)
         return doc, _copy(entry)
 
-    return _COMMENT_REPLIES_STORE.update(mutate)
+    return cast("dict[str, Any]", _COMMENT_REPLIES_STORE.update(mutate))
 
 
 def get_comment_reply(
@@ -337,5 +345,5 @@ def get_comment_reply(
             and record.get("facebook_post_id") == facebook_post_id
             and record.get("comment_id") == comment_id
         ):
-            return _copy(record)
+            return dict(record)
     return None

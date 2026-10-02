@@ -118,12 +118,12 @@ def load_config(env_file: Optional[str] = None, use_env_file: bool = True) -> Fa
         raise FileNotFoundError(f"Environment file not found: {env_file}")
     
     if env_file:
-        return FacebookConfig(_env_file=env_file)
+        return FacebookConfig(_env_file=env_file)  # type: ignore[call-arg]  # pydantic-settings init arguments
     
     if not use_env_file:
-        return FacebookConfig(_env_file=None)
+        return FacebookConfig(_env_file=None)  # type: ignore[call-arg]  # pydantic-settings init arguments
     
-    return FacebookConfig()
+    return FacebookConfig()  # type: ignore[call-arg]  # pydantic-settings init arguments
 
 
 # Singleton instance (optional, for convenience)

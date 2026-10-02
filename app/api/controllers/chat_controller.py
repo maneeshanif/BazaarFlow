@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import logging
 import uuid
-from typing import Optional
+from typing import Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
@@ -38,7 +38,7 @@ class ChatMessageResponse(BaseModel):
 
 
 async def _handle_agent_request(
-    handler, request: ChatMessageRequest, principal: Principal, *, log_ctx: str
+    handler: Any, request: ChatMessageRequest, principal: Principal, *, log_ctx: str
 ) -> ChatMessageResponse:
     # The client-visible session id is not a secret, so the stored session is keyed by tenant + id: another tenant
     # sending the same id gets its own empty conversation, never this one's history.
@@ -57,7 +57,7 @@ async def _handle_agent_request(
 @router.post("/chat/sales", response_model=ChatMessageResponse, dependencies=[Depends(require_role(*ALL_ROLES))])
 async def chat_with_sales_agent(
     request: ChatMessageRequest, principal: Principal = Depends(require_role(*ALL_ROLES))
-):
+) -> Any:
     """Website chat endpoint for the sales agent."""
     return await _handle_agent_request(chat_service, request, principal, log_ctx="chat_with_sales_agent")
 
@@ -65,7 +65,7 @@ async def chat_with_sales_agent(
 @router.post("/chat/finance", response_model=ChatMessageResponse, dependencies=[Depends(require_role(*MANAGER_UP))])
 async def chat_with_finance_agent(
     request: ChatMessageRequest, principal: Principal = Depends(require_role(*MANAGER_UP))
-):
+) -> Any:
     """Chat endpoint for the finance agent."""
     return await _handle_agent_request(finance_chat_service, request, principal, log_ctx="chat_with_finance_agent")
 
@@ -73,11 +73,11 @@ async def chat_with_finance_agent(
 @router.post("/chat/inventory", response_model=ChatMessageResponse, dependencies=[Depends(require_role(*ALL_ROLES))])
 async def chat_with_inventory_agent(
     request: ChatMessageRequest, principal: Principal = Depends(require_role(*ALL_ROLES))
-):
+) -> Any:
     """Chat endpoint for the inventory agent."""
     return await _handle_agent_request(inventory_chat_service, request, principal, log_ctx="chat_with_inventory_agent")
 
 
 @router.get("/health/chat", dependencies=[Depends(public_route)])
-async def chat_health():
+async def chat_health() -> Any:
     return {"status": "chat services are running"}

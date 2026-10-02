@@ -7,10 +7,12 @@ and with no tenant context nothing is visible at all.
 from __future__ import annotations
 
 import uuid
+from typing import Any, cast
 
 import pytest
 from httpx import AsyncClient
 from sqlalchemy import text
+from sqlalchemy.engine import CursorResult
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
@@ -92,9 +94,9 @@ async def test_cannot_modify_or_create_rows_of_another_tenant(client: AsyncClien
     session = await _session(app_engine, tenant_id=tenant_a)
     try:
         updated = await session.execute(text("UPDATE customers SET name = 'pwned' WHERE tenant_id = :t"), {"t": tenant_b})
-        assert updated.rowcount == 0
+        assert cast("CursorResult[Any]", updated).rowcount == 0
         deleted = await session.execute(text("DELETE FROM customers WHERE tenant_id = :t"), {"t": tenant_b})
-        assert deleted.rowcount == 0
+        assert cast("CursorResult[Any]", deleted).rowcount == 0
     finally:
         await session.rollback()
         await session.close()

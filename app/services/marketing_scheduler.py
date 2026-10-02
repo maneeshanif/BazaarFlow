@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import functools
 import logging
 import os
 from dataclasses import dataclass
@@ -142,17 +143,17 @@ class MarketingScheduler:
             logger.debug("Campaign runner does not support publish_scheduled_post; skipping scheduled posts dispatch")
             return
 
-        for record in pending_posts:
-            scheduled_post_id = record.get("scheduled_post_id")
+        for post in pending_posts:
+            scheduled_post_id = post.get("scheduled_post_id")
             if not isinstance(scheduled_post_id, str):
                 continue
             async with self._semaphore:
                 try:
                     logger.info("Publishing scheduled marketing post %s", scheduled_post_id)
-                    # type: ignore[call-arg]
+
+                    publish = self._campaign_runner.publish_scheduled_post
                     await asyncio.get_running_loop().run_in_executor(
-                        None,
-                        lambda spid=scheduled_post_id: self._campaign_runner.publish_scheduled_post(scheduled_post_id=spid),
+                        None, functools.partial(publish, scheduled_post_id=scheduled_post_id)
                     )
                 except Exception:  # pragma: no cover - defensive guard
                     logger.exception("Failed to publish scheduled post %s", scheduled_post_id)

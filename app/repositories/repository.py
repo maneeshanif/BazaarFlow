@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, cast
 from uuid import uuid4
 
 from .json_store import JsonStore
@@ -92,7 +92,7 @@ def upsert_vendor(
 ) -> Dict[str, Any]:
     """Create or update a vendor identified by ``phone_number_id``."""
 
-    def mutate(doc: JsonDocument):
+    def mutate(doc: JsonDocument) -> Any:
         now = _utcnow()
         for vendor in doc:
             if vendor.get("phone_number_id") == phone_number_id:
@@ -121,7 +121,7 @@ def upsert_vendor(
         doc.append(record)
         return doc, _copy_dict(record)
 
-    return vendors_store.update(mutate)
+    return cast("dict[str, Any]", vendors_store.update(mutate))
 
 
 def update_vendor_settings(
@@ -134,7 +134,7 @@ def update_vendor_settings(
 ) -> Dict[str, Any]:
     """Apply settings updates to a vendor, raising if unknown."""
 
-    def mutate(doc: JsonDocument):
+    def mutate(doc: JsonDocument) -> Any:
         now = _utcnow()
         for vendor in doc:
             if vendor.get("vendor_id") == vendor_id:
@@ -151,7 +151,7 @@ def update_vendor_settings(
                 return doc, _copy_dict(vendor)
         raise KeyError(f"Vendor {vendor_id} not found")
 
-    return vendors_store.update(mutate)
+    return cast("dict[str, Any]", vendors_store.update(mutate))
 
 
 def list_vendors() -> List[Dict[str, Any]]:
@@ -166,7 +166,7 @@ def upsert_customer(
 ) -> Dict[str, Any]:
     """Create or update a customer under ``vendor_id``."""
 
-    def mutate(doc: JsonDocument):
+    def mutate(doc: JsonDocument) -> Any:
         now = _utcnow()
         for customer in doc:
             if customer.get("vendor_id") == vendor_id and customer.get("phone") == phone:
@@ -185,7 +185,7 @@ def upsert_customer(
         doc.append(record)
         return doc, _copy_dict(record)
 
-    return customers_store.update(mutate)
+    return cast("dict[str, Any]", customers_store.update(mutate))
 
 
 def list_customers(vendor_id: str) -> List[Dict[str, Any]]:
@@ -212,7 +212,7 @@ def record_message(
 ) -> Dict[str, Any]:
     """Persist a chat message."""
 
-    def mutate(doc: JsonDocument):
+    def mutate(doc: JsonDocument) -> Any:
         record = {
             "id": str(uuid4()),
             "vendor_id": vendor_id,
@@ -225,7 +225,7 @@ def record_message(
         doc.append(record)
         return doc, _copy_dict(record)
 
-    return messages_store.update(mutate)
+    return cast("dict[str, Any]", messages_store.update(mutate))
 
 
 def list_messages(vendor_id: str, customer_phone: str, *, limit: Optional[int] = None) -> List[Dict[str, Any]]:

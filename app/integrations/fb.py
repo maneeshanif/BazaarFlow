@@ -32,7 +32,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Any, Dict, Iterable, Optional
+from typing import Any, Dict, Iterable, Mapping, Optional
 
 from dotenv import load_dotenv
 from pydantic import ValidationError
@@ -254,7 +254,7 @@ def write_output(payload: Dict[str, Any], destination: str) -> None:
     print(f"\nFull output written to {output_path.resolve()}")
 
 
-def format_validation_errors(errors: Iterable[Dict[str, Any]]) -> str:
+def format_validation_errors(errors: Iterable[Mapping[str, Any]]) -> str:
     """Render Pydantic validation errors into a readable multi-line string."""
 
     lines = []
@@ -265,7 +265,7 @@ def format_validation_errors(errors: Iterable[Dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
-def command_fetch_post_engagement(config, args) -> int:
+def command_fetch_post_engagement(config: Any, args: Any) -> int:
     period = parse_insight_period(args.period)
     with FacebookManager(config=config) as manager:
         payload = fetch_comments_and_insights(manager, args.post_id, args.limit, period)
@@ -278,7 +278,7 @@ def command_fetch_post_engagement(config, args) -> int:
     return 0
 
 
-def command_post_text(config, args) -> int:
+def command_post_text(config: Any, args: Any) -> int:
     message = args.message
     if not message:
         message = sys.stdin.read().strip() if not sys.stdin.isatty() else input("Enter post message: ").strip()
@@ -295,7 +295,7 @@ def command_post_text(config, args) -> int:
     return 0
 
 
-def command_post_image(config, args) -> int:
+def command_post_image(config: Any, args: Any) -> int:
     if bool(args.image_url) == bool(args.image_path):
         raise ValueError("Provide exactly one of --image-url or --image-path.")
 
@@ -312,7 +312,7 @@ def command_post_image(config, args) -> int:
     return 0
 
 
-def command_verify(config, args) -> int:
+def command_verify(config: Any, args: Any) -> int:
     with FacebookManager(config=config) as manager:
         success = manager.verify_credentials()
 
@@ -322,7 +322,7 @@ def command_verify(config, args) -> int:
     return 0 if success else 1
 
 
-def command_page_insights(config, args) -> int:
+def command_page_insights(config: Any, args: Any) -> int:
     period = parse_insight_period(args.period)
     with FacebookManager(config=config) as manager:
         insights = manager.get_page_insights(period=period)

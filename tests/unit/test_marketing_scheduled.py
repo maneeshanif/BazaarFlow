@@ -29,21 +29,21 @@ class _MemoryStore:
     self._doc = list(value)
     return self._doc
 
-  def update(self, mutator):  # type: ignore[no-untyped-def]
+  def update(self, mutator: Any) -> Any:
     doc, result = mutator(list(self._doc))
     self._doc = list(doc)
     return result
 
 
 @pytest.fixture
-def stores(monkeypatch):  # type: ignore[no-untyped-def]
+def stores(monkeypatch: Any) -> Any:
   campaigns, posts = _MemoryStore(), _MemoryStore()
   monkeypatch.setattr(scheduled_repo, "_campaign_store", campaigns)
   monkeypatch.setattr(scheduled_repo, "_post_store", posts)
   return campaigns, posts
 
 
-def test_repository_create_and_list_pending(stores):  # type: ignore[no-untyped-def]
+def test_repository_create_and_list_pending(stores: Any) -> None:
   """The repository persists a campaign with its posts and returns only the pending posts that are due."""
   now = datetime.now(timezone.utc)
   past = _make_iso(now - timedelta(minutes=5))
@@ -71,7 +71,7 @@ def test_repository_create_and_list_pending(stores):  # type: ignore[no-untyped-
   assert due[0]["post_payload"]["message"] == "m1"
 
 
-def test_mark_post_posted_and_failed(stores):  # type: ignore[no-untyped-def]
+def test_mark_post_posted_and_failed(stores: Any) -> None:
   """Status updates flip a scheduled post from pending to posted or failed; unknown ids change nothing."""
   now = _make_iso(datetime.now(timezone.utc))
   result = scheduled_repo.create_scheduled_campaign(
@@ -103,7 +103,7 @@ def test_mark_post_posted_and_failed(stores):  # type: ignore[no-untyped-def]
 
 
 @pytest.mark.asyncio
-async def test_create_scheduled_campaign_validates_future_times(monkeypatch, stores):  # type: ignore[no-untyped-def]
+async def test_create_scheduled_campaign_validates_future_times(monkeypatch: Any, stores: Any) -> None:
   """MarketingService.create_scheduled_campaign rejects past times and an empty list, and stores nothing."""
   service = MarketingService()
   monkeypatch.setattr(service, "_require_account", lambda account_id: {"account_id": account_id})
@@ -136,19 +136,19 @@ async def test_create_scheduled_campaign_validates_future_times(monkeypatch, sto
 
 
 @pytest.mark.asyncio
-async def test_scheduler_publishes_pending_posts(monkeypatch):
+async def test_scheduler_publishes_pending_posts(monkeypatch: Any) -> None:
   """MarketingScheduler._tick should invoke publish_scheduled_post for due posts."""
 
   calls: List[str] = []
 
   class DummyRunner:
-    async def trigger_scheduled_campaign(self, *, account_id: str, user_id: str, triggered_at: str | None = None):
+    async def trigger_scheduled_campaign(self, *, account_id: str, user_id: str, triggered_at: str | None = None) -> Any:
       return {"ok": True}
 
-    def publish_scheduled_post(self, *, scheduled_post_id: str):  # type: ignore[no-untyped-def]
+    def publish_scheduled_post(self, *, scheduled_post_id: str) -> None:
       calls.append(scheduled_post_id)
 
-  def fake_list_schedules():  # type: ignore[no-untyped-def]
+  def fake_list_schedules() -> Any:
     return []
 
   now = datetime.now(timezone.utc)
@@ -167,6 +167,6 @@ async def test_scheduler_publishes_pending_posts(monkeypatch):
 
   scheduler = MarketingScheduler(campaign_runner=DummyRunner())
 
-  await scheduler._tick()  # type: ignore[attr-defined]
+  await scheduler._tick()
 
   assert calls == ["sp1"]

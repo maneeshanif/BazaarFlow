@@ -93,8 +93,9 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [x] 15 Rewrite the 19 quarantined tests (pytest markers legacy_port and live) against app.* and tenant-scoped data, then remove both markers from addopts
   - Acceptance: tests/ contains no `live` or `legacy_port` marker and pyproject.toml no longer excludes them; the default `pytest` run executes every former quarantined test
   - Acceptance: every former live-LLM test runs offline against a recording fake runner and asserts our behaviour; tests never write to app/data (tests/unit/conftest.py)
-- [ ] 16 Burn down the mypy legacy override list in pyproject.toml module by module until strict passes everywhere
-  - Acceptance: The done-condition for this task is written here and has an automated check
+- [x] 16 Burn down the mypy legacy override list in pyproject.toml module by module until strict passes everywhere
+  - Acceptance: `uv run mypy .` passes in strict mode with no ignore_errors override (tests/architecture/test_typing_policy.py enforces it)
+  - Acceptance: the only mypy override is for a third-party package that ships no stubs
 - [x] 17 Fix the double-prefixed v1 routes (/api/v1/api/...) and consolidate router mounting in app/api/routers
   - Acceptance: The done-condition for this task is written here and has an automated check
 - [ ] 18 Scaffold the web app with the chosen framework, strict TypeScript, lint and format [web-app pack]

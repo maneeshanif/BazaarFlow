@@ -7,7 +7,7 @@ import logging
 import re
 from collections import Counter
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, cast
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -48,7 +48,7 @@ class FacebookManager:
     Provides methods for creating posts with text and images.
     """
     
-    def __init__(self, config: Optional[FacebookConfig] = None):
+    def __init__(self, config: Optional[FacebookConfig] = None) -> None:
         """
         Initialize Facebook Manager.
         
@@ -147,7 +147,7 @@ class FacebookManager:
                         error_response.error_code
                     )
             
-            return response_data
+            return cast("dict[str, Any]", response_data)
             
         except requests.exceptions.Timeout:
             logger.error(f"Request timeout for endpoint: {endpoint}")
@@ -286,6 +286,8 @@ class FacebookManager:
         Returns:
             FacebookPostResponse with post ID
         """
+        if not post_request.image_path:
+            raise ImageUploadError("No image path provided")
         image_path = Path(post_request.image_path)
         
         # Validate file exists
@@ -902,9 +904,6 @@ class FacebookManager:
             reaction_values.get('angry', reaction_values.get('anger', 0)) or 0
         )
         care = int(reaction_values.get('care', 0) or 0)
-
-        total = like + love + wow + haha + sad + angry + care
-
         return ReactionBreakdown(
             like=like,
             love=love,
@@ -913,10 +912,9 @@ class FacebookManager:
             sad=sad,
             angry=angry,
             care=care,
-            total=total
         )
 
-    def _parse_reaction_breakdown(self, reactions_data: List[Dict]) -> ReactionBreakdown:
+    def _parse_reaction_breakdown(self, reactions_data: List[dict[str, Any]]) -> ReactionBreakdown:
         """
         Parse reactions data into ReactionBreakdown model.
         
@@ -941,8 +939,6 @@ class FacebookManager:
             if reaction_type in reaction_counts:
                 reaction_counts[reaction_type] += 1
         
-        total = sum(reaction_counts.values())
-        
         return ReactionBreakdown(
             like=reaction_counts['like'],
             love=reaction_counts['love'],
@@ -951,7 +947,6 @@ class FacebookManager:
             sad=reaction_counts['sad'],
             angry=reaction_counts['angry'],
             care=reaction_counts['care'],
-            total=total
         )
     
     def get_page_insights(
@@ -1062,7 +1057,7 @@ class FacebookManager:
         }
         
         # Collect all words from comments
-        word_counts = Counter()
+        word_counts: Counter[str] = Counter()
         
         for comment in comments:
             # Convert to lowercase and extract words
@@ -1084,16 +1079,16 @@ class FacebookManager:
         
         return top_keywords
     
-    def close(self):
+    def close(self) -> None:
         """Close the HTTP session."""
         if self.session:
             self.session.close()
             logger.info("Facebook Manager session closed")
     
-    def __enter__(self):
+    def __enter__(self) -> "FacebookManager":
         """Context manager entry."""
         return self
     
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
         """Context manager exit."""
         self.close()

@@ -50,7 +50,7 @@ TEST_WEBHOOK = {
 }
 
 
-async def test_webhook():
+async def test_webhook() -> None:
     """Test webhook via ngrok URL."""
     async with httpx.AsyncClient(timeout=30.0) as client:
         try:

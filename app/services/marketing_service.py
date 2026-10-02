@@ -8,7 +8,7 @@ from app.core.settings import settings
 import logging
 import re
 from datetime import datetime, timezone
-from typing import Any, Awaitable, Callable, Dict, List, Optional
+from typing import Any, Awaitable, Callable, Dict, List, Optional, cast
 from zoneinfo import ZoneInfo
 
 import requests
@@ -341,11 +341,11 @@ class MarketingService:
 
         try:
             if image_url:
-                post_request = ImagePostRequest(message=formatted_message, image_url=image_url)
-                response = manager.create_image_post(post_request)
+                image_request = ImagePostRequest.model_validate({"message": formatted_message, "image_url": image_url})
+                response = manager.create_image_post(image_request)
             else:
-                post_request = TextPostRequest(message=formatted_message)
-                response = manager.create_text_post(post_request)
+                text_request = TextPostRequest(message=formatted_message)
+                response = manager.create_text_post(text_request)
         except (FacebookAPIError, PostCreationError) as exc:
             logger.error("Failed to publish scheduled marketing post via Facebook: %s", exc)
             scheduled_repo.mark_scheduled_post_failed(scheduled_post_id=scheduled_post_id, error=str(exc))
@@ -737,9 +737,6 @@ class MarketingService:
         prompt: Optional[str],
         overrides: Dict[str, Any],
     ) -> Dict[str, Any]:
-        if not self._agent_runner:
-            raise RuntimeError("Marketing agent runner is not configured")
-
         # Extract an optional post_count hint from overrides, clamped to a safe range.
         raw_post_count = overrides.get("post_count") if isinstance(overrides, dict) else None
         try:
@@ -749,8 +746,10 @@ class MarketingService:
 
         if post_count_hint is not None:
             post_count_hint = max(1, min(post_count_hint, 6))
+        if self._agent_runner is None:  # an explicit agent_runner=None must fail clearly
+            raise RuntimeError("Marketing agent runner is not configured")
 
-        payload = {
+        payload: Dict[str, Any] = {
             "account": account,
             "user_id": user_id,
             "mode": mode,
@@ -858,11 +857,11 @@ class MarketingService:
 
             try:
                 if image_url:
-                    post_request = ImagePostRequest(message=formatted_message, image_url=image_url)
-                    response = manager.create_image_post(post_request)
+                    image_request = ImagePostRequest.model_validate({"message": formatted_message, "image_url": image_url})
+                    response = manager.create_image_post(image_request)
                 else:
-                    post_request = TextPostRequest(message=formatted_message)
-                    response = manager.create_text_post(post_request)
+                    text_request = TextPostRequest(message=formatted_message)
+                    response = manager.create_text_post(text_request)
             except (FacebookAPIError, PostCreationError) as exc:
                 logger.error("Failed to publish marketing campaign post via Facebook: %s", exc)
                 raise
@@ -943,7 +942,7 @@ class MarketingService:
         for item in items:
             name = item.get("name")
             if name and name.lower() in text_lower:
-                return name
+                return cast("str | None", name)
 
         tokens = re.findall(r"[a-z0-9]+", text_lower)
         for token in tokens:
@@ -951,7 +950,7 @@ class MarketingService:
             if matches:
                 candidate = matches[0].get("name")
                 if candidate:
-                    return candidate
+                    return cast("str | None", candidate)
         return None
 
     def _matches_inventory_product(self, candidate: str) -> bool:
@@ -976,7 +975,7 @@ class MarketingService:
             return None
 
         headers = {"Authorization": self._pexels_api_key}
-        params = {
+        params: Dict[str, str | int] = {
             "query": query,
             "per_page": 4,
             "orientation": "landscape",
@@ -1003,7 +1002,7 @@ class MarketingService:
         for source_name in preferred_sources:
             candidate = photos[0].get("src", {}).get(source_name)
             if candidate:
-                return candidate
+                return cast("str | None", candidate)
         return None
 
     def _photo_is_usable(self, photo: Dict[str, Any]) -> bool:
@@ -1026,7 +1025,7 @@ class MarketingService:
         return self._facebook_manager_factory(config)
 
     def _build_config(self, *, page_id: str, access_token: str) -> FacebookConfig:
-        kwargs = {
+        kwargs: Dict[str, Any] = {
             "facebook_page_id": page_id,
             "facebook_access_token": access_token,
             "facebook_api_version": settings.META_GRAPH_VERSION,
@@ -1184,11 +1183,11 @@ class MarketingService:
         greeting_name = first_name or "there"
         topic = self._extract_topic_from_comment(comment_message)
 
-        templates = [
+        templates: List[Callable[[str, str], str]] = [
             lambda g, t: f"Thanks, {g}! We'd love to help with {t}. Message us on WhatsApp at {number} so we can share everything.",
             lambda g, t: f"Hi {g}! Let's continue this on WhatsApp for the full details. Send us a quick message at {number}.",
             lambda g, t: f"Hey {g}, appreciate your comment. WhatsApp us at {number} and we'll walk you through it.",
-            lambda g, t: f"{g.capitalize()}, thanks for reaching out. Our team replies fastest on WhatsAppâ€”drop us a note at {number}.",
+            lambda g, t: f"{g.capitalize()}, thanks for reaching out. Our team replies fastest on WhatsApp. Drop us a note at {number}.",
             lambda g, t: f"Great to hear from you, {g}! For everything about {t}, ping us on WhatsApp at {number} and we'll help right away.",
         ]
 

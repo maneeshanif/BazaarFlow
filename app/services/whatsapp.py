@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple, cast
 
-import httpx  # type: ignore[import-not-found]
+import httpx
 
 from app.core.settings import settings
 
@@ -119,7 +119,7 @@ async def send_text_message(
         raise WhatsAppAPIError(message, status_code=response.status_code, payload=detail)
 
     try:
-        return response.json()
+        return cast("dict[str, Any]", response.json())
     except ValueError as exc:  # pragma: no cover - unexpected API behaviour
         logger.exception("Invalid JSON body from WhatsApp API: %s", response.text)
         raise WhatsAppAPIError(
@@ -148,7 +148,7 @@ async def validate_phone_number(
     )
     response = await client.get(url, headers=headers, params=params, timeout=30.0)
     response.raise_for_status()
-    return response.json()
+    return cast("dict[str, Any]", response.json())
 
 
 __all__ = ["send_text_message", "validate_phone_number", "WhatsAppAPIError"]

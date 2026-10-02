@@ -4,11 +4,11 @@ Diagnostic script to troubleshoot Facebook Manager CLI issues.
 
 Run this to check your configuration and identify common problems.
 """
-
 import os
 import sys
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from dotenv import load_dotenv
 
@@ -20,7 +20,7 @@ BLUE = "\033[94m"
 RESET = "\033[0m"
 
 
-def print_status(message: str, status: str):
+def print_status(message: str, status: str) -> None:
     """Print a status message with color coding."""
     if status == "OK":
         print(f"{GREEN}✓{RESET} {message}")
@@ -32,7 +32,7 @@ def print_status(message: str, status: str):
         print(f"{BLUE}ℹ{RESET} {message}")
 
 
-def check_env_file():
+def check_env_file() -> bool:
     """Check if .env file exists and is readable."""
     env_path = Path(".env")
     if not env_path.exists():
@@ -52,7 +52,7 @@ def check_env_file():
         return False
 
 
-def check_environment_variables():
+def check_environment_variables() -> Any:
     """Check if required environment variables are set."""
     load_dotenv()
     
@@ -94,10 +94,10 @@ def check_environment_variables():
     return all_ok
 
 
-def check_token_expiration():
+def check_token_expiration() -> bool:
     """Attempt to verify token with Facebook API."""
     try:
-        from src import FacebookManager
+        from app.integrations.facebook_manager import FacebookManager
         
         print_status("Attempting to verify credentials with Facebook...", "INFO")
         
@@ -135,7 +135,7 @@ def check_token_expiration():
         return False
 
 
-def check_dependencies():
+def check_dependencies() -> Any:
     """Check if required Python packages are installed."""
     required_packages = [
         "pydantic",
@@ -159,19 +159,19 @@ def check_dependencies():
     return all_ok
 
 
-def check_main_script():
+def check_main_script() -> bool:
     """Check if main.py exists and is executable."""
-    main_path = Path("main.py")
+    main_path = Path("app") / "main.py"
     
     if not main_path.exists():
-        print_status("main.py not found", "ERROR")
+        print_status("app/main.py not found", "ERROR")
         return False
     
-    print_status("main.py found", "OK")
+    print_status("app/main.py found", "OK")
     
     # Try to import and check structure
     try:
-        import main
+        import app.main as main
         print_status("main.py imports successfully", "OK")
         
         # Check if main function exists
@@ -187,7 +187,7 @@ def check_main_script():
         return False
 
 
-def provide_recommendations(results):
+def provide_recommendations(results: Any) -> None:
     """Provide recommendations based on diagnostic results."""
     print(f"\n{BLUE}{'=' * 60}{RESET}")
     print(f"{BLUE}RECOMMENDATIONS{RESET}")
@@ -223,7 +223,7 @@ def provide_recommendations(results):
         print("  python main.py fetch-post-engagement YOUR_POST_ID")
 
 
-def main():
+def main() -> None:
     """Run all diagnostic checks."""
     print(f"\n{BLUE}{'=' * 60}{RESET}")
     print(f"{BLUE}Facebook Manager CLI Diagnostics{RESET}")

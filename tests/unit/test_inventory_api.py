@@ -1,6 +1,7 @@
 """Test inventory management API endpoints."""
 import importlib
 from types import SimpleNamespace
+from typing import Any
 
 from fastapi.testclient import TestClient
 
@@ -10,18 +11,18 @@ chat_service_module = importlib.import_module("app.services.chat_service")
 
 
 class DummyResp:
-    def __init__(self):
+    def __init__(self) -> None:
         self.id = "dummy-startup-id"
 
 
 class DummyWA:
-    async def send_message(self, *args, **kwargs):
+    async def send_message(self, *args: Any, **kwargs: Any) -> Any:
         return DummyResp()
 
 
 
-def test_inventory_chat_endpoint(monkeypatch):
-    async def fake_run(*args, **kwargs):
+def test_inventory_chat_endpoint(monkeypatch: Any) -> None:
+    async def fake_run(*args: Any, **kwargs: Any) -> Any:
         return SimpleNamespace(final_output="📦 Stock looks healthy!")
 
     monkeypatch.setattr(chat_service_module.Runner, "run", fake_run)
@@ -39,7 +40,7 @@ def test_inventory_chat_endpoint(monkeypatch):
 
 # ============ INVENTORY CRUD API TESTS ============
 
-def test_get_all_inventory():
+def test_get_all_inventory() -> None:
     """Test GET /api/inventory - should return all items."""
     client = TestClient(app_module.app)
     response = client.get("/api/inventory")
@@ -51,7 +52,7 @@ def test_get_all_inventory():
     print(f"✅ Found {len(data['items'])} inventory items")
 
 
-def test_get_inventory_item():
+def test_get_inventory_item() -> None:
     """Test GET /api/inventory/{sku} - should return specific item."""
     client = TestClient(app_module.app)
     # First get all items to find a valid SKU
@@ -68,14 +69,14 @@ def test_get_inventory_item():
         print(f"✅ Retrieved item: {data['item']['name']}")
 
 
-def test_get_nonexistent_item():
+def test_get_nonexistent_item() -> None:
     """Test GET /api/inventory/{sku} with invalid SKU - should return 404."""
     client = TestClient(app_module.app)
     response = client.get("/api/inventory/INVALID-SKU-123")
     assert response.status_code == 404
 
 
-def test_create_inventory_item():
+def test_create_inventory_item() -> None:
     """Test POST /api/inventory - should create new item."""
     client = TestClient(app_module.app)
     new_item = {
@@ -99,7 +100,7 @@ def test_create_inventory_item():
     print(f"✅ Created item: {data['item']['name']}")
 
 
-def test_create_duplicate_sku():
+def test_create_duplicate_sku() -> None:
     """Test POST /api/inventory with duplicate SKU - should return 400."""
     client = TestClient(app_module.app)
     # Get existing SKU
@@ -121,7 +122,7 @@ def test_create_duplicate_sku():
         assert response.status_code == 400
 
 
-def test_update_inventory_item():
+def test_update_inventory_item() -> None:
     """Test PUT /api/inventory/{sku} - should update item fields."""
     client = TestClient(app_module.app)
     # First create a test item
@@ -153,7 +154,7 @@ def test_update_inventory_item():
     print(f"✅ Updated item: {data['item']['name']}")
 
 
-def test_update_nonexistent_item():
+def test_update_nonexistent_item() -> None:
     """Test PUT /api/inventory/{sku} with invalid SKU - should return 404."""
     client = TestClient(app_module.app)
     updates = {"name": "Test"}
@@ -161,7 +162,7 @@ def test_update_nonexistent_item():
     assert response.status_code == 404
 
 
-def test_add_stock():
+def test_add_stock() -> None:
     """Test PATCH /api/inventory/{sku}/add-stock - should increment stock."""
     client = TestClient(app_module.app)
     # First create a test item
@@ -192,7 +193,7 @@ def test_add_stock():
     print(f"✅ Added {add_quantity} units, new stock: {data['item']['stock']}")
 
 
-def test_add_stock_invalid_quantity():
+def test_add_stock_invalid_quantity() -> None:
     """Test PATCH /api/inventory/{sku}/add-stock with negative quantity - should return 400."""
     client = TestClient(app_module.app)
     response = client.get("/api/inventory")
@@ -207,7 +208,7 @@ def test_add_stock_invalid_quantity():
         assert response.status_code == 400
 
 
-def test_add_stock_nonexistent_item():
+def test_add_stock_nonexistent_item() -> None:
     """Test PATCH /api/inventory/{sku}/add-stock with invalid SKU - should return 404."""
     client = TestClient(app_module.app)
     response = client.patch(
@@ -217,7 +218,7 @@ def test_add_stock_nonexistent_item():
     assert response.status_code == 404
 
 
-def test_delete_inventory_item():
+def test_delete_inventory_item() -> None:
     """Test DELETE /api/inventory/{sku} - should remove existing item."""
     client = TestClient(app_module.app)
 
@@ -244,7 +245,7 @@ def test_delete_inventory_item():
     assert follow_up.status_code == 404
 
 
-def test_delete_nonexistent_item():
+def test_delete_nonexistent_item() -> None:
     """Test DELETE /api/inventory/{sku} with invalid SKU - should return 404."""
     client = TestClient(app_module.app)
     response = client.delete("/api/inventory/INVALID-SKU-DELETE")

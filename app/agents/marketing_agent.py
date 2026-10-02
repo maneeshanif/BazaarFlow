@@ -37,7 +37,7 @@ class CampaignPost(BaseModel):
     message: str = Field(..., max_length=400, description="Primary caption text. Keep it under 400 characters.")
     hashtags: List[str] = Field(
         default_factory=list,
-        max_items=6,
+        max_length=6,
         description="List of 3-6 concise hashtags (without duplicates, without '#').",
     )
     image_query: str = Field(
@@ -79,8 +79,8 @@ class CampaignResponse(BaseModel):
     )
     posts: List[CampaignPost] = Field(
         ...,
-        min_items=1,
-        max_items=6,
+        min_length=1,
+        max_length=6,
         description="The ordered sequence of posts that form this campaign.",
     )
 

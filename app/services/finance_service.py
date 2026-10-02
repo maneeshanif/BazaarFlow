@@ -10,7 +10,7 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_DATASET = BASE_DIR / "data" / "finance_transactions.json"
@@ -32,11 +32,11 @@ class FinanceAnalyticsService:
 
     def __init__(self, data_path: Optional[Path] = None) -> None:
         self._data_path = Path(data_path) if data_path else DEFAULT_DATASET
-        self._cache: Optional[List[dict]] = None
+        self._cache: Optional[List[dict[str, Any]]] = None
 
     # ------------------------------------------------------------------
     # Data loading helpers
-    def _ensure_cache(self) -> List[dict]:
+    def _ensure_cache(self) -> List[dict[str, Any]]:
         if self._cache is None:
             with self._data_path.open("r", encoding="utf-8") as handle:
                 self._cache = json.load(handle)
@@ -86,7 +86,7 @@ class FinanceAnalyticsService:
         limit: int = 3,
         status: Optional[str] = None,
         method: Optional[str] = None,
-    ) -> List[dict]:
+    ) -> List[dict[str, Any]]:
         """Return the newest transactions filtered by optional criteria."""
         if limit <= 0:
             return []
@@ -94,7 +94,7 @@ class FinanceAnalyticsService:
         status_filter = status.lower() if status else None
         method_filter = method.lower() if method else None
 
-        def _matches(txn: dict) -> bool:
+        def _matches(txn: dict[str, Any]) -> bool:
             status_ok = (
                 True if status_filter is None else txn.get("status", "").lower() == status_filter
             )
@@ -103,7 +103,7 @@ class FinanceAnalyticsService:
             )
             return status_ok and method_ok
 
-        filtered: List[dict] = [txn for txn in self._ensure_cache() if _matches(txn)]
+        filtered: List[dict[str, Any]] = [txn for txn in self._ensure_cache() if _matches(txn)]
 
         def _parse_timestamp(value: str) -> datetime:
             try:

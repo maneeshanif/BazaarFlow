@@ -4,6 +4,7 @@ Provides product lookup and sales tools for the sales agent
 """
 
 import logging
+from typing import Any
 
 from fastmcp import FastMCP
 
@@ -15,7 +16,7 @@ logger = logging.getLogger(__name__)
 mcp = FastMCP(name="BazaarFlow Sales Tools")
 
 # Product database
-PRODUCTS_DB = {
+PRODUCTS_DB: dict[str, dict[str, Any]] = {
     "phone": {
         "name": "iPhone 15",
         "price": 999,

@@ -4,8 +4,9 @@ from app.core.settings import settings
 
 logger = logging.getLogger(__name__)
 
-from agents import AsyncOpenAI, OpenAIChatCompletionsModel
+from agents import OpenAIChatCompletionsModel
 from dotenv import find_dotenv, load_dotenv
+from openai import AsyncOpenAI
 
 load_dotenv(find_dotenv())
 

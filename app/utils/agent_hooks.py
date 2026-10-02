@@ -3,9 +3,9 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from agents.agent import Agent  # type: ignore[import]
-from agents.lifecycle import RunHooksBase  # type: ignore[import]
-from agents.run_context import RunContextWrapper  # type: ignore[import]
+from agents.agent import Agent
+from agents.lifecycle import RunHooksBase
+from agents.run_context import RunContextWrapper
 
 
 class AgentTurnLogger(RunHooksBase[Any, Agent[Any]]):

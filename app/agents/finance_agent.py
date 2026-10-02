@@ -3,8 +3,9 @@ from app.core.settings import settings
 """Finance agent orchestrated via the OpenAI Agents SDK."""
 import logging
 
-from agents import Agent, AsyncOpenAI, OpenAIChatCompletionsModel, set_tracing_disabled
+from agents import Agent, OpenAIChatCompletionsModel, set_tracing_disabled
 from dotenv import find_dotenv, load_dotenv
+from openai import AsyncOpenAI
 
 from app.agents.tools.finance_tool import (
     create_customer_order,

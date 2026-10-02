@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
@@ -63,7 +63,7 @@ def _mask_token(token: Optional[str]) -> Optional[str]:
 
 
 @router.get("/", response_model=List[VendorResponse])
-async def get_all_vendors():
+async def get_all_vendors() -> Any:
     vendors = list_vendors()
     return [
         VendorResponse(
@@ -77,7 +77,7 @@ async def get_all_vendors():
 
 
 @router.post("/", response_model=VendorResponse, status_code=201)
-async def create_new_vendor(payload: VendorCreatePayload):
+async def create_new_vendor(payload: VendorCreatePayload) -> Any:
     vendor = upsert_vendor(
         phone_number_id=payload.phone_number_id,
         name=payload.name,
@@ -91,7 +91,7 @@ async def create_new_vendor(payload: VendorCreatePayload):
 
 
 @router.get("/{vendor_id}/customers")
-async def list_vendor_customers(vendor_id: str):
+async def list_vendor_customers(vendor_id: str) -> Any:
     vendor = get_vendor(vendor_id)
     if not vendor:
         raise HTTPException(status_code=404, detail="Vendor not found")
@@ -100,7 +100,7 @@ async def list_vendor_customers(vendor_id: str):
 
 
 @router.get("/{vendor_id}/customers/{customer_phone}/messages")
-async def list_customer_messages(vendor_id: str, customer_phone: str):
+async def list_customer_messages(vendor_id: str, customer_phone: str) -> Any:
     vendor = get_vendor(vendor_id)
     if not vendor:
         raise HTTPException(status_code=404, detail="Vendor not found")
@@ -113,7 +113,7 @@ async def list_customer_messages(vendor_id: str, customer_phone: str):
 
 
 @router.get("/{vendor_id}/settings", response_model=VendorSettingsResponse)
-async def get_vendor_settings(vendor_id: str):
+async def get_vendor_settings(vendor_id: str) -> Any:
     vendor = get_vendor(vendor_id)
     if not vendor:
         raise HTTPException(status_code=404, detail="Vendor not found")
@@ -129,7 +129,7 @@ async def get_vendor_settings(vendor_id: str):
 
 
 @router.post("/{vendor_id}/settings", response_model=VendorSettingsResponse)
-async def update_vendor_settings_endpoint(vendor_id: str, payload: VendorSettingsPayload, request: Request):
+async def update_vendor_settings_endpoint(vendor_id: str, payload: VendorSettingsPayload, request: Request) -> Any:
     http_client = await get_http_client(request)
     try:
         await whatsapp.validate_phone_number(
@@ -170,7 +170,7 @@ async def update_vendor_settings_endpoint(vendor_id: str, payload: VendorSetting
 
 
 @router.post("/{vendor_id}/customers/{customer_phone}/messages")
-async def send_vendor_message(vendor_id: str, customer_phone: str, payload: SendMessagePayload, request: Request):
+async def send_vendor_message(vendor_id: str, customer_phone: str, payload: SendMessagePayload, request: Request) -> Any:
     vendor = get_vendor(vendor_id)
     if not vendor:
         raise HTTPException(status_code=404, detail="Vendor not found")
@@ -194,7 +194,7 @@ async def send_vendor_message(vendor_id: str, customer_phone: str, payload: Send
             body=payload.text,
         )
     except WhatsAppAPIError as exc:
-        failure_payload = {
+        failure_payload: dict[str, Any] = {
             "status": "send_failed",
             "source": "whatsapp_api",
             "error": exc.payload,

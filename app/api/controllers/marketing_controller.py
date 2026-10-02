@@ -85,110 +85,110 @@ class UpdateScheduledCampaignRequest(BaseModel):
 # -- Endpoints -----------------------------------------------------------------
 
 @router.get("/accounts")
-async def list_accounts():
+async def list_accounts() -> Any:
     # TODO: query facebook_accounts table filtered by user
     return []
 
 
 @router.post("/accounts", status_code=201)
-async def create_account(body: AccountCreateRequest):
+async def create_account(body: AccountCreateRequest) -> None:
     # TODO: verify FB token + upsert facebook_accounts row
     raise HTTPException(status_code=501, detail="Not yet implemented")
 
 
 @router.delete("/accounts/{account_id}")
-async def delete_account(account_id: str):
+async def delete_account(account_id: str) -> None:
     # TODO: delete facebook_accounts row + cascade cleanup
     raise HTTPException(status_code=501, detail="Not yet implemented")
 
 
 @router.put("/accounts/{account_id}/schedule")
-async def set_schedule(account_id: str, body: ScheduleRequest):
+async def set_schedule(account_id: str, body: ScheduleRequest) -> None:
     # TODO: upsert marketing schedule for account
     raise HTTPException(status_code=501, detail="Not yet implemented")
 
 
 @router.get("/accounts/{account_id}/schedule")
-async def get_schedule(account_id: str):
+async def get_schedule(account_id: str) -> None:
     # TODO: fetch schedule for account
     raise HTTPException(status_code=404, detail="Schedule not found")
 
 
 @router.post("/accounts/{account_id}/campaign")
-async def run_manual_campaign(account_id: str, body: ManualCampaignRequest):
+async def run_manual_campaign(account_id: str, body: ManualCampaignRequest) -> None:
     # TODO: trigger marketing_service.run_campaign(account_id, ...)
     raise HTTPException(status_code=501, detail="Not yet implemented")
 
 
 @router.post("/accounts/{account_id}/campaign/scheduled")
-async def create_scheduled_campaign(account_id: str, body: ScheduledCampaignRequest):
+async def create_scheduled_campaign(account_id: str, body: ScheduledCampaignRequest) -> None:
     # TODO: create ScheduledCampaign row + register with scheduler
     raise HTTPException(status_code=501, detail="Not yet implemented")
 
 
 @router.post("/accounts/{account_id}/scheduled/preview")
-async def preview_scheduled_post(account_id: str, body: ScheduledPreviewRequest):
+async def preview_scheduled_post(account_id: str, body: ScheduledPreviewRequest) -> None:
     # TODO: generate post preview without publishing
     raise HTTPException(status_code=501, detail="Not yet implemented")
 
 
 @router.post("/accounts/{account_id}/scheduled")
-async def create_scheduled_post(account_id: str, body: ScheduledCampaignRequest):
+async def create_scheduled_post(account_id: str, body: ScheduledCampaignRequest) -> None:
     # TODO: create a scheduled post entry
     raise HTTPException(status_code=501, detail="Not yet implemented")
 
 
 @router.get("/accounts/{account_id}/posts")
-async def list_posts(account_id: str):
+async def list_posts(account_id: str) -> Any:
     # TODO: query marketing_posts for this account
     return []
 
 
 @router.get("/accounts/{account_id}/scheduled/activity")
-async def get_scheduled_activity(account_id: str):
+async def get_scheduled_activity(account_id: str) -> Any:
     # TODO: return list of scheduled posts + campaigns
     return {"scheduled_posts": [], "scheduled_campaigns": []}
 
 
 @router.post("/accounts/{account_id}/posts/{facebook_post_id}/insights")
-async def refresh_post_insights(account_id: str, facebook_post_id: str):
+async def refresh_post_insights(account_id: str, facebook_post_id: str) -> None:
     # TODO: fetch insights from Facebook Graph API and update DB
     raise HTTPException(status_code=501, detail="Not yet implemented")
 
 
 @router.patch("/accounts/{account_id}/scheduled/posts/{scheduled_post_id}")
-async def update_scheduled_post(account_id: str, scheduled_post_id: str, body: UpdateScheduledPostRequest):
+async def update_scheduled_post(account_id: str, scheduled_post_id: str, body: UpdateScheduledPostRequest) -> None:
     raise HTTPException(status_code=501, detail="Not yet implemented")
 
 
 @router.patch("/accounts/{account_id}/scheduled/campaigns/{scheduled_campaign_id}")
-async def update_scheduled_campaign(account_id: str, scheduled_campaign_id: str, body: UpdateScheduledCampaignRequest):
+async def update_scheduled_campaign(account_id: str, scheduled_campaign_id: str, body: UpdateScheduledCampaignRequest) -> None:
     raise HTTPException(status_code=501, detail="Not yet implemented")
 
 
 @router.delete("/accounts/{account_id}/scheduled/posts/{scheduled_post_id}")
-async def delete_scheduled_post(account_id: str, scheduled_post_id: str):
+async def delete_scheduled_post(account_id: str, scheduled_post_id: str) -> None:
     raise HTTPException(status_code=501, detail="Not yet implemented")
 
 
 @router.delete("/accounts/{account_id}/scheduled/campaigns/{scheduled_campaign_id}")
-async def delete_scheduled_campaign(account_id: str, scheduled_campaign_id: str):
+async def delete_scheduled_campaign(account_id: str, scheduled_campaign_id: str) -> None:
     raise HTTPException(status_code=501, detail="Not yet implemented")
 
 
 @router.get("/accounts/{account_id}/posts/{facebook_post_id}/comments")
-async def list_post_comments(account_id: str, facebook_post_id: str):
+async def list_post_comments(account_id: str, facebook_post_id: str) -> Any:
     # TODO: fetch comments from Facebook Graph API
     return {"comments": []}
 
 
 @router.delete("/accounts/{account_id}/posts/{facebook_post_id}")
-async def delete_post(account_id: str, facebook_post_id: str):
+async def delete_post(account_id: str, facebook_post_id: str) -> None:
     # TODO: delete from Facebook + remove DB record
     raise HTTPException(status_code=501, detail="Not yet implemented")
 
 
 @router.post("/accounts/{account_id}/posts/{facebook_post_id}/comments/{comment_id}/reply")
-async def reply_to_comment(account_id: str, facebook_post_id: str, comment_id: str, body: CommentReplyRequest):
+async def reply_to_comment(account_id: str, facebook_post_id: str, comment_id: str, body: CommentReplyRequest) -> None:
     # TODO: post reply via Facebook Graph API + record in DB
     raise HTTPException(status_code=501, detail="Not yet implemented")

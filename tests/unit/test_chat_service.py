@@ -1,5 +1,6 @@
 """Unit tests for the chat service."""
 from types import SimpleNamespace
+from typing import Any
 
 import pytest
 from agents import Runner, SQLiteSession
@@ -8,22 +9,22 @@ from app.services.chat_service import ChatService, chat_service
 
 
 @pytest.fixture(autouse=True)
-def stub_runner(monkeypatch):
-    async def _fake_run(*args, **kwargs):
+def stub_runner(monkeypatch: Any) -> None:
+    async def _fake_run(*args: Any, **kwargs: Any) -> Any:
         return SimpleNamespace(final_output="stub response")
 
     monkeypatch.setattr(Runner, "run", _fake_run)
 
 
 @pytest.fixture
-def chat_service_instance():
+def chat_service_instance() -> Any:
     """Create a fresh chat service instance for each test"""
     service = ChatService()
     return service
 
 
 @pytest.mark.asyncio
-async def test_process_message_new_session(chat_service_instance):
+async def test_process_message_new_session(chat_service_instance: Any) -> None:
     """Test processing a message with a new session"""
     response_text, session_id = await chat_service_instance.process_message(
         message="Hello, what can you do?",
@@ -37,7 +38,7 @@ async def test_process_message_new_session(chat_service_instance):
 
 
 @pytest.mark.asyncio
-async def test_process_message_existing_session(chat_service_instance):
+async def test_process_message_existing_session(chat_service_instance: Any) -> None:
     """Test processing a message with an existing session ID"""
     test_session_id = "test_session_123"
     response_text, returned_session_id = await chat_service_instance.process_message(
@@ -55,7 +56,7 @@ async def test_process_message_existing_session(chat_service_instance):
 
 
 @pytest.mark.asyncio
-async def test_process_message_error_handling(chat_service_instance):
+async def test_process_message_error_handling(chat_service_instance: Any) -> None:
     """Test error handling in message processing"""
     # This test may require mocking the agent to simulate an error
     # For now, test with various inputs to ensure no exceptions
@@ -81,13 +82,13 @@ async def test_process_message_error_handling(chat_service_instance):
         assert len(session_id) > 0
 
 
-def test_get_session_nonexistent(chat_service_instance):
+def test_get_session_nonexistent(chat_service_instance: Any) -> None:
     """Test getting a session that doesn't exist"""
     session = chat_service_instance.get_session("nonexistent_session")
     assert session is None
 
 
-def test_create_session(chat_service_instance):
+def test_create_session(chat_service_instance: Any) -> None:
     """Test creating a new session"""
     session_id = "new_session_test"
     session = chat_service_instance.create_session(session_id)
@@ -101,14 +102,14 @@ def test_create_session(chat_service_instance):
     assert retrieved_session == session
 
 
-def test_singleton_service():
+def test_singleton_service() -> None:
     """Test that the global chat service exists and works"""
     assert chat_service is not None
     assert isinstance(chat_service, ChatService)
 
 
 @pytest.mark.asyncio
-async def test_session_persistence_in_service():
+async def test_session_persistence_in_service() -> None:
     """Test that sessions persist within the service"""
     service = ChatService()
     session_id = "persistence_test"

@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -9,12 +10,12 @@ from app.services.finance_service import FinanceAnalyticsService
 
 
 @pytest.fixture(scope="module")
-def finance_service():
+def finance_service() -> Any:
     data_path = BACKEND_DIR / "data" / "finance_transactions.json"
     return FinanceAnalyticsService(data_path=data_path)
 
 
-def test_payment_status_snapshot(finance_service):
+def test_payment_status_snapshot(finance_service: Any) -> None:
     snapshot = finance_service.get_payment_status_snapshot()
 
     assert set(snapshot.keys()) == {"paid", "pending", "failed"}
@@ -29,7 +30,7 @@ def test_payment_status_snapshot(finance_service):
     assert snapshot["failed"]["total_amount"] == 42_000
 
 
-def test_method_summary(finance_service):
+def test_method_summary(finance_service: Any) -> None:
     summary = finance_service.get_method_summary()
 
     assert summary["easypaisa"]["count"] == 4
@@ -42,7 +43,7 @@ def test_method_summary(finance_service):
     assert summary["raast"]["total_amount"] == 177_000
 
 
-def test_recent_transactions_filtering(finance_service):
+def test_recent_transactions_filtering(finance_service: Any) -> None:
     recent_pending = finance_service.get_recent_transactions(limit=2, status="pending")
 
     assert len(recent_pending) == 2

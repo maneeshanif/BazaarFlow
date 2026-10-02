@@ -5,7 +5,7 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_DATASET = BASE_DIR / "data" / "inventory_items.json"
@@ -25,9 +25,9 @@ class InventoryAnalyticsService:
 
     def __init__(self, data_path: Optional[Path] = None) -> None:
         self._data_path = Path(data_path) if data_path else DEFAULT_DATASET
-        self._cache: Optional[List[dict]] = None
+        self._cache: Optional[List[dict[str, Any]]] = None
 
-    def _ensure_cache(self) -> List[dict]:
+    def _ensure_cache(self) -> List[dict[str, Any]]:
         if self._cache is None:
             with self._data_path.open("r", encoding="utf-8") as handle:
                 self._cache = json.load(handle)
@@ -60,8 +60,8 @@ class InventoryAnalyticsService:
 
         return buckets
 
-    def get_stock_health_detail(self) -> Dict[str, Dict[str, object]]:
-        detail: Dict[str, Dict[str, object]] = {
+    def get_stock_health_detail(self) -> Dict[str, Dict[str, Any]]:
+        detail: Dict[str, Dict[str, Any]] = {
             "in_stock": {"count": 0, "total_units": 0, "items": []},
             "low_stock": {"count": 0, "total_units": 0, "items": []},
             "out_of_stock": {"count": 0, "total_units": 0, "items": []},
@@ -100,7 +100,7 @@ class InventoryAnalyticsService:
 
         return {key: bucket.as_dict() for key, bucket in totals.items()}
 
-    def get_restock_queue(self, *, limit: int = 5) -> List[dict]:
+    def get_restock_queue(self, *, limit: int = 5) -> List[dict[str, Any]]:
         if limit <= 0:
             return []
 
@@ -119,7 +119,7 @@ class InventoryAnalyticsService:
         )
         return candidates[:limit]
 
-    def get_items_by_category(self, category: str) -> List[dict]:
+    def get_items_by_category(self, category: str) -> List[dict[str, Any]]:
         category_lower = category.lower()
         return [
             item
@@ -127,13 +127,13 @@ class InventoryAnalyticsService:
             if item.get("category", "").lower() == category_lower
         ]
 
-    def get_all_items(self, *, limit: Optional[int] = None) -> List[dict]:
+    def get_all_items(self, *, limit: Optional[int] = None) -> List[dict[str, Any]]:
         items = list(self._ensure_cache())
         if limit is not None and limit >= 0:
             return items[:limit]
         return items
 
-    def get_incoming_summary(self, *, limit: int = 3) -> List[dict]:
+    def get_incoming_summary(self, *, limit: int = 3) -> List[dict[str, Any]]:
         if limit <= 0:
             return []
 
@@ -144,7 +144,7 @@ class InventoryAnalyticsService:
         )
         return items[:limit]
 
-    def get_last_restocked(self, *, limit: int = 5) -> List[dict]:
+    def get_last_restocked(self, *, limit: int = 5) -> List[dict[str, Any]]:
         if limit <= 0:
             return []
 
@@ -160,7 +160,7 @@ class InventoryAnalyticsService:
         )
         return items[:limit]
 
-    def search_items(self, query: str, *, limit: int = 10) -> List[dict]:
+    def search_items(self, query: str, *, limit: int = 10) -> List[dict[str, Any]]:
         if not query:
             return []
 
@@ -177,7 +177,7 @@ class InventoryAnalyticsService:
         *,
         sku: Optional[str] = None,
         product_name: Optional[str] = None,
-    ) -> Tuple[int, dict]:
+    ) -> Tuple[int, dict[str, Any]]:
         """Return (index, item) for the first match by SKU or product name."""
 
         items = list(self._ensure_cache())
@@ -202,7 +202,7 @@ class InventoryAnalyticsService:
         quantity: int,
         sku: Optional[str] = None,
         product_name: Optional[str] = None,
-    ) -> dict:
+    ) -> dict[str, Any]:
         """Decrease on-hand stock for a product while preventing negative counts."""
 
         if quantity <= 0:
@@ -223,13 +223,13 @@ class InventoryAnalyticsService:
         self._write_all(items)
         return updated_item
 
-    def _write_all(self, items: List[dict]) -> None:
+    def _write_all(self, items: List[dict[str, Any]]) -> None:
         """Write all items back to the JSON file."""
         with self._data_path.open("w", encoding="utf-8") as handle:
             json.dump(items, handle, ensure_ascii=False, indent=2)
         self._cache = None  # Clear cache to force reload
 
-    def create_item(self, item_data: dict) -> dict:
+    def create_item(self, item_data: dict[str, Any]) -> dict[str, Any]:
         """Create a new inventory item."""
         items = self._ensure_cache().copy()
         
@@ -246,7 +246,7 @@ class InventoryAnalyticsService:
         self._write_all(items)
         return item_data
 
-    def update_item(self, sku: str, item_data: dict) -> Optional[dict]:
+    def update_item(self, sku: str, item_data: dict[str, Any]) -> Optional[dict[str, Any]]:
         """Update an existing inventory item."""
         items = self._ensure_cache().copy()
         
@@ -260,7 +260,7 @@ class InventoryAnalyticsService:
         
         return None
 
-    def add_stock(self, sku: str, quantity: int) -> Optional[dict]:
+    def add_stock(self, sku: str, quantity: int) -> Optional[dict[str, Any]]:
         """Add stock to an existing item."""
         items = self._ensure_cache().copy()
         
@@ -275,14 +275,14 @@ class InventoryAnalyticsService:
         
         return None
 
-    def get_item_by_sku(self, sku: str) -> Optional[dict]:
+    def get_item_by_sku(self, sku: str) -> Optional[dict[str, Any]]:
         """Get a specific item by SKU."""
         for item in self._ensure_cache():
             if item.get("sku") == sku:
                 return item
         return None
 
-    def delete_item(self, sku: str) -> Optional[dict]:
+    def delete_item(self, sku: str) -> Optional[dict[str, Any]]:
         """Remove an inventory item by SKU."""
         items = self._ensure_cache().copy()
 

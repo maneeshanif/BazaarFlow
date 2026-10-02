@@ -11,7 +11,7 @@ from app.services.marketing_service import MarketingService
 
 
 @pytest.mark.asyncio
-async def test_generate_campaign_allows_single_post(monkeypatch):
+async def test_generate_campaign_allows_single_post(monkeypatch: Any) -> None:
     """_generate_campaign should accept a single-post campaign when requested."""
 
     async def fake_runner(payload: Dict[str, Any]) -> Dict[str, Any]:
@@ -24,9 +24,9 @@ async def test_generate_campaign_allows_single_post(monkeypatch):
             ],
         }
 
-    service = MarketingService(agent_runner=fake_runner)  # type: ignore[arg-type]
+    service = MarketingService(agent_runner=fake_runner)
 
-    campaign = await service._generate_campaign(  # type: ignore[attr-defined]
+    campaign = await service._generate_campaign(
         account={"account_id": "acc1"},
         user_id="user1",
         mode="manual",
@@ -39,7 +39,7 @@ async def test_generate_campaign_allows_single_post(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_publish_campaign_records_multiple_posts(monkeypatch):
+async def test_publish_campaign_records_multiple_posts(monkeypatch: Any) -> None:
     """_publish_campaign should loop through all posts and record them with a shared campaign_id."""
 
     created_posts = []
@@ -53,24 +53,24 @@ async def test_publish_campaign_records_multiple_posts(monkeypatch):
             return {"id": self.post_id}
 
     class DummyManager:
-        def create_image_post(self, request):  # type: ignore[no-untyped-def]
+        def create_image_post(self, request: Any) -> Any:
             created_posts.append(request.message)
             return DummyResponse(f"post_{len(created_posts)}")
 
-        def create_text_post(self, request):  # type: ignore[no-untyped-def]
+        def create_text_post(self, request: Any) -> Any:
             created_posts.append(request.message)
             return DummyResponse(f"post_{len(created_posts)}")
 
-    def fake_factory(config):  # type: ignore[no-untyped-def]
+    def fake_factory(config: Any) -> Any:
         return DummyManager()
 
-    def fake_record_marketing_post(**kwargs):  # type: ignore[no-untyped-def]
+    def fake_record_marketing_post(**kwargs: Any) -> Any:
         recorded.append(kwargs)
         return {"record_id": f"rec_{len(recorded)}", **kwargs}
 
     monkeypatch.setattr("app.services.marketing_service.record_marketing_post", fake_record_marketing_post)
 
-    service = MarketingService(facebook_manager_factory=fake_factory)  # type: ignore[arg-type]
+    service = MarketingService(facebook_manager_factory=fake_factory)
 
     # FacebookConfig validates the shape of the credentials, so the fake ones must look real
     account = {"account_id": "acc1", "page_id": "123456789012345", "access_token": "EAA" + "x" * 40}
@@ -82,7 +82,7 @@ async def test_publish_campaign_records_multiple_posts(monkeypatch):
         ],
     }
 
-    result = service._publish_campaign(  # type: ignore[attr-defined]
+    result = service._publish_campaign(
         account=account,
         user_id="user1",
         campaign=campaign,
@@ -97,7 +97,7 @@ async def test_publish_campaign_records_multiple_posts(monkeypatch):
     assert len(campaign_ids) == 1  # shared id
 
 
-def test_scheduler_calls_trigger_scheduled_campaign(monkeypatch):
+def test_scheduler_calls_trigger_scheduled_campaign(monkeypatch: Any) -> None:
     """MarketingScheduler should call trigger_scheduled_campaign for due schedules.
 
     This is a light-weight behavioural check to ensure the wiring remains intact.
@@ -107,13 +107,13 @@ def test_scheduler_calls_trigger_scheduled_campaign(monkeypatch):
 
     class DummyRunner:
         def __init__(self) -> None:
-            self.calls = []
+            self.calls: list[tuple[str, str, str | None]] = []
 
-        async def trigger_scheduled_campaign(self, *, account_id: str, user_id: str, triggered_at: str | None = None):
+        async def trigger_scheduled_campaign(self, *, account_id: str, user_id: str, triggered_at: str | None = None) -> Any:
             self.calls.append((account_id, user_id, triggered_at))
             return {"ok": True}
 
-    def fake_list_schedules():  # type: ignore[no-untyped-def]
+    def fake_list_schedules() -> Any:
         return [
             {
                 "account_id": "acc1",
@@ -133,6 +133,6 @@ def test_scheduler_calls_trigger_scheduled_campaign(monkeypatch):
     # Run a single tick synchronously
     import asyncio
 
-    asyncio.run(scheduler._tick())  # type: ignore[attr-defined]
+    asyncio.run(scheduler._tick())
 
     assert len(runner.calls) == 1
