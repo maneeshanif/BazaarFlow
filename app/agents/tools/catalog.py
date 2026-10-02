@@ -56,6 +56,39 @@ def register_tool(
     return decorator
 
 
+class UnknownToolError(LookupError):
+    """The model asked for a tool that is not in the catalogue."""
+
+
+class ApprovalRequired(PermissionError):
+    """The tool changes money, stock or something external: it may only be proposed, never run directly."""
+
+
+def declare_tool(
+    name: str, *, access: Access, min_role: TenantRole = TenantRole.staff, approval: Approval = "none"
+) -> ToolSpec:
+    """Declare an SDK tool (the SDK wraps the function, so the decorator above cannot be applied to it)."""
+    if access == "write" and approval == "none":
+        raise ValueError(f"write tool {name!r} must declare an approval level")
+    if name in CATALOG:
+        raise ValueError(f"tool {name!r} is already registered")
+    spec = ToolSpec(name=name, access=access, min_role=min_role, approval=approval)
+    CATALOG[name] = spec
+    return spec
+
+
+def authorize_call(name: str, ctx: ToolContext) -> ToolSpec:
+    """The single gate a tool call passes before it runs: known tool, sufficient role, and no direct write
+    when approval is required (the caller turns ``ApprovalRequired`` into an approval request)."""
+    spec = CATALOG.get(name)
+    if spec is None:
+        raise UnknownToolError(f"unknown tool {name!r}")
+    ensure_allowed(spec, ctx)
+    if spec.access == "write" and spec.approval != "none":
+        raise ApprovalRequired(f"tool {name} needs approval before it runs")
+    return spec
+
+
 def ensure_allowed(spec: ToolSpec, ctx: ToolContext) -> None:
     """Raise PermissionError when the caller's role is below the tool's minimum."""
     if _RANK[ctx.role] < _RANK[spec.min_role]:
