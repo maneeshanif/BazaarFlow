@@ -213,9 +213,12 @@ lane_web() {
   has_script lint && step "web: lint" npm run --silent lint
   has_script typecheck && step "web: typecheck" npm run --silent typecheck
   [ -f tsconfig.json ] && ! has_script typecheck && step "web: tsc" npx tsc --noEmit
+  has_script check:tokens && step "web: design tokens (no hard-coded colour, type or spacing)" npm run --silent check:tokens
   has_script test && step "web: test" npm run --silent test
   slow_step "web: dependency audit" npm audit --audit-level=high
   has_script build && slow_step "web: build" npm run --silent build
+  # real-browser responsive check (needs the build above and Chromium: `npx playwright install chromium`)
+  has_script test:e2e && slow_step "web: e2e shell (no horizontal scroll at 360-1440 px)" npm run --silent test:e2e
   return 0
 }
 

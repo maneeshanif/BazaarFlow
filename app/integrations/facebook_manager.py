@@ -227,6 +227,8 @@ class FacebookManager:
             else:
                 raise ImageUploadError("No image source provided")
                 
+        except ImageUploadError:
+            raise  # the specific cause (bad file, no image source) is what callers need
         except FacebookAPIError as e:
             logger.error(f"Failed to create image post: {str(e)}")
             raise PostCreationError(f"Failed to create image post: {str(e)}")

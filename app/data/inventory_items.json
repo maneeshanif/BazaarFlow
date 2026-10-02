@@ -88,28 +88,6 @@
     "last_restocked": "2024-10-22"
   },
   {
-    "sku": "TEST-CREATE-001",
-    "name": "Test Product",
-    "category": "Test Category",
-    "price": 999.99,
-    "stock": 100,
-    "reorder_point": 20,
-    "incoming": 50,
-    "supplier": "Test Supplier",
-    "last_restocked": null
-  },
-  {
-    "sku": "TEST-STOCK-001",
-    "name": "Stock Test Product",
-    "category": "Test",
-    "price": 100.0,
-    "stock": 80,
-    "reorder_point": 10,
-    "incoming": 0,
-    "supplier": "Test Supplier",
-    "last_restocked": "2025-11-11T21:11:52.099088"
-  },
-  {
     "sku": "sdf",
     "name": "Habib",
     "category": "Headphones & Speakers",

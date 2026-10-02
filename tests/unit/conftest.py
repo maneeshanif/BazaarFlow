@@ -21,10 +21,14 @@ from app.services import inventory_service
 
 
 @pytest.fixture(autouse=True)
-def _isolate_inventory_json(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def _isolate_inventory_json(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Iterator[None]:
     copy = tmp_path / "inventory_items.json"
     shutil.copy(inventory_service.DEFAULT_DATASET, copy)
-    monkeypatch.setattr(inventory_service.inventory_analytics_service, "_data_path", copy)
+    service = inventory_service.inventory_analytics_service
+    monkeypatch.setattr(service, "_data_path", copy)
+    service.refresh()  # the service caches its rows: drop whatever an earlier test left behind
+    yield
+    service.refresh()  # and do not leak this test's rows into the next one
 
 
 @pytest.fixture(autouse=True)

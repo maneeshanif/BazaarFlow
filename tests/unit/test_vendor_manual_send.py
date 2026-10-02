@@ -33,7 +33,6 @@ def vendor_id():
     return vendor["vendor_id"]
 
 
-@pytest.mark.legacy_port
 def test_manual_send_normalizes_phone(client, vendor_id, monkeypatch):
     async def fake_send_text_message(**kwargs):
         fake_send_text_message.kwargs = kwargs  # type: ignore[attr-defined]
@@ -59,7 +58,6 @@ def test_manual_send_normalizes_phone(client, vendor_id, monkeypatch):
     assert messages[-1]["direction"] == "outbound"
 
 
-@pytest.mark.legacy_port
 def test_manual_send_surfaces_whatsapp_error(client, vendor_id, monkeypatch):
     async def failing_send_text_message(**kwargs):
         raise WhatsAppAPIError(

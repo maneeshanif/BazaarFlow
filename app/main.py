@@ -21,6 +21,7 @@ from app.core.auth import public_route
 from app.core.settings import settings
 from app.middleware.rate_limiter import RateLimiterMiddleware
 from app.middleware.request_logger import RequestLoggerMiddleware
+from app.services.marketing_scheduler import marketing_scheduler
 from app.utils.live_logs import configure_live_logging
 
 configure_live_logging(logging.DEBUG)
@@ -31,9 +32,23 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     logger.info("BazaarFlow starting up (env=%s)", settings.APP_ENV)
     app.state.http_client = httpx.AsyncClient(timeout=30.0)
+    scheduler_started = False
+    if settings.MARKETING_SCHEDULER_ENABLED and settings.APP_ENV != "test":
+        await marketing_scheduler.start()
+        scheduler_started = True
     yield
+    if scheduler_started:
+        await marketing_scheduler.stop()
     await app.state.http_client.aclose()
     logger.info("BazaarFlow shutdown complete")
+
+
+def _allowed_origins() -> list[str]:
+    """Explicit origins only: credentials are allowed, so a wildcard is never acceptable (not even in development)."""
+    origins = [settings.FRONTEND_ORIGIN]
+    if settings.APP_ENV in {"development", "test"}:
+        origins += ["http://localhost:3000", "http://127.0.0.1:3000"]
+    return sorted(set(origins))
 
 
 app = FastAPI(
@@ -61,7 +76,7 @@ app.add_middleware(RateLimiterMiddleware, limit=200, window=60)
 # CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.FRONTEND_ORIGIN] if settings.is_production else ["*"],
+    allow_origins=_allowed_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -1,6 +1,7 @@
 """VAPI webhook endpoint � exact port of backend/controllers/vapi_controller.py"""
 from __future__ import annotations
 
+import hmac
 import logging
 from typing import Any, Dict, Optional
 
@@ -8,6 +9,7 @@ from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel
 
 from app.core.settings import settings
+from app.services import vapi_support_service
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -35,8 +37,13 @@ async def vapi_webhook(
 ) -> Dict[str, Any]:
     """Handle function-call messages from VAPI."""
     if settings.VAPI_WEBHOOK_SECRET:
-        if not x_vapi_signature or x_vapi_signature != settings.VAPI_WEBHOOK_SECRET:
+        supplied = (x_vapi_signature or "").encode()
+        if not hmac.compare_digest(supplied, settings.VAPI_WEBHOOK_SECRET.encode()):
             raise HTTPException(status_code=401, detail="Invalid VAPI webhook signature")
+    elif settings.APP_ENV in {"production", "staging"}:
+        # An unset secret must never mean "accept anyone" on a public route.
+        logger.error("VAPI_WEBHOOK_SECRET is not configured; refusing VAPI webhooks")
+        raise HTTPException(status_code=503, detail="Webhook secret not configured")
 
     message = body.message
     if message.type != "function-call" or not message.functionCall:
@@ -44,9 +51,9 @@ async def vapi_webhook(
         return {"success": True, "message": None}
 
     tool_name = message.functionCall.name
-    _args = message.functionCall.arguments or {}  # TODO: pass to dispatch_tool_call
+    args = message.functionCall.arguments or {}
     logger.info("Handling VAPI function call: %s", tool_name)
 
-    # TODO: delegate to app.services.vapi_service.dispatch_tool_call(tool_name, args)
-    result: Dict[str, Any] = {"success": True, "responseMessage": f"Handled {tool_name}"}
+    result = vapi_support_service.dispatch_tool_call(tool_name, args)
+    # VAPI expects a top-level ``message`` that can be spoken.
     return {"success": result.get("success", True), "result": result, "message": result.get("responseMessage")}

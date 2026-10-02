@@ -2,6 +2,135 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ==========================================================================
+   Design tokens (context/ui-tokens.md, task 07). The ONLY place colours, type sizes and layout dimensions are
+   defined: components use the Tailwind names mapped to these variables (tailwind.config.js), never literals.
+   scripts/check-tokens.mjs enforces that. Identity is provisional (PRD section 33): only values in this block change.
+   Naming deviations from ui-tokens.md: the primary action colour is "action" (shadcn already owns "accent") and the
+   type scale is "text-ui-*" (Tailwind's default text-sm/base stay as they are for legacy pages).
+   ========================================================================== */
+:root {
+  --color-canvas: #f1f5f9;
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-sunken: #f8fafc;
+  --color-surface-hover: #f1f5f9;
+  --color-surface-active: #e2e8f0;
+
+  --color-line-strong: #cbd5e1;
+  --color-line-focus: #2563eb;
+
+  --color-fg: #0f172a;
+  --color-fg-muted: #475569;
+  --color-fg-subtle: #64748b;
+  --color-fg-inverse: #ffffff;
+
+  --color-action: #2563eb;
+  --color-action-hover: #1d4ed8;
+  --color-action-active: #1e40af;
+  --color-action-subtle: #eff6ff;
+  --color-action-border: #bfdbfe;
+
+  --color-success: #047857;
+  --color-success-subtle: #ecfdf5;
+  --color-success-border: #a7f3d0;
+  --color-warning: #b45309;
+  --color-warning-subtle: #fffbeb;
+  --color-warning-border: #fde68a;
+  --color-danger: #b91c1c;
+  --color-danger-hover: #991b1b;
+  --color-danger-subtle: #fef2f2;
+  --color-danger-border: #fecaca;
+  --color-info: #0e7490;
+  --color-info-subtle: #ecfeff;
+  --color-info-border: #a5f3fc;
+  --color-neutral: #475569;
+  --color-neutral-subtle: #f1f5f9;
+  --color-neutral-border: #cbd5e1;
+
+  --color-positive: #047857;
+  --color-negative: #b91c1c;
+
+  --color-chart-1: #2563eb;
+  --color-chart-2: #0891b2;
+  --color-chart-3: #7c3aed;
+  --color-chart-4: #d97706;
+  --color-chart-5: #059669;
+  --color-chart-6: #db2777;
+  --color-chart-grid: #e2e8f0;
+  --color-chart-axis: #94a3b8;
+
+  --text-ui-2xs: 0.6875rem;
+  --text-ui-xs: 0.75rem;
+  --text-ui-sm: 0.8125rem;
+  --text-ui-base: 0.875rem;
+  --text-ui-md: 1rem;
+  --text-ui-lg: 1.125rem;
+  --text-ui-xl: 1.375rem;
+  --text-ui-2xl: 1.75rem;
+  --text-ui-3xl: 2.25rem;
+
+  --layout-sidebar: 15rem;
+  --layout-sidebar-collapsed: 3.5rem;
+  --layout-topbar: 3.5rem;
+  --layout-tabbar: 3.5rem;
+  --layout-form-max: 60rem;
+
+  --control-sm: 1.75rem;
+  --control-md: 2.125rem;
+  --control-lg: 2.5rem;
+
+  --shadow-popover: 0 4px 16px -2px rgb(15 23 42 / 0.14);
+}
+
+.dark {
+  --color-canvas: #0b1220;
+  --color-surface: #111a2b;
+  --color-surface-raised: #162033;
+  --color-surface-sunken: #0e1626;
+  --color-surface-hover: #1a2538;
+  --color-surface-active: #223048;
+
+  --color-line-strong: #2b394f;
+  --color-line-focus: #60a5fa;
+
+  --color-fg: #e2e8f0;
+  --color-fg-muted: #94a3b8;
+  --color-fg-subtle: #94a3b8;
+  --color-fg-inverse: #0b1220;
+
+  --color-action: #60a5fa;
+  --color-action-hover: #93c5fd;
+  --color-action-active: #3b82f6;
+  --color-action-subtle: #172554;
+  --color-action-border: #1e3a8a;
+
+  --color-success: #34d399;
+  --color-success-subtle: #052e22;
+  --color-success-border: #065f46;
+  --color-warning: #fbbf24;
+  --color-warning-subtle: #2a1d05;
+  --color-warning-border: #78350f;
+  --color-danger: #f87171;
+  --color-danger-hover: #fca5a5;
+  --color-danger-subtle: #2f0f12;
+  --color-danger-border: #7f1d1d;
+  --color-info: #22d3ee;
+  --color-info-subtle: #062a30;
+  --color-info-border: #155e75;
+  --color-neutral: #94a3b8;
+  --color-neutral-subtle: #1a2538;
+  --color-neutral-border: #334155;
+
+  --color-positive: #34d399;
+  --color-negative: #f87171;
+
+  --color-chart-grid: #1f2a3d;
+  --color-chart-axis: #64748b;
+
+  --shadow-popover: 0 4px 16px -2px rgb(0 0 0 / 0.5);
+}
+
 @layer base {
   :root {
     /* Brand Colors */

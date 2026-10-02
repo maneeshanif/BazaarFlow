@@ -62,7 +62,7 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [x] 06 Audit infrastructure — audit rows for the actions in PRD §14.1, sensitive-field masking, test that each audited action writes a row
   - Acceptance: Each audited action in PRD §14.1 writes exactly one audit row (one test per action); §14.1 actions whose feature does not exist yet are listed with their phase in tests/pg/test_audit_actions.py (NOT_YET_BUILT) and get their test in the task that builds them
   - Acceptance: Sensitive fields are masked in the stored row
-- [ ] 07 UI foundation — design tokens, layout shell, the mandated form layout (PRD §5.1), reusable grid/form/status components, `context/ui-registry.md` started
+- [x] 07 UI foundation — design tokens, layout shell, the mandated form layout (PRD §5.1), reusable grid/form/status components, `context/ui-registry.md` started
   - Acceptance: Design tokens are the only source of colour, type and spacing; a lint or grep check finds no hard-coded values
   - Acceptance: The layout shell renders at mobile and desktop widths without horizontal scroll
 - [x] 08 Vertical slice — the smallest end-to-end feature across every layer, to prove the pattern later tasks copy
@@ -90,8 +90,9 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [x] 14 Agent tool layer inside the API process: tools call services with a tenant-scoped context, approvals via agent_actions — PRD §36.2-36.4
   - Acceptance: Agent tools receive tenant, user and role from a server-side ToolContext; the catalog rejects tools that take them as arguments or write without an approval level (tests/architecture/test_agent_tools.py)
   - Acceptance: Agent writes go through agent_actions: request, approve/reject, execute exactly once with the stored payload hash, expire, all audited and tenant-isolated (tests/pg/test_approvals.py, tests/pg/test_review_fixes.py)
-- [ ] 15 Rewrite the 19 quarantined tests (pytest markers legacy_port and live) against app.* and tenant-scoped data, then remove both markers from addopts
-  - Acceptance: The done-condition for this task is written here and has an automated check
+- [x] 15 Rewrite the 19 quarantined tests (pytest markers legacy_port and live) against app.* and tenant-scoped data, then remove both markers from addopts
+  - Acceptance: tests/ contains no `live` or `legacy_port` marker and pyproject.toml no longer excludes them; the default `pytest` run executes every former quarantined test
+  - Acceptance: every former live-LLM test runs offline against a recording fake runner and asserts our behaviour; tests never write to app/data (tests/unit/conftest.py)
 - [ ] 16 Burn down the mypy legacy override list in pyproject.toml module by module until strict passes everywhere
   - Acceptance: The done-condition for this task is written here and has an automated check
 - [x] 17 Fix the double-prefixed v1 routes (/api/v1/api/...) and consolidate router mounting in app/api/routers

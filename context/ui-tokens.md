@@ -216,3 +216,21 @@ Not required for the first phase. When it is added, define the same token names 
 3. New token needed? Add it here first, then use it. A one-off value in a component is a defect.
 4. Status color comes from the mapping table above — never chosen ad hoc per screen.
 5. Touch/kiosk screens use the touch scale. forms and grids use the control and grid scales. Do not mix them.
+
+
+---
+
+## Deviations from this document (task 07, ADR 0002)
+
+The tokens live in `frontend/app/global.css` as CSS variables and are mapped in `frontend/tailwind.config.js`. The project stays on Tailwind 3 (see ADR 0002), so the `@theme` block above is expressed as variables plus config, and:
+
+| This document says | The code uses | Why |
+| --- | --- | --- |
+| `bg-accent`, `text-accent` for the primary action | `bg-action`, `text-action` (`action-hover/-subtle/-border`) | shadcn components already own `accent` as a hover surface |
+| `text-sm` = 13px, `text-base` = 14px | `text-ui-sm`, `text-ui-base` (and `ui-2xs ... ui-3xl`) | overriding Tailwind's defaults would shift every legacy page |
+| `border-border` and `border-border-strong` | `border-border` (shadcn) and `border-line-strong` | `border` is a shadcn colour already |
+| status `success` `#059669`, `danger` `#dc2626`, `info` `#0891b2`, `warning` `#d97706`; `fg-subtle` `#94a3b8` | `success` `#047857`, `danger` `#b91c1c`, `info` `#0e7490`, `warning` `#b45309`; `fg-subtle` `#64748b` (light) | the spec values fail WCAG AA (4.5:1) for small text on their tinted backgrounds; `tests/ui/contrast.test.ts` checks every pair in both themes |
+| dark theme `fg-inverse` white on the action/danger fill | dark `fg-inverse` is `#0b1220`, dark `action` is `#60a5fa` | white on the light-blue/red fills fails 4.5:1; dark text on them passes |
+| (not specified) dark theme | full `.dark` set in `global.css` | PRD section 16 asks for light and dark |
+
+Colour, type size and spacing may not appear as literals anywhere under `frontend/app` or `frontend/components` (`npm run check:tokens`). Legacy pages are listed with their violation counts in `frontend/token-baseline.json`; the count can only go down.

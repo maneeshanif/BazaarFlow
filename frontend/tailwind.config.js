@@ -15,7 +15,64 @@ module.exports = {
   		}
   	},
   	extend: {
+  		fontSize: {
+  			'ui-2xs': ['var(--text-ui-2xs)', { lineHeight: '1rem' }],
+  			'ui-xs': ['var(--text-ui-xs)', { lineHeight: '1.125rem' }],
+  			'ui-sm': ['var(--text-ui-sm)', { lineHeight: '1.25rem' }],
+  			'ui-base': ['var(--text-ui-base)', { lineHeight: '1.375rem' }],
+  			'ui-md': ['var(--text-ui-md)', { lineHeight: '1.5rem' }],
+  			'ui-lg': ['var(--text-ui-lg)', { lineHeight: '1.625rem' }],
+  			'ui-xl': ['var(--text-ui-xl)', { lineHeight: '1.75rem' }],
+  			'ui-2xl': ['var(--text-ui-2xl)', { lineHeight: '2.125rem' }],
+  			'ui-3xl': ['var(--text-ui-3xl)', { lineHeight: '2.5rem' }]
+  		},
+  		spacing: {
+  			sidebar: 'var(--layout-sidebar)',
+  			'sidebar-collapsed': 'var(--layout-sidebar-collapsed)',
+  			topbar: 'var(--layout-topbar)',
+  			tabbar: 'var(--layout-tabbar)',
+  			'control-sm': 'var(--control-sm)',
+  			'control-md': 'var(--control-md)',
+  			'control-lg': 'var(--control-lg)'
+  		},
+  		maxWidth: { form: 'var(--layout-form-max)' },
+  		boxShadow: { popover: 'var(--shadow-popover)' },
   		colors: {
+  			canvas: 'var(--color-canvas)',
+  			surface: {
+  				DEFAULT: 'var(--color-surface)',
+  				raised: 'var(--color-surface-raised)',
+  				sunken: 'var(--color-surface-sunken)',
+  				hover: 'var(--color-surface-hover)',
+  				active: 'var(--color-surface-active)'
+  			},
+  			fg: {
+  				DEFAULT: 'var(--color-fg)',
+  				muted: 'var(--color-fg-muted)',
+  				subtle: 'var(--color-fg-subtle)',
+  				inverse: 'var(--color-fg-inverse)'
+  			},
+  			'line-strong': 'var(--color-line-strong)',
+  			'line-focus': 'var(--color-line-focus)',
+  			action: {
+  				DEFAULT: 'var(--color-action)',
+  				hover: 'var(--color-action-hover)',
+  				active: 'var(--color-action-active)',
+  				subtle: 'var(--color-action-subtle)',
+  				border: 'var(--color-action-border)'
+  			},
+  			success: { DEFAULT: 'var(--color-success)', subtle: 'var(--color-success-subtle)', border: 'var(--color-success-border)' },
+  			warning: { DEFAULT: 'var(--color-warning)', subtle: 'var(--color-warning-subtle)', border: 'var(--color-warning-border)' },
+  			danger: { DEFAULT: 'var(--color-danger)', hover: 'var(--color-danger-hover)', subtle: 'var(--color-danger-subtle)', border: 'var(--color-danger-border)' },
+  			info: { DEFAULT: 'var(--color-info)', subtle: 'var(--color-info-subtle)', border: 'var(--color-info-border)' },
+  			neutral: { DEFAULT: 'var(--color-neutral)', subtle: 'var(--color-neutral-subtle)', border: 'var(--color-neutral-border)' },
+  			positive: 'var(--color-positive)',
+  			negative: 'var(--color-negative)',
+  			'ui-chart': {
+  				'1': 'var(--color-chart-1)', '2': 'var(--color-chart-2)', '3': 'var(--color-chart-3)',
+  				'4': 'var(--color-chart-4)', '5': 'var(--color-chart-5)', '6': 'var(--color-chart-6)',
+  				grid: 'var(--color-chart-grid)', axis: 'var(--color-chart-axis)'
+  			},
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',

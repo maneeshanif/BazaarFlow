@@ -39,6 +39,7 @@ dev = [
     "psycopg2-binary>=2.9.13",
     "pytest>=8.0.0",
     "pytest-asyncio>=0.23.0",
+    "pytest-timeout>=2.4.0",
     "ruff>=0.16.10",
     "testcontainers[postgres]>=4.15.0",
 ]
@@ -53,11 +54,11 @@ packages = ["app"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
-addopts = "-m 'not live and not legacy_port and not pg'"
+addopts = "-m 'not pg'"
+# a stuck test fails loudly instead of stalling the whole run (the real-Postgres tests need the headroom)
+timeout = 300
 markers = [
-    "live: calls a real external service (LLM, Meta, Twilio); run explicitly with -m live",
     "pg: needs Docker (real Postgres via testcontainers); run with -m pg, verify.sh runs them when Docker is up",
-    "legacy_port: v1-era test that no longer matches the migrated app/ code; to be rewritten (build-plan task) - run with -m legacy_port",
 ]
 
 [tool.ruff]

@@ -1,6 +1,6 @@
 "use client";
 
-import SupportVoicePage from "@/app/support/voice/page";
+import SupportVoicePage from "@/app/(marketing)/support/voice/page";
 import { DashboardLayout } from "@/components/DashboardSidebar";
 
 export default function CustomerSupportPage() {

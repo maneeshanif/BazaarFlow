@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "eslint",
     "test:integration": "node tests/integration.test.js",
-    "test:chat": "node tests/chat_integration.test.js"
+    "test:chat": "node tests/chat_integration.test.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check:tokens": "node scripts/check-tokens.mjs",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",
@@ -25,6 +29,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.4.0",
+    "@sentry/nextjs": "^10.71.0",
     "@studio-freight/lenis": "^1.0.42",
     "@types/canvas-confetti": "^1.9.0",
     "@vapi-ai/web": "^2.5.1",
@@ -46,14 +51,21 @@
     "three": "^0.181.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^4.7.0",
     "autoprefixer": "^10.4.16",
     "eslint": "^9",
     "eslint-config-next": "16.0.0",
+    "jsdom": "^29.1.1",
     "postcss": "^8.4.31",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.7"
   }
 }

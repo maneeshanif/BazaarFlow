@@ -2,7 +2,6 @@
 import importlib
 from types import SimpleNamespace
 
-import pytest
 from fastapi.testclient import TestClient
 
 import app.main as app_module
@@ -76,7 +75,6 @@ def test_get_nonexistent_item():
     assert response.status_code == 404
 
 
-@pytest.mark.legacy_port
 def test_create_inventory_item():
     """Test POST /api/inventory - should create new item."""
     client = TestClient(app_module.app)
@@ -163,7 +161,6 @@ def test_update_nonexistent_item():
     assert response.status_code == 404
 
 
-@pytest.mark.legacy_port
 def test_add_stock():
     """Test PATCH /api/inventory/{sku}/add-stock - should increment stock."""
     client = TestClient(app_module.app)

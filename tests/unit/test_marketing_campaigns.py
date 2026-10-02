@@ -39,7 +39,6 @@ async def test_generate_campaign_allows_single_post(monkeypatch):
 
 
 @pytest.mark.asyncio
-@pytest.mark.legacy_port
 async def test_publish_campaign_records_multiple_posts(monkeypatch):
     """_publish_campaign should loop through all posts and record them with a shared campaign_id."""
 
@@ -73,7 +72,8 @@ async def test_publish_campaign_records_multiple_posts(monkeypatch):
 
     service = MarketingService(facebook_manager_factory=fake_factory)  # type: ignore[arg-type]
 
-    account = {"account_id": "acc1", "page_id": "p1", "access_token": "t"}
+    # FacebookConfig validates the shape of the credentials, so the fake ones must look real
+    account = {"account_id": "acc1", "page_id": "123456789012345", "access_token": "EAA" + "x" * 40}
     campaign = {
         "strategy_summary": "Test",
         "posts": [

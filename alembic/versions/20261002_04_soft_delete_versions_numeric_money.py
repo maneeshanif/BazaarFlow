@@ -52,7 +52,7 @@ def downgrade() -> None:
     op.drop_index('uq_inventory_items_tenant_sku', table_name='inventory_items', postgresql_where=sa.text('deleted_at IS NULL'), sqlite_where=sa.text('deleted_at IS NULL'))
     # soft-deleted rows could collide with live ones once uniqueness covers every row again: keep them,
     # but make their sku unique (lossy by design: the original sku text is replaced)
-    op.execute("UPDATE inventory_items SET sku = left(coalesce(sku, ''), 60) || '#deleted-' || id::text WHERE deleted_at IS NOT NULL")
+    op.execute("UPDATE inventory_items SET sku = left(coalesce(sku, ''), 50) || '#deleted-' || id::text WHERE deleted_at IS NOT NULL")
     op.create_unique_constraint(op.f('uq_inventory_items_tenant_sku'), 'inventory_items', ['tenant_id', 'sku'], postgresql_nulls_not_distinct=False)
     op.alter_column('inventory_items', 'price',
                existing_type=sa.Numeric(precision=14, scale=2),

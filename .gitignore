@@ -38,3 +38,6 @@ backend/
 # Runtime databases
 db/
 app/db/
+# Playwright
+frontend/test-results/
+frontend/playwright-report/

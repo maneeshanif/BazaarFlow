@@ -124,7 +124,6 @@ def test_create_image_post_from_file(manager: FacebookManager, monkeypatch: pyte
     assert mime_type == "image/jpeg"
 
 
-@pytest.mark.legacy_port
 def test_create_image_post_with_missing_file(manager: FacebookManager) -> None:
     with pytest.raises(ImageUploadError):
         manager.create_image_post(ImagePostRequest(image_path="/does/not/exist.jpg"))
@@ -260,7 +259,6 @@ def test_extract_keywords_helper(manager: FacebookManager) -> None:
     assert len(keywords) <= 3
 
 
-@pytest.mark.legacy_port
 def test_get_post_insights_handles_missing_shares(
     manager: FacebookManager, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -288,3 +286,9 @@ def test_get_post_insights_handles_missing_shares(
     assert insights.shares_count == 0
     assert insights.comments_count == 0
     assert insights.reactions.total == 3
+
+
+def test_facebook_api_errors_carry_the_graph_api_error_code() -> None:
+    err = FacebookAPIError("token expired", 190, 463)
+    assert (err.error_code, err.error_subcode, str(err)) == (190, 463, "token expired")
+    assert FacebookAPIError("timeout").error_code is None

@@ -7,6 +7,7 @@ from typing import List, Optional
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
+from app.core.dependencies import get_http_client
 from app.repositories import (
     get_vendor,
     list_customers,
@@ -17,11 +18,8 @@ from app.repositories import (
     upsert_customer,
     upsert_vendor,
 )
-from app.services.whatsapp import (
-    WhatsAppAPIError,
-    send_text_message,
-    validate_phone_number,
-)
+from app.services import whatsapp
+from app.services.whatsapp import WhatsAppAPIError
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -132,9 +130,9 @@ async def get_vendor_settings(vendor_id: str):
 
 @router.post("/{vendor_id}/settings", response_model=VendorSettingsResponse)
 async def update_vendor_settings_endpoint(vendor_id: str, payload: VendorSettingsPayload, request: Request):
-    http_client = request.app.state.http_client
+    http_client = await get_http_client(request)
     try:
-        await validate_phone_number(
+        await whatsapp.validate_phone_number(
             client=http_client,
             phone_number_id=payload.phone_number_id,
             access_token=payload.access_token,
@@ -185,10 +183,10 @@ async def send_vendor_message(vendor_id: str, customer_phone: str, payload: Send
     if not normalized_phone:
         raise HTTPException(status_code=400, detail="Customer phone number must contain digits")
 
-    http_client = request.app.state.http_client
+    http_client = await get_http_client(request)
     upsert_customer(vendor_id, phone=normalized_phone)
     try:
-        response = await send_text_message(
+        response = await whatsapp.send_text_message(
             client=http_client,
             phone_number_id=phone_number_id,
             access_token=access_token,

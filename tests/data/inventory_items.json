@@ -1,0 +1,10 @@
+[
+  {"sku": "SKU-IPHONE-15", "name": "iPhone 15", "category": "mobile", "price": 289999, "stock": 9, "reorder_point": 8, "incoming": 25, "supplier": "Apple Middle East", "last_restocked": "2024-10-28"},
+  {"sku": "SKU-GALAXY-S24", "name": "Samsung Galaxy S24", "category": "mobile", "price": 249999, "stock": 0, "reorder_point": 5, "incoming": 18, "supplier": "Samsung Gulf", "last_restocked": "2024-09-30"},
+  {"sku": "SKU-PIXEL-8", "name": "Google Pixel 8", "category": "mobile", "price": 219999, "stock": 12, "reorder_point": 6, "incoming": 0, "supplier": "Google Partner", "last_restocked": "2024-10-20"},
+  {"sku": "SKU-MBA-M3", "name": "MacBook Air M3", "category": "computer", "price": 399999, "stock": 5, "reorder_point": 7, "incoming": 12, "supplier": "Apple Middle East", "last_restocked": "2024-10-15"},
+  {"sku": "SKU-SURFACE-10", "name": "Surface Laptop 10", "category": "computer", "price": 359999, "stock": 4, "reorder_point": 6, "incoming": 6, "supplier": "Microsoft Partner", "last_restocked": "2024-10-01"},
+  {"sku": "SKU-AIRPODS-PRO", "name": "AirPods Pro", "category": "audio", "price": 79999, "stock": 18, "reorder_point": 10, "incoming": 0, "supplier": "Apple Middle East", "last_restocked": "2024-10-25"},
+  {"sku": "SKU-LOGI-MX4", "name": "Logitech MX Master 4", "category": "accessory", "price": 29999, "stock": 3, "reorder_point": 5, "incoming": 20, "supplier": "Logitech Distributor", "last_restocked": "2024-10-05"},
+  {"sku": "SKU-IPAD-10", "name": "iPad 10th Gen", "category": "tablet", "price": 119999, "stock": 7, "reorder_point": 4, "incoming": 0, "supplier": "Apple Middle East", "last_restocked": "2024-10-22"}
+]

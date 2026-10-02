@@ -7,16 +7,16 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 0 — Foundation: spec harness, CI (`verify.sh`), Supabase projects and roles (§3.8), Data API lockdown, Alembic baseline, tenancy tables, RLS, JWT claims, role dependencies, architecture tests, secret hygiene (remove committed DSN script)
-**Last completed:** 03, 04, 05, 06, 08, 10, 11, 13, 14, 17 (each with tests, `verify.sh --slow` and an independent code review)
+**Last completed:** 07 UI foundation, 15 quarantined tests ported (each with tests, `verify.sh --slow` and an independent code review)
 **In progress:** Phase 0, in task order (see Phase 0 status below)
-**Next:** 07 UI foundation, 15, 16; then the pack tasks once the decisions under Needs a human are made
+**Next:** 16 mypy burn-down, then 18-20 (web scaffold, tokens/shell are done, auth guard), then the pack tasks once the decisions under Needs a human are made
 **Blockers:** 00 needs the owner's sign-off; 09 needs Supabase credentials; 26 needs vendor sandbox accounts
 
 ### Phase 0 status
 
-**Phase 0: 10 of 34 tasks done, 24 left.** Blocked on the owner: 00, 01 (B), 02, 09, 12. Needs a decision: 22-24, 28, 31-33. Open work I can do: 07, 15, 16, 18-21, 25, 27, 29, 30.
+**Phase 0: 12 of 34 tasks done, 22 left.** Blocked on the owner: 00, 01 (B), 02, 09, 12. Needs a decision: 22-24, 28, 31-33. Open work I can do: 16, 18-21, 25, 27, 29, 30.
 
-Done: 03, 04, 05, 06, 08, 10, 11, 13, 14, 17. Partly done: 01, 02, 12. Blocked on the owner: 00, 09, 26.
+Done: 03, 04, 05, 06, 07, 08, 10, 11, 13, 14, 15, 17. Partly done: 01, 02, 12. Blocked on the owner: 00, 09, 26.
 
 ---
 
@@ -29,7 +29,7 @@ Done: 03, 04, 05, 06, 08, 10, 11, 13, 14, 17. Partly done: 01, 02, 12. Blocked o
 - [x] 04 Authentication & authorization
 - [x] 05 Tenancy enforcement
 - [x] 06 Audit infrastructure
-- [ ] 07 UI foundation
+- [x] 07 UI foundation
 - [x] 08 Vertical slice
 - [ ] 09 Supabase projects (dev/staging/prod), database roles migrator/app_…
 - [x] 10 Tenancy schema and RLS baseline migration
@@ -37,7 +37,7 @@ Done: 03, 04, 05, 06, 08, 10, 11, 13, 14, 17. Partly done: 01, 02, 12. Blocked o
 - [ ] 12 Secret hygiene
 - [x] 13 Channel adapter interface (connect, send, receive, verify_webhook)…
 - [x] 14 Agent tool layer inside the API process: tools call services with…
-- [ ] 15 Rewrite the 19 quarantined tests (pytest markers legacy_port and l…
+- [x] 15 Rewrite the 19 quarantined tests (pytest markers legacy_port and l…
 - [ ] 16 Burn down the mypy legacy override list in pyproject.toml module b…
 - [x] 17 Fix the double-prefixed v1 routes (/api/v1/api/...) and consolidat…
 - [ ] 18 Scaffold the web app with the chosen framework, strict TypeScript,…

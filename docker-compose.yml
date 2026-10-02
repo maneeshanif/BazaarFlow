@@ -27,7 +27,7 @@ services:
       - VAPI_WEBHOOK_SECRET=${VAPI_WEBHOOK_SECRET}
       - PEXELS_API_KEY=${PEXELS_API_KEY}
       - MARKETING_SCHEDULER_ENABLED=${MARKETING_SCHEDULER_ENABLED:-true}
-      - FRONTEND_ORIGIN=http://frontend:3000
+      - FRONTEND_ORIGIN=${FRONTEND_ORIGIN:-http://localhost:3000}
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
       interval: 30s

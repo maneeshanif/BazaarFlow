@@ -58,6 +58,8 @@ class Settings(BaseSettings):
 
     # -- Meta / WhatsApp Cloud API ---------------------------------------------
     META_VERIFY_TOKEN: str = "test123"
+    # App secret used to verify X-Hub-Signature-256 on inbound webhooks (required in production/staging)
+    META_APP_SECRET: str = ""
     META_GRAPH_VERSION: str = "v17.0"
     META_GRAPH_BASE: str = "https://graph.facebook.com"
 
@@ -71,6 +73,9 @@ class Settings(BaseSettings):
 
     # -- Pexels Images ---------------------------------------------------------
     PEXELS_API_KEY: str = ""
+
+    # Legacy v1 routers share one JSON store across tenants: off in production/staging unless set to true
+    LEGACY_V1_ROUTES: bool | None = None
 
     # -- Scheduler -------------------------------------------------------------
     MARKETING_SCHEDULER_ENABLED: bool = True
@@ -96,6 +101,12 @@ class Settings(BaseSettings):
     @property
     def migrations_url(self) -> str:
         return self.DATABASE_URL_MIGRATIONS or self.DATABASE_URL
+
+    @property
+    def legacy_routes_enabled(self) -> bool:
+        if self.LEGACY_V1_ROUTES is not None:
+            return self.LEGACY_V1_ROUTES
+        return self.APP_ENV not in {"production", "staging"}
 
     @property
     def is_production(self) -> bool:

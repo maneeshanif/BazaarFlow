@@ -36,6 +36,10 @@ class AgentChatService:
         self._session_prefix = session_prefix
         self.active_sessions: Dict[str, SQLiteSession] = {}
 
+    @property
+    def session_prefix(self) -> str:
+        return self._session_prefix
+
     def _resolve_session(self, session_id: Optional[str]) -> tuple[str, SQLiteSession]:
         if not session_id:
             session_id = f"{self._session_prefix}_{len(self.active_sessions) + 1}"

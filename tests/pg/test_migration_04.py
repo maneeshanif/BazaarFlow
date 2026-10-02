@@ -131,3 +131,29 @@ async def test_downgrade_keeps_soft_deleted_rows_instead_of_deleting_them(scratc
         assert await conn.fetchval("SELECT count(*) FROM customers") == 2, "soft-deleted rows must survive a downgrade"
     finally:
         await conn.close()
+
+
+async def test_downgrade_works_when_a_soft_deleted_sku_is_very_long(scratch_db: str) -> None:
+    """The renamed sku (original + '#deleted-' + uuid) must still fit VARCHAR(100)."""
+    await asyncio.to_thread(command.upgrade, _cfg(), "head")
+    conn = await asyncpg.connect(scratch_db)
+    try:
+        await conn.execute(
+            "INSERT INTO tenants (id, name, slug, plan, status, onboarding_state, timezone, currency, created_at, updated_at) "
+            "VALUES ($1, 'T', 't', 'demo', 'active', 'created', 'Asia/Karachi', 'PKR', now(), now())",
+            TENANT,
+        )
+        await conn.execute(
+            "INSERT INTO inventory_items (id, tenant_id, sku, name, stock_count, incoming_units, min_threshold, version, "
+            "created_at, updated_at, deleted_at) VALUES (gen_random_uuid(), $1, $2, 'x', 1, 0, 0, 1, now(), now(), now())",
+            TENANT,
+            "S" * 100,
+        )
+    finally:
+        await conn.close()
+    await asyncio.to_thread(command.downgrade, _cfg(), "20261002_03")  # must not fail with 'value too long'
+    conn = await asyncpg.connect(scratch_db)
+    try:
+        assert await conn.fetchval("SELECT count(*) FROM inventory_items") == 1
+    finally:
+        await conn.close()

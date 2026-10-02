@@ -16,7 +16,6 @@ def _set_db_root(tmp_path):
 
 
 @pytest.mark.asyncio
-@pytest.mark.legacy_port
 async def test_inbound_webhook_process(monkeypatch):
     vendor = repository.upsert_vendor(
         phone_number_id="12345",
@@ -75,7 +74,6 @@ async def test_inbound_webhook_process(monkeypatch):
 
 
 @pytest.mark.asyncio
-@pytest.mark.legacy_port
 async def test_webhook_verification():
     async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
         response = await client.get(
@@ -84,3 +82,43 @@ async def test_webhook_verification():
         )
     assert response.status_code == 200
     assert response.text == "abc"
+
+
+def _sign(secret: str, body: bytes) -> str:
+    import hashlib
+    import hmac
+
+    return "sha256=" + hmac.new(secret.encode(), body, hashlib.sha256).hexdigest()
+
+
+@pytest.mark.asyncio
+async def test_a_signed_webhook_is_accepted_and_a_bad_signature_is_rejected(monkeypatch):
+    from app.core.settings import settings
+
+    monkeypatch.setattr(settings, "META_APP_SECRET", "app-secret")
+    body = b'{"entry": []}'
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
+        good = await client.post("/webhook", content=body, headers={"X-Hub-Signature-256": _sign("app-secret", body), "Content-Type": "application/json"})
+        bad = await client.post("/webhook", content=body, headers={"X-Hub-Signature-256": _sign("wrong", body), "Content-Type": "application/json"})
+        missing = await client.post("/webhook", content=body, headers={"Content-Type": "application/json"})
+    assert good.status_code == 200 and good.json() == {"status": "ignored"}
+    assert bad.status_code == 401
+    assert missing.status_code == 401
+
+
+@pytest.mark.asyncio
+async def test_production_refuses_unsigned_webhooks_when_no_secret_is_configured(monkeypatch):
+    from app.core.settings import settings
+
+    monkeypatch.setattr(settings, "META_APP_SECRET", "")
+    monkeypatch.setattr(settings, "APP_ENV", "production")
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
+        res = await client.post("/webhook", json={"entry": []})
+    assert res.status_code == 503
+
+
+@pytest.mark.asyncio
+async def test_a_wrong_verify_token_is_a_403(monkeypatch):
+    async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url="http://test") as client:
+        res = await client.get("/webhook", params={"hub.mode": "subscribe", "hub.verify_token": "nope", "hub.challenge": "x"})
+    assert res.status_code == 403

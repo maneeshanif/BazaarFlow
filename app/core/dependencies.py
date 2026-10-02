@@ -26,7 +26,10 @@ async def get_db() -> AsyncIterator[AsyncSession]:
 
 async def get_http_client(request: Request) -> httpx.AsyncClient:
     """Return the shared AsyncClient stored on app.state."""
-    client: httpx.AsyncClient = request.app.state.http_client
+    client: httpx.AsyncClient | None = getattr(request.app.state, "http_client", None)
+    if client is None:  # lifespan did not run (tests, or a different ASGI host): create it once
+        client = httpx.AsyncClient(timeout=30.0)
+        request.app.state.http_client = client
     return client
 
 

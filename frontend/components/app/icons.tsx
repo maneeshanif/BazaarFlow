@@ -1,0 +1,60 @@
+import {
+  Activity,
+  ArrowLeftRight,
+  BarChart3,
+  Bot,
+  Building2,
+  Calendar,
+  CheckCircle2,
+  Headphones,
+  Home,
+  Megaphone,
+  Menu,
+  MessageSquare,
+  Package,
+  Phone,
+  Plug,
+  PlusCircle,
+  Receipt,
+  ScrollText,
+  Store,
+  Truck,
+  UserCog,
+  Users,
+  Wallet,
+  Workflow,
+  type LucideIcon,
+} from "lucide-react";
+
+/** Icon names used by lib/navigation.ts -> components. Keeping names in the data keeps lib/ free of React. */
+const ICONS: Record<string, LucideIcon> = {
+  home: Home,
+  activity: Activity,
+  "check-circle": CheckCircle2,
+  "message-square": MessageSquare,
+  phone: Phone,
+  bot: Bot,
+  "plus-circle": PlusCircle,
+  receipt: Receipt,
+  users: Users,
+  package: Package,
+  "arrow-left-right": ArrowLeftRight,
+  truck: Truck,
+  wallet: Wallet,
+  megaphone: Megaphone,
+  calendar: Calendar,
+  "bar-chart": BarChart3,
+  headphones: Headphones,
+  workflow: Workflow,
+  store: Store,
+  "user-cog": UserCog,
+  plug: Plug,
+  building: Building2,
+  "scroll-text": ScrollText,
+  menu: Menu,
+};
+
+export function NavIcon({ name, className }: { name: string; className?: string }) {
+  const Icon = ICONS[name] ?? Home;
+  return <Icon aria-hidden className={className ?? "h-4 w-4"} />;
+}

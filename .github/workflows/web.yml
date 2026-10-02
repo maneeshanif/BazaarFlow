@@ -31,5 +31,11 @@ jobs:
           node-version: "22"
           cache: "npm"
           cache-dependency-path: frontend/package-lock.json
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Install Chromium for the responsive e2e check
+        working-directory: frontend
+        run: npx playwright install --with-deps chromium
       - name: Verify
         run: bash scripts/verify.sh --lane web

@@ -15,7 +15,16 @@ class BazaarFlowError(Exception):
 # -- Facebook / Meta -----------------------------------------------------------
 
 class FacebookAPIError(BazaarFlowError):
-    """Raised when the Facebook Graph API returns an error."""
+    """Raised when the Facebook Graph API returns an error.
+
+    ``error_code`` / ``error_subcode`` carry Graph API codes (for example 190 = expired token, 100 = invalid
+    parameter) so callers can decide what to retry or tolerate.
+    """
+
+    def __init__(self, message: str = "", error_code: int | None = None, error_subcode: int | None = None) -> None:
+        super().__init__(message)
+        self.error_code = error_code
+        self.error_subcode = error_subcode
 
 
 class PostCreationError(FacebookAPIError):
