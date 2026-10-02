@@ -7,16 +7,16 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 0 — Foundation: spec harness, CI (`verify.sh`), Supabase projects and roles (§3.8), Data API lockdown, Alembic baseline, tenancy tables, RLS, JWT claims, role dependencies, architecture tests, secret hygiene (remove committed DSN script)
-**Last completed:** 16 strict typing everywhere (each task: tests, `verify.sh --slow`, independent code review)
+**Last completed:** 18 web scaffold (strict TS, lint, format on new code), 19 tokens and shell (evidence from 07)
 **In progress:** Phase 0, in task order (see Phase 0 status below)
-**Next:** 18-20 (web scaffold done; auth guard is the real work), 25, 27, 29, 30; the rest wait on the owner
+**Next:** 20 web auth guard (login/logout/expiry, 403), then 25, 27, 29, 30
 **Blockers:** 00 needs the owner's sign-off; 09 needs Supabase credentials; 26 needs vendor sandbox accounts
 
 ### Phase 0 status
 
-**Phase 0: 13 of 34 tasks done, 21 left.** Blocked on the owner: 00, 01 (B), 02, 09, 12. Needs a decision: 22-24, 28, 31-33. Open work I can do: 18-21, 25, 27, 29, 30.
+**Phase 0: 15 of 34 tasks done, 19 left.** Blocked on the owner: 00, 01 (B), 02, 09, 12. Needs a decision: 22-24, 28, 31-33. Open work I can do: 20, 21 (needs a Vercel account), 25, 27, 29, 30.
 
-Done: 03, 04, 05, 06, 07, 08, 10, 11, 13, 14, 15, 16, 17. Partly done: 01, 02, 12. Blocked on the owner: 00, 09, 26.
+Done: 03, 04, 05, 06, 07, 08, 10, 11, 13, 14, 15, 16, 17, 18, 19. Partly done: 01, 02, 12. Blocked on the owner: 00, 09, 26.
 
 ---
 
@@ -40,8 +40,8 @@ Done: 03, 04, 05, 06, 07, 08, 10, 11, 13, 14, 15, 16, 17. Partly done: 01, 02, 1
 - [x] 15 Rewrite the 19 quarantined tests (pytest markers legacy_port and l…
 - [x] 16 Burn down the mypy legacy override list in pyproject.toml module b…
 - [x] 17 Fix the double-prefixed v1 routes (/api/v1/api/...) and consolidat…
-- [ ] 18 Scaffold the web app with the chosen framework, strict TypeScript,…
-- [ ] 19 Design tokens and layout shell [web-app pack]
+- [x] 18 Scaffold the web app with the chosen framework, strict TypeScript,…
+- [x] 19 Design tokens and layout shell [web-app pack]
 - [ ] 20 Authentication and role guard [web-app pack]
 - [ ] 21 Deploy a preview environment on a free tier [web-app pack]
 - [ ] 22 Scaffold the API with lint, format, typecheck and a health endpoin…

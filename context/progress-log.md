@@ -57,3 +57,7 @@ The owner pointed out that Phase 0 was not being built task by task. Audit of wh
 - All 463 strict-mypy errors fixed across app and tests; the ignore_errors override list is gone and a test keeps it gone. Method: an AST tool added 239 missing annotations (types from literal defaults, `-> None` where nothing is returned, `Any` elsewhere), 25 checked casts, then every remaining error by hand.
 - Real defects found on the way: deprecated pydantic Field arguments (max_items/min_items), AsyncOpenAI imported from the wrong package, ReactionBreakdown given a `total` property as a keyword, a mangled em dash in a customer-facing reply template, the diagnose script checking a root main.py that does not exist, an unreachable guard for a missing agent runner.
 - Honest caveat (from the review): many mechanically added annotations are `Any` (parameters whose type is not obvious from the code, and some controller returns). Strict passes, but those spots are not truly typed. Tighten them as each legacy module is rebuilt on the database (phase 1).
+
+## 2026-10-02 - Tasks 18 and 19
+- 18: prettier added; `format:check` runs in the web lane for the new foundation code only (legacy pages join as they are rebuilt, to avoid a 30-file reformat). Strict TS, lint, typecheck, build already pass; `npm ci` from the lockfile was exercised after the Windows node_modules reinstall; CI repeats it from a clean checkout.
+- 19: duplicates 07; its criteria are covered by check-tokens (tokens are the only source) and the Playwright no-horizontal-scroll tests at 360 and 1440 px.

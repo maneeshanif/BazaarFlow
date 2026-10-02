@@ -98,10 +98,10 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
   - Acceptance: the only mypy override is for a third-party package that ships no stubs
 - [x] 17 Fix the double-prefixed v1 routes (/api/v1/api/...) and consolidate router mounting in app/api/routers
   - Acceptance: The done-condition for this task is written here and has an automated check
-- [ ] 18 Scaffold the web app with the chosen framework, strict TypeScript, lint and format [web-app pack]
+- [x] 18 Scaffold the web app with the chosen framework, strict TypeScript, lint and format [web-app pack]
   - Acceptance: Fresh clone installs and builds
   - Acceptance: lint and typecheck run in the fast tier
-- [ ] 19 Design tokens and layout shell [web-app pack]
+- [x] 19 Design tokens and layout shell [web-app pack]
   - Acceptance: Tokens are the only source of colour, type and spacing
   - Acceptance: shell renders at 360 px and 1440 px without horizontal scroll
 - [ ] 20 Authentication and role guard [web-app pack]

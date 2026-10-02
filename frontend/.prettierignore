@@ -1,0 +1,13 @@
+# Format check covers the new foundation code only; legacy pages join as they are rebuilt (task 18).
+*
+!components/app/**
+!components/form/**
+!lib/format.ts
+!lib/navigation.ts
+!lib/status.ts
+!tests/ui/**
+!e2e/**
+!scripts/check-tokens.mjs
+!app/(app)/**
+!vitest.config.ts
+!playwright.config.ts
