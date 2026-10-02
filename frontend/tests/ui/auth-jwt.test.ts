@@ -30,7 +30,7 @@ describe("safeNextPath: where to go after sign-in", () => {
   it("accepts same-site paths", () => {
     expect(safeNextPath("/dashboard/orders?x=1")).toBe("/dashboard/orders?x=1");
   });
-  it.each(["https://evil.example", "//evil.example", "/\\evil.example", "javascript:alert(1)", "dashboard", "", null, undefined])(
+  it.each(["https://evil.example", "//evil.example", "/\\evil.example", "javascript:alert(1)", "/\t/evil.example", "/\n/evil.example", "/\r/evil.example", "/ /evil.example", "dashboard", "", null, undefined])(
     "rejects %s",
     (value) => {
       expect(safeNextPath(value as string | null | undefined)).toBeNull();

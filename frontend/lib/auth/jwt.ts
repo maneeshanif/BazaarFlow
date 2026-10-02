@@ -29,9 +29,27 @@ export function msUntilRefresh(token: string, now: number = Date.now(), skewMs =
   return Math.max(MIN_DELAY_MS, exp * 1000 - now - skewMs);
 }
 
-/** A post-sign-in destination is accepted only if it is a path on this site (no open redirects). */
+/** Control characters, space, DEL and backslash: browsers strip or reinterpret them inside a URL. */
+function hasUnsafeChars(value: string): boolean {
+  for (const ch of value) {
+    const code = ch.codePointAt(0) ?? 0;
+    if (code <= 0x20 || code === 0x7f || code === 0x5c) return true;
+  }
+  return false;
+}
+
+/**
+ * A post-sign-in destination is accepted only if it is a path on this site. Control characters and spaces are
+ * rejected outright (browsers strip tabs and newlines, so "/<TAB>/evil.com" would become "//evil.com"), and the
+ * result is checked by resolving it against a dummy origin.
+ */
 export function safeNextPath(value: string | null | undefined): string | null {
-  if (!value || !value.startsWith("/") || value.startsWith("//") || value.includes("\\") || value.includes("://")) {
+  if (!value || !value.startsWith("/") || value.startsWith("//")) return null;
+  if (hasUnsafeChars(value) || value.includes("://")) return null;
+  try {
+    const resolved = new URL(value, "http://site.invalid");
+    if (resolved.origin !== "http://site.invalid") return null;
+  } catch {
     return null;
   }
   return value;

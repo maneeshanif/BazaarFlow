@@ -59,6 +59,20 @@ describe("POST /api/auth/login (BFF: the refresh token never reaches JavaScript)
     backend.mockResolvedValue(json({ detail: "Too many failed attempts; try again later" }, 429));
     expect((await login(post("/api/auth/login", { email: "a@b.com", password: "x" }))).status).toBe(429);
   });
+  it("rejects a JSON null, an array or a string body without crashing", async () => {
+    for (const body of [null, [], "x", 5]) expect((await login(post("/api/auth/login", body))).status).toBe(400);
+  });
+  it("does not set a cookie when a 200 carries no tokens", async () => {
+    backend.mockResolvedValue(json({}));
+    const res = await login(post("/api/auth/login", { email: "a@b.com", password: "pw-12345678" }));
+    expect(res.status).toBe(502);
+    expect(res.headers.get("set-cookie")).toBeNull();
+  });
+  it("gives the backend call a timeout so a hung API cannot hang the page", async () => {
+    backend.mockResolvedValue(json(tokens));
+    await login(post("/api/auth/login", { email: "a@b.com", password: "pw-12345678" }));
+    expect(backend.mock.calls[0][1].signal).toBeInstanceOf(AbortSignal);
+  });
   it("rejects a malformed body and survives an unreachable backend", async () => {
     expect((await login(post("/api/auth/login", { nope: true }))).status).toBe(400);
     backend.mockRejectedValue(new Error("ECONNREFUSED"));
@@ -81,6 +95,24 @@ describe("POST /api/auth/refresh", () => {
     expect((await res.json()).access_token).toBe("new.access.jwt");
     expect(res.headers.get("set-cookie")).toContain(`bf_refresh=${"n".repeat(48)}`);
     expect(JSON.parse(backend.mock.calls[0][1].body)).toEqual({ refresh_token: tokens.refresh_token });
+  });
+  it("keeps the cookie and answers 503 when the backend has a transient failure (a restart must not sign people out)", async () => {
+    for (const status of [429, 500, 502, 503]) {
+      backend.mockResolvedValueOnce(json({ detail: "busy" }, status));
+      const res = await refresh(post("/api/auth/refresh", undefined, `bf_refresh=${tokens.refresh_token}`));
+      expect(res.status, String(status)).toBe(503);
+      expect(res.headers.get("set-cookie"), String(status)).toBeNull();
+    }
+    backend.mockRejectedValueOnce(new Error("ECONNREFUSED"));
+    const down = await refresh(post("/api/auth/refresh", undefined, `bf_refresh=${tokens.refresh_token}`));
+    expect(down.status).toBe(502);
+    expect(down.headers.get("set-cookie")).toBeNull();
+  });
+  it("does not trust a 200 without tokens", async () => {
+    backend.mockResolvedValue(json({}));
+    const res = await refresh(post("/api/auth/refresh", undefined, `bf_refresh=${tokens.refresh_token}`));
+    expect(res.status).toBe(502);
+    expect(res.headers.get("set-cookie")).toBeNull();
   });
   it("clears the cookie when the backend rejects the token", async () => {
     backend.mockResolvedValue(json({ detail: "Invalid refresh token" }, 401));

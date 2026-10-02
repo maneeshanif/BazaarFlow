@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 export const REFRESH_COOKIE = "bf_refresh";
 const COOKIE_PATH = "/api/auth";
 const REFRESH_DAYS = 14;
+const BACKEND_TIMEOUT_MS = 10_000;
 
 export function backendUrl(path: string): string {
   const base = process.env.API_INTERNAL_URL || process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
@@ -46,7 +47,21 @@ export async function callBackend(path: string, body: unknown): Promise<Response
     headers: { "content-type": "application/json" },
     body: JSON.stringify(body),
     cache: "no-store",
+    signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS), // a hung API must not hang the page
   });
+}
+
+/** True when the backend answered with a well-formed session (never trust a 200 blindly). */
+export function isSession(value: unknown): value is BackendTokens {
+  const v = value as Partial<BackendTokens> | null;
+  return (
+    !!v &&
+    typeof v === "object" &&
+    typeof v.access_token === "string" &&
+    typeof v.refresh_token === "string" &&
+    typeof v.tenant_id === "string" &&
+    typeof v.role === "string"
+  );
 }
 
 export const unreachable = () => NextResponse.json({ detail: "The service is temporarily unavailable." }, { status: 502 });

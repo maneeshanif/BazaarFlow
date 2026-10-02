@@ -2,7 +2,7 @@
 
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { msUntilRefresh } from "@/lib/auth/jwt";
+import { decodeExp, msUntilRefresh } from "@/lib/auth/jwt";
 import type { Role } from "@/lib/navigation";
 
 type Status = "loading" | "authenticated" | "anonymous";
@@ -35,13 +35,36 @@ export const useAuth = () => useContext(AuthContext);
 type Session = { access_token: string; tenant_id: string; role: Role };
 type Retriable = InternalAxiosRequestConfig & { _retried?: boolean };
 
+/**
+ * The provider is mounted per area (sign-in, dashboard, app), so the session is carried across client-side
+ * navigation here. Without it, signing in and landing on the dashboard would refresh again immediately, and a
+ * reload during that refresh could drop the rotated cookie and trip reuse detection.
+ */
+let carried: Session | null = null;
+export function resetCarriedSession(): void {
+  carried = null;
+}
+
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
-const isApiCall = (url?: string) => !!url && (url.startsWith(API_BASE) || url.startsWith("/api/")) && !url.startsWith("/api/auth/");
+const REQUEST_TIMEOUT_MS = 15_000;
+const TRANSIENT_RETRY_MS = 30_000;
+
+/** The token goes only to the backend: same origin as API_BASE (a prefix match would also match evil hosts). */
+function isBackendCall(url: string | undefined): boolean {
+  if (!url) return false;
+  try {
+    const target = new URL(url, API_BASE);
+    return target.origin === new URL(API_BASE).origin && !target.pathname.startsWith("/api/auth/");
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Holds the signed-in session in memory (never in localStorage) and keeps it alive:
  * the access token is refreshed shortly before it expires and once more if the API answers 401.
  * It also attaches the token to calls made through the default axios instance, so existing pages work unchanged.
+ * Mounted only under the signed-in areas and the sign-in page, so public pages never ask for a session.
  */
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<Status>("loading");
@@ -50,38 +73,65 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const token = useRef<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const inflight = useRef<Promise<string | null> | null>(null);
+  // bumped by logout/clear: a refresh that started earlier must not bring the session back
+  const generation = useRef(0);
 
   const clear = useCallback(() => {
+    generation.current += 1;
     token.current = null;
+    carried = null;
     if (timer.current) clearTimeout(timer.current);
     setSession(null);
     setStatus("anonymous");
   }, []);
 
-  const adopt = useCallback((s: Session, refresh: () => Promise<string | null>) => {
-    token.current = s.access_token;
-    setSession(s);
-    setStatus("authenticated");
-    setError(null);
+  const schedule = useCallback((ms: number, refresh: () => Promise<string | null>) => {
     if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => void refresh(), msUntilRefresh(s.access_token));
+    timer.current = setTimeout(() => void refresh(), ms);
   }, []);
+
+  const adopt = useCallback(
+    (s: Session, refresh: () => Promise<string | null>) => {
+      token.current = s.access_token;
+      carried = s;
+      setSession(s);
+      setStatus("authenticated");
+      setError(null);
+      schedule(msUntilRefresh(s.access_token), refresh);
+    },
+    [schedule],
+  );
 
   // single-flight: concurrent 401s and the expiry timer share one refresh call
   const refresh = useCallback((): Promise<string | null> => {
     if (inflight.current) return inflight.current;
+    const started = generation.current;
     const run = (async () => {
       try {
-        const res = await fetch("/api/auth/refresh", { method: "POST", credentials: "same-origin" });
-        if (!res.ok) {
-          clear();
+        const res = await fetch("/api/auth/refresh", {
+          method: "POST",
+          credentials: "same-origin",
+          signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+        });
+        if (started !== generation.current) return null; // signed out or replaced meanwhile: ignore the result
+        if (res.status === 401) {
+          clear(); // the session is really over
           return null;
         }
+        if (!res.ok) throw new Error(`refresh failed: ${res.status}`);
         const s = (await res.json()) as Session;
+        if (started !== generation.current) return null;
         adopt(s, refresh);
         return s.access_token;
       } catch {
-        clear();
+        if (started !== generation.current) return null;
+        // transient (API restarting, network blip, timeout): keep an existing session and try again soon;
+        // with no session yet, there is nothing to keep
+        if (token.current) schedule(TRANSIENT_RETRY_MS, refresh);
+        else {
+          setSession(null);
+          setStatus("anonymous");
+        }
         return null;
       } finally {
         inflight.current = null;
@@ -89,23 +139,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })();
     inflight.current = run;
     return run;
-  }, [adopt, clear]);
+  }, [adopt, clear, schedule]);
 
   useEffect(() => {
-    void refresh(); // restore the session from the httpOnly cookie
+    const exp = carried ? decodeExp(carried.access_token) : null;
+    if (carried && exp !== null && exp * 1000 > Date.now()) {
+      adopt(carried, refresh); // arrived by client-side navigation with a live session
+    } else {
+      void refresh(); // restore the session from the httpOnly cookie
+    }
     return () => {
       if (timer.current) clearTimeout(timer.current);
     };
-  }, [refresh]);
+  }, [refresh, adopt]);
 
   useEffect(() => {
     const req = axios.interceptors.request.use((config) => {
-      if (token.current && isApiCall(config.url)) config.headers.set("Authorization", `Bearer ${token.current}`);
+      if (token.current && isBackendCall(config.url)) config.headers.set("Authorization", `Bearer ${token.current}`);
       return config;
     });
     const res = axios.interceptors.response.use(undefined, async (err: AxiosError) => {
       const config = err.config as Retriable | undefined;
-      if (err.response?.status === 401 && config && !config._retried && isApiCall(config.url)) {
+      if (err.response?.status === 401 && config && !config._retried && isBackendCall(config.url)) {
         config._retried = true;
         const fresh = await refresh();
         if (fresh) {
@@ -130,6 +185,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           headers: { "content-type": "application/json" },
           credentials: "same-origin",
           body: JSON.stringify({ email, password, ...(tenantId ? { tenant_id: tenantId } : {}) }),
+          signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
         });
         const body = await res.json().catch(() => ({}));
         if (!res.ok) {
@@ -141,6 +197,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setError(message);
           return { ok: false, error: message };
         }
+        generation.current += 1; // supersede any refresh that was already running
         adopt(body as Session, refresh);
         return { ok: true };
       } catch {
@@ -153,8 +210,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const logout = useCallback(async () => {
-    await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" }).catch(() => undefined);
-    clear();
+    clear(); // first: from this moment no in-flight refresh can restore the session
+    await fetch("/api/auth/logout", {
+      method: "POST",
+      credentials: "same-origin",
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    }).catch(() => undefined);
   }, [clear]);
 
   const value = useMemo<AuthValue>(

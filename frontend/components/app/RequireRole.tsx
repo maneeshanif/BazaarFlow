@@ -18,7 +18,11 @@ export function RequireRole({ roles, children }: { roles: Role[]; children: Reac
   const pathname = usePathname();
 
   useEffect(() => {
-    if (status === "anonymous") router.replace(`/sign-in?next=${encodeURIComponent(pathname)}`);
+    if (status === "anonymous") {
+      // read at redirect time (not via useSearchParams, which forces a Suspense boundary on every guarded page)
+      const query = window.location.search.replace(/^\?/, "");
+      router.replace(`/sign-in?next=${encodeURIComponent(query ? `${pathname}?${query}` : pathname)}`);
+    }
   }, [status, router, pathname]);
 
   if (status === "loading") {

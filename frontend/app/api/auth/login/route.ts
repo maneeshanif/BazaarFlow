@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { callBackend, publicSession, setRefreshCookie, unreachable, type BackendTokens } from "@/lib/auth/server";
+import { callBackend, isSession, publicSession, setRefreshCookie, unreachable } from "@/lib/auth/server";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   let body: { email?: unknown; password?: unknown; tenant_id?: unknown };
   try {
-    body = await request.json();
+    const parsed: unknown = await request.json();
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("not an object");
+    body = parsed as typeof body;
   } catch {
     return NextResponse.json({ detail: "Invalid request" }, { status: 400 });
   }
@@ -30,7 +32,8 @@ export async function POST(request: NextRequest) {
     // wrong password, lockout (429), tenant choice (409): the backend's message is safe to show
     return NextResponse.json(payload, { status: upstream.status });
   }
-  const res = NextResponse.json(publicSession(payload as BackendTokens));
-  setRefreshCookie(res, (payload as BackendTokens).refresh_token);
+  if (!isSession(payload)) return unreachable();
+  const res = NextResponse.json(publicSession(payload));
+  setRefreshCookie(res, payload.refresh_token);
   return res;
 }

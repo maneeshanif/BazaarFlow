@@ -2,7 +2,7 @@ import { act, render, screen, waitFor } from "@testing-library/react";
 import axios from "axios";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { RequireRole } from "@/components/app/RequireRole";
-import { AuthProvider, useAuth } from "@/lib/auth/AuthProvider";
+import { AuthProvider, resetCarriedSession, useAuth } from "@/lib/auth/AuthProvider";
 
 const replace = vi.fn();
 vi.mock("next/navigation", () => ({
@@ -17,6 +17,7 @@ const ok = (body: unknown, status = 200) =>
 
 const routes = vi.fn();
 beforeEach(() => {
+  resetCarriedSession();
   replace.mockReset();
   routes.mockReset();
   vi.stubGlobal("fetch", routes);
@@ -108,6 +109,16 @@ describe("AuthProvider", () => {
     }
   });
 
+  it("a provider mounted after client-side navigation reuses the live session instead of refreshing again", async () => {
+    routes.mockResolvedValueOnce(ok({ access_token: jwt(900), tenant_id: "t1", role: "owner" }));
+    const first = mount();
+    await waitFor(() => expect(screen.getByTestId("status")).toHaveTextContent("authenticated"));
+    first.unmount(); // e.g. leaving the sign-in area for the dashboard
+    mount();
+    await waitFor(() => expect(screen.getByTestId("status")).toHaveTextContent("authenticated"));
+    expect(routes).toHaveBeenCalledTimes(1);
+  });
+
   it("falls back to anonymous when the refresh at expiry is refused", async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     try {
@@ -122,6 +133,65 @@ describe("AuthProvider", () => {
     } finally {
       vi.useRealTimers();
     }
+  });
+
+  it("a transient backend failure at expiry keeps the session and tries again, instead of signing out", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    try {
+      routes.mockResolvedValueOnce(ok({ access_token: jwt(120), tenant_id: "t1", role: "staff" }));
+      routes.mockResolvedValueOnce(ok({ detail: "unavailable" }, 503));
+      routes.mockResolvedValueOnce(ok({ access_token: jwt(900), tenant_id: "t1", role: "staff" }));
+      mount();
+      await waitFor(() => expect(screen.getByTestId("status")).toHaveTextContent("authenticated"));
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(70_000);
+      });
+      expect(screen.getByTestId("status")).toHaveTextContent("authenticated");
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(35_000);
+      });
+      await waitFor(() => expect(routes).toHaveBeenCalledTimes(3));
+      expect(screen.getByTestId("status")).toHaveTextContent("authenticated");
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("a refresh that was already in flight cannot sign the user back in after logout", async () => {
+    let finishRefresh: (r: Response) => void = () => undefined;
+    routes.mockResolvedValueOnce(ok({ access_token: jwt(900), tenant_id: "t1", role: "owner" }));
+    mount();
+    await waitFor(() => expect(screen.getByTestId("status")).toHaveTextContent("authenticated"));
+    // start a second refresh through a 401 retry that we hold open
+    const held = new Promise<Response>((resolve) => (finishRefresh = resolve));
+    routes.mockReturnValueOnce(held); // refresh (held)
+    routes.mockResolvedValueOnce(new Response(null, { status: 204 })); // logout
+    const adapter = vi.fn(async (config: unknown) => {
+      throw Object.assign(new Error("401"), { response: { status: 401 }, config });
+    });
+    void axios.get("http://localhost:8000/api/inventory", { adapter: adapter as never }).catch(() => undefined);
+    await waitFor(() => expect(routes).toHaveBeenCalledTimes(2));
+    await act(async () => screen.getByText("logout").click());
+    await waitFor(() => expect(screen.getByTestId("status")).toHaveTextContent("anonymous"));
+    await act(async () => finishRefresh(ok({ access_token: jwt(900), tenant_id: "t1", role: "owner" })));
+    expect(screen.getByTestId("status")).toHaveTextContent("anonymous");
+  });
+
+  it("never sends the token to a host that merely starts with the API address", async () => {
+    const seen: (string | undefined)[] = [];
+    const adapter = vi.fn(async (config: { headers: { get: (k: string) => unknown } }) => {
+      seen.push(config.headers.get("Authorization") as string | undefined);
+      return { data: {}, status: 200, statusText: "OK", headers: {}, config };
+    });
+    routes.mockResolvedValueOnce(ok({ access_token: jwt(900), tenant_id: "t1", role: "owner" }));
+    mount();
+    await waitFor(() => expect(screen.getByTestId("status")).toHaveTextContent("authenticated"));
+    await axios.get("http://localhost:8000.evil.example/steal", { adapter: adapter as never });
+    await axios.get("http://localhost:8000@evil.example/steal", { adapter: adapter as never });
+    await axios.get("http://localhost:8000/api/inventory", { adapter: adapter as never });
+    expect(seen[0]).toBeUndefined();
+    expect(seen[1]).toBeUndefined();
+    expect(seen[2]).toMatch(/^Bearer /);
   });
 
   it("sends the bearer token on existing axios calls and retries once after a 401", async () => {
@@ -158,6 +228,16 @@ describe("RequireRole: login and 403 on the web", () => {
     routes.mockResolvedValue(ok({}, 401));
     renderGuard(["owner"]);
     await waitFor(() => expect(replace).toHaveBeenCalledWith("/sign-in?next=%2Fdashboard%2Ffinance"));
+  });
+
+  it("keeps the query string in the remembered destination", async () => {
+    window.history.pushState({}, "", "/dashboard/finance?status=pending&item=42");
+    routes.mockResolvedValue(ok({}, 401));
+    renderGuard(["owner"]);
+    await waitFor(() =>
+      expect(replace).toHaveBeenCalledWith("/sign-in?next=" + encodeURIComponent("/dashboard/finance?status=pending&item=42")),
+    );
+    window.history.pushState({}, "", "/");
     expect(screen.queryByText("secret finance page")).toBeNull();
   });
 

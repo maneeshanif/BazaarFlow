@@ -3,10 +3,10 @@ import {
   REFRESH_COOKIE,
   callBackend,
   clearRefreshCookie,
+  isSession,
   publicSession,
   setRefreshCookie,
   unreachable,
-  type BackendTokens,
 } from "@/lib/auth/server";
 
 export const dynamic = "force-dynamic";
@@ -21,12 +21,17 @@ export async function POST(request: NextRequest) {
   } catch {
     return unreachable();
   }
-  if (!upstream.ok) {
+  if (upstream.status === 400 || upstream.status === 401 || upstream.status === 403) {
+    // the token is really dead (expired, revoked, reused): end the session
     const res = NextResponse.json({ detail: "Session expired" }, { status: 401 });
     clearRefreshCookie(res);
     return res;
   }
-  const tokens = (await upstream.json()) as BackendTokens;
+  const tokens: unknown = upstream.ok ? await upstream.json().catch(() => null) : null;
+  if (!isSession(tokens)) {
+    // a restart, rate limit or bad gateway is transient: keep the cookie so the next attempt can succeed
+    return NextResponse.json({ detail: "Temporarily unavailable" }, { status: upstream.ok ? 502 : 503 });
+  }
   const res = NextResponse.json(publicSession(tokens));
   setRefreshCookie(res, tokens.refresh_token); // rotated: the old one is now dead
   return res;

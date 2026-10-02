@@ -4,13 +4,14 @@
 
 Postgres 16 in Docker (roles provisioned like Supabase, migrations applied), three users (owner, manager,
 staff) in one shop, the FastAPI backend on :8000 with 1-minute access tokens, then Playwright (which starts the
-Next.js server on :3100). Needs Docker and `npm run build` in frontend/ to have been run.
+Next.js server on :3100). Needs Docker. Builds the frontend itself and refuses to run if :8000 or :3100 is already taken.
 """
 
 from __future__ import annotations
 
 import asyncio
 import os
+import socket
 import subprocess
 import sys
 import time
@@ -80,17 +81,70 @@ async def seed_users() -> None:
         await conn.close()
 
 
+def port_in_use(port: int) -> bool:
+    with socket.socket() as s:
+        s.settimeout(1)
+        return s.connect_ex(("127.0.0.1", port)) == 0
+
+
+def stop_tree(proc: subprocess.Popen) -> None:
+    """`uv run` is a wrapper: on Windows terminate() would leave the real uvicorn holding the port."""
+    if os.name == "nt":
+        subprocess.run(["taskkill", "/F", "/T", "/PID", str(proc.pid)], capture_output=True)
+    else:
+        proc.terminate()
+    try:
+        proc.wait(timeout=10)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+
+
 def main() -> int:
-    sh(["docker", "rm", "-f", NAME], capture_output=True) if False else subprocess.run(["docker", "rm", "-f", NAME], capture_output=True)
-    sh(["docker", "run", "-d", "--rm", "--name", NAME, "-p", f"{PORT}:5432", "-e", f"POSTGRES_PASSWORD={PW['postgres']}", "-e", "POSTGRES_DB=bazaarflow", "postgres:16"], capture_output=True)
+    for port in (8000, 3100):
+        if port_in_use(port):
+            raise SystemExit(f"port {port} is already in use: a stale server would make this test meaningless")
+    subprocess.run(["docker", "rm", "-f", NAME], capture_output=True)
+    sh(
+        [
+            "docker",
+            "run",
+            "-d",
+            "--rm",
+            "--name",
+            NAME,
+            "-p",
+            f"{PORT}:5432",
+            "-e",
+            f"POSTGRES_PASSWORD={PW['postgres']}",
+            "-e",
+            "POSTGRES_DB=bazaarflow",
+            "postgres:16",
+        ],
+        capture_output=True,
+    )
     api: subprocess.Popen | None = None
     code = 1
     try:
         wait_for_postgres()
         env = {**os.environ, "APP_ENV": "development", "SECRET_KEY": "e2e-secret-key-not-for-anything-else-0123456789"}
         sh(
-            ["uv", "run", "python", "-m", "app.cli.provision_db", "--admin-url", url("postgres", "postgresql"), "--database", "bazaarflow"],
-            env={**env, "MIGRATOR_PASSWORD": PW["migrator"], "APP_USER_PASSWORD": PW["app"], "REPORT_RO_PASSWORD": PW["report"]},
+            [
+                "uv",
+                "run",
+                "python",
+                "-m",
+                "app.cli.provision_db",
+                "--admin-url",
+                url("postgres", "postgresql"),
+                "--database",
+                "bazaarflow",
+            ],
+            env={
+                **env,
+                "MIGRATOR_PASSWORD": PW["migrator"],
+                "APP_USER_PASSWORD": PW["app"],
+                "REPORT_RO_PASSWORD": PW["report"],
+            },
         )
         sh(["uv", "run", "alembic", "upgrade", "head"], env={**env, "DATABASE_URL_MIGRATIONS": url("migrator")})
         sys.path.insert(0, str(ROOT))
@@ -117,6 +171,8 @@ def main() -> int:
         else:
             raise SystemExit("API did not start")
 
+        # the test runs against a production build, so always build from the current source
+        subprocess.run(["npm", "run", "build"], cwd=FRONTEND, check=True, shell=os.name == "nt", capture_output=True)
         result = subprocess.run(
             ["npx", "playwright", "test", *(sys.argv[1:] or ["e2e/auth.spec.ts"])],
             cwd=FRONTEND,
@@ -126,11 +182,7 @@ def main() -> int:
         code = result.returncode
     finally:
         if api is not None:
-            api.terminate()
-            try:
-                api.wait(timeout=10)
-            except subprocess.TimeoutExpired:
-                api.kill()
+            stop_tree(api)
         subprocess.run(["docker", "rm", "-f", NAME], capture_output=True)
     return code
 

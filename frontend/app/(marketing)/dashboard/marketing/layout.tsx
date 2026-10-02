@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { LayoutDashboard, CalendarClock, BarChart3, ShieldCheck, Megaphone } from "lucide-react";
 
+import { RequireRole } from "@/components/app/RequireRole";
 import { DashboardLayout } from "@/components/DashboardSidebar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -63,13 +64,16 @@ function MarketingShell({ children }: { children: React.ReactNode }) {
 }
 
 export default function DashboardMarketingLayout({ children }: { children: React.ReactNode }) {
+  // the guard sits above the provider: a role without access must not trigger the marketing API calls
   return (
-    <DashboardLayout>
-      <MarketingProvider>
-        <div className="mx-auto max-w-7xl space-y-6">
-          <MarketingShell>{children}</MarketingShell>
-        </div>
-      </MarketingProvider>
-    </DashboardLayout>
+    <RequireRole roles={["owner", "manager"]}>
+      <DashboardLayout>
+        <MarketingProvider>
+          <div className="mx-auto max-w-7xl space-y-6">
+            <MarketingShell>{children}</MarketingShell>
+          </div>
+        </MarketingProvider>
+      </DashboardLayout>
+    </RequireRole>
   );
 }
