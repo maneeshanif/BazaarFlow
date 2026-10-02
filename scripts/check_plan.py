@@ -106,7 +106,7 @@ def main():
                 problem(f"task {num} is {'done' if done else 'open'} in the tracker but {'done' if by_num[num]['done'] else 'open'} in the build plan", f"make both files agree on task {num} (tick or untick it in both)")
         for num in ticks:
             if num not in by_num:
-                problem(f"tracker lists task {num}, which is not in the build plan", f"remove it from the tracker or add it to build-plan.md")
+                problem(f"tracker lists task {num}, which is not in the build plan", "remove it from the tracker or add it to build-plan.md")
         nxt = re.match(r"\s*(\d{2,3})\b", status.get("Next", ""))
         if nxt and ticks.get(nxt.group(1)):
             problem(f"tracker says Next is task {nxt.group(1)}, but it is ticked done", "set Next to the first unticked task")
