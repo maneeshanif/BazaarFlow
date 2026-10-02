@@ -24,7 +24,6 @@
   "app/(marketing)/logs/page.tsx": 27,
   "app/(marketing)/page.tsx": 171,
   "app/(marketing)/register/page.tsx": 39,
-  "app/(marketing)/sign-in/page.tsx": 19,
   "app/(marketing)/support/voice/page.tsx": 26,
   "app/components/Header.tsx": 47,
   "components/DashboardSidebar.tsx": 34,

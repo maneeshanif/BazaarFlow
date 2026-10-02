@@ -61,3 +61,9 @@ The owner pointed out that Phase 0 was not being built task by task. Audit of wh
 ## 2026-10-02 - Tasks 18 and 19
 - 18: prettier added; `format:check` runs in the web lane for the new foundation code only (legacy pages join as they are rebuilt, to avoid a 30-file reformat). Strict TS, lint, typecheck, build already pass; `npm ci` from the lockfile was exercised after the Windows node_modules reinstall; CI repeats it from a clean checkout.
 - 19: duplicates 07; its criteria are covered by check-tokens (tokens are the only source) and the Playwright no-horizontal-scroll tests at 360 and 1440 px.
+
+## 2026-10-02 - Task 20 (web auth and role guard)
+- Browser talks to Next route handlers (/api/auth/login|refresh|logout) that call FastAPI; the refresh token lives in an httpOnly SameSite=Lax cookie scoped to /api/auth, the access token only in memory. AuthProvider refreshes before expiry (min 5 s so a short token cannot loop), retries once on 401, and attaches the bearer token to existing axios calls so legacy pages work.
+- Guards: /dashboard any member; marketing and support owner+manager; settings owner. Sign-in honours `next` (open-redirect safe).
+- The real-stack e2e (Postgres, API, Next, Playwright) caught a tight refresh loop on a stale build that tripped refresh-token reuse detection and logged the user out; fixed with the 5 s floor. One unexplained 33 s stall in a single run did not recur (8/8 on rerun).
+- Caveat: two tabs refreshing at the same moment can trigger reuse detection and sign one out (safe direction). Legacy pages still call the shared JSON store routes (/api/sales etc.); they now carry the token but are not tenant-scoped until rebuilt in phase 1.

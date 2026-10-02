@@ -13,8 +13,8 @@
     "test": "vitest run",
     "check:tokens": "node scripts/check-tokens.mjs",
     "test:e2e": "playwright test",
-    "format:check": "prettier --check components/app components/form lib/format.ts lib/navigation.ts lib/status.ts tests/ui e2e scripts/check-tokens.mjs \"app/(app)\" vitest.config.ts playwright.config.ts",
-    "format": "prettier --write components/app components/form lib/format.ts lib/navigation.ts lib/status.ts tests/ui e2e scripts/check-tokens.mjs \"app/(app)\" vitest.config.ts playwright.config.ts"
+    "format:check": "prettier --check components/app components/form lib/auth \"app/api/auth\" \"app/(marketing)/sign-in\" lib/format.ts lib/navigation.ts lib/status.ts tests/ui e2e scripts/check-tokens.mjs \"app/(app)\" vitest.config.ts playwright.config.ts",
+    "format": "prettier --write components/app components/form lib/auth \"app/api/auth\" \"app/(marketing)/sign-in\" lib/format.ts lib/navigation.ts lib/status.ts tests/ui e2e scripts/check-tokens.mjs \"app/(app)\" vitest.config.ts playwright.config.ts"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",

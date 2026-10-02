@@ -104,9 +104,10 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [x] 19 Design tokens and layout shell [web-app pack]
   - Acceptance: Tokens are the only source of colour, type and spacing
   - Acceptance: shell renders at 360 px and 1440 px without horizontal scroll
-- [ ] 20 Authentication and role guard [web-app pack]
-  - Acceptance: Login, logout and expiry work
-  - Acceptance: a user without the role gets 403 on a protected route
+- [x] 20 Authentication and role guard [web-app pack]
+  - Acceptance: login, logout and silent token refresh work end to end against the real backend (e2e/auth.spec.ts, 8 tests via scripts/e2e_auth_stack.py)
+  - Acceptance: a role without access sees the restricted view, and the API itself answers 401/403 (UI guard is a convenience)
+  - Acceptance: the refresh token is an httpOnly cookie, never in JS or storage
 - [ ] 21 Deploy a preview environment on a free tier [web-app pack]
   - Acceptance: Every pull request gets a preview URL
   - Acceptance: production deploy is one command

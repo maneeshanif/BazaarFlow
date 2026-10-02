@@ -1,120 +1,104 @@
 "use client";
 
-import { useState } from "react";
-import { Chrome, Lock, ShieldCheck } from "lucide-react";
-import Link from "next/link";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState, type FormEvent } from "react";
+import { FormField } from "@/components/form/FormField";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useAuth } from "@/lib/auth/AuthProvider";
+import { safeNextPath } from "@/lib/auth/jwt";
 
-const assurances = [
-  "SSO-ready when you are",
-  "Fine-grained workspace roles",
-  "Audit trails across every agent",
-];
+const buttonClass =
+  "inline-flex h-control-lg w-full items-center justify-center rounded-md bg-action px-4 text-ui-base font-medium text-fg-inverse hover:bg-action-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-line-focus disabled:cursor-not-allowed disabled:opacity-60";
 
-export default function SignInPage() {
-  const [dialogOpen, setDialogOpen] = useState(false);
+function SignInForm() {
+  const { login } = useAuth();
+  const router = useRouter();
+  const next = safeNextPath(useSearchParams().get("next")) ?? "/dashboard";
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [tenantId, setTenantId] = useState("");
+  const [tenants, setTenants] = useState<{ tenant_id: string; tenant_name: string }[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  async function submit(event: FormEvent) {
+    event.preventDefault();
+    setBusy(true);
+    setError(null);
+    const result = await login(email, password, tenantId || undefined);
+    setBusy(false);
+    if (result.ok) {
+      router.replace(next);
+      return;
+    }
+    if (result.tenants) {
+      setTenants(result.tenants);
+      setTenantId(result.tenants[0]?.tenant_id ?? "");
+    }
+    setError(result.error);
+  }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-6 py-16 lg:flex-row lg:items-center">
-        <div className="flex-1 space-y-6">
-          <Badge variant="secondary" className="bg-slate-900 text-white">
-            Secure access
-          </Badge>
-          <h1 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
-            Welcome back to your BazaarFlow control room.
-          </h1>
-          <p className="text-lg text-slate-600">
-            Sign in to orchestrate finance, sales, and marketing agents from one place. Two clicks and you&#39;re back
-            to shipping automated workflows.
-          </p>
-
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <DialogTrigger asChild>
-                <Button size="lg" className="bg-slate-900 text-white hover:bg-slate-800">
-                  Open sign-in modal
-                </Button>
-              </DialogTrigger>
-              <Button size="lg" variant="outline" className="text-slate-700" asChild>
-                <Link href="/register">Need an account?</Link>
-              </Button>
-            </div>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Sign in to BazaarFlow</DialogTitle>
-                <DialogDescription>All authentication is simulated here—connect it to your backend later.</DialogDescription>
-              </DialogHeader>
-              <form className="space-y-4" onSubmit={(event) => event.preventDefault()}>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="founder@brand.com" required />
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Password</Label>
-                    <Button variant="link" className="px-0 text-sm" type="button">
-                      Forgot password?
-                    </Button>
-                  </div>
-                  <Input id="password" type="password" placeholder="••••••••" required />
-                </div>
-                <Button type="button" variant="outline" className="w-full border-slate-200">
-                  <Chrome className="mr-2 h-4 w-4" /> Continue with Google
-                </Button>
-                <DialogFooter className="flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-center gap-2 text-xs text-slate-500">
-                    <ShieldCheck className="h-4 w-4" />
-                    <span>Protected with SOC 2 practices.</span>
-                  </div>
-                  <Button type="submit" className="w-full sm:w-auto">
-                    Sign in
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
+    <main className="flex min-h-screen items-center justify-center bg-canvas p-4">
+      <form
+        onSubmit={submit}
+        aria-label="Sign in"
+        className="flex w-full max-w-sm flex-col gap-4 rounded-lg border border-border bg-surface p-6 shadow-popover"
+      >
+        <div>
+          <h1 className="text-ui-xl font-semibold text-fg">Sign in to BazaarFlow</h1>
+          <p className="text-ui-sm text-fg-muted">Use the email and password you registered your shop with.</p>
         </div>
 
-        <Card className="flex-1 border-slate-200">
-          <CardContent className="space-y-6 p-8">
-            <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <div className="flex items-center gap-3 text-slate-600">
-                <Lock className="h-5 w-5" />
-                <p className="text-sm uppercase tracking-wide">Single sign-on ready</p>
-              </div>
-              <p className="mt-4 text-xl font-semibold text-slate-900">
-                “Our entire team signs in with Google while IT preps the real SSO.”
-              </p>
-              <p className="mt-2 text-sm text-slate-500">
-                The engineering lead at River &amp; Co. used this exact flow to preview the UI before wiring the API.
-              </p>
-            </div>
-            <div className="space-y-4">
-              {assurances.map((item) => (
-                <div key={item} className="flex items-start gap-3">
-                  <ShieldCheck className="mt-1 h-5 w-5 text-emerald-500" />
-                  <p className="text-slate-600">{item}</p>
-                </div>
+        <FormField id="email" label="Email" required>
+          <Input id="email" type="email" autoComplete="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+        </FormField>
+        <FormField id="password" label="Password" required>
+          <Input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </FormField>
+
+        {tenants.length > 0 ? (
+          <FormField id="shop" label="Shop" required hint="Your account belongs to more than one shop.">
+            <select
+              id="shop"
+              value={tenantId}
+              onChange={(e) => setTenantId(e.target.value)}
+              className="h-control-md w-full rounded-md border border-border bg-surface px-3 text-ui-base text-fg"
+            >
+              {tenants.map((t) => (
+                <option key={t.tenant_id} value={t.tenant_id}>
+                  {t.tenant_name}
+                </option>
               ))}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+            </select>
+          </FormField>
+        ) : null}
+
+        {error ? (
+          <p role="alert" className="rounded-md border border-danger-border bg-danger-subtle px-3 py-2 text-ui-sm text-danger">
+            {error}
+          </p>
+        ) : null}
+
+        <button type="submit" disabled={busy} className={buttonClass}>
+          {busy ? "Signing in..." : "Sign in"}
+        </button>
+      </form>
+    </main>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense>
+      <SignInForm />
+    </Suspense>
   );
 }

@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
-import { Bell, Search, UserCircle } from "lucide-react";
+import { Bell, LogOut, Search, UserCircle } from "lucide-react";
 import { NavIcon } from "@/components/app/icons";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { navFor, tabsFor, type NavGroup, type Role } from "@/lib/navigation";
+import { useAuth } from "@/lib/auth/AuthProvider";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -74,6 +75,7 @@ function NavList({ groups, activeHref, onNavigate }: { groups: NavGroup[]; activ
 export function AppShell({ role, platformAdmin = false, tenantName, userName, activeHref, children }: Props) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const groups = navFor(role, { platformAdmin });
+  const { logout } = useAuth();
 
   return (
     <div className="min-h-screen bg-canvas text-fg">
@@ -126,6 +128,17 @@ export function AppShell({ role, platformAdmin = false, tenantName, userName, ac
             </button>
             <button type="button" aria-label={`User menu${userName ? `: ${userName}` : ""}`} className={cn("inline-flex h-control-md w-control-md items-center justify-center rounded-md text-fg-muted hover:bg-surface-hover", focusRing)}>
               <UserCircle aria-hidden className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              aria-label="Sign out"
+              onClick={() => void logout()}
+              className={cn(
+                "inline-flex h-control-md w-control-md items-center justify-center rounded-md text-fg-muted hover:bg-surface-hover",
+                focusRing,
+              )}
+            >
+              <LogOut aria-hidden className="h-4 w-4" />
             </button>
           </div>
         </header>
