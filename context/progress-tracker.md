@@ -7,16 +7,16 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 0 — Foundation: spec harness, CI (`verify.sh`), Supabase projects and roles (§3.8), Data API lockdown, Alembic baseline, tenancy tables, RLS, JWT claims, role dependencies, architecture tests, secret hygiene (remove committed DSN script)
-**Last completed:** 27 Twilio WhatsApp integration skill (cited, dated)
+**Last completed:** 27 integration skill; 30 eval harness (reviewed, fixes applied)
 **In progress:** Phase 0, in task order (see Phase 0 status below)
 **Next:** nothing I can do alone; waiting on the owner for the Blocked and Needs-a-decision lists
 **Blockers:** 00 needs the owner's sign-off; 09 needs Supabase credentials; 26 needs vendor sandbox accounts
 
 ### Phase 0 status
 
-**Phase 0: 20 of 34 tasks done, 14 left.** Everything left needs the owner. Blocked: 00, 01 (B), 02, 09, 12, 21, 26. Needs a decision: 22-24, 28, 31-33.
+**Phase 0: 19 of 34 tasks done, 15 left.** Everything left needs the owner or phase-1 work. Blocked: 00, 01 (B), 02, 09, 12, 21, 26. Needs a decision: 22-24, 28, 31-33. Partly done: 29 (runtime enforcement waits for ToolContext at call sites).
 
-Done: 03, 04, 05, 06, 07, 08, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 25, 27, 29, 30. Partly done: 01, 02, 12. Blocked on the owner: 00, 09, 26.
+Done: 03, 04, 05, 06, 07, 08, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 25, 27, 30. Partly done: 01, 02, 12. Blocked on the owner: 00, 09, 26.
 
 ---
 
@@ -51,7 +51,7 @@ Done: 03, 04, 05, 06, 07, 08, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 25, 27, 29
 - [ ] 26 Vendor accounts, sandbox access and credentials in the secret mana…
 - [x] 27 Integration skill: install an upstream one or generate a project-l…
 - [ ] 28 Agent service skeleton, separate from the API, with no database cr…
-- [x] 29 Tool catalogue with schemas, permissions and a test per tool [agen…
+- [ ] 29 Tool catalogue with schemas, permissions and a test per tool [agen…
 - [x] 30 Evaluation harness with a first golden set [agents pack]
 - [ ] 31 Channel setup (number or WebRTC room) and a hello-world call [voic…
 - [ ] 32 Latency and cost instrumentation per turn [voice-agents pack]

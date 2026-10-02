@@ -19,7 +19,8 @@ FORBIDDEN_PARAMS = frozenset({"tenant_id", "tenant", "user_id", "user", "role", 
 _RANK = {TenantRole.staff: 0, TenantRole.manager: 1, TenantRole.owner: 2}
 
 Access = Literal["read", "write"]
-Approval = Literal["none", "auto_under_limit", "required"]
+# "auto under a tenant limit" joins this list when the limit logic exists; until then a write is "required"
+Approval = Literal["none", "required"]
 
 
 @dataclass(frozen=True)
@@ -91,5 +92,9 @@ def authorize_call(name: str, ctx: ToolContext) -> ToolSpec:
 
 def ensure_allowed(spec: ToolSpec, ctx: ToolContext) -> None:
     """Raise PermissionError when the caller's role is below the tool's minimum."""
-    if _RANK[ctx.role] < _RANK[spec.min_role]:
-        raise PermissionError(f"role {ctx.role.value} may not call tool {spec.name}")
+    try:
+        role = TenantRole(ctx.role)  # a raw JWT claim is a plain string
+    except ValueError:
+        raise PermissionError(f"unknown role {ctx.role!r} may not call tool {spec.name}") from None
+    if _RANK[role] < _RANK[spec.min_role]:
+        raise PermissionError(f"role {role.value} may not call tool {spec.name}")

@@ -132,12 +132,14 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [ ] 28 Agent service skeleton, separate from the API, with no database credentials [agents pack]
   - Acceptance: The service starts
   - Acceptance: its environment contains no database variable (checked by a test)
-- [x] 29 Tool catalogue with schemas, permissions and a test per tool [agents pack]
-  - Acceptance: a forbidden call is rejected (unknown tool, role below minimum, approval-gated write): authorize_call in app/agents/tools/catalog.py
-  - Acceptance: each of the 16 tools is declared in app/agents/tools/manifest.py with permission and approval, and has its own unit tests (tests/unit/test_agent_tool_catalog.py); an undeclared tool fails the suite
+- [ ] 29 Tool catalogue with schemas, permissions and a test per tool [agents pack]
+  - Acceptance: every tool an agent can call (16 functions and the 2 delegation wrappers) is declared with permission and approval (DONE: app/agents/tools/manifest.py; an undeclared tool fails the suite)
+  - Acceptance: each tool has its own unit tests (DONE: tests/unit/test_agent_tool_catalog.py)
+  - Acceptance: authorize_call rejects unknown tools, roles below the minimum and approval-gated writes (DONE as a function, tested)
+  - Acceptance: a forbidden call is rejected AT RUNTIME: the gate sits in the path of every agent tool call with a ToolContext (OPEN: needs phase 1, call sites do not pass a ToolContext yet; tools run raw through the SDK)
 - [x] 30 Evaluation harness with a first golden set [agents pack]
   - Acceptance: the suite runs in the fast tier against recorded model responses (tests/unit/evals; no network or key; 12 golden cases)
-  - Acceptance: the harness catches regressions: removing a tool from an agent, or dropping a write tool's approval declaration, fails a case (mutation-checked)
+  - Acceptance: the harness catches regressions: removing a tool from an agent fails a case; a tool that crashes, a customer-facing tool leaking stock, or an injected invented tool fails a case (mutation-checked). Limit: replayed turns are hand-recorded, so a prompt change alone does not fail a case; re-record against the live model for that.
 - [ ] 31 Channel setup (number or WebRTC room) and a hello-world call [voice-agents pack]
   - Acceptance: A test call connects and the agent answers
 - [ ] 32 Latency and cost instrumentation per turn [voice-agents pack]

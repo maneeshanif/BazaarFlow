@@ -4,11 +4,9 @@ harness catches regressions, using small in-test cases."""
 
 from __future__ import annotations
 
-from typing import Any
-
 import pytest
 
-from app.evals.harness import Case, Expect, Outcome, check, load_cases, run_case
+from app.evals.harness import Case, Expect, check, load_cases, run_case
 from app.evals.replay import RecordingModel, ReplayExhausted, ReplayModel, ToolCall, Turn
 
 
@@ -55,12 +53,12 @@ async def test_a_write_tool_is_flagged_as_needing_approval() -> None:
     }
     case = _case(
         [Turn(tool_calls=[ToolCall("create_customer_order", args)]), Turn(text="placed")],
-        Expect(tools_called=["create_customer_order"], approval_required=["create_customer_order"]),
+        Expect(tools_called=["create_customer_order"], declared_gated=["create_customer_order"]),
         agent="finance",
         text="I want to order a phone",
     )
     outcome = await run_case(case)
-    assert outcome.approval_required == ["create_customer_order"]
+    assert outcome.declared_gated == ["create_customer_order"]
     assert check(case, outcome) == []
 
 
@@ -98,12 +96,56 @@ async def test_recording_model_captures_turns_in_the_replay_format() -> None:
     inner = ReplayModel([Turn(tool_calls=[ToolCall("inventory_stock_overview", {})]), Turn(text="done")])
     recorder = RecordingModel(inner)
     from agents import Agent, Runner
+    from agents.exceptions import ModelBehaviorError
 
     agent = Agent(name="x", instructions="x", model=recorder, tools=[])
     # the recorded inner model asks for a tool the bare agent does not have; only the capture matters here
-    with pytest.raises(Exception):  # noqa: B017, PT011
+    with pytest.raises(ModelBehaviorError):
         await Runner.run(agent, "hi", max_turns=2)
     assert recorder.turns[0].tool_calls[0].name == "inventory_stock_overview"
+
+
+async def test_tool_outputs_are_captured_and_can_be_asserted_on() -> None:
+    case = _case(
+        [Turn(tool_calls=[ToolCall("inventory_search_items", {"query": "customer: phone"})]), Turn(text="ok")],
+        Expect(tool_output_not_contains=["in stock", "incoming"]),
+    )
+    outcome = await run_case(case)
+    assert outcome.tool_outputs and check(case, outcome) == []
+    leaking = _case(
+        [Turn(tool_calls=[ToolCall("inventory_search_items", {"query": "phone"})]), Turn(text="ok")],
+        Expect(tool_output_not_contains=["in stock"]),
+    )
+    assert check(leaking, await run_case(leaking)), (
+        "the owner view shows stock, so a customer-facing case must catch it"
+    )
+
+
+async def test_a_tool_that_crashes_fails_the_case_even_though_the_sdk_hides_the_exception(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from app.services.inventory_service import inventory_analytics_service
+
+    def boom(*_: object) -> list[dict[str, object]]:
+        raise RuntimeError("database is down")
+
+    monkeypatch.setattr(inventory_analytics_service, "search_items", boom)
+    case = _case(
+        [Turn(tool_calls=[ToolCall("inventory_search_items", {"query": "phone"})]), Turn(text="ok")],
+        Expect(tools_called=["inventory_search_items"]),
+    )
+    failures = check(case, await run_case(case))
+    assert any("tool error" in f for f in failures), failures
+
+
+async def test_the_tools_that_ran_are_known_even_when_the_run_fails() -> None:
+    turns = [
+        Turn(tool_calls=[ToolCall("inventory_stock_overview", {}), ToolCall("delete_all_customers", {})]),
+        Turn(text="done"),
+    ]
+    outcome = await run_case(_case(turns, Expect(raises="delete_all_customers")))
+    assert outcome.error is not None
+    assert "delete_all_customers" not in outcome.tools_called
 
 
 def test_turns_round_trip_through_json() -> None:
@@ -116,6 +158,3 @@ def test_the_golden_set_loads_and_is_not_trivially_small() -> None:
     cases = load_cases()
     assert len(cases) >= 10
     assert len({c.id for c in cases}) == len(cases), "case ids must be unique"
-
-
-def _unused(_: Any, __: Outcome) -> None: ...

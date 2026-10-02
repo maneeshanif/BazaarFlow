@@ -11,6 +11,9 @@ from app.models.tenant import TenantRole
 
 _STAFF, _MANAGER = TenantRole.staff, TenantRole.manager
 
+# agents wrapped as tools (not functions in this package): checked against the agents instead
+DELEGATION_WRAPPERS = frozenset({"consult_finance_agent", "consult_inventory_agent"})
+
 DECLARATIONS: dict[str, ToolSpec] = {
     # inventory (read-only)
     "inventory_stock_overview": declare_tool("inventory_stock_overview", access="read"),
@@ -28,7 +31,11 @@ DECLARATIONS: dict[str, ToolSpec] = {
     "marketing_inventory_snapshot": declare_tool("marketing_inventory_snapshot", access="read", min_role=_MANAGER),
     "marketing_sales_insights": declare_tool("marketing_sales_insights", access="read", min_role=_MANAGER),
     "marketing_image_search": declare_tool("marketing_image_search", access="read", min_role=_MANAGER),
-    # sales (read-only product lookups for the customer chat)
+    # agents-as-tools (SalesAgent delegates to these). They only forward to the declared tools above, so the real
+    # governance belongs on the tools they reach; declared so a new wrapper cannot appear unnoticed.
+    "consult_finance_agent": declare_tool("consult_finance_agent", access="read"),
+    "consult_inventory_agent": declare_tool("consult_inventory_agent", access="read"),
+    # sales product lookups: declared, but no agent uses them today (SalesAgent only has the consult_* wrappers)
     "lookup_product": declare_tool("lookup_product", access="read"),
     "list_all_products": declare_tool("list_all_products", access="read"),
     "get_product_by_price_range": declare_tool("get_product_by_price_range", access="read"),

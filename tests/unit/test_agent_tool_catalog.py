@@ -22,7 +22,7 @@ from app.agents.tools.catalog import (
     UnknownToolError,
     authorize_call,
 )
-from app.agents.tools.manifest import DECLARATIONS
+from app.agents.tools.manifest import DECLARATIONS, DELEGATION_WRAPPERS
 from app.core.settings import settings
 from app.models.tenant import TenantRole
 
@@ -48,18 +48,40 @@ def _ctx(role: TenantRole) -> ToolContext:
 
 
 def test_every_sdk_tool_is_declared_and_every_declaration_is_a_real_tool() -> None:
-    assert set(TOOLS) == set(DECLARATIONS), (
-        f"undeclared tools: {sorted(set(TOOLS) - set(DECLARATIONS))}; "
-        f"declarations without a tool: {sorted(set(DECLARATIONS) - set(TOOLS))}. "
+    function_declarations = set(DECLARATIONS) - DELEGATION_WRAPPERS
+    assert set(TOOLS) == function_declarations, (
+        f"undeclared tools: {sorted(set(TOOLS) - function_declarations)}; "
+        f"declarations without a tool: {sorted(function_declarations - set(TOOLS))}. "
         "Declare each tool in app/agents/tools/manifest.py."
     )
     assert set(CATALOG) >= set(DECLARATIONS)
 
 
+def test_every_tool_an_agent_can_call_is_declared_including_the_delegation_wrappers() -> None:
+    """The review found consult_* wrappers (agents-as-tools) reaching governed tools undeclared."""
+    from app.agents.finance_agent import finance_agent
+    from app.agents.inventory_agent import inventory_agent
+    from app.agents.marketing_agent import marketing_agent
+    from app.agents.sales_agent import sales_agent
+
+    wired = {
+        tool.name for agent in (finance_agent, inventory_agent, marketing_agent, sales_agent) for tool in agent.tools
+    }
+    assert wired <= set(DECLARATIONS), f"agent tools without a declaration: {sorted(wired - set(DECLARATIONS))}"
+
+
+def test_a_role_that_arrives_as_a_plain_string_is_handled_not_a_keyerror() -> None:
+    ctx = ToolContext(tenant_id=uuid.uuid4(), user_id=None, role="manager", session=None)  # type: ignore[arg-type]
+    assert authorize_call("marketing_sales_insights", ctx).name == "marketing_sales_insights"
+    bad = ToolContext(tenant_id=uuid.uuid4(), user_id=None, role="superuser", session=None)  # type: ignore[arg-type]
+    with pytest.raises(PermissionError):
+        authorize_call("marketing_sales_insights", bad)
+
+
 def test_write_tools_always_require_approval_and_reads_never_do() -> None:
     for name, spec in DECLARATIONS.items():
         if spec.access == "write":
-            assert spec.approval in {"required", "auto_under_limit"}, name
+            assert spec.approval == "required", name
         else:
             assert spec.approval == "none", name
 
@@ -119,7 +141,7 @@ SAMPLE_ARGS: dict[str, dict[str, Any]] = {
 
 
 def test_every_read_tool_has_sample_arguments_so_none_goes_untested() -> None:
-    reads = {n for n, s in DECLARATIONS.items() if s.access == "read"}
+    reads = {n for n, s in DECLARATIONS.items() if s.access == "read" and n not in DELEGATION_WRAPPERS}
     assert reads == set(SAMPLE_ARGS), f"add or remove sample arguments: {sorted(reads ^ set(SAMPLE_ARGS))}"
 
 
@@ -133,7 +155,7 @@ async def test_read_tool_runs_and_returns_text_or_a_dict(name: str, monkeypatch:
     monkeypatch.setattr(settings, "PEXELS_API_KEY", "", raising=False)  # never reach the network from a unit test
     result = await _call(TOOLS[name], SAMPLE_ARGS[name])
     assert isinstance(result, (str, dict)) and result, name
-    assert "Traceback" not in str(result)
+    assert "An error occurred while running the tool" not in str(result), f"{name} raised: {result}"
 
 
 @pytest.mark.parametrize("name", sorted(TOOLS))
