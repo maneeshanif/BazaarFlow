@@ -52,6 +52,26 @@ async def _prepare(admin_url: str) -> None:
     await provision(admin_url, DB_NAME, MIGRATOR_PW, APP_PW, REPORT_PW)
     conn = await asyncpg.connect(admin_url)
     try:
+        # Mimic Supabase's `ensure_rls` event trigger: every table created in public gets RLS enabled, with no policy.
+        # Found on the first real Supabase seed: it locked app_user out of the global auth tables.
+        await conn.execute(
+            """CREATE OR REPLACE FUNCTION ensure_rls() RETURNS event_trigger LANGUAGE plpgsql AS $$
+            DECLARE cmd record;
+            BEGIN
+              FOR cmd IN SELECT * FROM pg_event_trigger_ddl_commands()
+                         WHERE command_tag IN ('CREATE TABLE', 'CREATE TABLE AS', 'SELECT INTO')
+                           AND object_type IN ('table', 'partitioned table')
+              LOOP
+                IF cmd.schema_name = 'public' THEN
+                  EXECUTE format('ALTER TABLE IF EXISTS %s ENABLE ROW LEVEL SECURITY', cmd.object_identity);
+                END IF;
+              END LOOP;
+            END $$"""
+        )
+        await conn.execute(
+            "CREATE EVENT TRIGGER ensure_rls ON ddl_command_end "
+            "WHEN TAG IN ('CREATE TABLE', 'CREATE TABLE AS', 'SELECT INTO') EXECUTE FUNCTION ensure_rls()"
+        )
         for role in ("anon", "authenticated"):
             await conn.execute(
                 f"ALTER DEFAULT PRIVILEGES FOR ROLE migrator IN SCHEMA public GRANT ALL ON TABLES TO {role}"

@@ -47,3 +47,33 @@ async def test_role_users_are_created_only_on_request_and_only_once(
         login = await client.post("/api/v1/auth/login", json={"email": email, "password": "demo-password-123"})
         assert login.status_code == 200, login.text
         assert login.json()["role"] == role
+
+
+async def test_demo_passwords_can_be_reset_but_only_when_one_is_given(
+    client: AsyncClient, app_engine: AsyncEngine, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The first seed may have generated random passwords nobody saw; SEED_RESET_PASSWORDS sets known ones."""
+    monkeypatch.setenv("DEMO_USER_PASSWORD", "first-password-123")
+    monkeypatch.setenv("SEED_ROLE_USERS", "true")
+    monkeypatch.setenv("SEED_RESET_PASSWORDS", "true")  # earlier tests in this module already seeded other passwords
+    await seed_database()
+    monkeypatch.delenv("SEED_RESET_PASSWORDS")
+
+    # a plain re-seed never changes passwords
+    monkeypatch.setenv("DEMO_USER_PASSWORD", "second-password-456")
+    await seed_database()
+    old = await client.post("/api/v1/auth/login", json={"email": DEMO_EMAIL, "password": "first-password-123"})
+    assert old.status_code == 200
+
+    # reset without an explicit password is refused: it must never invent a new one nobody sees
+    monkeypatch.setenv("SEED_RESET_PASSWORDS", "true")
+    monkeypatch.delenv("DEMO_USER_PASSWORD")
+    with pytest.raises(SystemExit):
+        await seed_database()
+
+    monkeypatch.setenv("DEMO_USER_PASSWORD", "second-password-456")
+    await seed_database()
+    for email in (DEMO_EMAIL, DEMO_MANAGER_EMAIL, DEMO_STAFF_EMAIL):
+        fresh = await client.post("/api/v1/auth/login", json={"email": email, "password": "second-password-456"})
+        stale = await client.post("/api/v1/auth/login", json={"email": email, "password": "first-password-123"})
+        assert (fresh.status_code, stale.status_code) == (200, 401), email

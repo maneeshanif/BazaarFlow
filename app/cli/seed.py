@@ -60,6 +60,28 @@ _FALLBACK_INVENTORY: list[dict[str, Any]] = [
 ]
 
 
+def _wants_password_reset() -> bool:
+    return os.environ.get("SEED_RESET_PASSWORDS", "").lower() in {"1", "true", "yes"}
+
+
+async def _reset_demo_passwords() -> None:
+    """Set the demo logins' password to DEMO_USER_PASSWORD. Refuses to invent one: a password nobody saw is useless."""
+    from sqlalchemy import update
+
+    from app.core import database
+
+    password = os.environ.get("DEMO_USER_PASSWORD")
+    if not password:
+        raise SystemExit("SEED_RESET_PASSWORDS needs DEMO_USER_PASSWORD to be set (it will not generate one)")
+    async with database.AsyncSessionLocal() as session, session.begin():
+        await session.execute(
+            update(User)
+            .where(User.email.in_([DEMO_EMAIL, DEMO_MANAGER_EMAIL, DEMO_STAFF_EMAIL]))
+            .values(hashed_password=hash_password(password))
+        )
+    logger.info("Demo passwords reset to DEMO_USER_PASSWORD.")
+
+
 def _wants_role_users() -> bool:
     return os.environ.get("SEED_ROLE_USERS", "").lower() in {"1", "true", "yes"}
 
@@ -105,6 +127,8 @@ async def seed_database() -> None:
         existing_user = (await probe.execute(select(User).where(User.email == DEMO_EMAIL))).scalar_one_or_none()
     if existing_user is not None:
         logger.info("Demo data already present; nothing to do.")
+        if _wants_password_reset():
+            await _reset_demo_passwords()
         if _wants_role_users():
             await _ensure_role_users(
                 existing_user.id, os.environ.get("DEMO_USER_PASSWORD") or secrets.token_urlsafe(12)

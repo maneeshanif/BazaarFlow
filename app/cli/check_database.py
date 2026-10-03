@@ -20,6 +20,9 @@ import asyncpg
 
 # Tables that are intentionally outside row level security (see tests/pg/test_schema_rules.py).
 GLOBAL_TABLES = {"users", "refresh_tokens", "login_attempts", "alembic_version"}
+# Global auth tables are read before a tenant is known. They still need RLS on with one explicit policy for app_user:
+# hosted Postgres (Supabase) enables RLS on every new table, and RLS without a policy locks the application out.
+AUTH_TABLES = {"users", "refresh_tokens", "login_attempts"}
 
 
 async def run_checks(admin_url: str) -> list[str]:
@@ -51,6 +54,13 @@ async def run_checks(admin_url: str) -> list[str]:
         if not tables:
             problems.append("no tables in schema public (run alembic upgrade head)")
         for t in tables:
+            if t["relname"] in AUTH_TABLES:
+                if not (t["relrowsecurity"] and t["policies"] >= 1):
+                    problems.append(
+                        f"auth table {t['relname']} needs row level security ON with a policy for app_user "
+                        "(without one, hosted Postgres locks the application out of it)"
+                    )
+                continue
             if t["relname"] in GLOBAL_TABLES:
                 continue
             if not (t["relrowsecurity"] and t["relforcerowsecurity"] and t["policies"] >= 1):
