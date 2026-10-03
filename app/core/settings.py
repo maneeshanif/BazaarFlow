@@ -71,6 +71,8 @@ class Settings(BaseSettings):
     OPENAI_MODEL: str = "gpt-4o-mini"
     LLM_TIMEOUT_SECONDS: float = 30.0
     LLM_MAX_RETRIES: int = 1
+    # Log format: "json" (one object per line), "text", or "auto" (json in production and staging).
+    LOG_FORMAT: str = "auto"
     # Public live demo (PRD F-027): each visitor gets a temporary shop that app.cli.purge_demos deletes after
     # DEMO_HOURS. A demo shop gets its own small AI allowance so visitors cannot spend the real one.
     DEMO_ENABLED: bool = True

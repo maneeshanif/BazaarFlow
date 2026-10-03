@@ -240,7 +240,7 @@ Batch gate: tasks 50, 42, 36, 48, 46, 47, 57, 58, 53, 54, 02, 12, 21, 26 pass th
   - Acceptance: A user with one of the roles (public) can complete the Public flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-027 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 57 Structured logging, request ids and error reporting [backend-api pack]
+- [x] 57 Structured logging, request ids and error reporting [backend-api pack]
   - Acceptance: A failed request can be traced from the response id to the log line
 - [ ] 58 Backups and one timed restore [backend-api pack]
   - Acceptance: The restore completes within the PRD recovery target

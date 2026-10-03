@@ -19,6 +19,7 @@ from sqlalchemy.orm.exc import StaleDataError
 from app.api.routers.main_router import main_router
 from app.api.routers.v1 import api_v1_router
 from app.core.auth import public_route
+from app.core.logging_config import configure_logging
 from app.core.problems import install_problem_handlers
 from app.core.settings import settings
 from app.middleware.rate_limiter import RateLimiterMiddleware
@@ -27,6 +28,7 @@ from app.services.marketing_scheduler import marketing_scheduler
 from app.utils.live_logs import configure_live_logging
 
 configure_live_logging(logging.DEBUG)
+configure_logging()
 logger = logging.getLogger(__name__)
 
 

@@ -12,7 +12,7 @@ from collections.abc import AsyncIterator, Awaitable, Callable
 from typing import Any
 
 import jwt
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -55,6 +55,7 @@ def _principal_from_claims(claims: dict[str, Any]) -> Principal:
 
 
 async def get_principal(
+    request: Request,
     credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
 ) -> Principal:
     """Decode the bearer token into a Principal; 401 when missing, invalid or expired."""
@@ -66,6 +67,8 @@ async def get_principal(
         raise _UNAUTHENTICATED from exc
     principal = _principal_from_claims(claims)
     await _confirm_still_valid(principal)
+    # for the access log (task 57): ids only, never the token
+    request.state.tenant_id, request.state.user_id = str(principal.tenant_id), str(principal.user_id)
     return principal
 
 
