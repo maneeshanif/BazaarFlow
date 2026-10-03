@@ -35,6 +35,8 @@ logger = logging.getLogger("bazaarflow.seed")
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 DEMO_SLUG = "demo-retail"
 DEMO_EMAIL = "demo@bazaarflow.app"
+DEMO_MANAGER_EMAIL = "demo-manager@bazaarflow.app"
+DEMO_STAFF_EMAIL = "demo-staff@bazaarflow.app"
 
 
 def _money(value: Any) -> Decimal | None:
@@ -58,6 +60,40 @@ _FALLBACK_INVENTORY: list[dict[str, Any]] = [
 ]
 
 
+def _wants_role_users() -> bool:
+    return os.environ.get("SEED_ROLE_USERS", "").lower() in {"1", "true", "yes"}
+
+
+async def _ensure_role_users(owner_id: uuid.UUID, password: str) -> None:
+    """Add a manager and a staff login to the demo tenant (opt-in; idempotent), so role checks can be exercised."""
+    from app.core import database
+    from app.core.tenancy import anonymous_session, apply_context
+
+    async with anonymous_session() as probe:
+        await apply_context(probe, user_id=owner_id)
+        tenant_id = (
+            await probe.execute(select(Membership.tenant_id).where(Membership.user_id == owner_id))
+        ).scalar_one()
+    async with database.AsyncSessionLocal() as check:
+        present = set(
+            (
+                await check.execute(select(User.email).where(User.email.in_([DEMO_MANAGER_EMAIL, DEMO_STAFF_EMAIL])))
+            ).scalars()
+        )
+    async with tenant_session(tenant_id, owner_id) as session:
+        for email, role, name in (
+            (DEMO_MANAGER_EMAIL, TenantRole.manager, "Demo Manager"),
+            (DEMO_STAFF_EMAIL, TenantRole.staff, "Demo Staff"),
+        ):
+            if email in present:
+                continue
+            user_id = uuid.uuid4()
+            session.add(User(id=user_id, email=email, hashed_password=hash_password(password), name=name))
+            await session.flush()
+            session.add(Membership(tenant_id=tenant_id, user_id=user_id, role=role.value))
+    logger.info("Demo role logins: %s, %s (same password as the owner)", DEMO_MANAGER_EMAIL, DEMO_STAFF_EMAIL)
+
+
 async def seed_database() -> None:
     from app.core import database
 
@@ -69,6 +105,10 @@ async def seed_database() -> None:
         existing_user = (await probe.execute(select(User).where(User.email == DEMO_EMAIL))).scalar_one_or_none()
     if existing_user is not None:
         logger.info("Demo data already present; nothing to do.")
+        if _wants_role_users():
+            await _ensure_role_users(
+                existing_user.id, os.environ.get("DEMO_USER_PASSWORD") or secrets.token_urlsafe(12)
+            )
         return
 
     password = os.environ.get("DEMO_USER_PASSWORD") or secrets.token_urlsafe(12)
@@ -104,6 +144,8 @@ async def seed_database() -> None:
 
     logger.info("Seeded demo tenant %s (%s items).", DEMO_SLUG, len(inventory))
     logger.info("Demo login: %s / %s", DEMO_EMAIL, password)
+    if _wants_role_users():
+        await _ensure_role_users(user_id, password)
 
 
 if __name__ == "__main__":

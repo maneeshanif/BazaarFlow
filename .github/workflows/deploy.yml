@@ -18,8 +18,29 @@ permissions:
   contents: read
 
 jobs:
+  verify:
+    name: All checks (api, api-db, web, infra)
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: uv sync --frozen
+      - run: npm ci
+        working-directory: frontend
+      - run: bash scripts/verify.sh --lane api --lane api-db --lane web --lane infra
+
   api:
     name: Migrate and deploy the API
+    if: github.ref == 'refs/heads/main'
+    needs: verify
     runs-on: ubuntu-latest
     environment: production
     steps:
@@ -41,6 +62,7 @@ jobs:
 
   web:
     name: Deploy the web app
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     needs: api
     environment: production
@@ -54,8 +76,8 @@ jobs:
         with:
           node-version: 22
       - name: Pull Vercel settings
-        run: npx --yes vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
+        run: npx --yes vercel@62.2.0 pull --yes --environment=production --token="$VERCEL_TOKEN"
       - name: Build
-        run: npx --yes vercel@latest build --prod --token="$VERCEL_TOKEN"
+        run: npx --yes vercel@62.2.0 build --prod --token="$VERCEL_TOKEN"
       - name: Deploy
-        run: npx --yes vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+        run: npx --yes vercel@62.2.0 deploy --prebuilt --prod --token="$VERCEL_TOKEN"

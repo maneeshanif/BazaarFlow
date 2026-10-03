@@ -1,6 +1,7 @@
 """Start the real stack for the web auth end-to-end test (task 20), run it, and tear everything down.
 
-    uv run python scripts/e2e_auth_stack.py
+    uv run python scripts/e2e_auth_stack.py             # throwaway Postgres in Docker
+    uv run python scripts/e2e_auth_stack.py --supabase  # your Supabase dev project (credentials from .env)
 
 Postgres 16 in Docker (roles provisioned like Supabase, migrations applied), three users (owner, manager,
 staff) in one shop, the FastAPI backend on :8000 with 1-minute access tokens, then Playwright (which starts the
@@ -99,7 +100,81 @@ def stop_tree(proc: subprocess.Popen) -> None:
         proc.kill()
 
 
+SUPABASE_REQUIRED = ("DATABASE_URL", "DATABASE_URL_MIGRATIONS", "DEMO_USER_PASSWORD", "SECRET_KEY")
+
+
+def load_dotenv_into_environ() -> None:
+    from dotenv import load_dotenv
+
+    load_dotenv(ROOT / ".env", override=False)
+
+
 def main() -> int:
+    supabase = "--supabase" in sys.argv
+    if supabase:
+        sys.argv.remove("--supabase")
+        load_dotenv_into_environ()
+        missing = [name for name in SUPABASE_REQUIRED if not os.environ.get(name)]
+        if missing:
+            raise SystemExit(f"--supabase needs these in .env or the environment: {', '.join(missing)}")
+        return run_against_supabase()
+    return run_against_docker()
+
+
+def run_against_supabase() -> int:
+    """Real project: migrate with the migrator role, seed the demo tenant (with manager and staff logins) through
+    the runtime role, start the API on the runtime URL, run the browser tests. Nothing is created locally."""
+    for port in (8000, 3100):
+        if port_in_use(port):
+            raise SystemExit(f"port {port} is already in use: a stale server would make this test meaningless")
+    password = os.environ["DEMO_USER_PASSWORD"]
+    env = {**os.environ, "APP_ENV": "development", "SEED_ROLE_USERS": "true"}
+    sh(["uv", "run", "alembic", "upgrade", "head"], env=env)
+    sh(["uv", "run", "python", "-m", "app.cli.seed"], env=env)
+    api: subprocess.Popen | None = None
+    try:
+        api_env = {
+            **env,
+            "FRONTEND_ORIGIN": "http://localhost:3100",
+            "ACCESS_TOKEN_EXPIRE_MINUTES": "1",
+            "MARKETING_SCHEDULER_ENABLED": "false",
+        }
+        api = subprocess.Popen(["uv", "run", "uvicorn", "app.main:app", "--port", "8000"], cwd=ROOT, env=api_env)
+        wait_for_api()
+        subprocess.run(["npm", "run", "build"], cwd=FRONTEND, check=True, shell=os.name == "nt", capture_output=True)
+        result = subprocess.run(
+            ["npx", "playwright", "test", *(sys.argv[1:] or ["e2e/auth.spec.ts"])],
+            cwd=FRONTEND,
+            env={
+                **os.environ,
+                "E2E_AUTH": "1",
+                "API_INTERNAL_URL": "http://localhost:8000",
+                "E2E_PASSWORD": password,
+                "E2E_OWNER_EMAIL": "demo@bazaarflow.app",
+                "E2E_MANAGER_EMAIL": "demo-manager@bazaarflow.app",
+                "E2E_STAFF_EMAIL": "demo-staff@bazaarflow.app",
+            },
+            shell=os.name == "nt",
+        )
+        return result.returncode
+    finally:
+        if api is not None:
+            stop_tree(api)
+
+
+def wait_for_api() -> None:
+    import urllib.request
+
+    for _ in range(90):
+        try:
+            urllib.request.urlopen("http://localhost:8000/health", timeout=2)
+            return
+        except Exception:
+            time.sleep(1)
+    raise SystemExit("API did not start")
+
+
+def run_against_docker() -> int:
     for port in (8000, 3100):
         if port_in_use(port):
             raise SystemExit(f"port {port} is already in use: a stale server would make this test meaningless")

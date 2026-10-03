@@ -5,6 +5,7 @@ from __future__ import annotations
 import uuid
 from datetime import timedelta
 
+import asyncpg
 import pytest
 from httpx import AsyncClient
 from sqlalchemy import text
@@ -72,22 +73,53 @@ async def test_a_reload_during_a_refresh_does_not_sign_the_user_out(client: Asyn
     assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": third})).status_code == 200
 
 
-async def test_reuse_after_the_grace_window_is_still_theft(
-    client: AsyncClient, monkeypatch: pytest.MonkeyPatch, strict_reuse: None
+async def test_grace_is_one_shot_a_second_replay_of_the_same_token_is_theft(client: AsyncClient) -> None:
+    acct = await register(client, "Shop A")
+    first = acct["refresh_token"]
+    second = (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).json()["refresh_token"]
+    assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).status_code == 200  # lost response
+    assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).status_code == 401  # replay again
+    assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": second})).status_code == 401  # family dead
+
+
+async def test_a_grace_reuse_leaves_an_audit_trail(client: AsyncClient, app_engine: AsyncEngine) -> None:
+    acct = await register(client, "Shop A")
+    first = acct["refresh_token"]
+    await client.post("/api/v1/auth/refresh", json={"refresh_token": first})
+    await client.post("/api/v1/auth/refresh", json={"refresh_token": first})
+    assert "auth.refresh_reuse_in_grace" in await _audit_actions(app_engine, acct["tenant_id"])
+
+
+async def test_logging_out_with_a_stale_token_ends_the_session(client: AsyncClient) -> None:
+    acct = await register(client, "Shop A")
+    first = acct["refresh_token"]
+    second = (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).json()["refresh_token"]
+    assert (await client.post("/api/v1/auth/logout", json={"refresh_token": first})).status_code == 204
+    assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": second})).status_code == 401
+
+
+async def test_logging_out_the_successor_then_replaying_the_predecessor_does_not_revive_the_session(
+    client: AsyncClient,
 ) -> None:
     acct = await register(client, "Shop A")
     first = acct["refresh_token"]
     second = (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).json()["refresh_token"]
-    monkeypatch.setattr(settings, "REFRESH_REUSE_GRACE_SECONDS", 0)
+    assert (await client.post("/api/v1/auth/logout", json={"refresh_token": second})).status_code == 204
     assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).status_code == 401
-    assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": second})).status_code == 401
 
 
-async def test_a_logged_out_token_is_never_revived_by_the_grace_window(client: AsyncClient) -> None:
+async def test_an_expired_session_is_not_revived_by_the_grace_window(
+    client: AsyncClient, admin_conn: asyncpg.Connection
+) -> None:
     acct = await register(client, "Shop A")
-    token = acct["refresh_token"]
-    assert (await client.post("/api/v1/auth/logout", json={"refresh_token": token})).status_code == 204
-    assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": token})).status_code == 401
+    first = acct["refresh_token"]
+    await client.post("/api/v1/auth/refresh", json={"refresh_token": first})
+    await admin_conn.execute(
+        "UPDATE refresh_tokens SET expires_at = now() - interval '1 hour' WHERE user_id = "
+        "(SELECT id FROM users WHERE email = $1)",
+        acct["email"],
+    )
+    assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).status_code == 401
 
 
 async def test_the_grace_window_is_bounded_in_time(client: AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -11,6 +11,9 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 [ -z "$(git status --porcelain)" ] || { echo "✗ working tree is not clean: commit or stash first"; exit 1; }
+[ "$(git rev-parse --abbrev-ref HEAD)" = "main" ] || { echo "✗ deploy from main only"; exit 1; }
+git fetch --quiet origin main
+[ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ] || { echo "✗ main is not in sync with origin/main"; exit 1; }
 : "${DATABASE_URL_MIGRATIONS:?DATABASE_URL_MIGRATIONS is not set (the migrator connection string)}"
 
 echo "→ checks"
@@ -23,6 +26,7 @@ echo "→ API (FastAPI Cloud)"
 uv run fastapi deploy
 
 echo "→ web (Vercel)"
-( cd frontend && npx --yes vercel@latest deploy --prod ${VERCEL_TOKEN:+--token="$VERCEL_TOKEN"} )
+# from the repo root, like CI: the Vercel project's Root Directory setting points at frontend/
+npx --yes vercel@62.2.0 deploy --prod ${VERCEL_TOKEN:+--token="$VERCEL_TOKEN"}
 
 echo "✓ deployed"

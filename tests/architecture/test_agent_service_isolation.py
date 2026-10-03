@@ -14,19 +14,18 @@ import yaml
 ROOT = Path(__file__).resolve().parents[2]
 SERVICE = ROOT / "agent_service"
 
-FORBIDDEN_MODULES = (
+# The agent service may import nothing from the API package at all: not `app.x`, not `from app import y`, not `app`.
+# (Anything in `app` can pull in the whole backend, database layer included.) Database drivers are forbidden too.
+FORBIDDEN_ROOTS = (
+    "app",
     "sqlalchemy",
     "asyncpg",
     "psycopg",
     "psycopg2",
     "alembic",
-    "app.core.database",
-    "app.core.database_ro",
-    "app.core.tenancy",
-    "app.models",
-    "app.crud",
-    "app.repositories",
-    "app.cli",
+    "aiosqlite",
+    "databases",
+    "sqlmodel",
 )
 DB_WORDS = ("DATABASE", "POSTGRES", "SUPABASE", "PGPASSWORD", "PGHOST", "DB_URL")
 
@@ -47,7 +46,7 @@ def test_the_service_package_exists_and_has_code() -> None:
 
 def test_no_agent_service_module_imports_a_database_layer() -> None:
     offenders = {
-        str(path.relative_to(ROOT)): [m for m in _imports(path) if m.startswith(FORBIDDEN_MODULES)]
+        str(path.relative_to(ROOT)): [m for m in _imports(path) if m.split(".")[0] in FORBIDDEN_ROOTS]
         for path in SERVICE.rglob("*.py")
     }
     offenders = {k: v for k, v in offenders.items() if v}
@@ -63,10 +62,26 @@ def test_the_compose_agent_service_gets_no_database_variable() -> None:
     assert "env_file" not in agent, "an env_file would hand the agent every secret in .env, database URLs included"
 
 
-def test_the_agent_image_does_not_contain_the_database_code() -> None:
+ALLOWED_COPY_SOURCES = {"pyproject.toml", "uv.lock", "README.md", "agent_service/"}
+
+
+def test_the_agent_image_copies_only_allow_listed_sources() -> None:
+    """An allow-list: `COPY app/ ./app/` or `COPY . .` (the easy mistakes) must fail, not slip past a deny-list."""
     dockerfile = (ROOT / "agent.Dockerfile").read_text(encoding="utf-8")
-    copied = [line for line in dockerfile.splitlines() if line.strip().upper().startswith("COPY ")]
-    text = "\n".join(copied)
-    assert "agent_service" in text
-    for forbidden in ("alembic", "app/models", "app/crud", "app/core", "app/repositories"):
-        assert forbidden not in text, f"agent.Dockerfile copies {forbidden}"
+    sources: set[str] = set()
+    for line in dockerfile.splitlines():
+        parts = line.split()
+        if parts and parts[0].upper() == "COPY" and not any(p.startswith("--from") for p in parts):
+            args = [p for p in parts[1:] if not p.startswith("--")]
+            sources.update(args[:-1])  # the last argument is the destination
+    assert sources, "the agent image must copy its service code"
+    assert sources <= ALLOWED_COPY_SOURCES, f"agent.Dockerfile copies {sorted(sources - ALLOWED_COPY_SOURCES)}"
+    assert "agent_service/" in sources
+
+
+def test_the_image_installs_the_locked_dependencies_but_never_copies_the_api_source() -> None:
+    """Database drivers exist on disk (the lockfile is shared with the API), which is exactly why the import test
+    and the startup guard both exist."""
+    dockerfile = (ROOT / "agent.Dockerfile").read_text(encoding="utf-8")
+    assert "uv sync --frozen" in dockerfile
+    assert "COPY app/" not in dockerfile and "COPY . " not in dockerfile

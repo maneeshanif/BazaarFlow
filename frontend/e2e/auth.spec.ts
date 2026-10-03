@@ -6,7 +6,10 @@ import { expect, test, type Page } from "@playwright/test";
  */
 test.skip(!process.env.E2E_AUTH, "run through scripts/e2e_auth_stack.py");
 
-const PASSWORD = "e2e-password-1";
+const PASSWORD = process.env.E2E_PASSWORD ?? "e2e-password-1";
+const OWNER = process.env.E2E_OWNER_EMAIL ?? "owner@example.com";
+const MANAGER = process.env.E2E_MANAGER_EMAIL ?? "manager@example.com";
+const STAFF = process.env.E2E_STAFF_EMAIL ?? "staff@example.com";
 
 /** Navigate and wait until the page has settled. A reload that aborts an in-flight refresh loses the rotated cookie
  * (the server has already rotated it), which reuse detection then treats as theft: tests must not do that. */
@@ -25,7 +28,7 @@ async function signIn(page: Page, email: string, password = PASSWORD) {
 test("a visitor who is not signed in is sent to sign-in and comes back afterwards", async ({ page }) => {
   await open(page, "/dashboard/orders");
   await expect(page).toHaveURL(/\/sign-in\?next=%2Fdashboard%2Forders/);
-  await page.getByLabel("Email").fill("owner@example.com");
+  await page.getByLabel("Email").fill(OWNER);
   await page.getByLabel("Password").fill(PASSWORD);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL(/\/dashboard\/orders$/);
@@ -38,13 +41,13 @@ test("the sign-in redirect keeps the query string of the page that was asked for
 });
 
 test("a wrong password shows an error and does not sign in", async ({ page }) => {
-  await signIn(page, "owner@example.com", "not-the-password");
+  await signIn(page, OWNER, "not-the-password");
   await expect(page.locator("form[aria-label='Sign in'] [role=alert]")).toContainText("Invalid email or password");
   await expect(page).toHaveURL(/\/sign-in/);
 });
 
 test("the refresh token is an httpOnly cookie, never visible to page JavaScript", async ({ page, context }) => {
-  await signIn(page, "owner@example.com");
+  await signIn(page, OWNER);
   await expect(page).toHaveURL(/\/dashboard$/);
   const cookie = (await context.cookies()).find((c) => c.name === "bf_refresh");
   expect(cookie, "refresh cookie is set").toBeDefined();
@@ -65,7 +68,7 @@ test("a reload keeps the session (restored from the cookie) and API calls carry 
   page.on("response", (r) => {
     if (r.url().startsWith("http://localhost:8000/api/") && r.status() === 401) unauthorized.push(r.url());
   });
-  await signIn(page, "owner@example.com");
+  await signIn(page, OWNER);
   await expect(page).toHaveURL(/\/dashboard$/);
   await open(page, "/dashboard/inventory");
   await expect(page.getByText(/access is restricted/i)).toHaveCount(0);
@@ -76,7 +79,7 @@ test("a reload keeps the session (restored from the cookie) and API calls carry 
 test("a staff member is shown the restricted view on owner and manager pages, and the work pages still open", async ({
   page,
 }) => {
-  await signIn(page, "staff@example.com");
+  await signIn(page, STAFF);
   await expect(page).toHaveURL(/\/dashboard$/);
   await open(page, "/dashboard/settings");
   await expect(page.getByText(/access is restricted/i)).toBeVisible();
@@ -87,7 +90,7 @@ test("a staff member is shown the restricted view on owner and manager pages, an
 });
 
 test("a manager can use marketing but not shop settings", async ({ page }) => {
-  await signIn(page, "manager@example.com");
+  await signIn(page, MANAGER);
   await expect(page).toHaveURL(/\/dashboard$/);
   await open(page, "/dashboard/settings");
   await expect(page.getByText(/access is restricted/i)).toBeVisible();
@@ -104,7 +107,7 @@ test("a staff member's visit to a restricted area makes no marketing API calls (
   page.on("request", (r) => {
     if (r.url().includes("/api/marketing")) marketingCalls.push(r.url());
   });
-  await signIn(page, "staff@example.com");
+  await signIn(page, STAFF);
   await expect(page).toHaveURL(/\/dashboard$/);
   await open(page, "/dashboard/marketing/overview");
   await expect(page.getByText(/access is restricted/i)).toBeVisible();
@@ -115,7 +118,7 @@ test("signing out ends the session: the cookie is gone and protected pages ask f
   page,
   context,
 }) => {
-  await signIn(page, "owner@example.com");
+  await signIn(page, OWNER);
   await expect(page).toHaveURL(/\/dashboard$/);
   await open(page, "/ui-preview"); // the app shell carries the Sign out control
   await page.getByRole("button", { name: "Sign out" }).click();
@@ -131,7 +134,7 @@ test("the session survives access-token expiry: it is refreshed in the backgroun
   page.on("response", (r) => {
     if (r.url().endsWith("/api/auth/refresh") && r.status() === 200) refreshes += 1;
   });
-  await signIn(page, "owner@example.com");
+  await signIn(page, OWNER);
   await expect(page).toHaveURL(/\/dashboard$/);
   const before = refreshes;
   await page.waitForTimeout(14_000); // a 60 s token is refreshed every 5 s (never in a tight loop)

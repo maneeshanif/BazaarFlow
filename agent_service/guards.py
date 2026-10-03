@@ -8,10 +8,13 @@ from collections.abc import Mapping
 
 # Names that mean "database access". Anchored so ordinary variables (DEBUG, DBUS_*) are not caught.
 _DATABASE_NAME = re.compile(
-    r"^(DATABASE(_|$)|POSTGRES(_|$)|PG(PASSWORD|HOST|USER|PORT|DATABASE|SERVICE)$|SUPABASE_(DB|SERVICE|DATABASE)|DB_(HOST|URL|USER|PASSWORD|NAME|PORT))"
-    r"|(_DATABASE_URL|_DB_URL)$",
+    r"^(DATABASE(_|$)|POSTGRES(QL)?(_|$)|PG(PASSWORD|HOST|USER|PORT|DATABASE|SERVICE)$"
+    r"|SUPABASE_(DB|SERVICE|DATABASE)|DB_(HOST|URL|USER|PASSWORD|NAME|PORT|DSN|CONNECTION)|SQLALCHEMY_)"
+    r"|(_DATABASE_URL|_DB_URL|_DSN)$",
     re.IGNORECASE,
 )
+# A connection string under any name is still database access.
+_DATABASE_VALUE = re.compile(r"^(postgres(ql)?|mysql|mariadb|mssql|sqlite)(\+\w+)?://", re.IGNORECASE)
 
 
 class DatabaseCredentialsPresent(RuntimeError):
@@ -19,7 +22,7 @@ class DatabaseCredentialsPresent(RuntimeError):
 
 
 def find_database_variables(env: Mapping[str, str]) -> list[str]:
-    return sorted(name for name in env if _DATABASE_NAME.search(name))
+    return sorted(name for name, value in env.items() if _DATABASE_NAME.search(name) or _DATABASE_VALUE.match(value))
 
 
 def assert_no_database_environment(env: Mapping[str, str] | None = None) -> None:

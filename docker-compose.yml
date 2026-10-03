@@ -11,11 +11,15 @@ services:
     restart: unless-stopped
     ports:
       - "8000:8000"
-    env_file:
-      - .env
+    # no env_file: it would hand the API every variable in .env, DATABASE_URL_MIGRATIONS included
     environment:
       - APP_ENV=production
+      - SECRET_KEY=${SECRET_KEY}
       - DATABASE_URL=${DATABASE_URL}
+      - META_APP_SECRET=${META_APP_SECRET}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - AGENT_SERVICE_TOKEN=${AGENT_SERVICE_TOKEN}
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.0-flash}
       - META_VERIFY_TOKEN=${META_VERIFY_TOKEN}

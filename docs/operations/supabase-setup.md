@@ -54,3 +54,15 @@ launch; in project settings, disable the Data API if the option is available (th
 ```bash
 DEMO_USER_PASSWORD=... uv run python -m app.cli.seed
 ```
+
+## 7. Prove the whole stack on the real project (task 09)
+With `DATABASE_URL`, `DATABASE_URL_MIGRATIONS`, `SECRET_KEY` and `DEMO_USER_PASSWORD` in `.env`:
+```bash
+uv run python -m app.cli.check_database --admin-url "<session pooler URL of the postgres user>"   # you run this one
+uv run python scripts/e2e_auth_stack.py --supabase
+```
+The second command migrates with the migrator role, seeds the demo tenant (owner, manager and staff logins), starts the
+API on the runtime `app_user` URL and runs the browser tests (login, logout, expiry, role pages) against Supabase. It
+creates nothing locally. The automated test suite keeps using a throwaway Docker Postgres on purpose: those tests
+create and destroy roles and fake accounts and try to break row-level security, which must never run against a real
+project.

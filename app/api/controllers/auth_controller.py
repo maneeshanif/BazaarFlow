@@ -192,7 +192,7 @@ async def refresh(body: RefreshRequest) -> TokenOut:
     result: TokenOut | None = None
     async with anonymous_session() as session:
         try:
-            old, new_raw = await refresh_tokens.rotate(session, body.refresh_token)
+            old, new_raw, in_grace = await refresh_tokens.rotate(session, body.refresh_token)
         except refresh_tokens.RefreshError:
             failure = HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid refresh token")
         else:
@@ -216,6 +216,9 @@ async def refresh(body: RefreshRequest) -> TokenOut:
                     extra_claims={"tenant_id": str(old.tenant_id), "role": role.value, "pa": user.is_platform_admin},
                 )
                 record_audit(session, "auth.refresh", tenant_id=old.tenant_id, actor_id=user.id)
+                if in_grace:
+                    # tolerated, but worth seeing: a stolen token replayed inside the window looks exactly like this
+                    record_audit(session, "auth.refresh_reuse_in_grace", tenant_id=old.tenant_id, actor_id=user.id)
                 result = TokenOut(access_token=access, refresh_token=new_raw, tenant_id=old.tenant_id, role=role)
     if failure is not None:
         raise failure

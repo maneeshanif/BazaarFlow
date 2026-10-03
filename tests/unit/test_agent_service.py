@@ -58,6 +58,9 @@ def test_the_service_refuses_to_start_when_a_database_variable_is_in_its_environ
         "SUPABASE_DB_URL",
         "PGPASSWORD",
         "DB_HOST",
+        "POSTGRESQL_URL",
+        "DB_DSN",
+        "SQLALCHEMY_DATABASE_URI",
     ):
         with pytest.raises(DatabaseCredentialsPresent) as raised:
             assert_no_database_environment({name: "postgresql://x", "PATH": "/bin"})
@@ -71,6 +74,12 @@ def test_startup_enforces_the_guard(monkeypatch: pytest.MonkeyPatch) -> None:
     with pytest.raises(DatabaseCredentialsPresent):
         with TestClient(app):
             pass
+
+
+def test_a_connection_string_is_caught_whatever_the_variable_is_called() -> None:
+    for value in ("postgresql://u:p@h/db", "postgresql+asyncpg://u:p@h/db", "mysql://u:p@h/db", "sqlite:///x.db"):
+        assert find_database_variables({"MY_INNOCENT_LOOKING_NAME": value}) == ["MY_INNOCENT_LOOKING_NAME"]
+    assert find_database_variables({"API_BASE_URL": "http://backend:8000"}) == []
 
 
 def test_ordinary_variables_are_not_mistaken_for_database_ones() -> None:

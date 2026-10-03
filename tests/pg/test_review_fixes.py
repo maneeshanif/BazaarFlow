@@ -43,7 +43,7 @@ async def test_concurrent_refreshes_with_one_token_succeed_only_once(
     assert codes.count(200) == 1, f"a single refresh token must mint exactly one successor, got {codes}"
 
 
-async def test_with_grace_concurrent_refreshes_still_leave_exactly_one_live_token(
+async def test_with_grace_concurrent_refreshes_never_leave_more_than_one_live_token(
     client: AsyncClient, admin_conn: asyncpg.Connection
 ) -> None:
     """Grace tolerates a lost response; it must not fork the session into several live tokens."""
@@ -55,7 +55,8 @@ async def test_with_grace_concurrent_refreshes_still_leave_exactly_one_live_toke
         "(SELECT id FROM users WHERE email = $1)",
         acct["email"],
     )
-    assert live == 1, f"the session must have exactly one live refresh token, found {live}"
+    # one-shot grace: the first replay gets a fresh token, later ones are theft and end the session
+    assert live <= 1, f"the session must never have more than one live refresh token, found {live}"
 
 
 async def test_an_approved_action_runs_its_executor_exactly_once_under_concurrency(
