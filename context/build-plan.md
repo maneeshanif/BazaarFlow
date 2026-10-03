@@ -244,10 +244,10 @@ Batch gate: tasks 50, 42, 36, 48, 46, 47, 57, 58, 53, 54, 02, 12, 21, 26 pass th
   - Acceptance: A failed request can be traced from the response id to the log line
 - [x] 58 Backups and one timed restore [backend-api pack]
   - Acceptance: The restore completes within the PRD recovery target
-- [ ] 53 Accessibility and performance gates [web-app pack]
+- [x] 53 Accessibility and performance gates [web-app pack]
   - Acceptance: axe finds no serious issue on the slice
   - Acceptance: the performance budget lane passes
-- [ ] 54 End-to-end smoke test of the critical flow [web-app pack]
+- [x] 54 End-to-end smoke test of the critical flow [web-app pack]
   - Acceptance: One browser test signs in and completes the main task
 - [ ] 02 CI/CD + verification — one workflow per lane (api, web) calling `scripts/verify.sh`; secret scan; dependency scan *(carried over from Phase 0)*
   - Acceptance: Every lane has a workflow that calls `scripts/verify.sh`; a deliberately broken commit turns CI red
