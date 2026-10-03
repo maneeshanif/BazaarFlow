@@ -1,6 +1,6 @@
 # ADR 0001 — Stack decision
 
-Status: proposed (awaiting owner sign-off, build-plan task 00)
+Status: accepted by the owner, 2026-10-03 (build-plan task 00)
 Date: 2026-10-02
 
 ## Context

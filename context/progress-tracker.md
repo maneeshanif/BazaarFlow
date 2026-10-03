@@ -7,23 +7,23 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 0 — Foundation: spec harness, CI (`verify.sh`), Supabase projects and roles (§3.8), Data API lockdown, Alembic baseline, tenancy tables, RLS, JWT claims, role dependencies, architecture tests, secret hygiene (remove committed DSN script)
-**Last completed:** 09 (real Supabase dev project provisioned, migrated and checked); 22; 28
+**Last completed:** 00 (ADR accepted), 01 (.env.example committed)
 **In progress:** Phase 0, in task order (see Phase 0 status below)
-**Next:** run scripts/e2e_auth_stack.py --supabase once DEMO_USER_PASSWORD is in .env; then wait for the owner items
+**Next:** first backend deploy to FastAPI Cloud (app bazaarflow-api), then CI evidence for 02 and 12
 **Blockers:** 00 needs the owner's sign-off; 09 needs Supabase credentials; 26 needs vendor sandbox accounts
 
 ### Phase 0 status
 
-**Phase 0: 24 of 31 tasks done, 7 left (00, 01, 02, 12, 21, 26, 29).** Waiting on the owner: 00 (ADR sign-off), 01 and 12 (.env.example from docs/operations/env.example.proposed), 02 (push for CI proof; rotate leaked keys), 21 (Vercel and FastAPI Cloud accounts), 26 (Twilio credentials). 29: runtime enforcement is phase 1.
+**Phase 0: 26 of 31 tasks done, 5 left (02, 12, 21, 26, 29).** 02 and 12: need the green CI run on GitHub (and the owner rotating the leaked keys). 21: Vercel secrets. 26: Twilio (paused). 29: runtime enforcement is phase 1.
 
-Done: 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 27, 28, 30. Partly done: 01, 02, 12. Blocked on the owner: 00, 09, 26.
+Done: 00, 01, 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 27, 28, 30. Partly done: 01, 02, 12. Blocked on the owner: 00, 09, 26.
 
 ---
 
 ## Phase 0 — Foundation: spec harness, CI (`verify.sh`), Supabase projects and roles (§3.8), Data API lockdown, Alembic baseline, tenancy tables, RLS, JWT claims, role dependencies, architecture tests, secret hygiene (remove committed DSN script)
 
-- [ ] 00 Architecture Decision Record + sign-off
-- [ ] 01 Repo scaffold
+- [x] 00 Architecture Decision Record + sign-off
+- [x] 01 Repo scaffold
 - [ ] 02 CI/CD + verification
 - [x] 03 Database foundation
 - [x] 04 Authentication & authorization

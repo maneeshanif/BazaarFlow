@@ -41,12 +41,12 @@ A task must be verifiable in one fast-tier cycle (`bash scripts/verify.sh`, seco
 
 Exit gate: CI green; two seeded tenants cannot read each other's rows through any API route (test passes); login returns tenant and role
 
-- [ ] 00 Architecture Decision Record + sign-off — write `docs/adr/0001-stack-decision.md` from PRD §3.1 (stack, why, rejected alternatives)
+- [x] 00 Architecture Decision Record + sign-off — write `docs/adr/0001-stack-decision.md` from PRD §3.1 (stack, why, rejected alternatives)
   - Acceptance: `docs/adr/0001-stack-decision.md` exists and names the stack, the reasons and the rejected alternatives
-  - Acceptance: The developer has signed it off (recorded in the progress log)
-- [ ] 01 Repo scaffold — folders per PRD §3.4 (`.`, `frontend`), package managers, `.env.example` with empty values
+  - Acceptance: the developer has signed it off (DONE: owner accepted it on 2026-10-03, recorded in the progress log; ADR status is accepted)
+- [x] 01 Repo scaffold — folders per PRD §3.4 (`.`, `frontend`), package managers, `.env.example` with empty values
   - Acceptance: Every folder in PRD §3.4 exists and each part builds or runs an empty smoke test
-  - Acceptance: `.env.example` lists every variable with an empty value; no real secret is committed
+  - Acceptance: `.env.example` lists every variable with an empty value; no real secret is committed (DONE: committed by the owner's instruction; verified byte-identical to docs/operations/env.example.proposed, whose names are enforced against docs/operations/env-vars.md by tests/architecture/test_env_docs.py)
 - [ ] 02 CI/CD + verification — one workflow per lane (api, web) calling `scripts/verify.sh`; secret scan; dependency scan
   - Acceptance: Every lane has a workflow that calls `scripts/verify.sh`; a deliberately broken commit turns CI red
   - Acceptance: Secret scan and dependency scan run and pass on the clean tree

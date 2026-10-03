@@ -1,0 +1,18 @@
+# Files tracked in git that the deployed API does not need (FastAPI Cloud also respects .gitignore, so .env,
+# virtualenvs and caches are never uploaded). agent_service/ and README.md stay: pyproject.toml builds them.
+frontend/
+tests/
+docs/
+context/
+scripts/
+backend/
+db/
+dev.db
+.claude/
+.github/
+skills/
+alembic/
+alembic.ini
+*.docx
+*.md
+!README.md
