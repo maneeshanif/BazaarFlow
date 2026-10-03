@@ -13,6 +13,8 @@ prepared this change is not allowed to read that file, so the owner should add t
 | `LOGIN_MAX_FAILURES` / `LOGIN_LOCKOUT_MINUTES` | API | *new*, defaults 5 / 15 |
 | `DATABASE_URL` | API runtime | Supabase **pooler** (port 6543), user `app_user`, `postgresql+asyncpg://` |
 | `DATABASE_URL_MIGRATIONS` | Alembic | *new*. Supabase **direct** connection (port 5432), user `migrator` |
+| `SUPABASE_PROJECT_REF`, `SUPABASE_POOLER_HOST` | `app.cli.provision_supabase` | project ref and `aws-0-<region>.pooler.supabase.com` from Connect -> Session pooler. Not secret |
+| `SUPABASE_ADMIN_PASSWORD` | `app.cli.provision_supabase` | the database password. Used once, then the command blanks it. Never keep it in `.env` |
 | `MIGRATOR_PASSWORD`, `APP_USER_PASSWORD`, `REPORT_RO_PASSWORD` | `app.cli.provision_db` | *new*. Only needed on the machine that provisions roles; never on the API host |
 | `DEMO_USER_PASSWORD` | `app.cli.seed` | optional; generated and printed once if unset |
 | `FRONTEND_ORIGIN` | API CORS | production origin of the web app |
