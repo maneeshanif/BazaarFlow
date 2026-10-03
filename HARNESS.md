@@ -20,3 +20,4 @@ Two failures with the same shape should be impossible. If you see a second, the 
 | Date | What went wrong (one sentence) | Class | The fix, and the surface it went on |
 | --- | --- | --- | --- |
 | | | | |
+| 2026-10-03 | `verify.sh --slow` ran `alembic downgrade base` against the owner's real Supabase project (data wiped) because `.env` DATABASE_URL_MIGRATIONS overrides the throwaway DATABASE_URL the lane sets, and a failed `upgrade head` did not stop the following destructive steps (`set -e` is ignored in conditionals) | Constraint | The migration step pins both URL variables to the throwaway container, refuses any non-local URL before the downgrade, and chains every alembic command with `|| return 1`; `tests/architecture/test_ci_workflows.py` fails if any of those is removed |

@@ -180,12 +180,33 @@ api_db_migrations() {
       sleep 1
     done
     url="postgresql+psycopg://postgres:verify@localhost:$port/verify"
+    # The roles production already has when migrations run (provision_db creates them first; Supabase supplies anon and
+    # authenticated). Migration 20261003_05 grants a policy to app_user, so a bare database cannot migrate.
+    # The image starts, initialises, shuts down and starts again: pg_isready can answer during the first start, so retry.
+    local ready=""
+    for _ in $(seq 1 30); do
+      if docker exec "$cid" psql -U postgres -d verify -v ON_ERROR_STOP=1 -q -c         "CREATE ROLE app_user NOLOGIN; CREATE ROLE report_ro NOLOGIN; CREATE ROLE anon NOLOGIN; CREATE ROLE authenticated NOLOGIN;" > /dev/null 2>&1; then
+        ready=yes
+        break
+      fi
+      sleep 1
+    done
+    [ -n "$ready" ] || { echo "✗ the throwaway database never became ready" >&2; return 1; }
   fi
-  export DATABASE_URL="$url"
-  uv run alembic upgrade head
-  uv run alembic check
-  uv run alembic downgrade base
-  uv run alembic upgrade head
+  # SAFETY: this step runs `alembic downgrade base`, which empties every table. It must only ever touch a throwaway
+  # database on this machine. Refuse anything else, and pin BOTH variables the migration tooling reads: a value in
+  # .env (DATABASE_URL_MIGRATIONS, e.g. a real Supabase project) would otherwise win over DATABASE_URL and be wiped.
+  if ! [[ "$url" =~ @(localhost|127\.0\.0\.1)(:[0-9]+)?/ ]]; then
+    echo "✗ refusing to run migrations that include a downgrade against a non-local database: ${url%%@*}@…" >&2
+    return 1
+  fi
+  export DATABASE_URL="$url" DATABASE_URL_MIGRATIONS="$url"
+  # explicit `|| return 1`: `set -e` is ignored when this function is called from a conditional, and a failed upgrade
+  # must never be followed by the destructive steps
+  uv run alembic upgrade head || return 1
+  uv run alembic check || return 1
+  uv run alembic downgrade base || return 1
+  uv run alembic upgrade head || return 1
   echo "Migrations apply, match the models, and round-trip."
 }
 

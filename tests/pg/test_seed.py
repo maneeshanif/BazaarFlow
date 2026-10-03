@@ -23,7 +23,7 @@ async def test_seed_creates_a_demo_tenant_once(
     assert login.json()["role"] == "owner"
     token = {"Authorization": f"Bearer {login.json()['access_token']}"}
 
-    customers = (await client.get("/api/v1/customers/", headers=token)).json()
+    customers = (await client.get("/api/v1/customers/", headers=token)).json()["items"]
     assert sorted(c["name"] for c in customers) == ["Ali Raza", "Sara Khan"]
     me = (await client.get("/api/v1/auth/me", headers=token)).json()
     assert [m["tenant_name"] for m in me["memberships"]] == ["Demo Retail"]

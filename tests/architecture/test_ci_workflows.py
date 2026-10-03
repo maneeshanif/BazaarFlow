@@ -61,3 +61,15 @@ def test_node_dependency_scan_is_a_slow_verify_step() -> None:
     assert re.search(r'slow_step\s+"web: dependency audit[^"]*"[^\n]*check:audit', VERIFY), "web lane has no audit gate"
     gate = (ROOT / "frontend" / "scripts" / "check-audit.mjs").read_text(encoding="utf-8")
     assert "npm audit --json" in gate
+
+
+def test_the_migration_check_can_never_target_a_persistent_database() -> None:
+    """Incident 2026-10-03: `verify.sh --slow` ran `alembic downgrade base` against the real Supabase project, because a
+    DATABASE_URL_MIGRATIONS in .env wins over the DATABASE_URL the lane sets. The step must pin both variables to the
+    throwaway database, refuse a non-local one, and stop at the first failing command (set -e is ignored in conditionals)."""
+    body = VERIFY[VERIFY.index("api_db_migrations() {") : VERIFY.index("lane_api_db() {")]
+    assert 'export DATABASE_URL="$url" DATABASE_URL_MIGRATIONS="$url"' in body
+    assert "refusing to run migrations" in body and "localhost|127" in body
+    for command in ("upgrade head", "check", "downgrade base"):
+        assert re.search(rf"alembic {command} \|\| return 1", body), f"alembic {command} must stop the step when it fails"
+    assert body.index("refusing to run migrations") < body.index("uv run alembic downgrade base")
