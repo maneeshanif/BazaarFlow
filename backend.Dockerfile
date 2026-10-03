@@ -21,8 +21,6 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 # Copy application source files
 COPY app/ ./app/
-COPY alembic/ ./alembic/
-COPY alembic.ini ./
 
 # Run as non-root user for security
 RUN addgroup --system --gid 1001 appgroup && \
@@ -33,5 +31,6 @@ USER appuser
 
 EXPOSE 8000
 
-# Run migrations and start the application
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2"]
+# Migrations are a deploy step run with the migrator role (scripts/deploy.sh, .github/workflows/deploy.yml).
+# The runtime container holds only app_user, which has no DDL rights, so it must not run them.
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]

@@ -16,6 +16,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
 from app.agents.context import ToolContext
+from app.core.settings import settings
 from app.core.tenancy import apply_context, tenant_session
 from app.models.customer import Customer
 from app.models.tenant import TenantRole
@@ -31,11 +32,30 @@ async def _ctx(tenant_id: str, role: TenantRole) -> AsyncIterator[ToolContext]:
         yield ToolContext(tenant_id=uuid.UUID(tenant_id), user_id=uuid.uuid4(), role=role, session=session)
 
 
-async def test_concurrent_refreshes_with_one_token_succeed_only_once(client: AsyncClient) -> None:
+async def test_concurrent_refreshes_with_one_token_succeed_only_once(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Strict mode (grace 0): a token can be redeemed once; the race loser is treated as theft."""
+    monkeypatch.setattr(settings, "REFRESH_REUSE_GRACE_SECONDS", 0)
     acct = await register(client, "Shop A")
     results = await asyncio.gather(*[client.post("/api/v1/auth/refresh", json={"refresh_token": acct["refresh_token"]}) for _ in range(6)])
     codes = sorted(r.status_code for r in results)
     assert codes.count(200) == 1, f"a single refresh token must mint exactly one successor, got {codes}"
+
+
+async def test_with_grace_concurrent_refreshes_still_leave_exactly_one_live_token(
+    client: AsyncClient, admin_conn: asyncpg.Connection
+) -> None:
+    """Grace tolerates a lost response; it must not fork the session into several live tokens."""
+    acct = await register(client, "Shop A")
+    results = await asyncio.gather(*[client.post("/api/v1/auth/refresh", json={"refresh_token": acct["refresh_token"]}) for _ in range(6)])
+    assert any(r.status_code == 200 for r in results)
+    live = await admin_conn.fetchval(
+        "SELECT count(*) FROM refresh_tokens WHERE revoked_at IS NULL AND user_id = "
+        "(SELECT id FROM users WHERE email = $1)",
+        acct["email"],
+    )
+    assert live == 1, f"the session must have exactly one live refresh token, found {live}"
 
 
 async def test_an_approved_action_runs_its_executor_exactly_once_under_concurrency(

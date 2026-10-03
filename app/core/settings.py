@@ -42,6 +42,12 @@ class Settings(BaseSettings):
     ALLOW_INSECURE_DEV_SECRET: bool = False
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 14
+    # A rotated refresh token presented again within this many seconds is a lost response (reload, second tab), not
+    # theft: it gets a fresh token instead of ending the session. 0 restores the strict rule.
+    REFRESH_REUSE_GRACE_SECONDS: int = 10
+    # Twilio WhatsApp sandbox for the demo (platform level). Per-tenant encrypted credentials replace these in phase 2.
+    TWILIO_ACCOUNT_SID: str = ""
+    TWILIO_AUTH_TOKEN: str = ""
     LOGIN_MAX_FAILURES: int = 5
     LOGIN_LOCKOUT_MINUTES: int = 15
     FRONTEND_ORIGIN: str = "http://localhost:3000"

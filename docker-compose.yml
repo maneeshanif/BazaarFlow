@@ -37,6 +37,30 @@ services:
     networks:
       - bazaarflow_net
 
+  # -- Agent service (ADR 0003): no env_file and no database variable, on purpose -----------
+  agent:
+    build:
+      context: .
+      dockerfile: agent.Dockerfile
+    container_name: bazaarflow_agent
+    restart: unless-stopped
+    ports:
+      - "8100:8100"
+    environment:
+      - APP_ENV=production
+      - AGENT_SERVICE_TOKEN=${AGENT_SERVICE_TOKEN}
+      - API_BASE_URL=http://backend:8000
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.0-flash}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8100/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - bazaarflow_net
+
   # -- Next.js Frontend ---------------------------------------------------------
   frontend:
     build:

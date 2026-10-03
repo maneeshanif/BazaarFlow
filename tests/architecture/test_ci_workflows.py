@@ -57,4 +57,7 @@ def test_python_dependency_scan_is_a_slow_verify_step() -> None:
 
 
 def test_node_dependency_scan_is_a_slow_verify_step() -> None:
-    assert re.search(r'slow_step\s+"web: dependency audit"[^\n]*npm audit', VERIFY), "web lane has no npm audit step"
+    """The gate wraps `npm audit` with a reviewed, expiring allow-list (frontend/scripts/check-audit.mjs)."""
+    assert re.search(r'slow_step\s+"web: dependency audit[^"]*"[^\n]*check:audit', VERIFY), "web lane has no audit gate"
+    gate = (ROOT / "frontend" / "scripts" / "check-audit.mjs").read_text(encoding="utf-8")
+    assert "npm audit --json" in gate

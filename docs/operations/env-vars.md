@@ -22,5 +22,16 @@ prepared this change is not allowed to read that file, so the owner should add t
 | `VAPI_API_KEY`, `VAPI_WEBHOOK_SECRET` | voice | becomes per-tenant in Phase 3 |
 | `PEXELS_API_KEY` | marketing images | |
 | `MARKETING_SCHEDULER_ENABLED` | scheduler | default true |
+| `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` | WhatsApp sandbox | demo channel (PRD A-004). Check them with `uv run python -m app.cli.smoke_twilio`. Per-tenant encrypted credentials replace these in phase 2 |
+| `META_APP_SECRET` | WhatsApp webhook | verifies the inbound signature (`X-Hub-Signature-256`); the webhook refuses unsigned calls without it |
+| `LEGACY_V1_ROUTES` | API | `true` mounts the old JSON-store routes outside development/test; leave empty in production |
+| `REFRESH_REUSE_GRACE_SECONDS` | API | default 10. A rotated refresh token presented again within this window is treated as a lost response, not theft. `0` = strict |
+| `AGENT_SERVICE_TOKEN` | API, agent service | shared secret for `X-Agent-Service-Token` (ADR 0003). Required outside tests |
+| `API_BASE_URL` | agent service | how the agent service reaches the API. It never receives a database variable |
+| `API_INTERNAL_URL` | web (server side) | the API address the Next.js auth route handlers call; falls back to `NEXT_PUBLIC_API_BASE_URL` |
+| `NEXT_PUBLIC_API_BASE_URL` | web (browser) | public API address used by the browser |
+| `NEXT_PUBLIC_VAPI_PUBLIC_KEY`, `NEXT_PUBLIC_VAPI_SUPPORT_ASSISTANT_ID` | web | voice widget (phase 3) |
+| `NEXT_PUBLIC_SENTRY_DSN`, `SENTRY_DSN` | web | Sentry. A DSN is not secret |
+| `SENTRY_AUTH_TOKEN` | CI only | uploads source maps. A secret: never in a build argument or an image |
 
 Never put the Supabase `service_role` key, or any production credential, in an agent's or developer's environment.

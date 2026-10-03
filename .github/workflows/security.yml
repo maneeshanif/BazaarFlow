@@ -51,4 +51,6 @@ jobs:
           gitleaks version
 
       - name: Run gitleaks
-        run: gitleaks detect --source . --redact --verbose
+        # The baseline holds the 22 known historical findings (old keys already rotated, old test fixtures);
+        # anything new fails the build. Regenerate it only after a deliberate review.
+        run: gitleaks detect --source . --redact --verbose --baseline-path .gitleaks-baseline.json

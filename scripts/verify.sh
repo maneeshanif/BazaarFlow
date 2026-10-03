@@ -216,7 +216,7 @@ lane_web() {
   has_script format:check && step "web: format (new code)" npm run --silent format:check
   has_script check:tokens && step "web: design tokens (no hard-coded colour, type or spacing)" npm run --silent check:tokens
   has_script test && step "web: test" npm run --silent test
-  slow_step "web: dependency audit" npm audit --audit-level=high
+  slow_step "web: dependency audit (reviewed allow-list)" npm run --silent check:audit
   has_script build && slow_step "web: build" npm run --silent build
   # real-browser responsive check (needs the build above and Chromium: `npx playwright install chromium`)
   has_script test:e2e && slow_step "web: e2e shell (no horizontal scroll at 360-1440 px)" npm run --silent test:e2e
@@ -233,6 +233,10 @@ lane_infra() {
   if [ -d .github/workflows ] && docker_up; then
     # MSYS_NO_PATHCONV: stop Git Bash on Windows rewriting /repo into a host path.
     slow_step "infra: actionlint" env MSYS_NO_PATHCONV=1 docker run --rm -v "$(host_path "$ROOT"):/repo" -w /repo rhysd/actionlint:1.7.7 -color
+  fi
+  if docker_up; then
+    # Whole history, minus the reviewed baseline: a new secret anywhere fails. Same scan as CI (security.yml).
+    slow_step "infra: secret scan (gitleaks, baselined)" env MSYS_NO_PATHCONV=1 docker run --rm -v "$(host_path "$ROOT"):/repo" zricethezav/gitleaks:v8.30.1 detect --source /repo --redact --no-banner --baseline-path /repo/.gitleaks-baseline.json
   fi
   step "infra: verify.sh syntax" bash -n scripts/verify.sh
 }

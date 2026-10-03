@@ -114,13 +114,12 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [ ] 22 Scaffold the API with lint, format, typecheck and a health endpoint [backend-api pack]
   - Acceptance: The service starts from a clean clone
   - Acceptance: the health endpoint answers
-- [ ] 23 Database foundation and first migration [backend-api pack]
-  - Acceptance: Migration applies to an empty database
-  - Acceptance: the migration check passes in the fast tier
-- [ ] 24 Authentication and authorisation skeleton [backend-api pack]
-  - Acceptance: Login works
-  - Acceptance: a role without access gets 403
-  - Acceptance: one test per role
+- [x] 23 Database foundation and first migration [backend-api pack]
+  - Acceptance: migration applies to an empty database (done in task 03: tests/pg/test_migration_04.py, alembic upgrade/check/round-trip in verify.sh api-db)
+  - Acceptance: the migration check passes in the fast tier (alembic check runs in the api-db lane when Docker is up)
+- [x] 24 Authentication and authorisation skeleton [backend-api pack]
+  - Acceptance: login works (done in task 04: tests/pg/test_auth.py; web: e2e/auth.spec.ts)
+  - Acceptance: a role without access gets 403, one test per role (tests/architecture/test_authorization.py, tests/pg/test_rls.py, e2e/auth.spec.ts)
 - [x] 25 OpenAPI contract and generated client with a drift check [backend-api pack]
   - Acceptance: the drift check fails when an endpoint changes without regeneration (tests/architecture/test_openapi_contract.py; mutation-checked)
   - Acceptance: TypeScript client types are generated from contracts/openapi.json and checked byte for byte
@@ -140,14 +139,6 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [x] 30 Evaluation harness with a first golden set [agents pack]
   - Acceptance: the suite runs in the fast tier against recorded model responses (tests/unit/evals; no network or key; 12 golden cases)
   - Acceptance: the harness catches regressions: removing a tool from an agent fails a case; a tool that crashes, a customer-facing tool leaking stock, or an injected invented tool fails a case (mutation-checked). Limit: replayed turns are hand-recorded, so a prompt change alone does not fail a case; re-record against the live model for that.
-- [ ] 31 Channel setup (number or WebRTC room) and a hello-world call [voice-agents pack]
-  - Acceptance: A test call connects and the agent answers
-- [ ] 32 Latency and cost instrumentation per turn [voice-agents pack]
-  - Acceptance: Each call logs per-turn latency and cost
-  - Acceptance: a cap stops runaway calls
-- [ ] 33 Evaluation set of recorded calls [voice-agents pack]
-  - Acceptance: The set replays offline and reports task success
-
 Each task: confirm the acceptance criteria (`/architect` turns them into failing tests first), then build, then `bash scripts/verify.sh`, then `/review`.
 
 ## Phase 1 — Public demo launch: services moved from JSON to DB, inventory/sales/customers/udhaar with stock movements, sales chat agent, approvals center, agent activity log, home dashboard, app shell, landing page, demo seed
@@ -342,6 +333,13 @@ Each task: confirm the acceptance criteria (`/architect` turns them into failing
 
 Exit gate: A VAPI call is answered and logged; an owner enables the low-stock recipe and receives a drafted vendor message; embedded signup connects a number without developer tools
 
+- [ ] 31 Channel setup (number or WebRTC room) and a hello-world call [voice-agents pack, moved from Phase 0 by the owner]
+  - Acceptance: A test call connects and the agent answers
+- [ ] 32 Latency and cost instrumentation per turn [voice-agents pack, moved from Phase 0 by the owner]
+  - Acceptance: Each call logs per-turn latency and cost
+  - Acceptance: a cap stops runaway calls
+- [ ] 33 Evaluation set of recorded calls [voice-agents pack, moved from Phase 0 by the owner]
+  - Acceptance: The set replays offline and reports task success
 - [ ] 86 Marketing insights — F-017 (Marketing; report; P2; roles: owner, manager)
   - Acceptance: A user with one of the roles (owner, manager) can complete the Marketing flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-017 in PRD §5.3 (one test per rule)

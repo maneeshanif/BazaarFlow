@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import uuid
+from datetime import timedelta
 
 import pytest
 from httpx import AsyncClient
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 
+from app.core.settings import settings
 from app.core.tenancy import apply_context
 from tests.pg.conftest import bearer, register
 
@@ -27,7 +29,13 @@ async def _audit_actions(app_engine: AsyncEngine, tenant_id: str) -> list[str]:
         await session.close()
 
 
-async def test_refresh_rotates_the_token_and_the_old_one_stops_working(client: AsyncClient) -> None:
+@pytest.fixture
+def strict_reuse(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Grace 0 = the strict PRD rule: any reuse of a rotated token is theft."""
+    monkeypatch.setattr(settings, "REFRESH_REUSE_GRACE_SECONDS", 0)
+
+
+async def test_refresh_rotates_the_token_and_the_old_one_stops_working(client: AsyncClient, strict_reuse: None) -> None:
     acct = await register(client, "Shop A")
     first = acct["refresh_token"]
     res = await client.post("/api/v1/auth/refresh", json={"refresh_token": first})
@@ -40,13 +48,58 @@ async def test_refresh_rotates_the_token_and_the_old_one_stops_working(client: A
     assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).status_code == 401
 
 
-async def test_reusing_a_rotated_refresh_token_revokes_the_whole_session_family(client: AsyncClient) -> None:
+async def test_reusing_a_rotated_refresh_token_revokes_the_whole_session_family(
+    client: AsyncClient, strict_reuse: None
+) -> None:
     acct = await register(client, "Shop A")
     first = acct["refresh_token"]
     second = (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).json()["refresh_token"]
     # attacker replays the old token -> rejected, and the legitimate newer token is revoked as well
     assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).status_code == 401
     assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": second})).status_code == 401
+
+
+async def test_a_reload_during_a_refresh_does_not_sign_the_user_out(client: AsyncClient) -> None:
+    """The browser aborted after the server rotated: it presents the OLD token again within the grace window."""
+    acct = await register(client, "Shop A")
+    first = acct["refresh_token"]
+    second = await client.post("/api/v1/auth/refresh", json={"refresh_token": first})
+    assert second.status_code == 200
+    retry = await client.post("/api/v1/auth/refresh", json={"refresh_token": first})
+    assert retry.status_code == 200, "a reuse inside the grace window must not be treated as theft"
+    third = retry.json()["refresh_token"]
+    assert third not in {first, second.json()["refresh_token"]}
+    assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": third})).status_code == 200
+
+
+async def test_reuse_after_the_grace_window_is_still_theft(
+    client: AsyncClient, monkeypatch: pytest.MonkeyPatch, strict_reuse: None
+) -> None:
+    acct = await register(client, "Shop A")
+    first = acct["refresh_token"]
+    second = (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).json()["refresh_token"]
+    monkeypatch.setattr(settings, "REFRESH_REUSE_GRACE_SECONDS", 0)
+    assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).status_code == 401
+    assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": second})).status_code == 401
+
+
+async def test_a_logged_out_token_is_never_revived_by_the_grace_window(client: AsyncClient) -> None:
+    acct = await register(client, "Shop A")
+    token = acct["refresh_token"]
+    assert (await client.post("/api/v1/auth/logout", json={"refresh_token": token})).status_code == 204
+    assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": token})).status_code == 401
+
+
+async def test_the_grace_window_is_bounded_in_time(client: AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Move the clock past the window: the second use of the rotated token is theft again."""
+    import app.core.refresh_tokens as rt
+
+    acct = await register(client, "Shop A")
+    first = acct["refresh_token"]
+    assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).status_code == 200
+    real_now = rt._now
+    monkeypatch.setattr(rt, "_now", lambda: real_now() + timedelta(seconds=settings.REFRESH_REUSE_GRACE_SECONDS + 5))
+    assert (await client.post("/api/v1/auth/refresh", json={"refresh_token": first})).status_code == 401
 
 
 async def test_logout_revokes_the_refresh_token_and_is_idempotent(client: AsyncClient, app_engine: AsyncEngine) -> None:

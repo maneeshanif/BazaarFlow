@@ -1,0 +1,10 @@
+{
+  "allow": [
+    {
+      "id": "GHSA-vfj7-8cjw-p6xm",
+      "package": "braces (via Tailwind CSS 3, chokidar, micromatch)",
+      "reason": "Stack-exhaustion DoS when braces expands deeply nested patterns. Reached only at build time through Tailwind's file scanner, on our own trusted config; never shipped to the browser or the server. braces 3.0.3 is the newest release, so there is no fix on Tailwind 3. Goes away with the Tailwind 4 migration (ADR 0002).",
+      "expires": "2027-01-15"
+    }
+  ]
+}

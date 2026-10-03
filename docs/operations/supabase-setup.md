@@ -9,11 +9,14 @@ client. Do this once per project (`dev`, `staging`, `prod`), in this order.
 - The free tier pauses after inactivity. Upgrade the demo/prod project to Pro before the public launch (RK-07).
 
 ## 2. Provision the three roles (once, before the first migration)
-Use the **direct** connection string (port 5432) of the `postgres` user:
+Use the **session pooler** connection string (port 5432, host `aws-0-<region>.pooler.supabase.com`, user
+`postgres.<project-ref>`). Do not use the "Direct connection" host `db.<ref>.supabase.co`: Supabase serves it over IPv6
+only on the free tier, and many home and office networks (including many in Pakistan) have no IPv6, so it fails to
+connect. The session pooler works over IPv4 and behaves like a direct connection for DDL and migrations.
 
 ```bash
 export MIGRATOR_PASSWORD=...  APP_USER_PASSWORD=...  REPORT_RO_PASSWORD=...   # generate long random values
-uv run python -m app.cli.provision_db --admin-url "postgresql://postgres:<pw>@db.<ref>.supabase.co:5432/postgres"
+uv run python -m app.cli.provision_db --admin-url "postgresql://postgres.<ref>:<pw>@aws-0-<region>.pooler.supabase.com:5432/postgres"
 ```
 
 This creates `migrator` (owns the schema, used only by Alembic), `app_user` (API runtime, `NOBYPASSRLS`,
@@ -24,7 +27,7 @@ usable by the other two. Re-running it is safe and re-sets the passwords.
 | Variable | Value |
 | --- | --- |
 | `DATABASE_URL` | **pooler**, transaction mode (port 6543), user `app_user.<project-ref>`, `postgresql+asyncpg://` |
-| `DATABASE_URL_MIGRATIONS` | **direct** connection (port 5432), user `migrator`, `postgresql+asyncpg://` |
+| `DATABASE_URL_MIGRATIONS` | **session pooler** (port 5432), user `migrator.<project-ref>`, `postgresql+asyncpg://` |
 | `SECRET_KEY` | long random string; the API refuses to start in `production`/`staging` without it |
 | `APP_ENV` | `production` (or `staging`) |
 
@@ -32,7 +35,7 @@ The app already disables asyncpg's prepared-statement cache, which the transacti
 
 ## 4. Run the migrations
 ```bash
-DATABASE_URL_MIGRATIONS="postgresql+asyncpg://migrator:...@db.<ref>.supabase.co:5432/postgres" uv run alembic upgrade head
+DATABASE_URL_MIGRATIONS="postgresql+asyncpg://migrator.<ref>:...@aws-0-<region>.pooler.supabase.com:5432/postgres" uv run alembic upgrade head
 ```
 The second migration enables and forces row-level security on every business table and revokes every grant
 from Supabase's `anon` and `authenticated` roles (the Data API roles). Never edit the schema in the Supabase
@@ -40,7 +43,7 @@ dashboard: `alembic check` in CI will flag the drift.
 
 ## 5. Verify the lockdown (automated)
 ```bash
-uv run python -m app.cli.check_database --admin-url "postgresql://postgres:<pw>@db.<ref>.supabase.co:5432/postgres"
+uv run python -m app.cli.check_database --admin-url "postgresql://postgres.<ref>:<pw>@aws-0-<region>.pooler.supabase.com:5432/postgres"
 ```
 It checks the three roles (no superuser / bypassrls), that every business table has ENABLE + FORCE row level
 security and a policy, that `anon` and `authenticated` have no privileges, and that `audit_logs` is append-only.

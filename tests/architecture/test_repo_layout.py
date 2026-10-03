@@ -30,6 +30,7 @@ PRD_LAYOUT = [
     "app/mcp_server",
     "app/cli",
     "app/utils",
+    "agent_service",
     "alembic",
     "frontend",
     "tests/unit",
@@ -40,6 +41,7 @@ PRD_LAYOUT = [
     "context",
     "docker-compose.yml",
     "backend.Dockerfile",
+    "agent.Dockerfile",
     "pyproject.toml",
 ]
 

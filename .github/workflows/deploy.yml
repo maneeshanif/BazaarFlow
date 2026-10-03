@@ -1,0 +1,61 @@
+name: deploy
+
+# Production deploy: runs on every merge to main, or by hand (Actions -> deploy -> Run workflow).
+# Order matters: schema first (migrator role), then the API on FastAPI Cloud, then the web app on Vercel.
+# Credentials are GitHub secrets only: DATABASE_URL_MIGRATIONS, FASTAPI_CLOUD_TOKEN, FASTAPI_CLOUD_APP_ID,
+# VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  api:
+    name: Migrate and deploy the API
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v6
+      - name: Install dependencies
+        run: uv sync --frozen
+      - name: Apply database migrations (migrator role)
+        env:
+          DATABASE_URL_MIGRATIONS: ${{ secrets.DATABASE_URL_MIGRATIONS }}
+        run: uv run alembic upgrade head
+      - name: Deploy the API to FastAPI Cloud
+        env:
+          FASTAPI_CLOUD_TOKEN: ${{ secrets.FASTAPI_CLOUD_TOKEN }}
+          FASTAPI_CLOUD_APP_ID: ${{ secrets.FASTAPI_CLOUD_APP_ID }}
+        run: uv run fastapi deploy
+
+  web:
+    name: Deploy the web app
+    runs-on: ubuntu-latest
+    needs: api
+    environment: production
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Pull Vercel settings
+        run: npx --yes vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
+      - name: Build
+        run: npx --yes vercel@latest build --prod --token="$VERCEL_TOKEN"
+      - name: Deploy
+        run: npx --yes vercel@latest deploy --prebuilt --prod --token="$VERCEL_TOKEN"
