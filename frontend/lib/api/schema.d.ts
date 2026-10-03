@@ -355,6 +355,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/dashboard/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Summary */
+        get: operations["summary_api_v1_dashboard_summary_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/inventory/": {
         parameters: {
             query?: never;
@@ -404,6 +421,76 @@ export interface paths {
         put?: never;
         /** Add Stock Movement */
         post: operations["add_stock_movement_api_v1_inventory__product_id__stock_movements_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/marketing/posts/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Posts */
+        get: operations["list_posts_api_v1_marketing_posts__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/marketing/posts/drafts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Draft */
+        post: operations["create_draft_api_v1_marketing_posts_drafts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/marketing/posts/{post_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Post */
+        get: operations["get_post_api_v1_marketing_posts__post_id__get"];
+        put?: never;
+        post?: never;
+        /** Archive Post */
+        delete: operations["archive_post_api_v1_marketing_posts__post_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Post */
+        patch: operations["update_post_api_v1_marketing_posts__post_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/marketing/posts/{post_id}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit Post */
+        post: operations["submit_post_api_v1_marketing_posts__post_id__submit_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -927,6 +1014,15 @@ export interface components {
             /** Session Id */
             session_id: string;
         };
+        /** CountFigure */
+        CountFigure: {
+            /** Change Percent */
+            change_percent: number | null;
+            /** Previous */
+            previous: number;
+            /** Value */
+            value: number;
+        };
         /** CustomerCreate */
         CustomerCreate: {
             /** Address */
@@ -985,6 +1081,58 @@ export interface components {
             /** Phone */
             phone?: string | null;
         };
+        /** DashboardOut */
+        DashboardOut: {
+            /** Approvals Waiting */
+            approvals_waiting: number | null;
+            /** Briefing */
+            briefing: string | null;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Low Stock */
+            low_stock: number;
+            orders: components["schemas"]["CountFigure"];
+            profit: components["schemas"]["ProfitFigure"] | null;
+            /**
+             * Range
+             * @enum {string}
+             */
+            range: "today" | "7d" | "30d";
+            /** Role */
+            role: string;
+            sales: components["schemas"]["MoneyFigure"];
+            /** Trend */
+            trend: components["schemas"]["TrendDay"][];
+            /** Unpaid Udhaar */
+            unpaid_udhaar: string | null;
+        };
+        /** DraftRequest */
+        DraftRequest: {
+            /**
+             * Goal
+             * @enum {string}
+             */
+            goal: "promote_product" | "announce_offer" | "festival_greeting" | "general";
+            /**
+             * Language
+             * @default english
+             * @enum {string}
+             */
+            language: "english" | "roman_urdu";
+            /** Notes */
+            notes?: string | null;
+            /** Product Id */
+            product_id?: string | null;
+            /**
+             * Tone
+             * @default friendly
+             * @enum {string}
+             */
+            tone: "friendly" | "professional" | "festive";
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -1042,6 +1190,15 @@ export interface components {
              */
             tenant_id: string;
             user: components["schemas"]["UserOut"];
+        };
+        /** MoneyFigure */
+        MoneyFigure: {
+            /** Change Percent */
+            change_percent: number | null;
+            /** Previous */
+            previous: string;
+            /** Value */
+            value: string;
         };
         /** OrderDetail */
         OrderDetail: {
@@ -1209,6 +1366,15 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** Page[PostOut] */
+        Page_PostOut_: {
+            /** Items */
+            items: components["schemas"]["PostOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
         /** Page[ProductOut] */
         Page_ProductOut_: {
             /** Items */
@@ -1260,6 +1426,47 @@ export interface components {
             id: string;
             /** Method */
             method: string;
+        };
+        /** PostOut */
+        PostOut: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Hashtags */
+            hashtags: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Message */
+            message: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "draft" | "pending_approval" | "approved" | "archived";
+            /** Title */
+            title: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** PostUpdate */
+        PostUpdate: {
+            /**
+             * Hashtags
+             * @default
+             */
+            hashtags: string;
+            /** Message */
+            message: string;
+            /** Title */
+            title: string;
         };
         /** ProductCreate */
         ProductCreate: {
@@ -1354,6 +1561,17 @@ export interface components {
             sku?: string | null;
             /** Vendor Id */
             vendor_id?: string | null;
+        };
+        /** ProfitFigure */
+        ProfitFigure: {
+            /** Change Percent */
+            change_percent: number | null;
+            /** Orders Without Cost */
+            orders_without_cost: number;
+            /** Previous */
+            previous: string;
+            /** Value */
+            value: string;
         };
         /** RefreshRequest */
         RefreshRequest: {
@@ -1638,6 +1856,18 @@ export interface components {
              * @default bearer
              */
             token_type: string;
+        };
+        /** TrendDay */
+        TrendDay: {
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Orders */
+            orders: number;
+            /** Total */
+            total: string;
         };
         /** UserOut */
         UserOut: {
@@ -2434,6 +2664,37 @@ export interface operations {
             };
         };
     };
+    summary_api_v1_dashboard_summary_get: {
+        parameters: {
+            query?: {
+                range?: "today" | "7d" | "30d";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_products_api_v1_inventory__get: {
         parameters: {
             query?: {
@@ -2655,6 +2916,198 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProductOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_posts_api_v1_marketing_posts__get: {
+        parameters: {
+            query?: {
+                status?: ("draft" | "pending_approval" | "approved" | "archived") | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_PostOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_draft_api_v1_marketing_posts_drafts_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DraftRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_post_api_v1_marketing_posts__post_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    archive_post_api_v1_marketing_posts__post_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_post_api_v1_marketing_posts__post_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    submit_post_api_v1_marketing_posts__post_id__submit_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PostOut"];
                 };
             };
             /** @description Validation Error */

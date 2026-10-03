@@ -45,6 +45,8 @@ After building any component, record: name, file path, purpose, variants, and th
 | ReverseDialog (destructive action with a required reason) | `frontend/components/orders/ReverseDialog.tsx` | built (task 39) |
 | TeamMemberForm, RoleGuide | `frontend/components/team/` | built (task 43) |
 | ApprovalCard (+ RejectDialog, EditApprovalDialog), ChatPanel, AgentStatusPanel | `frontend/components/agent/` | built (tasks 37, 44, 45) |
+| DraftBriefForm, PostEditor (marketing studio) | `frontend/components/marketing/` | built (task 42) |
+| DashboardView, SalesTrend (home) | `frontend/components/dashboard/` | built (tasks 36, 48) |
 
 ---
 
@@ -105,3 +107,9 @@ A large master list is never a plain select. The trigger is a secondary Button w
 
 ### Chat panel
 Messages in an `aria-live="polite"` list; the user's messages `bg-action text-fg-inverse` right-aligned, the assistant's `bg-surface-sunken` with a border (warning tone for paused/limit outcomes); a visually hidden "You:" / "Assistant:" prefix; proposals appear as approval cards under the message that created them; Enter sends and Shift+Enter breaks the line; the empty state explains the flow and offers examples in English and Roman Urdu.
+
+### Dashboard pattern
+A period filter (`role="search"`), then a briefing card, then a `Key figures` region of `KpiCard`s (value, delta with sign, link to the records behind it), then a chart section. Cards a role may not see are never rendered because the API does not send them. Charts are drawn from server figures only and always come with an `sr-only` table; with no data the chart section says what to do and offers the primary action instead of an empty plot.
+
+### Draft-then-approve (marketing studio)
+AI output is a saved draft first: editable fields with a character count, "Save changes" (disabled until something changed), "Send for approval" (saves pending edits first), "Remove draft" (confirmed, names the post). Once sent the fields are read-only and the page says who decides and where. The approval card for it has no Edit button: it is edited here, not there.

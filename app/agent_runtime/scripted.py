@@ -20,10 +20,16 @@ from openai.types.responses import ResponseFunctionToolCall, ResponseOutputMessa
 
 # "sell 2 shirt to Ali", "2 shirt bech do Ali ko", "1 jeans Ali ko udhaar pe"; the last word before "ko" is the customer
 _FORMS = (
-    re.compile(r"^(?:sell\s+)?(?P<qty>\d+)\s+(?P<product>.+?)\s+(?:to|for)\s+(?P<customer>[a-z][a-z0-9 .]*?)(?:\s+(?:on\s+)?(?:udhaar|credit))?$"),
-    re.compile(r"^(?P<qty>\d+)\s+(?P<product>.+?)\s+(?:bech\s+do|becho)\s+(?P<customer>[a-z][a-z0-9 .]*?)\s+ko(?:\s+udhaar(?:\s+pe)?)?$"),
+    re.compile(
+        r"^(?:sell\s+)?(?P<qty>\d+)\s+(?P<product>.+?)\s+(?:to|for)\s+(?P<customer>[a-z][a-z0-9 .]*?)(?:\s+(?:on\s+)?(?:udhaar|credit))?$"
+    ),
+    re.compile(
+        r"^(?P<qty>\d+)\s+(?P<product>.+?)\s+(?:bech\s+do|becho)\s+(?P<customer>[a-z][a-z0-9 .]*?)\s+ko(?:\s+udhaar(?:\s+pe)?)?$"
+    ),
     re.compile(r"^(?P<qty>\d+)\s+(?P<product>.+?)\s+(?P<customer>[a-z][a-z0-9]*)\s+ko(?:\s+udhaar(?:\s+pe)?)?$"),
-    re.compile(r"^(?:sell\s+)?(?P<qty>\d+)\s+(?P<product>.+?)(?:\s+(?:bech\s+do|becho))?(?:\s+(?:on\s+)?(?:udhaar|credit)(?:\s+pe)?)?$"),
+    re.compile(
+        r"^(?:sell\s+)?(?P<qty>\d+)\s+(?P<product>.+?)(?:\s+(?:bech\s+do|becho))?(?:\s+(?:on\s+)?(?:udhaar|credit)(?:\s+pe)?)?$"
+    ),
 )
 _YES = re.compile(r"^(yes|y|haan|han|ok|okay|post it|confirm)\b")
 _ID = re.compile(r"id=([0-9a-f]{8}-[0-9a-f-]{27})")
@@ -66,7 +72,11 @@ def _say(text: str) -> list[Any]:
 class ScriptedModel(Model):
     async def get_response(self, *args: Any, **kwargs: Any) -> ModelResponse:
         raw = kwargs.get("input", args[1] if len(args) > 1 else "")
-        return ModelResponse(output=self._next(_items(raw)), usage=Usage(requests=1, input_tokens=120, output_tokens=40), response_id="scripted")
+        return ModelResponse(
+            output=self._next(_items(raw)),
+            usage=Usage(requests=1, input_tokens=120, output_tokens=40),
+            response_id="scripted",
+        )
 
     def stream_response(self, *args: Any, **kwargs: Any) -> AsyncIterator[Any]:
         raise NotImplementedError("the scripted model is not streamed")
@@ -78,7 +88,9 @@ class ScriptedModel(Model):
         text = _text_of(items[last_user].get("content")).strip().lower() if last_user >= 0 else ""
         since = items[last_user + 1 :]
         calls = [it for it in since if it.get("type") == "function_call"]
-        outputs = {it.get("call_id"): str(it.get("output", "")) for it in since if it.get("type") == "function_call_output"}
+        outputs = {
+            it.get("call_id"): str(it.get("output", "")) for it in since if it.get("type") == "function_call_output"
+        }
         done = [(c.get("name"), outputs.get(c.get("call_id"), "")) for c in calls]
 
         if _YES.match(text):

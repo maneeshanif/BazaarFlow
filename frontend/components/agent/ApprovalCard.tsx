@@ -12,7 +12,7 @@ import type { Approval } from "@/lib/api/types";
 import { formatDateTime } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
-const KIND: Record<string, string> = { post_order: "Sale", record_payment: "Payment", adjust_stock: "Stock change" };
+const KIND: Record<string, string> = { post_order: "Sale", record_payment: "Payment", adjust_stock: "Stock change", approve_post: "Marketing post" };
 
 /**
  * One thing an agent wants to do (PRD F-021): what it is in plain words, who asked, and Approve / Edit / Reject for
@@ -24,6 +24,7 @@ export function ApprovalCard({ approval, canDecide, onChanged, className }: { ap
   const [editing, setEditing] = useState(false);
   const approve = useSubmit(() => apiPost<Approval>(`/approvals/${approval.id}/approve`));
   const pending = approval.status === "pending";
+  const editable = approval.tool !== "approve_post"; // a post is edited in the studio, not here
 
   async function onApprove() {
     const done = await approve.run();
@@ -67,7 +68,7 @@ export function ApprovalCard({ approval, canDecide, onChanged, className }: { ap
       {pending && canDecide ? (
         <div className="mt-3 flex flex-wrap justify-end gap-2">
           <Button onClick={() => setRejecting(true)}>Reject</Button>
-          <Button onClick={() => setEditing(true)}>Edit</Button>
+          {editable ? <Button onClick={() => setEditing(true)}>Edit</Button> : null}
           <Button variant="primary" loading={approve.pending} onClick={() => void onApprove()}>
             Approve
           </Button>
@@ -77,7 +78,7 @@ export function ApprovalCard({ approval, canDecide, onChanged, className }: { ap
       {canDecide ? (
         <>
           <RejectDialog approval={approval} open={rejecting} onOpenChange={setRejecting} onRejected={onChanged} />
-          <EditApprovalDialog key={JSON.stringify(approval.payload)} approval={approval} open={editing} onOpenChange={setEditing} onEdited={onChanged} />
+          {editable ? <EditApprovalDialog key={JSON.stringify(approval.payload)} approval={approval} open={editing} onOpenChange={setEditing} onEdited={onChanged} /> : null}
         </>
       ) : null}
     </article>

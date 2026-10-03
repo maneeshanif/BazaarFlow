@@ -30,3 +30,7 @@ export type AgentRunDetail = Schemas["AgentRunDetail"];
 export type AgentStatus = Schemas["AgentStatus"];
 
 export type Page<T> = { items: T[]; total: number; next_cursor: string | null };
+export type MarketingPost = Schemas["PostOut"];
+export type DraftBrief = Schemas["DraftRequest"];
+export type Dashboard = Schemas["DashboardOut"];
+export type DashboardRange = Dashboard["range"];

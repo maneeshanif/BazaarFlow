@@ -25,12 +25,20 @@ async def post_order_payload(
 ) -> OrderDetail:
     sale = SaleCreate.model_validate(payload)
     sale = sale.model_copy(update={"stock_override": False})  # an agent can never override the shelf count
-    order, _created = await order_service.post_sale(db, principal, sale, idempotency_key=idempotency_key, channel="chat")
+    order, _created = await order_service.post_sale(
+        db, principal, sale, idempotency_key=idempotency_key, channel="chat"
+    )
     return order
 
 
 async def execute_action(
-    db: AsyncSession, approver: Principal, *, action_id: uuid.UUID, tool: str, requested_by: uuid.UUID | None, payload: dict[str, Any]
+    db: AsyncSession,
+    approver: Principal,
+    *,
+    action_id: uuid.UUID,
+    tool: str,
+    requested_by: uuid.UUID | None,
+    payload: dict[str, Any],
 ) -> str:
     """Run one approved action; returns a one-line outcome. Raises DomainError when the rules now refuse it."""
     author = Principal(user_id=requested_by or approver.user_id, tenant_id=approver.tenant_id, role=approver.role)
@@ -61,6 +69,10 @@ async def execute_action(
             note=payload.get("note"),
         )
         return f"Stock changed by {movement.delta}"
+    if tool == "approve_post":
+        from app.services import marketing_studio_service  # local import: the writer pulls in the whole agent runtime
+
+        return await marketing_studio_service.mark_approved(db, approver, uuid.UUID(str(payload["post_id"])))
     raise DomainError(f"Nothing knows how to run the action '{tool}'", code="unknown_action")
 
 

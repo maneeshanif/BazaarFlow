@@ -42,3 +42,25 @@ Reversing a posted sale (manager or owner) needs a reason of 3 to 255 characters
 | password | password | for a new person | at least 8 characters, not in the common-password list | given to them by the owner; ignored for an existing account |
 
 Rules: owner only; a person is in a shop once; the owner cannot be changed or removed; a role change applies from the person's next request; removing a person ends their sessions in that shop immediately. Adding, changing and removing are audited (`team.added`, `team.role_changed`, `team.removed`) without the password. E-mail invitations need an e-mail provider and are a Phase 2 item.
+
+## F-014 Marketing studio
+
+Brief (asks the assistant for a draft):
+
+| Field | Type | Required | Validation / rule | Notes |
+| --- | --- | --- | --- | --- |
+| goal | select | yes | promote a product, announce an offer, festival greeting, general | |
+| product | lookup | when promoting | a product of this shop | another shop's product is "not found" |
+| tone | select | yes | friendly, professional, festive | |
+| language | select | yes | English or Roman Urdu | |
+| notes | text area | no | at most 300 characters | what to mention; the writer is told not to invent prices |
+
+Post (edited by a person):
+
+| Field | Type | Required | Validation / rule | Notes |
+| --- | --- | --- | --- | --- |
+| title | text | yes | 1 to 120 characters, not blank | |
+| message | text area | yes | 1 to 1000 characters, not blank | live character count |
+| hashtags | text | no | letters, numbers, underscores; up to 10; `#` added for you | |
+
+Rules: owner and manager only. A post is `draft`, `pending_approval`, `approved` or `archived`. Only a draft can be edited, sent or removed. Sending files an approval (`approve_post`); approving marks the post ready and nothing is published (Facebook publishing is Phase 2). A rejected, expired or failed request returns the post to a draft. Drafting obeys the shop's AI switch and monthly allowance and is recorded in the agent activity log. Drafts, edits, approvals and removals are audited.

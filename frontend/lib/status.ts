@@ -21,7 +21,7 @@ const TONES: Record<string, Tone> = {
   // accent
   ai_handling: "accent",
   // neutral
-  draft: "neutral", resolved: "neutral", open: "neutral", disabled: "neutral", paused: "neutral",
+  draft: "neutral", resolved: "neutral", open: "neutral", disabled: "neutral", paused: "neutral", archived: "neutral",
 };
 
 const normalise = (status: string): string => status.trim().toLowerCase().replace(/[\s-]+/g, "_");

@@ -43,3 +43,6 @@ prepared this change is not allowed to read that file, so the owner should add t
 | `SENTRY_AUTH_TOKEN` | CI only | uploads source maps. A secret: never in a build argument or an image |
 
 Never put the Supabase `service_role` key, or any production credential, in an agent's or developer's environment.
+| `STORAGE_PROVIDER` | `app/integrations/storage.py` | `fake` (in memory; refused in production) or `supabase`. Default `fake` |
+| `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `STORAGE_BUCKET` | `app/integrations/storage.py` | Supabase Storage. The service key is a secret and lives only on the API host, never in the web app. The bucket must be private |
+| `STORAGE_TIMEOUT_SECONDS`, `STORAGE_MAX_RETRIES`, `STORAGE_SIGNED_URL_SECONDS` | `app/integrations/storage.py` | request timeout (10), retries on a timeout or 5xx (2), signed link lifetime (600) |

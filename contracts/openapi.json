@@ -557,6 +557,36 @@
         "title": "ChatResponse",
         "type": "object"
       },
+      "CountFigure": {
+        "properties": {
+          "change_percent": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Change Percent"
+          },
+          "previous": {
+            "title": "Previous",
+            "type": "integer"
+          },
+          "value": {
+            "title": "Value",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "value",
+          "previous",
+          "change_percent"
+        ],
+        "title": "CountFigure",
+        "type": "object"
+      },
       "CustomerCreate": {
         "properties": {
           "address": {
@@ -748,6 +778,166 @@
         "title": "CustomerUpdate",
         "type": "object"
       },
+      "DashboardOut": {
+        "properties": {
+          "approvals_waiting": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Approvals Waiting"
+          },
+          "briefing": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Briefing"
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "low_stock": {
+            "title": "Low Stock",
+            "type": "integer"
+          },
+          "orders": {
+            "$ref": "#/components/schemas/CountFigure"
+          },
+          "profit": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProfitFigure"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "range": {
+            "enum": [
+              "today",
+              "7d",
+              "30d"
+            ],
+            "title": "Range",
+            "type": "string"
+          },
+          "role": {
+            "title": "Role",
+            "type": "string"
+          },
+          "sales": {
+            "$ref": "#/components/schemas/MoneyFigure"
+          },
+          "trend": {
+            "items": {
+              "$ref": "#/components/schemas/TrendDay"
+            },
+            "title": "Trend",
+            "type": "array"
+          },
+          "unpaid_udhaar": {
+            "anyOf": [
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unpaid Udhaar"
+          }
+        },
+        "required": [
+          "role",
+          "range",
+          "sales",
+          "orders",
+          "low_stock",
+          "profit",
+          "unpaid_udhaar",
+          "approvals_waiting",
+          "briefing",
+          "trend",
+          "generated_at"
+        ],
+        "title": "DashboardOut",
+        "type": "object"
+      },
+      "DraftRequest": {
+        "properties": {
+          "goal": {
+            "enum": [
+              "promote_product",
+              "announce_offer",
+              "festival_greeting",
+              "general"
+            ],
+            "title": "Goal",
+            "type": "string"
+          },
+          "language": {
+            "default": "english",
+            "enum": [
+              "english",
+              "roman_urdu"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "maxLength": 300,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "product_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Id"
+          },
+          "tone": {
+            "default": "friendly",
+            "enum": [
+              "friendly",
+              "professional",
+              "festive"
+            ],
+            "title": "Tone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "goal"
+        ],
+        "title": "DraftRequest",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -889,6 +1079,38 @@
           "memberships"
         ],
         "title": "MeOut",
+        "type": "object"
+      },
+      "MoneyFigure": {
+        "properties": {
+          "change_percent": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Change Percent"
+          },
+          "previous": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Previous",
+            "type": "string"
+          },
+          "value": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value",
+          "previous",
+          "change_percent"
+        ],
+        "title": "MoneyFigure",
         "type": "object"
       },
       "OrderDetail": {
@@ -1374,6 +1596,39 @@
         "title": "Page[OrderSummary]",
         "type": "object"
       },
+      "Page_PostOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PostOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "Page[PostOut]",
+        "type": "object"
+      },
       "Page_ProductOut_": {
         "properties": {
           "items": {
@@ -1522,6 +1777,86 @@
           "balance"
         ],
         "title": "PaymentOut",
+        "type": "object"
+      },
+      "PostOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "hashtags": {
+            "title": "Hashtags",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "pending_approval",
+              "approved",
+              "archived"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "message",
+          "hashtags",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "PostOut",
+        "type": "object"
+      },
+      "PostUpdate": {
+        "properties": {
+          "hashtags": {
+            "default": "",
+            "maxLength": 300,
+            "title": "Hashtags",
+            "type": "string"
+          },
+          "message": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Message",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "message"
+        ],
+        "title": "PostUpdate",
         "type": "object"
       },
       "ProductCreate": {
@@ -1855,6 +2190,43 @@
           }
         },
         "title": "ProductUpdate",
+        "type": "object"
+      },
+      "ProfitFigure": {
+        "properties": {
+          "change_percent": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Change Percent"
+          },
+          "orders_without_cost": {
+            "title": "Orders Without Cost",
+            "type": "integer"
+          },
+          "previous": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Previous",
+            "type": "string"
+          },
+          "value": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value",
+          "previous",
+          "change_percent",
+          "orders_without_cost"
+        ],
+        "title": "ProfitFigure",
         "type": "object"
       },
       "RefreshRequest": {
@@ -2564,6 +2936,31 @@
           "role"
         ],
         "title": "TokenOut",
+        "type": "object"
+      },
+      "TrendDay": {
+        "properties": {
+          "day": {
+            "format": "date",
+            "title": "Day",
+            "type": "string"
+          },
+          "orders": {
+            "title": "Orders",
+            "type": "integer"
+          },
+          "total": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Total",
+            "type": "string"
+          }
+        },
+        "required": [
+          "day",
+          "total",
+          "orders"
+        ],
+        "title": "TrendDay",
         "type": "object"
       },
       "UserOut": {
@@ -3948,6 +4345,59 @@
         ]
       }
     },
+    "/api/v1/dashboard/summary": {
+      "get": {
+        "operationId": "summary_api_v1_dashboard_summary_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "range",
+            "required": false,
+            "schema": {
+              "default": "today",
+              "enum": [
+                "today",
+                "7d",
+                "30d"
+              ],
+              "title": "Range",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Summary",
+        "tags": [
+          "dashboard"
+        ]
+      }
+    },
     "/api/v1/inventory/": {
       "get": {
         "operationId": "list_products_api_v1_inventory__get",
@@ -4409,6 +4859,331 @@
         "summary": "Add Stock Movement",
         "tags": [
           "inventory"
+        ]
+      }
+    },
+    "/api/v1/marketing/posts/": {
+      "get": {
+        "operationId": "list_posts_api_v1_marketing_posts__get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "draft",
+                    "pending_approval",
+                    "approved",
+                    "archived"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_PostOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Posts",
+        "tags": [
+          "marketing"
+        ]
+      }
+    },
+    "/api/v1/marketing/posts/drafts": {
+      "post": {
+        "operationId": "create_draft_api_v1_marketing_posts_drafts_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DraftRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Draft",
+        "tags": [
+          "marketing"
+        ]
+      }
+    },
+    "/api/v1/marketing/posts/{post_id}": {
+      "delete": {
+        "operationId": "archive_post_api_v1_marketing_posts__post_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Post Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Archive Post",
+        "tags": [
+          "marketing"
+        ]
+      },
+      "get": {
+        "operationId": "get_post_api_v1_marketing_posts__post_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Post Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Post",
+        "tags": [
+          "marketing"
+        ]
+      },
+      "patch": {
+        "operationId": "update_post_api_v1_marketing_posts__post_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Post Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Post",
+        "tags": [
+          "marketing"
+        ]
+      }
+    },
+    "/api/v1/marketing/posts/{post_id}/submit": {
+      "post": {
+        "operationId": "submit_post_api_v1_marketing_posts__post_id__submit_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Post Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PostOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Submit Post",
+        "tags": [
+          "marketing"
         ]
       }
     },

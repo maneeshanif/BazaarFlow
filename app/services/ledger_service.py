@@ -83,6 +83,27 @@ async def total_outstanding(db: AsyncSession, tenant_id: uuid.UUID) -> Decimal:
     return Decimal(total).quantize(ZERO)
 
 
+async def top_debtor(db: AsyncSession, tenant_id: uuid.UUID) -> tuple[str, Decimal] | None:
+    """The customer who owes the most (name or phone, and how much), or None when nobody owes anything."""
+    from app.models.customer import Customer
+
+    owed = func.sum(_SIGNED).label("owed")
+    row = (
+        await db.execute(
+            select(Customer.name, Customer.phone, owed)
+            .join(LedgerEntry, (LedgerEntry.party_id == Customer.id) & (LedgerEntry.tenant_id == tenant_id) & (LedgerEntry.party_type == "customer"))
+            .where(Customer.tenant_id == tenant_id)
+            .group_by(Customer.id, Customer.name, Customer.phone)
+            .having(owed > 0)
+            .order_by(owed.desc(), Customer.id)
+            .limit(1)
+        )
+    ).first()
+    if row is None:
+        return None
+    return (row[0] or row[1], Decimal(row[2]).quantize(ZERO))
+
+
 async def list_entries(
     db: AsyncSession, tenant_id: uuid.UUID, customer_id: uuid.UUID, *, limit: int, offset: int
 ) -> tuple[list[tuple[LedgerEntry, Decimal]], int]:

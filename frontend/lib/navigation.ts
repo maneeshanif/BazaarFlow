@@ -63,7 +63,7 @@ export const NAV: NavGroup[] = [
   {
     label: "Marketing",
     items: [
-      { label: "Studio", icon: "megaphone", roles: MANAGER_UP, href: "/dashboard/marketing" },
+      { label: "Studio", icon: "megaphone", roles: MANAGER_UP, href: "/marketing" },
       { label: "Schedule", icon: "calendar", roles: MANAGER_UP, href: "/dashboard/marketing/schedule" },
       { label: "Insights", icon: "bar-chart", roles: MANAGER_UP, href: "/dashboard/marketing/insights" },
     ],

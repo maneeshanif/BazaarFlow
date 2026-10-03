@@ -66,25 +66,54 @@ async def _details(db: AsyncSession, principal: Principal, action: AgentAction) 
             names = {
                 pid: name
                 for pid, name in (
-                    await db.execute(select(Product.id, Product.name).where(Product.id.in_([i.product_id for i in sale.items]), Product.tenant_id == principal.tenant_id))
+                    await db.execute(
+                        select(Product.id, Product.name).where(
+                            Product.id.in_([i.product_id for i in sale.items]), Product.tenant_id == principal.tenant_id
+                        )
+                    )
                 ).all()
             }
             preview = await order_service.preview_sale(
                 db,
                 principal,
-                SalePreviewRequest(items=sale.items, discount=sale.discount, payment_method=sale.payment_method, amount_paid=sale.amount_paid),
+                SalePreviewRequest(
+                    items=sale.items,
+                    discount=sale.discount,
+                    payment_method=sale.payment_method,
+                    amount_paid=sale.amount_paid,
+                ),
             )
             lines = [f"{i.qty} x {names.get(i.product_id, 'a product that no longer exists')}" for i in sale.items]
             if sale.customer_id:
-                customer = (await db.execute(select(Customer.name, Customer.phone).where(Customer.id == sale.customer_id, Customer.tenant_id == principal.tenant_id))).first()
+                customer = (
+                    await db.execute(
+                        select(Customer.name, Customer.phone).where(
+                            Customer.id == sale.customer_id, Customer.tenant_id == principal.tenant_id
+                        )
+                    )
+                ).first()
                 lines.append(f"Customer: {(customer[0] or customer[1]) if customer else 'unknown'}")
             else:
                 lines.append("Customer: walk-in")
-            lines.append(f"Total {_rs(preview.total)}; paid now {_rs(preview.amount_paid)} by {sale.payment_method}; on credit {_rs(preview.amount_due)}")
+            lines.append(
+                f"Total {_rs(preview.total)}; paid now {_rs(preview.amount_paid)} by {sale.payment_method}; on credit {_rs(preview.amount_due)}"
+            )
             lines.extend(f"Problem: {w}" for w in preview.warnings)
             return lines
+        if action.tool == "approve_post":
+            lines = [f"Title: {payload['title']}", str(payload["message"])]
+            if payload.get("hashtags"):
+                lines.append(str(payload["hashtags"]))
+            lines.append("Approving marks it ready. Nothing is posted to Facebook yet.")
+            return lines
         if action.tool == "record_payment":
-            row = (await db.execute(select(Customer.name, Customer.phone).where(Customer.id == uuid.UUID(str(payload["customer_id"])), Customer.tenant_id == principal.tenant_id))).first()
+            row = (
+                await db.execute(
+                    select(Customer.name, Customer.phone).where(
+                        Customer.id == uuid.UUID(str(payload["customer_id"])), Customer.tenant_id == principal.tenant_id
+                    )
+                )
+            ).first()
             amount = Decimal(str(payload["amount"]))
             return [f"{_rs(amount)} ({payload['method']}) from {(row[0] or row[1]) if row else 'unknown'}"]
         if action.tool == "adjust_stock":
@@ -92,7 +121,9 @@ async def _details(db: AsyncSession, principal: Principal, action: AgentAction) 
                 await db.execute(
                     select(Product.name, InventoryItem.qty_on_hand)
                     .join(InventoryItem, InventoryItem.product_id == Product.id)
-                    .where(Product.id == uuid.UUID(str(payload["product_id"])), Product.tenant_id == principal.tenant_id)
+                    .where(
+                        Product.id == uuid.UUID(str(payload["product_id"])), Product.tenant_id == principal.tenant_id
+                    )
                 )
             ).first()
             if stock_row is None:
@@ -117,7 +148,9 @@ async def list_actions(
     conditions: list[Any] = [AgentAction.tenant_id == principal.tenant_id]
     if status:
         conditions.append(AgentAction.status == status)
-    total = (await db.execute(select(func.count()).select_from(select(AgentAction.id).where(*conditions).subquery()))).scalar_one()
+    total = (
+        await db.execute(select(func.count()).select_from(select(AgentAction.id).where(*conditions).subquery()))
+    ).scalar_one()
     rows = (
         await db.execute(
             select(AgentAction, User.name, User.email)
@@ -186,11 +219,18 @@ async def _validate(db: AsyncSession, principal: Principal, tool: str, payload: 
             sale = SaleCreate.model_validate(payload)
         except ValidationError as exc:
             first = exc.errors()[0]
-            raise DomainError(f"{'.'.join(str(p) for p in first['loc'])}: {first['msg']}", code="validation_failed", status_code=422) from exc
+            raise DomainError(
+                f"{'.'.join(str(p) for p in first['loc'])}: {first['msg']}", code="validation_failed", status_code=422
+            ) from exc
         preview = await order_service.preview_sale(
             db,
             principal,
-            SalePreviewRequest(items=sale.items, discount=sale.discount, payment_method=sale.payment_method, amount_paid=sale.amount_paid),
+            SalePreviewRequest(
+                items=sale.items,
+                discount=sale.discount,
+                payment_method=sale.payment_method,
+                amount_paid=sale.amount_paid,
+            ),
         )
         if preview.warnings:
             raise DomainError("; ".join(preview.warnings), code="not_postable")
@@ -200,10 +240,18 @@ async def _validate(db: AsyncSession, principal: Principal, tool: str, payload: 
         except (KeyError, ValueError, TypeError):
             ok = False
         if not ok:
-            raise DomainError("amount must be above zero and method cash, card, bank or wallet", code="validation_failed", status_code=422)
+            raise DomainError(
+                "amount must be above zero and method cash, card, bank or wallet",
+                code="validation_failed",
+                status_code=422,
+            )
     elif tool == "adjust_stock":
         delta = payload.get("delta")
-        if not isinstance(delta, int) or delta == 0 or payload.get("reason") not in ("purchase", "adjustment", "return"):
+        if (
+            not isinstance(delta, int)
+            or delta == 0
+            or payload.get("reason") not in ("purchase", "adjustment", "return")
+        ):
             raise DomainError("delta must be a whole number other than zero", code="validation_failed", status_code=422)
     else:
         raise DomainError(f"'{tool}' cannot be edited", code="not_editable")
@@ -214,13 +262,17 @@ async def edit(db: AsyncSession, principal: Principal, action_id: uuid.UUID, pay
         raise DomainError("Only an owner or manager can edit an approval", code="forbidden", status_code=403)
     action = (
         await db.execute(
-            select(AgentAction).where(AgentAction.id == action_id, AgentAction.tenant_id == principal.tenant_id).with_for_update()
+            select(AgentAction)
+            .where(AgentAction.id == action_id, AgentAction.tenant_id == principal.tenant_id)
+            .with_for_update()
         )
     ).scalar_one_or_none()
     if action is None:
         raise NotFound("Approval")
     if action.status != ActionStatus.pending.value:
-        raise DomainError(f"This approval is {action.status}, so it can no longer be edited", code="approval_state", status_code=409)
+        raise DomainError(
+            f"This approval is {action.status}, so it can no longer be edited", code="approval_state", status_code=409
+        )
     await _validate(db, principal, action.tool, payload)
     before = action.payload_hash
     action.payload_json = payload
@@ -237,4 +289,3 @@ async def edit(db: AsyncSession, principal: Principal, action_id: uuid.UUID, pay
         after={"payload_hash": action.payload_hash},
     )
     return await get_action(db, principal, action_id)
-

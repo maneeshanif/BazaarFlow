@@ -218,18 +218,18 @@ Storage, marketing studio drafts, dashboards, landing page, per-visitor demo, ha
 
 Batch gate: tasks 50, 42, 36, 48, 46, 47, 57, 58, 53, 54, 02, 12, 21, 26 pass the full run; the exit gate above is met in the browser.
 
-- [ ] 50 Integration: Supabase Storage — I-007 (out; REST)
+- [x] 50 Integration: Supabase Storage — I-007 (out; REST)
   - Acceptance: A contract test against a recorded or sandbox response proves the happy path
   - Acceptance: A timeout, an error response and a duplicate delivery are each handled by a test
-- [ ] 42 Marketing studio — F-014 (Marketing; transaction; P0; roles: owner, manager)
+- [x] 42 Marketing studio — F-014 (Marketing; transaction; P0; roles: owner, manager)
   - Acceptance: A user with one of the roles (owner, manager) can complete the Marketing flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-014 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 36 Home dashboard — F-004 (Overview; report; P0; roles: owner, manager, staff)
+- [x] 36 Home dashboard — F-004 (Overview; report; P0; roles: owner, manager, staff)
   - Acceptance: A user with one of the roles (owner, manager, staff) can complete the Overview flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-004 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 48 Owner home dashboard — D-001 (role: owner, manager; KPIs: Today's sales, Profit today, Orders today, Low-stock items, Unpaid udhaar, Approvals waiting, AI briefing)
+- [x] 48 Owner home dashboard — D-001 (role: owner, manager; KPIs: Today's sales, Profit today, Orders today, Low-stock items, Unpaid udhaar, Approvals waiting, AI briefing)
   - Acceptance: Each KPI (Today's sales, Profit today, Orders today, Low-stock items, Unpaid udhaar, Approvals waiting, AI briefing) matches a hand-computed value on a seeded dataset
   - Acceptance: Only role owner, manager can open it; an empty dataset shows an empty state, not an error
 - [ ] 46 Public landing page — F-026 (Public; page; P0; roles: public)

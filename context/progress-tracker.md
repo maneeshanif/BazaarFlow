@@ -7,9 +7,9 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 1A, shop basics on the database (Phase 0 closed 2026-10-03)
-**Last completed:** 45
+**Last completed:** 48
 **In progress:** Phase 1A on branch `feat/phase-1-mvp`, strictly in the order listed
-**Next:** Batch 1B gate, then 1C task 50
+**Next:** 1C task 46 landing page
 **Blockers:** the owner has not yet said "let's build it"; 26 needs vendor sandbox accounts; DEMO_USER_PASSWORD must be set in `.env` (owner)
 
 ### Phase 0 status
@@ -76,10 +76,10 @@ Update this file after every completed task. Anyone reading it should immediatel
 
 ### Phase 1C — Dashboard and launch
 
-- [ ] 50 Integration: Supabase Storage
-- [ ] 42 Marketing studio
-- [ ] 36 Home dashboard
-- [ ] 48 Owner home dashboard
+- [x] 50 Integration: Supabase Storage
+- [x] 42 Marketing studio
+- [x] 36 Home dashboard
+- [x] 48 Owner home dashboard
 - [ ] 46 Public landing page
 - [ ] 47 Public live demo
 - [ ] 57 Structured logging, request ids and error reporting [backend-api p…

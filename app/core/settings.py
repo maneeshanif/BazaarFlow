@@ -24,7 +24,7 @@ def to_async_url(url: str) -> str:
     """Accept plain ``postgresql://`` and ``+psycopg`` URLs; the app and Alembic both use asyncpg."""
     for prefix in ("postgresql+psycopg://", "postgresql+psycopg2://", "postgresql://"):
         if url.startswith(prefix):
-            return "postgresql+asyncpg://" + url[len(prefix):]
+            return "postgresql+asyncpg://" + url[len(prefix) :]
     return url
 
 
@@ -71,6 +71,15 @@ class Settings(BaseSettings):
     OPENAI_MODEL: str = "gpt-4o-mini"
     LLM_TIMEOUT_SECONDS: float = 30.0
     LLM_MAX_RETRIES: int = 1
+    # File storage (PRD I-007): "fake" keeps files in memory for tests and local demos (refused in production);
+    # "supabase" uses Supabase Storage with the service key, which lives only on the API host.
+    STORAGE_PROVIDER: str = "fake"
+    SUPABASE_URL: str = ""
+    SUPABASE_SERVICE_KEY: str = ""
+    STORAGE_BUCKET: str = "bazaarflow"
+    STORAGE_TIMEOUT_SECONDS: float = 10.0
+    STORAGE_MAX_RETRIES: int = 2
+    STORAGE_SIGNED_URL_SECONDS: int = 600
     # Agent guardrails (PRD 36.18): tool calls per run, a monthly spend cap per shop, and the platform-wide switch.
     AGENT_MAX_TOOL_CALLS: int = 8
     AGENT_MONTHLY_SPEND_CAP_USD: float = 5.0
