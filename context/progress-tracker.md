@@ -7,9 +7,9 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 1A, shop basics on the database (Phase 0 closed 2026-10-03)
-**Last completed:** 26
+**Last completed:** 54
 **In progress:** Phase 1A on branch `feat/phase-1-mvp`, strictly in the order listed
-**Next:** none left that the assistant can do; see Needs a human
+**Next:** owner actions: 02 (confirm CI green after this push), 12 (copy .env.example), 21 (Vercel secrets), 26 (Twilio sandbox)
 **Blockers:** the owner has not yet said "let's build it"; 26 needs vendor sandbox accounts; DEMO_USER_PASSWORD must be set in `.env` (owner)
 
 ### Phase 0 status
@@ -86,10 +86,10 @@ Update this file after every completed task. Anyone reading it should immediatel
 - [x] 58 Backups and one timed restore [backend-api pack]
 - [x] 53 Accessibility and performance gates [web-app pack]
 - [x] 54 End-to-end smoke test of the critical flow [web-app pack]
-- [x] 02 CI/CD + verification
-- [x] 12 Secret hygiene
-- [x] 21 Deploy a preview environment on a free tier [web-app pack]
-- [x] 26 Vendor accounts, sandbox access and credentials in the secret mana…
+- [ ] 02 CI/CD + verification
+- [ ] 12 Secret hygiene
+- [ ] 21 Deploy a preview environment on a free tier [web-app pack]
+- [ ] 26 Vendor accounts, sandbox access and credentials in the secret mana…
 
 ## Phase 2 — Channels and onboarding: Twilio sandbox WhatsApp, unified inbox with AI/Human toggle, onboarding wizard, per-tenant encrypted integrations, Facebook connect + scheduler on DB, finance overview, vendors, daily briefing, platform admin
 
