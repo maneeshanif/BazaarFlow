@@ -16,7 +16,7 @@ from openai import AsyncOpenAI
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.agent_runtime.llm import LlmNotConfigured, describe_failure, provider_settings
-from app.agent_runtime.runtime import _spend, cap_micros, month_spend_micros, shop_switch_on
+from app.agent_runtime.runtime import _spend, month_spend_micros, shop_switch_on, tenant_cap_micros
 from app.core.problems import DomainError
 from app.core.settings import settings
 from app.core.tenancy import Principal
@@ -69,7 +69,7 @@ async def write_draft(
             code="agents_paused",
             status_code=409,
         )
-    if await month_spend_micros(db, principal.tenant_id) >= cap_micros():
+    if await month_spend_micros(db, principal.tenant_id) >= await tenant_cap_micros(db, principal.tenant_id):
         raise DomainError(
             "This month's AI allowance is used up. Drafting works again next month.",
             code="spend_limit",

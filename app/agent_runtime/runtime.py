@@ -64,7 +64,14 @@ async def month_spend_micros(db: AsyncSession, tenant_id: uuid.UUID) -> int:
 
 
 def cap_micros() -> int:
+    """The platform default allowance."""
     return int(settings.AGENT_MONTHLY_SPEND_CAP_USD * 1_000_000)
+
+
+async def tenant_cap_micros(db: AsyncSession, tenant_id: uuid.UUID) -> int:
+    """This shop's monthly allowance: its own override (a demo shop gets a few cents) or the platform default."""
+    own = (await db.execute(select(Tenant.agent_cap_usd).where(Tenant.id == tenant_id))).scalar_one_or_none()
+    return int(own * 1_000_000) if own is not None else cap_micros()
 
 
 async def shop_switch_on(db: AsyncSession, tenant_id: uuid.UUID) -> bool:
@@ -155,7 +162,8 @@ async def run_sales_chat(
         return AgentReply(reply=text, session_id=sid, outcome="paused", run_id=run.id)
 
     spent = await month_spend_micros(db, principal.tenant_id)
-    if spent >= cap_micros():
+    cap = await tenant_cap_micros(db, principal.tenant_id)
+    if spent >= cap:
         text = "This shop has used up its AI allowance for the month, so I cannot help until next month. You can still record sales by hand."
         run = await _record(db, rc, message=message, reply=text, outcome="spend_limit", started=started, sid=sid)
         return AgentReply(reply=text, session_id=sid, outcome="spend_limit", run_id=run.id)
@@ -186,6 +194,6 @@ async def run_sales_chat(
 
     run = await _record(db, rc, message=message, reply=reply, outcome=outcome, tokens_in=tokens_in, tokens_out=tokens_out, started=started, sid=sid)
     notice = None
-    if outcome == "ok" and (spent + run.spend_micros) * 100 >= cap_micros() * 80:
+    if outcome == "ok" and (spent + run.spend_micros) * 100 >= cap * 80:
         notice = "You have used more than 80% of this month's AI allowance."
     return AgentReply(reply=reply, session_id=sid, outcome=outcome, run_id=run.id, actions=list(rc.actions), notice=notice)

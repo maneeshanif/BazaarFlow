@@ -71,6 +71,12 @@ class Settings(BaseSettings):
     OPENAI_MODEL: str = "gpt-4o-mini"
     LLM_TIMEOUT_SECONDS: float = 30.0
     LLM_MAX_RETRIES: int = 1
+    # Public live demo (PRD F-027): each visitor gets a temporary shop that app.cli.purge_demos deletes after
+    # DEMO_HOURS. A demo shop gets its own small AI allowance so visitors cannot spend the real one.
+    DEMO_ENABLED: bool = True
+    DEMO_HOURS: int = 24
+    DEMO_MAX_PER_HOUR: int = 5
+    DEMO_AGENT_CAP_USD: float = 0.05
     # File storage (PRD I-007): "fake" keeps files in memory for tests and local demos (refused in production);
     # "supabase" uses Supabase Storage with the service key, which lives only on the API host.
     STORAGE_PROVIDER: str = "fake"

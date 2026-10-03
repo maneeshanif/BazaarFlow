@@ -34,6 +34,7 @@ from app.schemas.user import (
     TokenOut,
     UserOut,
 )
+from app.services import session_service
 
 router = APIRouter()
 
@@ -53,12 +54,7 @@ def _email_hash(email: str) -> str:
 
 async def _tokens(session: AsyncSession, user: User, tenant_id: uuid.UUID, role: TenantRole) -> TokenOut:
     """Access token (tenant + role claims) plus a fresh refresh token for the same session."""
-    access = create_access_token(
-        str(user.id),
-        extra_claims={"tenant_id": str(tenant_id), "role": role.value, "pa": user.is_platform_admin},
-    )
-    refresh = await refresh_tokens.issue(session, user.id, tenant_id)
-    return TokenOut(access_token=access, refresh_token=refresh, tenant_id=tenant_id, role=role)
+    return await session_service.issue_tokens(session, user, tenant_id, role)
 
 
 @router.post(

@@ -51,6 +51,18 @@
   --color-positive: #047857;
   --color-negative: #b91c1c;
 
+  /* The public site's identity (landing and live demo): a shop ledger. Deep ledger ink on cool ledger paper, one red
+     ink for the approval stamp, a little brass. The signed-in app keeps the neutral tokens above. */
+  --color-ink: #12383a;
+  --color-ink-soft: #2f5457;
+  --color-ledger: #edf2ee;
+  --color-ledger-raised: #f8fbf8;
+  --color-ledger-rule: #bdcec5;
+  --color-stamp: #b8352a;
+  --color-brass: #d9a12b;
+  --text-display-lg: clamp(2.25rem, 5vw, 3.5rem);
+  --text-display-xl: clamp(2.5rem, 5.4vw, 4.25rem);
+
   --color-chart-1: #2563eb;
   --color-chart-2: #0891b2;
   --color-chart-3: #7c3aed;
@@ -362,6 +374,23 @@
 .nav-link { @apply text-sm font-medium text-foreground/60 transition-colors hover:text-foreground/80; }
 .nav-link-active { @apply text-foreground; }
 
-
-
-
+/* The public site: ruled ledger paper behind the sale slip, and a red margin line like a khata page. */
+.ledger-rules {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 1.7rem,
+    var(--color-ledger-rule) 1.7rem,
+    var(--color-ledger-rule) calc(1.7rem + 1px)
+  );
+  background-position: 0 0.35rem;
+}
+.ledger-margin {
+  box-shadow: inset 2.75rem 0 0 -2.7rem var(--color-stamp);
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-motion {
+    transition: none !important;
+    animation: none !important;
+  }
+}

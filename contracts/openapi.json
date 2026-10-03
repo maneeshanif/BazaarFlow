@@ -4398,6 +4398,27 @@
         ]
       }
     },
+    "/api/v1/demo/start": {
+      "post": {
+        "operationId": "start_demo_api_v1_demo_start_post",
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Start Demo",
+        "tags": [
+          "demo"
+        ]
+      }
+    },
     "/api/v1/inventory/": {
       "get": {
         "operationId": "list_products_api_v1_inventory__get",

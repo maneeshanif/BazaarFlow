@@ -5,9 +5,22 @@ from __future__ import annotations
 import enum
 import uuid
 from datetime import datetime
+from decimal import Decimal
 from typing import Any
 
-from sqlalchemy import JSON, Boolean, CheckConstraint, DateTime, ForeignKey, String, Text, UniqueConstraint, Uuid, text
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    CheckConstraint,
+    DateTime,
+    ForeignKey,
+    Numeric,
+    String,
+    Text,
+    UniqueConstraint,
+    Uuid,
+    text,
+)
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -38,6 +51,10 @@ class Tenant(BaseModelMixin, Base):
     city: Mapped[str | None] = mapped_column(String(60), nullable=True)
     # The owner's kill switch for the AI assistant: off means no agent run starts for this shop (no deploy needed).
     agents_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, server_default=text("true"))
+    # A visitor's temporary demo shop is deleted after this moment (app.cli.purge_demos); null for every real shop.
+    demo_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # This shop's own monthly AI allowance in USD; null means the platform default.
+    agent_cap_usd: Mapped[Decimal | None] = mapped_column(Numeric(8, 2), nullable=True)
 
 
 class Membership(BaseModelMixin, TenantMixin, Base):

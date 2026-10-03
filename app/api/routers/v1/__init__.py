@@ -1,6 +1,6 @@
 """API v1 router aggregate.
 
-Only routers that are really versioned live here (auth, customers, inventory, sales, orders, team, chat, approvals, agent-runs, marketing, dashboard). The legacy JSON-backed routers
+Only routers that are really versioned live here (auth, customers, inventory, sales, orders, team, chat, approvals, agent-runs, marketing, dashboard, demo). The legacy JSON-backed routers
 keep their ``/api/...`` paths until each module moves to the database and gets a v1 router.
 """
 
@@ -10,6 +10,7 @@ from app.api.routers.agent_router import approvals_router, chat_router, runs_rou
 from app.api.routers.auth_router import router as auth_router
 from app.api.routers.customers_router import router as customers_router
 from app.api.routers.dashboard_router import router as dashboard_router
+from app.api.routers.demo_router import router as demo_router
 from app.api.routers.inventory_router import router as inventory_router
 from app.api.routers.marketing_studio_router import router as marketing_studio_router
 from app.api.routers.sales_router import orders_router, sales_router
@@ -28,3 +29,4 @@ api_v1_router.include_router(approvals_router)
 api_v1_router.include_router(runs_router)
 api_v1_router.include_router(marketing_studio_router)
 api_v1_router.include_router(dashboard_router)
+api_v1_router.include_router(demo_router)

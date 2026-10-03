@@ -24,7 +24,9 @@ module.exports = {
   			'ui-lg': ['var(--text-ui-lg)', { lineHeight: '1.625rem' }],
   			'ui-xl': ['var(--text-ui-xl)', { lineHeight: '1.75rem' }],
   			'ui-2xl': ['var(--text-ui-2xl)', { lineHeight: '2.125rem' }],
-  			'ui-3xl': ['var(--text-ui-3xl)', { lineHeight: '2.5rem' }]
+  			'ui-3xl': ['var(--text-ui-3xl)', { lineHeight: '2.5rem' }],
+  			'display-lg': ['var(--text-display-lg)', { lineHeight: '1.08', letterSpacing: '-0.01em' }],
+  			'display-xl': ['var(--text-display-xl)', { lineHeight: '1.02', letterSpacing: '-0.015em' }]
   		},
   		spacing: {
   			sidebar: 'var(--layout-sidebar)',
@@ -35,6 +37,7 @@ module.exports = {
   			'control-md': 'var(--control-md)',
   			'control-lg': 'var(--control-lg)'
   		},
+  		fontFamily: { display: ['var(--font-display)', 'Georgia', 'serif'], slip: ['var(--font-slip)', 'ui-monospace', 'monospace'] },
   		maxWidth: { form: 'var(--layout-form-max)' },
   		boxShadow: { popover: 'var(--shadow-popover)' },
   		colors: {
@@ -66,6 +69,10 @@ module.exports = {
   			danger: { DEFAULT: 'var(--color-danger)', hover: 'var(--color-danger-hover)', subtle: 'var(--color-danger-subtle)', border: 'var(--color-danger-border)' },
   			info: { DEFAULT: 'var(--color-info)', subtle: 'var(--color-info-subtle)', border: 'var(--color-info-border)' },
   			neutral: { DEFAULT: 'var(--color-neutral)', subtle: 'var(--color-neutral-subtle)', border: 'var(--color-neutral-border)' },
+  			ink: { DEFAULT: 'var(--color-ink)', soft: 'var(--color-ink-soft)' },
+  			ledger: { DEFAULT: 'var(--color-ledger)', raised: 'var(--color-ledger-raised)', rule: 'var(--color-ledger-rule)' },
+  			stamp: 'var(--color-stamp)',
+  			brass: 'var(--color-brass)',
   			positive: 'var(--color-positive)',
   			negative: 'var(--color-negative)',
   			'ui-chart': {

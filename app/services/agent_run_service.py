@@ -9,7 +9,7 @@ from typing import Any
 from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.agent_runtime.runtime import cap_micros, month_spend_micros
+from app.agent_runtime.runtime import month_spend_micros, tenant_cap_micros
 from app.core.audit import record_audit
 from app.core.problems import NotFound
 from app.core.settings import settings
@@ -87,7 +87,7 @@ async def status(db: AsyncSession, principal: Principal) -> AgentStatus:
             select(func.count()).select_from(AgentRun).where(AgentRun.tenant_id == principal.tenant_id)
         )
     ).scalar_one()
-    cap = cap_micros()
+    cap = await tenant_cap_micros(db, principal.tenant_id)
     return AgentStatus(
         enabled=bool(enabled_row) and settings.AGENTS_ENABLED,
         month_spend_usd=_usd(spent, 2),

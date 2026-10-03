@@ -232,11 +232,11 @@ Batch gate: tasks 50, 42, 36, 48, 46, 47, 57, 58, 53, 54, 02, 12, 21, 26 pass th
 - [x] 48 Owner home dashboard — D-001 (role: owner, manager; KPIs: Today's sales, Profit today, Orders today, Low-stock items, Unpaid udhaar, Approvals waiting, AI briefing)
   - Acceptance: Each KPI (Today's sales, Profit today, Orders today, Low-stock items, Unpaid udhaar, Approvals waiting, AI briefing) matches a hand-computed value on a seeded dataset
   - Acceptance: Only role owner, manager can open it; an empty dataset shows an empty state, not an error
-- [ ] 46 Public landing page — F-026 (Public; page; P0; roles: public)
+- [x] 46 Public landing page — F-026 (Public; page; P0; roles: public)
   - Acceptance: A user with one of the roles (public) can complete the Public flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-026 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 47 Public live demo — F-027 (Public; page; P1; roles: public)
+- [x] 47 Public live demo — F-027 (Public; page; P1; roles: public)
   - Acceptance: A user with one of the roles (public) can complete the Public flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-027 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored

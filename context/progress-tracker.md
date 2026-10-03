@@ -7,9 +7,9 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 1A, shop basics on the database (Phase 0 closed 2026-10-03)
-**Last completed:** 48
+**Last completed:** 47
 **In progress:** Phase 1A on branch `feat/phase-1-mvp`, strictly in the order listed
-**Next:** 1C task 46 landing page
+**Next:** 1C task 57 structured logging
 **Blockers:** the owner has not yet said "let's build it"; 26 needs vendor sandbox accounts; DEMO_USER_PASSWORD must be set in `.env` (owner)
 
 ### Phase 0 status
@@ -80,8 +80,8 @@ Update this file after every completed task. Anyone reading it should immediatel
 - [x] 42 Marketing studio
 - [x] 36 Home dashboard
 - [x] 48 Owner home dashboard
-- [ ] 46 Public landing page
-- [ ] 47 Public live demo
+- [x] 46 Public landing page
+- [x] 47 Public live demo
 - [ ] 57 Structured logging, request ids and error reporting [backend-api p…
 - [ ] 58 Backups and one timed restore [backend-api pack]
 - [ ] 53 Accessibility and performance gates [web-app pack]
@@ -141,6 +141,10 @@ Older items (ADR sign-off, `.env.example`, key rotation, `next` bump, pushing th
 
 | Task | Question |
 | --- | --- |
+| INCIDENT | **The real Supabase database was wiped during a verification run.** `verify.sh --slow --all` ran `alembic upgrade/downgrade base/upgrade` against the URL in `.env` (`DATABASE_URL_MIGRATIONS`) instead of its throwaway database. The schema is now empty at revision 06 (demo tenant, demo users, demo products and any visitor sign-ups are gone). `verify.sh` is fixed (both URLs pinned to the throwaway DB, non-local URLs refused before any downgrade, every alembic step fails the run) and a test guards it. To restore the demo data: `uv run alembic upgrade head` then `SEED_ROLE_USERS=true uv run python -m app.cli.seed` (password from `DEMO_USER_PASSWORD`). Please also run `alembic upgrade head` once to reach revision 07 |
+| env | `.env.example` is blocked for the assistant: add `SIGNUP_MAX_PER_HOUR`, `LLM_PROVIDER`, `OPENAI_API_KEY`, `OPENAI_MODEL`, `LLM_TIMEOUT_SECONDS`, `LLM_MAX_RETRIES`, `AGENT_MAX_TOOL_CALLS`, `AGENT_MONTHLY_SPEND_CAP_USD`, `AGENTS_ENABLED`, `LLM_PRICE_IN_PER_M`, `LLM_PRICE_OUT_PER_M`, `AGENT_AUTO_POST_LIMIT`, `STORAGE_PROVIDER`, `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `STORAGE_BUCKET`, `STORAGE_TIMEOUT_SECONDS`, `STORAGE_MAX_RETRIES`, `STORAGE_SIGNED_URL_SECONDS` (all documented in `docs/operations/env-vars.md`; secrets left empty) |
+| 49 | The live Gemini behaviour (strict tool schemas, Roman Urdu quality) has only been tested against recorded responses and the scripted model: try one real chat with `GEMINI_API_KEY` set |
+| demo | The demo password `12345678` is only safe for a local database; use a strong `DEMO_USER_PASSWORD` for anything public |
 | 02 | Check the GitHub Actions run for the pushed commit and confirm it is green (no `gh` CLI here) |
 | 21 | Vercel secrets, needed after batch 1C |
 | 26 | Twilio sandbox account (paused) |

@@ -17,10 +17,12 @@ from app.core.settings import settings
 
 _WINDOW_SECONDS = 3600
 _attempts: dict[str, list[float]] = defaultdict(list)
+_demo_attempts: dict[str, list[float]] = defaultdict(list)
 
 
 def reset_signup_throttle() -> None:
     _attempts.clear()
+    _demo_attempts.clear()
 
 
 def _client_address(request: Request) -> str:
@@ -52,3 +54,22 @@ async def signup_throttle(request: Request) -> None:
         )
     recent.append(now)
     _attempts[ip] = recent
+
+
+async def demo_throttle(request: Request) -> None:
+    """FastAPI dependency for starting a demo shop: at most DEMO_MAX_PER_HOUR per address (0 turns it off)."""
+    limit = settings.DEMO_MAX_PER_HOUR
+    if limit <= 0:
+        return
+    ip = _client_address(request)
+    now = time.time()
+    recent = [t for t in _demo_attempts[ip] if now - t < _WINDOW_SECONDS]
+    if len(recent) >= limit:
+        _demo_attempts[ip] = recent
+        raise DomainError(
+            "You have started several demos already. Create your own free shop to keep going, or try again in an hour.",
+            code="demo_rate_limited",
+            status_code=429,
+        )
+    recent.append(now)
+    _demo_attempts[ip] = recent

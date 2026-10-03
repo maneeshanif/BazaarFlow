@@ -48,7 +48,7 @@ function isStaleSocket(error: unknown): boolean {
   return ["ECONNRESET", "UND_ERR_SOCKET", "EPIPE"].includes(cause?.code ?? "") || /socket hang up|other side closed/i.test(text);
 }
 
-export async function callBackend(path: string, body: unknown, extraHeaders: Record<string, string> = {}): Promise<Response> {
+export async function callBackend(path: string, body: unknown, extraHeaders: Record<string, string> = {}, timeoutMs: number = BACKEND_TIMEOUT_MS): Promise<Response> {
   const headers: Record<string, string> = { "content-type": "application/json" };
   for (const [key, value] of Object.entries(extraHeaders)) if (value) headers[key] = value;
   const send = () =>
@@ -57,7 +57,7 @@ export async function callBackend(path: string, body: unknown, extraHeaders: Rec
       headers,
       body: JSON.stringify(body),
       cache: "no-store",
-      signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS), // a hung API must not hang the page
+      signal: AbortSignal.timeout(timeoutMs), // a hung API must not hang the page
     });
   try {
     return await send();

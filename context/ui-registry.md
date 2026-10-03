@@ -113,3 +113,6 @@ A period filter (`role="search"`), then a briefing card, then a `Key figures` re
 
 ### Draft-then-approve (marketing studio)
 AI output is a saved draft first: editable fields with a character count, "Save changes" (disabled until something changed), "Send for approval" (saves pending edits first), "Remove draft" (confirmed, names the post). Once sent the fields are read-only and the page says who decides and where. The approval card for it has no Edit button: it is edited here, not there.
+
+### Public site (landing, live demo)
+Own route group `app/(site)` with its own layout, fonts (Young Serif display, JetBrains Mono slip) and tokens (`ink`, `ledger`, `stamp`, `brass`, `display-lg/xl`): a shop ledger. One orchestrated motion, the hero sale slip (`components/site/HeroSlip.tsx`, GSAP): the finished state is plain HTML, motion only hides and reveals it and is skipped under reduced motion. Button classes live in `components/site/styles.ts` (never export class strings from a client module). Content rules: no unverifiable claims; planned channels are named as "coming next".
