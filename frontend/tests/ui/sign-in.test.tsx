@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import SignInPage from "@/app/(marketing)/sign-in/page";
+import SignInPage from "@/app/(auth)/sign-in/page";
 
 const replace = vi.fn();
 let search = "";

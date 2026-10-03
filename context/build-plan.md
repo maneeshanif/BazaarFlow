@@ -151,11 +151,11 @@ Batch gate: schema and RLS migrations, API, UI and tests for 55, 56, 41, 51, 52,
 - [x] 52 Form pattern: validation, error display, double-submit protection [web-app pack]
   - Acceptance: Server and client reject the same invalid inputs
   - Acceptance: a second click does not create a second record
-- [ ] 34 Sign in — F-001 (Auth; master; P0; roles: public)
+- [x] 34 Sign in — F-001 (Auth; master; P0; roles: public)
   - Acceptance: A user with one of the roles (public) can complete the Auth flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-001 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 35 Create account and shop — F-002 (Auth; master; P0; roles: public)
+- [x] 35 Create account and shop — F-002 (Auth; master; P0; roles: public)
   - Acceptance: A user with one of the roles (public) can complete the Auth flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-002 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored

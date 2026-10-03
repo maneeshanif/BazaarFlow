@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export { fieldErrorsOf } from "@/lib/validation/common";
+
 /**
  * Client-side mirror of the product rules (PRD F-010) for instant feedback only. The API stays authoritative:
  * contracts/invalid-product-inputs.json is read by both test suites so the two sides reject the same inputs.
@@ -36,16 +38,6 @@ export const productSchema = z.object({
 });
 
 export type ProductInput = z.input<typeof productSchema>;
-
-/** Field name -> first message, for FormField's inline error. */
-export function fieldErrorsOf(error: z.ZodError): Record<string, string> {
-  const out: Record<string, string> = {};
-  for (const issue of error.issues) {
-    const key = issue.path.join(".") || "form";
-    if (!(key in out)) out[key] = issue.message;
-  }
-  return out;
-}
 
 export const stockMovementSchema = z.object({
   delta: z.coerce

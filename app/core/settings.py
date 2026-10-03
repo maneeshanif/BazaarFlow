@@ -50,6 +50,8 @@ class Settings(BaseSettings):
     TWILIO_AUTH_TOKEN: str = ""
     LOGIN_MAX_FAILURES: int = 5
     LOGIN_LOCKOUT_MINUTES: int = 15
+    # Sign-ups allowed per client address per hour (0 = no limit). The only abuse control for the public demo.
+    SIGNUP_MAX_PER_HOUR: int = 10
     FRONTEND_ORIGIN: str = "http://localhost:3000"
 
     # -- Database (Supabase PostgreSQL / SQLite fallback) ----------------------

@@ -11,6 +11,7 @@ prepared this change is not allowed to read that file, so the owner should add t
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | API | *new*, default 30 |
 | `REFRESH_TOKEN_EXPIRE_DAYS` | API | *new*, default 14 |
 | `LOGIN_MAX_FAILURES` / `LOGIN_LOCKOUT_MINUTES` | API | *new*, defaults 5 / 15 |
+| `SIGNUP_MAX_PER_HOUR` | API | *new*, default 10 sign-ups per client address per hour, 0 = unlimited |
 | `DATABASE_URL` | API runtime | Supabase **pooler** (port 6543), user `app_user`, `postgresql+asyncpg://` |
 | `DATABASE_URL_MIGRATIONS` | Alembic | *new*. Supabase **direct** connection (port 5432), user `migrator` |
 | `SUPABASE_PROJECT_REF`, `SUPABASE_POOLER_HOST` | `app.cli.provision_supabase` | project ref and `aws-0-<region>.pooler.supabase.com` from Connect -> Session pooler. Not secret |

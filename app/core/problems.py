@@ -35,10 +35,18 @@ class DomainError(Exception):
 
     status_code = 422
 
-    def __init__(self, detail: str, *, code: str = "rule_violation", status_code: int | None = None) -> None:
+    def __init__(
+        self,
+        detail: str,
+        *,
+        code: str = "rule_violation",
+        status_code: int | None = None,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
         super().__init__(detail)
         self.detail = detail
         self.code = code
+        self.extra = extra or {}
         if status_code is not None:
             self.status_code = status_code
 
@@ -58,7 +66,12 @@ class Conflict(DomainError):
 
 
 def problem(
-    status: int, detail: str, *, code: str | None = None, errors: list[dict[str, str]] | None = None
+    status: int,
+    detail: str,
+    *,
+    code: str | None = None,
+    errors: list[dict[str, str]] | None = None,
+    extra: dict[str, Any] | None = None,
 ) -> JSONResponse:
     body: dict[str, Any] = {
         "type": f"about:blank#{code}" if code else "about:blank",
@@ -71,6 +84,8 @@ def problem(
         body["code"] = code
     if errors:
         body["errors"] = errors
+    for key, value in (extra or {}).items():  # RFC 7807 extension members, e.g. the shops to choose from at sign-in
+        body.setdefault(key, value)
     return JSONResponse(status_code=status, content=body, media_type=PROBLEM_CONTENT_TYPE)
 
 
@@ -97,7 +112,7 @@ async def _validation_error(_request: Request, exc: Exception) -> JSONResponse:
 
 async def _domain_error(_request: Request, exc: Exception) -> JSONResponse:
     assert isinstance(exc, DomainError)
-    return problem(exc.status_code, exc.detail, code=exc.code)
+    return problem(exc.status_code, exc.detail, code=exc.code, extra=exc.extra)
 
 
 def install_problem_handlers(app: FastAPI) -> None:

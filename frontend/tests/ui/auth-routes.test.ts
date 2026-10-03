@@ -54,7 +54,7 @@ describe("POST /api/auth/login (BFF: the refresh token never reaches JavaScript)
     expect((await res.json()).detail).toBe("Invalid email or password");
   });
   it("passes the tenant choice and the lockout through", async () => {
-    backend.mockResolvedValue(json({ detail: { code: "tenant_required", tenants: [{ tenant_id: "a", tenant_name: "A" }] } }, 409));
+    backend.mockResolvedValue(json({ detail: "Choose which shop to sign in to", code: "tenant_required", tenants: [{ tenant_id: "a", tenant_name: "A" }] }, 409));
     expect((await login(post("/api/auth/login", { email: "a@b.com", password: "pw-12345678" }))).status).toBe(409);
     backend.mockResolvedValue(json({ detail: "Too many failed attempts; try again later" }, 429));
     expect((await login(post("/api/auth/login", { email: "a@b.com", password: "x" }))).status).toBe(429);

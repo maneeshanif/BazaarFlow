@@ -11,7 +11,10 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 
 from app.core.database import Base
 from app.core.dependencies import get_db
+from app.core.settings import settings
 from app.main import app
+
+settings.SIGNUP_MAX_PER_HOUR = 0  # tests create many shops from one address; the throttle has its own test
 
 # Use in-memory SQLite for test database isolation
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"

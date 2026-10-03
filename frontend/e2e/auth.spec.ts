@@ -40,6 +40,26 @@ test("the sign-in redirect keeps the query string of the page that was asked for
   await expect(page).toHaveURL(/next=%2Fdashboard%2Forders%3Fstatus%3Dpending/);
 });
 
+test("the sign-in form checks the input first, then signs in whatever the email's case (F-001)", async ({ page }) => {
+  const calls: string[] = [];
+  page.on("request", (r) => r.url().includes("/api/auth/login") && calls.push(r.url()));
+  await page.goto("/sign-in");
+  await page.getByLabel("Email").fill("owner@");
+  await page.getByLabel("Password").fill("short");
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page.getByText("Enter an email like name@example.com")).toBeVisible();
+  await expect(page.getByText("Password must be at least 8 characters")).toBeVisible();
+  expect(calls, "nothing is sent while the input is invalid").toHaveLength(0);
+
+  await page.getByLabel("Email").fill(OWNER.toUpperCase());
+  await page.getByLabel("Password").fill(PASSWORD);
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page).toHaveURL(/\/dashboard$/);
+  expect(calls).toHaveLength(1);
+  const cookie = (await page.context().cookies()).find((c) => c.name === "bf_refresh");
+  expect(cookie, "the session was stored").toBeDefined();
+});
+
 test("a wrong password shows an error and does not sign in", async ({ page }) => {
   await signIn(page, OWNER, "not-the-password");
   await expect(page.locator("form[aria-label='Sign in'] [role=alert]")).toContainText("Invalid email or password");

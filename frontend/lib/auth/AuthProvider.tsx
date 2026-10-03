@@ -11,12 +11,27 @@ export type LoginResult =
   | { ok: true }
   | { ok: false; error: string; tenants?: { tenant_id: string; tenant_name: string }[] };
 
+export type RegisterInput = {
+  full_name: string;
+  email: string;
+  password: string;
+  shop_name: string;
+  phone: string;
+  city?: string;
+  accept_terms: boolean;
+};
+
+export type RegisterResult =
+  | { ok: true }
+  | { ok: false; error: string; fieldErrors: Record<string, string>; code?: string };
+
 type AuthValue = {
   status: Status;
   role: Role | null;
   tenantId: string | null;
   error: string | null;
   login: (email: string, password: string, tenantId?: string) => Promise<LoginResult>;
+  register: (input: RegisterInput) => Promise<RegisterResult>;
   logout: () => Promise<void>;
 };
 
@@ -26,6 +41,7 @@ const ANONYMOUS: AuthValue = {
   tenantId: null,
   error: null,
   login: async () => ({ ok: false, error: "Sign-in is not available here." }),
+  register: async () => ({ ok: false, error: "Sign-up is not available here.", fieldErrors: {} }),
   logout: async () => undefined,
 };
 
@@ -190,8 +206,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const body = await res.json().catch(() => ({}));
         if (!res.ok) {
           const detail = body?.detail;
-          if (res.status === 409 && detail?.code === "tenant_required") {
-            return { ok: false, error: "Choose a shop to continue.", tenants: detail.tenants };
+          if (res.status === 409 && body?.code === "tenant_required") {
+            return { ok: false, error: "Choose a shop to continue.", tenants: body.tenants };
           }
           const message = typeof detail === "string" ? detail : "Could not sign in. Check your details and try again.";
           setError(message);
@@ -209,6 +225,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [adopt, refresh],
   );
 
+  const register = useCallback<AuthValue["register"]>(
+    async (input) => {
+      try {
+        const res = await fetch("/api/auth/register", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          credentials: "same-origin",
+          body: JSON.stringify(input),
+          signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+        });
+        const body = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          const fieldErrors: Record<string, string> = {};
+          for (const item of (body?.errors ?? []) as { field: string; message: string }[]) fieldErrors[item.field] = item.message;
+          const message = typeof body?.detail === "string" ? body.detail : "Could not create your account. Try again.";
+          return { ok: false, error: message, fieldErrors, code: typeof body?.code === "string" ? body.code : undefined };
+        }
+        generation.current += 1; // supersede any refresh that was already running
+        adopt(body as Session, refresh);
+        return { ok: true };
+      } catch {
+        return {
+          ok: false,
+          error: "Could not reach the server. Check your connection and try again.",
+          fieldErrors: {},
+        };
+      }
+    },
+    [adopt, refresh],
+  );
+
   const logout = useCallback(async () => {
     clear(); // first: from this moment no in-flight refresh can restore the session
     await fetch("/api/auth/logout", {
@@ -219,8 +266,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [clear]);
 
   const value = useMemo<AuthValue>(
-    () => ({ status, role: session?.role ?? null, tenantId: session?.tenant_id ?? null, error, login, logout }),
-    [status, session, error, login, logout],
+    () => ({ status, role: session?.role ?? null, tenantId: session?.tenant_id ?? null, error, login, register, logout }),
+    [status, session, error, login, register, logout],
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

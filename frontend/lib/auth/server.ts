@@ -41,10 +41,12 @@ export function publicSession(tokens: BackendTokens) {
   return { access_token: tokens.access_token, tenant_id: tokens.tenant_id, role: tokens.role };
 }
 
-export async function callBackend(path: string, body: unknown): Promise<Response> {
+export async function callBackend(path: string, body: unknown, extraHeaders: Record<string, string> = {}): Promise<Response> {
+  const headers: Record<string, string> = { "content-type": "application/json" };
+  for (const [key, value] of Object.entries(extraHeaders)) if (value) headers[key] = value;
   return fetch(backendUrl(path), {
     method: "POST",
-    headers: { "content-type": "application/json" },
+    headers,
     body: JSON.stringify(body),
     cache: "no-store",
     signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS), // a hung API must not hang the page

@@ -16,9 +16,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core import refresh_tokens
 from app.core.audit import mask_email, record_audit
 from app.core.auth import ALL_ROLES, public_route, require_role
+from app.core.problems import DomainError
 from app.core.security import ahash_password, averify_password, create_access_token, hash_password
 from app.core.settings import settings
 from app.core.tenancy import Principal, anonymous_session, apply_context
+from app.core.throttle import signup_throttle
 from app.models.security import LoginAttempt
 from app.models.tenant import Membership, Tenant, TenantRole
 from app.models.user import User
@@ -59,12 +61,14 @@ async def _tokens(session: AsyncSession, user: User, tenant_id: uuid.UUID, role:
     return TokenOut(access_token=access, refresh_token=refresh, tenant_id=tenant_id, role=role)
 
 
-@router.post("/register", response_model=TokenOut, status_code=201, dependencies=[Depends(public_route)])
+@router.post(
+    "/register",
+    response_model=TokenOut,
+    status_code=201,
+    dependencies=[Depends(public_route), Depends(signup_throttle)],
+)
 async def register(body: RegisterRequest) -> TokenOut:
     """Create the user, the tenant and the owner membership in one transaction."""
-    if not body.accept_terms:
-        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Terms must be accepted")
-
     user_id = uuid.uuid4()
     tenant_id = uuid.uuid4()
     email = body.email.lower()
@@ -131,7 +135,7 @@ async def login(body: LoginRequest) -> TokenOut:
         valid = await averify_password(body.password, user.hashed_password if user else _DUMMY_HASH)
         credentials_ok = bool(user is not None and valid and user.is_active)
 
-    failure: HTTPException | None = None
+    failure: HTTPException | DomainError | None = None
     result: TokenOut | None = None
     async with anonymous_session() as session:  # 3) write the outcome
         if locked:
@@ -162,12 +166,11 @@ async def login(body: LoginRequest) -> TokenOut:
             elif len(rows) == 1:
                 chosen = rows[0]
             elif len(rows) > 1:
-                failure = HTTPException(
+                failure = DomainError(
+                    "Choose which shop to sign in to",
+                    code="tenant_required",
                     status_code=status.HTTP_409_CONFLICT,
-                    detail={
-                        "code": "tenant_required",
-                        "tenants": [{"tenant_id": str(r.tenant_id), "tenant_name": r.name} for r in rows],
-                    },
+                    extra={"tenants": [{"tenant_id": str(r.tenant_id), "tenant_name": r.name} for r in rows]},
                 )
             else:
                 failure = HTTPException(status.HTTP_403_FORBIDDEN, "No tenant for this account")
@@ -188,7 +191,7 @@ async def login(body: LoginRequest) -> TokenOut:
 @router.post("/refresh", response_model=TokenOut, dependencies=[Depends(public_route)])
 async def refresh(body: RefreshRequest) -> TokenOut:
     """Rotate a refresh token and issue a new access token with the membership's *current* role."""
-    failure: HTTPException | None = None
+    failure: HTTPException | DomainError | None = None
     result: TokenOut | None = None
     async with anonymous_session() as session:
         try:
