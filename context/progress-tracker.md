@@ -7,9 +7,9 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 1A, shop basics on the database (Phase 0 closed 2026-10-03)
-**Last completed:** 43
+**Last completed:** 65
 **In progress:** Phase 1A on branch `feat/phase-1-mvp`, strictly in the order listed
-**Next:** Batch 1A gate: verify.sh --slow --all, then 49 (1B)
+**Next:** 44 approvals center, 37 sales chat, 45 activity log (their screens), then 1C
 **Blockers:** the owner has not yet said "let's build it"; 26 needs vendor sandbox accounts; DEMO_USER_PASSWORD must be set in `.env` (owner)
 
 ### Phase 0 status
@@ -65,13 +65,13 @@ Update this file after every completed task. Anyone reading it should immediatel
 
 ### Phase 1B — AI on the database
 
-- [ ] 49 Integration: LLM provider (Gemini or OpenAI)
-- [ ] 29 Tool catalogue with schemas, permissions and a test per tool [agen…
+- [x] 49 Integration: LLM provider (Gemini or OpenAI)
+- [x] 29 Tool catalogue with schemas, permissions and a test per tool [agen…
 - [ ] 44 Approvals center
-- [ ] 63 First agent flow end to end with human approval on side effects [a…
+- [x] 63 First agent flow end to end with human approval on side effects [a…
 - [ ] 37 Sales chat (agent)
-- [ ] 64 Run caps, spend cap and kill switch [agents pack]
-- [ ] 65 Tracing with redaction [agents pack]
+- [x] 64 Run caps, spend cap and kill switch [agents pack]
+- [x] 65 Tracing with redaction [agents pack]
 - [ ] 45 Agent activity log
 
 ### Phase 1C — Dashboard and launch

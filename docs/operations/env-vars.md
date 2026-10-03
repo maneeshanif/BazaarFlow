@@ -20,6 +20,11 @@ prepared this change is not allowed to read that file, so the owner should add t
 | `DEMO_USER_PASSWORD` | `app.cli.seed` | optional; generated and printed once if unset |
 | `FRONTEND_ORIGIN` | API CORS | production origin of the web app |
 | `GEMINI_API_KEY`, `GEMINI_BASE_URL`, `GEMINI_MODEL` | agents | LLM provider |
+| `LLM_PROVIDER`, `OPENAI_API_KEY`, `OPENAI_MODEL` | agents | *new*. `gemini` (default) or `openai`; `scripted` is a rule-based test stand-in that refuses to load in production |
+| `LLM_TIMEOUT_SECONDS`, `LLM_MAX_RETRIES` | agents | *new*, defaults 30 s and 1 retry on every LLM call |
+| `AGENT_MAX_TOOL_CALLS`, `AGENT_MONTHLY_SPEND_CAP_USD`, `AGENTS_ENABLED` | agents | *new*. Guardrails: 8 tool calls per run, 5 USD per shop per month, platform-wide off switch (each shop also has its own switch in the app) |
+| `LLM_PRICE_IN_PER_M`, `LLM_PRICE_OUT_PER_M` | agents | *new*. USD per million input and output tokens, used to estimate spend |
+| `AGENT_AUTO_POST_LIMIT` | agents | *new*, default 0: a sale proposed by an agent up to this many rupees posts without approval; 0 means always ask |
 | `META_VERIFY_TOKEN`, `META_GRAPH_VERSION`, `META_GRAPH_BASE` | WhatsApp webhook | becomes per-tenant in Phase 2 |
 | `FACEBOOK_PAGE_ID`, `FACEBOOK_ACCESS_TOKEN` | marketing | becomes per-tenant in Phase 2 |
 | `VAPI_API_KEY`, `VAPI_WEBHOOK_SECRET` | voice | becomes per-tenant in Phase 3 |

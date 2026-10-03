@@ -1,6 +1,7 @@
 """Import all models here so Alembic autodiscovers them during migrations."""
 
 from app.models.agent import ActionStatus, AgentAction
+from app.models.agent_run import AgentRun
 from app.models.customer import Customer
 from app.models.facebook import FacebookAccount
 from app.models.inventory import InventoryItem
@@ -19,6 +20,7 @@ from app.models.vendor import Vendor
 __all__ = [
     "ActionStatus",
     "AgentAction",
+    "AgentRun",
     "AuditLog",
     "Customer",
     "FacebookAccount",

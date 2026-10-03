@@ -27,7 +27,7 @@ def _is_tz(column_type: object) -> bool:
 # Not tenant-owned by design (reason is the contract; see tests/pg/test_schema_rules.py).
 GLOBAL = {"users", "tenants", "refresh_tokens", "login_attempts"}
 # Append-only tables have no updated_at.
-APPEND_ONLY = {"audit_logs", "login_attempts", "stock_movements", "ledger_entries"}
+APPEND_ONLY = {"audit_logs", "login_attempts", "stock_movements", "ledger_entries", "agent_runs"}
 SOFT_DELETE = {"customers", "vendors", "products"}
 VERSIONED = {"orders", "inventory_items"}
 MONEY_WORDS = ("price", "cost", "amount", "balance", "total", "budget")

@@ -28,6 +28,10 @@ class ApprovalError(Exception):
     """The action cannot move to the requested state."""
 
 
+class ActionNotFound(ApprovalError):
+    """No such action in this shop (an unknown id and another shop's id look the same)."""
+
+
 def payload_hash(payload: dict[str, Any]) -> str:
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -44,7 +48,7 @@ async def _get(ctx: ToolContext, action_id: uuid.UUID, *, lock: bool = False) ->
         stmt = stmt.with_for_update()
     action = (await ctx.session.execute(stmt)).scalar_one_or_none()
     if action is None:
-        raise ApprovalError("action not found")
+        raise ActionNotFound("action not found")
     return action
 
 
@@ -129,7 +133,9 @@ async def execute(
             await executor(action.payload_json)
     except Exception as exc:
         action.status = ActionStatus.failed.value
-        action.decision_note = f"execution failed: {type(exc).__name__}"
+        # a rule that now refuses the action explains itself; anything else is named by type, never by message
+        reason = getattr(exc, "detail", None) if isinstance(getattr(exc, "detail", None), str) else type(exc).__name__
+        action.decision_note = f"execution failed: {reason}"[:250]
     else:
         action.status = ActionStatus.executed.value
         action.executed_at = _now()

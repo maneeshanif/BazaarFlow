@@ -182,10 +182,10 @@ LLM provider, permission gate in the agent runtime, approvals, the sales chat ag
 
 Batch gate: tasks 49, 29, 44, 63, 37, 64, 65, 45 pass the full run; a chat sale waits in approvals and executes only after approval.
 
-- [ ] 49 Integration: LLM provider (Gemini or OpenAI) — I-005 (out; REST)
+- [x] 49 Integration: LLM provider (Gemini or OpenAI) — I-005 (out; REST)
   - Acceptance: A contract test against a recorded or sandbox response proves the happy path
   - Acceptance: A timeout, an error response and a duplicate delivery are each handled by a test
-- [ ] 29 Tool catalogue with schemas, permissions and a test per tool [agents pack] *(carried over from Phase 0)*
+- [x] 29 Tool catalogue with schemas, permissions and a test per tool [agents pack] *(carried over from Phase 0)*
   - Acceptance: every tool an agent can call (16 functions and the 2 delegation wrappers) is declared with permission and approval (DONE: app/agents/tools/manifest.py; an undeclared tool fails the suite)
   - Acceptance: each tool has its own unit tests (DONE: tests/unit/test_agent_tool_catalog.py)
   - Acceptance: authorize_call rejects unknown tools, roles below the minimum and approval-gated writes (DONE as a function, tested)
@@ -194,7 +194,7 @@ Batch gate: tasks 49, 29, 44, 63, 37, 64, 65, 45 pass the full run; a chat sale 
   - Acceptance: A user with one of the roles (owner, manager) can complete the Overview flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-021 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 63 First agent flow end to end with human approval on side effects [agents pack]
+- [x] 63 First agent flow end to end with human approval on side effects [agents pack]
   - Acceptance: An approved action runs
   - Acceptance: a rejected action does not
   - Acceptance: the trace shows both
@@ -202,10 +202,10 @@ Batch gate: tasks 49, 29, 44, 63, 37, 64, 65, 45 pass the full run; a chat sale 
   - Acceptance: A user with one of the roles (owner, manager, staff) can complete the Sales flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-006 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 64 Run caps, spend cap and kill switch [agents pack]
+- [x] 64 Run caps, spend cap and kill switch [agents pack]
   - Acceptance: Exceeding a cap stops the run with a clear message
   - Acceptance: the kill switch works without a deploy
-- [ ] 65 Tracing with redaction [agents pack]
+- [x] 65 Tracing with redaction [agents pack]
   - Acceptance: A trace of a run contains no personal data from the test fixtures
 - [ ] 45 Agent activity log — F-022 (Overview; list; P0; roles: owner, manager)
   - Acceptance: A user with one of the roles (owner, manager) can complete the Overview flow; a user without them gets 403

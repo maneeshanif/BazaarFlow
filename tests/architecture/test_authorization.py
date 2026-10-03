@@ -78,4 +78,4 @@ def test_versioned_routes_are_not_double_prefixed_and_only_real_v1_routers_are_m
     paths = {path for path, _methods, _dep in _all_routes()}
     assert not [p for p in paths if p.startswith("/api/v1/api")], "legacy routers must not be mounted under /api/v1"
     v1_areas = {p.split("/")[3] for p in paths if p.startswith("/api/v1/")}
-    assert v1_areas <= {"auth", "customers", "inventory", "sales", "orders", "team"}, f"unexpected /api/v1 areas: {v1_areas}"
+    assert v1_areas <= {"auth", "customers", "inventory", "sales", "orders", "team", "chat", "approvals", "agent-runs"}, f"unexpected /api/v1 areas: {v1_areas}"

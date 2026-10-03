@@ -11,6 +11,7 @@ instead of silently returning None.
 from __future__ import annotations
 
 import logging
+from decimal import Decimal
 
 from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -63,6 +64,22 @@ class Settings(BaseSettings):
     GEMINI_API_KEY: str = ""
     GEMINI_BASE_URL: str = "https://generativelanguage.googleapis.com/v1beta/openai/"
     GEMINI_MODEL: str = "gemini-2.0-flash"
+    # Which provider the agents use: "gemini" (default) or "openai". "scripted" is a rule-based stand-in for tests and
+    # offline demos; it refuses to load in production.
+    LLM_PROVIDER: str = "gemini"
+    OPENAI_API_KEY: str = ""
+    OPENAI_MODEL: str = "gpt-4o-mini"
+    LLM_TIMEOUT_SECONDS: float = 30.0
+    LLM_MAX_RETRIES: int = 1
+    # Agent guardrails (PRD 36.18): tool calls per run, a monthly spend cap per shop, and the platform-wide switch.
+    AGENT_MAX_TOOL_CALLS: int = 8
+    AGENT_MONTHLY_SPEND_CAP_USD: float = 5.0
+    AGENTS_ENABLED: bool = True
+    # USD per million tokens, used to turn token counts into a spend figure (defaults match Gemini 2.0 Flash).
+    LLM_PRICE_IN_PER_M: float = 0.10
+    LLM_PRICE_OUT_PER_M: float = 0.40
+    # A sale up to this many rupees posts without asking when an agent proposes it. 0 = every agent write is approved.
+    AGENT_AUTO_POST_LIMIT: Decimal = Decimal("0")
 
     # -- Meta / WhatsApp Cloud API ---------------------------------------------
     META_VERIFY_TOKEN: str = "test123"

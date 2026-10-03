@@ -35,6 +35,16 @@ DECLARATIONS: dict[str, ToolSpec] = {
     # governance belongs on the tools they reach; declared so a new wrapper cannot appear unnoticed.
     "consult_finance_agent": declare_tool("consult_finance_agent", access="read"),
     "consult_inventory_agent": declare_tool("consult_inventory_agent", access="read"),
+    # the sales agent's tools on the shop's own data (app/agents/tools/shop_tools.py); writes are proposed, never run
+    "find_product": declare_tool("find_product", access="read"),
+    "find_customer": declare_tool("find_customer", access="read"),
+    "get_balance": declare_tool("get_balance", access="read", min_role=_MANAGER),
+    "draft_order": declare_tool("draft_order", access="read"),
+    "get_sales_summary": declare_tool("get_sales_summary", access="read"),
+    "get_profit": declare_tool("get_profit", access="read", min_role=_MANAGER),
+    "post_order": declare_tool("post_order", access="write", approval="required"),
+    "record_payment": declare_tool("record_payment", access="write", min_role=_MANAGER, approval="required"),
+    "adjust_stock": declare_tool("adjust_stock", access="write", min_role=_MANAGER, approval="required"),
     # sales product lookups: declared, but no agent uses them today (SalesAgent only has the consult_* wrappers)
     "lookup_product": declare_tool("lookup_product", access="read"),
     "list_all_products": declare_tool("list_all_products", access="read"),

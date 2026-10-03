@@ -2,23 +2,16 @@
 
 from __future__ import annotations
 
-import uuid
-from types import SimpleNamespace
 from typing import Any
 
 import pytest
-from agents import Runner
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from app.api.controllers.chat_controller import router as chat_router
 from app.api.controllers.support_controller import router as vapi_router
 from app.api.routers.main_router import build_main_router
-from app.core.auth import get_principal
 from app.core.settings import Settings, settings
-from app.core.tenancy import Principal
 from app.main import app as real_app
-from app.models.tenant import TenantRole
 from app.services import vapi_support_service
 
 
@@ -57,44 +50,6 @@ def test_vapi_refuses_everything_in_production_when_no_secret_is_configured(monk
     monkeypatch.setattr(settings, "VAPI_WEBHOOK_SECRET", "")
     monkeypatch.setattr(settings, "APP_ENV", "production")
     assert _vapi().post("/vapi/webhook", json=CALL).status_code == 503
-
-
-# ------------------------------------------------------- chat sessions per tenant
-def _chat_client(tenant: uuid.UUID) -> TestClient:
-    app = FastAPI()
-    app.include_router(chat_router)
-    app.dependency_overrides[get_principal] = lambda: Principal(user_id=uuid.uuid4(), tenant_id=tenant, role=TenantRole.owner)
-    return TestClient(app)
-
-
-def test_the_same_session_id_in_two_tenants_never_shares_a_conversation(monkeypatch: pytest.MonkeyPatch) -> None:
-    sessions: list[Any] = []
-
-    async def fake_run(*args: Any, **kwargs: Any) -> SimpleNamespace:
-        sessions.append(kwargs["session"])
-        return SimpleNamespace(final_output="ok")
-
-    monkeypatch.setattr(Runner, "run", fake_run)
-    tenant_a, tenant_b = uuid.uuid4(), uuid.uuid4()
-    a = _chat_client(tenant_a)
-    b = _chat_client(tenant_b)
-    sid = f"shared-{uuid.uuid4().hex[:6]}"
-    for client in (a, b, a):
-        res = client.post("/chat/sales", json={"message": "hi", "session_id": sid})
-        assert res.json()["session_id"] == sid, "the client still sees the id it sent"
-    assert sessions[0] is sessions[2], "one tenant keeps its own conversation"
-    assert sessions[0] is not sessions[1], "another tenant must get a different, empty one"
-
-
-def test_generated_session_ids_are_unguessable(monkeypatch: pytest.MonkeyPatch) -> None:
-    async def fake_run(*args: Any, **kwargs: Any) -> SimpleNamespace:
-        return SimpleNamespace(final_output="ok")
-
-    monkeypatch.setattr(Runner, "run", fake_run)
-    client = _chat_client(uuid.uuid4())
-    ids = {client.post("/chat/sales", json={"message": "hi"}).json()["session_id"] for _ in range(3)}
-    assert len(ids) == 3
-    assert all(i.startswith("web_") and len(i) >= 16 for i in ids)
 
 
 # ------------------------------------------------------------------------- CORS

@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime
 from typing import Any
 
-from sqlalchemy import JSON, CheckConstraint, DateTime, ForeignKey, String, Text, UniqueConstraint, Uuid
+from sqlalchemy import JSON, Boolean, CheckConstraint, DateTime, ForeignKey, String, Text, UniqueConstraint, Uuid, text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -36,6 +36,8 @@ class Tenant(BaseModelMixin, Base):
     currency: Mapped[str] = mapped_column(String(3), default="PKR", nullable=False)
     owner_phone: Mapped[str | None] = mapped_column(String(30), nullable=True)
     city: Mapped[str | None] = mapped_column(String(60), nullable=True)
+    # The owner's kill switch for the AI assistant: off means no agent run starts for this shop (no deploy needed).
+    agents_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, server_default=text("true"))
 
 
 class Membership(BaseModelMixin, TenantMixin, Base):

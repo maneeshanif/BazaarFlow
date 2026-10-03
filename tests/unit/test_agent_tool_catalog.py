@@ -140,9 +140,15 @@ SAMPLE_ARGS: dict[str, dict[str, Any]] = {
 }
 
 
+# The sales agent's tools on the shop's database (app/agents/tools/shop_tools.py) need a tenant-scoped session, so they
+# are exercised against real Postgres in tests/pg/test_shop_tools.py (which asserts it covers exactly this set).
+DB_BACKED_READS = frozenset({"find_product", "find_customer", "get_balance", "draft_order", "get_sales_summary", "get_profit"})
+
+
 def test_every_read_tool_has_sample_arguments_so_none_goes_untested() -> None:
     reads = {n for n, s in DECLARATIONS.items() if s.access == "read" and n not in DELEGATION_WRAPPERS}
-    assert reads == set(SAMPLE_ARGS), f"add or remove sample arguments: {sorted(reads ^ set(SAMPLE_ARGS))}"
+    assert DB_BACKED_READS <= reads, "a database-backed read tool must be declared"
+    assert reads - DB_BACKED_READS == set(SAMPLE_ARGS), f"add or remove sample arguments: {sorted((reads - DB_BACKED_READS) ^ set(SAMPLE_ARGS))}"
 
 
 async def _call(tool: FunctionTool, arguments: dict[str, Any]) -> Any:
