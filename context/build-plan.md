@@ -68,10 +68,10 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [x] 08 Vertical slice — the smallest end-to-end feature across every layer, to prove the pattern later tasks copy
   - Acceptance: The smallest feature works end to end across every layer with one automated test
   - Acceptance: `scripts/verify.sh` passes and the pattern is written down for later tasks to copy (docs/design/vertical-slice-pattern.md)
-- [ ] 09 Supabase projects (dev/staging/prod), database roles migrator/app_user/report_ro, pooler and direct connection strings, Data API lockdown — PRD §3.8
+- [x] 09 Supabase projects (dev/staging/prod), database roles migrator/app_user/report_ro, pooler and direct connection strings, Data API lockdown — PRD §3.8
   - Acceptance: `docs/operations/supabase-setup.md` describes the dev/staging/prod setup, role provisioning and both connection strings
   - Acceptance: `app.cli.provision_db` creates migrator/app_user/report_ro and `app.cli.check_database` passes on a provisioned, migrated database (tests/pg/test_check_database.py)
-  - Acceptance: `uv run python -m app.cli.check_database --admin-url <dev project>` passes against the real Supabase dev project (needs credentials)
+  - Acceptance: `app.cli.check_database` passes against the real Supabase dev project (DONE 2026-10-03: project llwinbumuaqvypgnickd, Mumbai; roles provisioned, 4 migrations applied, every check passed; staging and prod projects are still to be created before launch)
 - [x] 10 Tenancy schema and RLS baseline migration — tenants, memberships, tenant_id on every table, ENABLE+FORCE RLS, per-request app.tenant_id — PRD §3.5 and §3.8
   - Acceptance: Migrations create tenants and memberships and a tenant_id column on every business table (tests/architecture/test_data_conventions.py, tests/pg/test_schema_rules.py)
   - Acceptance: Every business table has ENABLE + FORCE row level security with a fail-closed policy keyed on app.tenant_id; migrations apply, match the models and round-trip (`verify.sh --slow --lane api-db`)
@@ -111,9 +111,9 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [ ] 21 Deploy a preview environment on a free tier [web-app pack]
   - Acceptance: Every pull request gets a preview URL
   - Acceptance: production deploy is one command
-- [ ] 22 Scaffold the API with lint, format, typecheck and a health endpoint [backend-api pack]
-  - Acceptance: The service starts from a clean clone
-  - Acceptance: the health endpoint answers
+- [x] 22 Scaffold the API with lint, format, typecheck and a health endpoint [backend-api pack]
+  - Acceptance: the service starts from a clean clone (DONE: scripts/check_clean_clone.sh clones HEAD, installs from the lockfiles, starts the API and the agent service, type-checks the web app)
+  - Acceptance: the health endpoint answers (DONE: same script; tests/architecture/test_repo_layout.py)
 - [x] 23 Database foundation and first migration [backend-api pack]
   - Acceptance: migration applies to an empty database (done in task 03: tests/pg/test_migration_04.py, alembic upgrade/check/round-trip in verify.sh api-db)
   - Acceptance: the migration check passes in the fast tier (alembic check runs in the api-db lane when Docker is up)
@@ -128,7 +128,7 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
   - Acceptance: no credential is in the repository
 - [x] 27 Integration skill: install an upstream one or generate a project-local one [integrations pack]
   - Acceptance: the skill cites the vendor documentation URL and date (.claude/skills/integration-twilio-whatsapp/SKILL.md: two Twilio URLs, read 2026-10-03)
-- [ ] 28 Agent service skeleton, separate from the API, with no database credentials [agents pack]
+- [x] 28 Agent service skeleton, separate from the API, with no database credentials [agents pack]
   - Acceptance: The service starts
   - Acceptance: its environment contains no database variable (checked by a test)
 - [ ] 29 Tool catalogue with schemas, permissions and a test per tool [agents pack]

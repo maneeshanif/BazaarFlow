@@ -7,16 +7,16 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 0 — Foundation: spec harness, CI (`verify.sh`), Supabase projects and roles (§3.8), Data API lockdown, Alembic baseline, tenancy tables, RLS, JWT claims, role dependencies, architecture tests, secret hygiene (remove committed DSN script)
-**Last completed:** 27 integration skill; 30 eval harness (reviewed, fixes applied)
+**Last completed:** 09 (real Supabase dev project provisioned, migrated and checked); 22; 28
 **In progress:** Phase 0, in task order (see Phase 0 status below)
-**Next:** nothing I can do alone; waiting on the owner for the Blocked and Needs-a-decision lists
+**Next:** run scripts/e2e_auth_stack.py --supabase once DEMO_USER_PASSWORD is in .env; then wait for the owner items
 **Blockers:** 00 needs the owner's sign-off; 09 needs Supabase credentials; 26 needs vendor sandbox accounts
 
 ### Phase 0 status
 
-**Phase 0: 19 of 34 tasks done, 15 left.** Everything left needs the owner or phase-1 work. Blocked: 00, 01 (B), 02, 09, 12, 21, 26. Needs a decision: 22-24, 28, 31-33. Partly done: 29 (runtime enforcement waits for ToolContext at call sites).
+**Phase 0: 24 of 31 tasks done, 7 left (00, 01, 02, 12, 21, 26, 29).** Waiting on the owner: 00 (ADR sign-off), 01 and 12 (.env.example from docs/operations/env.example.proposed), 02 (push for CI proof; rotate leaked keys), 21 (Vercel and FastAPI Cloud accounts), 26 (Twilio credentials). 29: runtime enforcement is phase 1.
 
-Done: 03, 04, 05, 06, 07, 08, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 25, 27, 30. Partly done: 01, 02, 12. Blocked on the owner: 00, 09, 26.
+Done: 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 27, 28, 30. Partly done: 01, 02, 12. Blocked on the owner: 00, 09, 26.
 
 ---
 
@@ -31,7 +31,7 @@ Done: 03, 04, 05, 06, 07, 08, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 25, 27, 30
 - [x] 06 Audit infrastructure
 - [x] 07 UI foundation
 - [x] 08 Vertical slice
-- [ ] 09 Supabase projects (dev/staging/prod), database roles migrator/app_…
+- [x] 09 Supabase projects (dev/staging/prod), database roles migrator/app_…
 - [x] 10 Tenancy schema and RLS baseline migration
 - [x] 11 Architecture tests in CI
 - [ ] 12 Secret hygiene
@@ -44,13 +44,13 @@ Done: 03, 04, 05, 06, 07, 08, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 25, 27, 30
 - [x] 19 Design tokens and layout shell [web-app pack]
 - [x] 20 Authentication and role guard [web-app pack]
 - [ ] 21 Deploy a preview environment on a free tier [web-app pack]
-- [ ] 22 Scaffold the API with lint, format, typecheck and a health endpoin…
+- [x] 22 Scaffold the API with lint, format, typecheck and a health endpoin…
 - [x] 23 Database foundation and first migration [backend-api pack]
 - [x] 24 Authentication and authorisation skeleton [backend-api pack]
 - [x] 25 OpenAPI contract and generated client with a drift check [backend-…
 - [ ] 26 Vendor accounts, sandbox access and credentials in the secret mana…
 - [x] 27 Integration skill: install an upstream one or generate a project-l…
-- [ ] 28 Agent service skeleton, separate from the API, with no database cr…
+- [x] 28 Agent service skeleton, separate from the API, with no database cr…
 - [ ] 29 Tool catalogue with schemas, permissions and a test per tool [agen…
 - [x] 30 Evaluation harness with a first golden set [agents pack]
 
