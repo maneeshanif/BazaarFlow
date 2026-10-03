@@ -26,7 +26,7 @@ PORT = 55440
 PW = {"postgres": "admin-pw", "migrator": "mig-pw", "app": "app-pw", "report": "rep-pw"}
 USER_PASSWORD = "e2e-password-1"
 # Specs that need the real stack (they skip themselves without E2E_AUTH). Add each new one here.
-STACK_SPECS = ["e2e/auth.spec.ts", "e2e/products.spec.ts", "e2e/register.spec.ts", "e2e/customers.spec.ts", "e2e/sales.spec.ts", "e2e/team.spec.ts"]
+STACK_SPECS = ["e2e/auth.spec.ts", "e2e/products.spec.ts", "e2e/register.spec.ts", "e2e/customers.spec.ts", "e2e/sales.spec.ts", "e2e/team.spec.ts", "e2e/agent.spec.ts"]
 
 
 def sh(args: list[str], **kw) -> subprocess.CompletedProcess:
@@ -140,6 +140,7 @@ def run_against_supabase() -> int:
             "FRONTEND_ORIGIN": "http://localhost:3100",
             "ACCESS_TOKEN_EXPIRE_MINUTES": "1",
             "MARKETING_SCHEDULER_ENABLED": "false",
+            "LLM_PROVIDER": "scripted",  # a rule-based stand-in: the agent flow runs for real with no API key
         }
         api = subprocess.Popen(["uv", "run", "uvicorn", "app.main:app", "--port", "8000"], cwd=ROOT, env=api_env)
         wait_for_api()
@@ -235,6 +236,7 @@ def run_against_docker() -> int:
             "ACCESS_TOKEN_EXPIRE_MINUTES": "1",
             "MARKETING_SCHEDULER_ENABLED": "false",
             "LEGACY_V1_ROUTES": "true",
+            "LLM_PROVIDER": "scripted",
         }
         api = subprocess.Popen(["uv", "run", "uvicorn", "app.main:app", "--port", "8000"], cwd=ROOT, env=api_env)
         for _ in range(60):

@@ -170,3 +170,23 @@ async def test_a_payment_and_a_stock_correction_go_through_the_same_approval(
     assert (await client.get(f"/api/v1/customers/{items['ali']['id']}", headers=bearer(owner))).json()["balance"] == "1500.00"
     moves = (await client.get(f"/api/v1/inventory/{items['shirt']['id']}/stock-movements", headers=bearer(owner))).json()["items"]
     assert moves[0]["actor_type"] == "agent" and moves[0]["reason"] == "purchase"
+
+
+async def test_each_approval_explains_itself_in_plain_words(client: AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    owner = await register(client, "Shop A")
+    items = await shop(client, owner)
+    sale_card = (await propose_sale(client, owner))["actions"][0]["id"]
+    card = (await client.get(f"{APPROVALS}{sale_card}", headers=bearer(owner))).json()
+    assert card["details"][0] == "2 x Classic Shirt" and card["details"][1] == "Customer: Ali Raza"
+    assert "Total Rs 5,000.00" in card["details"][2] and "paid now Rs 5,000.00 by cash" in card["details"][2]
+
+    await client.post(SALES, json=sale([(items["shirt"], 1)], payment_method="udhaar", customer_id=items["ali"]["id"]), headers=bearer(owner))
+    turns = [
+        Turn(tool_calls=[ToolCall("record_payment", {"customer_id": items["ali"]["id"], "amount": "1000", "method": "cash"})]),
+        Turn(tool_calls=[ToolCall("adjust_stock", {"product_id": items["shirt"]["id"], "delta": 5, "reason": "purchase", "note": None})]),
+        Turn(text="sent"),
+    ]
+    use_model(monkeypatch, PricedReplay(turns))
+    reply = await say(client, owner, "pay and restock", "x9")
+    texts = [(await client.get(f"{APPROVALS}{a['id']}", headers=bearer(owner))).json()["details"][0] for a in reply["actions"]]
+    assert texts == ["Rs 1,000.00 (cash) from Ali Raza", "Classic Shirt: +5 (purchase); 9 in stock now"]

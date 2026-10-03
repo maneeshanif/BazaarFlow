@@ -40,6 +40,11 @@ After building any component, record: name, file path, purpose, variants, and th
 | ProductForm, StockPanel (master form + stock history pattern) | `frontend/components/inventory/` | built (tasks 41, 51) |
 | useLoad (four states), useSubmit (one request at a time) | `frontend/hooks/` | built (task 52) |
 | API client and problem-details errors | `frontend/lib/api/client.ts` | built (task 51) |
+| LookupDialog (standard search dialog), CustomerLookup, ProductPicker | `frontend/components/app/LookupDialog.tsx`, `frontend/components/sales/` | built (task 38) |
+| SaleForm (transaction form: master fields, line grid, server-side totals) | `frontend/components/sales/SaleForm.tsx` | built (task 38) |
+| ReverseDialog (destructive action with a required reason) | `frontend/components/orders/ReverseDialog.tsx` | built (task 39) |
+| TeamMemberForm, RoleGuide | `frontend/components/team/` | built (task 43) |
+| ApprovalCard (+ RejectDialog, EditApprovalDialog), ChatPanel, AgentStatusPanel | `frontend/components/agent/` | built (tasks 37, 44, 45) |
 
 ---
 
@@ -88,3 +93,15 @@ Compose FormShell mode="master"; fields in `grid grid-cols-1 gap-4 md:grid-cols-
 
 ### List pattern (Products page)
 PageHeader with the primary action, a filter panel (`role="search"`), DataTable with all four states through `useLoad`, "Showing x to y of total" and Previous/Next with the API cursor. Empty state differs when filters are active ("No products match", with Clear filters) from truly empty (with the first-record action). Hide columns a role must not see (cost for staff) and the primary action for roles that cannot use it.
+
+### Transaction form pattern (SaleForm)
+FormShell in transaction mode: master fields (lookup for the customer, select for how they paid, optional amounts), the detail grid (a real table with a labelled input per cell, a "No items yet" row that says what to do, a Remove button per row), totals (a `dl` that is `aria-busy` while the server recalculates), actions (Cancel, then the primary "Post sale", disabled while settling and after posting), audit text. Every figure comes from the server (`/sales/preview`); the browser never adds money up. The Idempotency-Key is created once per form, so a retry posts once. After a successful post the form is done: the button stays disabled until navigation.
+
+### Lookup fields (LookupDialog)
+A large master list is never a plain select. The trigger is a secondary Button whose `aria-label` carries the current value ("Customer: Walk-in customer. Change"), because a `<label>` pointed at a button would replace its name. The dialog has a search box, results as full-width buttons (hover and focus-visible `bg-surface-hover`), an empty message that says what to do, and an optional footer for "add new".
+
+### Approval card
+`article` with an `aria-label` that names the kind and the summary; header = kind + StatusBadge; the summary; a bullet list of plain-words details (a line starting "Problem:" is `text-danger`); who asked and when it expires; the decision note (`role="alert"` when the run failed); right-aligned actions Reject, Edit, Approve (primary). Staff see "Waiting for a manager" instead of buttons. The same component serves the Approvals page and the inline card in the chat.
+
+### Chat panel
+Messages in an `aria-live="polite"` list; the user's messages `bg-action text-fg-inverse` right-aligned, the assistant's `bg-surface-sunken` with a border (warning tone for paused/limit outcomes); a visually hidden "You:" / "Assistant:" prefix; proposals appear as approval cards under the message that created them; Enter sends and Shift+Enter breaks the line; the empty state explains the flow and offers examples in English and Roman Urdu.

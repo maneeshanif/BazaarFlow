@@ -20,9 +20,9 @@ from openai.types.responses import ResponseFunctionToolCall, ResponseOutputMessa
 
 # "sell 2 shirt to Ali", "2 shirt bech do Ali ko", "1 jeans Ali ko udhaar pe"; the last word before "ko" is the customer
 _FORMS = (
-    re.compile(r"^(?:sell\s+)?(?P<qty>\d+)\s+(?P<product>.+?)\s+(?:to|for)\s+(?P<customer>[a-z][a-z .]*?)(?:\s+(?:on\s+)?(?:udhaar|credit))?$"),
-    re.compile(r"^(?P<qty>\d+)\s+(?P<product>.+?)\s+(?:bech\s+do|becho)\s+(?P<customer>[a-z][a-z .]*?)\s+ko(?:\s+udhaar(?:\s+pe)?)?$"),
-    re.compile(r"^(?P<qty>\d+)\s+(?P<product>.+?)\s+(?P<customer>[a-z]+)\s+ko(?:\s+udhaar(?:\s+pe)?)?$"),
+    re.compile(r"^(?:sell\s+)?(?P<qty>\d+)\s+(?P<product>.+?)\s+(?:to|for)\s+(?P<customer>[a-z][a-z0-9 .]*?)(?:\s+(?:on\s+)?(?:udhaar|credit))?$"),
+    re.compile(r"^(?P<qty>\d+)\s+(?P<product>.+?)\s+(?:bech\s+do|becho)\s+(?P<customer>[a-z][a-z0-9 .]*?)\s+ko(?:\s+udhaar(?:\s+pe)?)?$"),
+    re.compile(r"^(?P<qty>\d+)\s+(?P<product>.+?)\s+(?P<customer>[a-z][a-z0-9]*)\s+ko(?:\s+udhaar(?:\s+pe)?)?$"),
     re.compile(r"^(?:sell\s+)?(?P<qty>\d+)\s+(?P<product>.+?)(?:\s+(?:bech\s+do|becho))?(?:\s+(?:on\s+)?(?:udhaar|credit)(?:\s+pe)?)?$"),
 )
 _YES = re.compile(r"^(yes|y|haan|han|ok|okay|post it|confirm)\b")

@@ -318,7 +318,7 @@ export default function DashboardPage() {
                     <span className="text-sm">Inventory</span>
                   </Button>
                 </Link>
-                <Link href="/chat/sales">
+                <Link href="/sales/chat">
                   <Button variant="outline" className="w-full h-20 flex-col gap-2 border-2 border-blue-200 hover:bg-blue-50 dark:border-blue-900 dark:hover:bg-blue-950">
                     <MessageSquare className="w-6 h-6 text-blue-600" />
                     <span className="text-sm">Sales</span>

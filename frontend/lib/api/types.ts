@@ -22,4 +22,11 @@ export type OrderSummary = Schemas["OrderSummary"];
 
 export type TeamMember = Schemas["TeamMemberOut"];
 
+export type ChatResponse = Schemas["ChatResponse"];
+export type ChatAction = Schemas["ChatAction"];
+export type Approval = Schemas["ApprovalOut"];
+export type AgentRun = Schemas["AgentRunOut"];
+export type AgentRunDetail = Schemas["AgentRunDetail"];
+export type AgentStatus = Schemas["AgentStatus"];
+
 export type Page<T> = { items: T[]; total: number; next_cursor: string | null };

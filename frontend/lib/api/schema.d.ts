@@ -844,6 +844,8 @@ export interface components {
             decided_by: string | null;
             /** Decision Note */
             decision_note: string | null;
+            /** Details */
+            details: string[];
             /** Executed At */
             executed_at: string | null;
             /** Expires At */

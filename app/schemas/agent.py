@@ -40,6 +40,7 @@ class ApprovalOut(BaseModel):
     agent: str
     tool: str
     summary: str
+    details: list[str]  # the proposal in plain words (names, amounts), worked out from the live data
     payload: dict[str, Any]
     status: ActionStatusName
     requested_by: UUID | None

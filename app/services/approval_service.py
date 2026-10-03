@@ -8,6 +8,7 @@ and managers decide. Every step is audited (``agent.action_*``).
 from __future__ import annotations
 
 import uuid
+from decimal import Decimal
 from typing import Any
 
 from pydantic import ValidationError
@@ -20,6 +21,9 @@ from app.core.audit import record_audit
 from app.core.problems import DomainError, NotFound
 from app.core.tenancy import Principal
 from app.models.agent import ActionStatus, AgentAction
+from app.models.customer import Customer
+from app.models.inventory import InventoryItem
+from app.models.product import Product
 from app.models.user import User
 from app.schemas.agent import ApprovalOut
 from app.schemas.order import SaleCreate, SalePreviewRequest
@@ -30,12 +34,13 @@ def _ctx(db: AsyncSession, principal: Principal) -> ToolContext:
     return ToolContext(tenant_id=principal.tenant_id, user_id=principal.user_id, role=principal.role, session=db)
 
 
-def _out(action: AgentAction, requester: str | None) -> ApprovalOut:
+def _out(action: AgentAction, requester: str | None, details: list[str] | None = None) -> ApprovalOut:
     return ApprovalOut(
         id=action.id,
         agent=action.agent,
         tool=action.tool,
         summary=action.summary,
+        details=details or [],
         payload=action.payload_json,
         status=action.status,  # type: ignore[arg-type]
         requested_by=action.requested_by,
@@ -46,6 +51,56 @@ def _out(action: AgentAction, requester: str | None) -> ApprovalOut:
         expires_at=action.expires_at,
         executed_at=action.executed_at,
     )
+
+
+def _rs(value: Decimal) -> str:
+    return f"Rs {value:,.2f}"
+
+
+async def _details(db: AsyncSession, principal: Principal, action: AgentAction) -> list[str]:
+    """What the proposal means in plain words, from the live data. A stale reference just yields fewer lines."""
+    payload = action.payload_json
+    try:
+        if action.tool == "post_order":
+            sale = SaleCreate.model_validate(payload)
+            names = {
+                pid: name
+                for pid, name in (
+                    await db.execute(select(Product.id, Product.name).where(Product.id.in_([i.product_id for i in sale.items]), Product.tenant_id == principal.tenant_id))
+                ).all()
+            }
+            preview = await order_service.preview_sale(
+                db,
+                principal,
+                SalePreviewRequest(items=sale.items, discount=sale.discount, payment_method=sale.payment_method, amount_paid=sale.amount_paid),
+            )
+            lines = [f"{i.qty} x {names.get(i.product_id, 'a product that no longer exists')}" for i in sale.items]
+            if sale.customer_id:
+                customer = (await db.execute(select(Customer.name, Customer.phone).where(Customer.id == sale.customer_id, Customer.tenant_id == principal.tenant_id))).first()
+                lines.append(f"Customer: {(customer[0] or customer[1]) if customer else 'unknown'}")
+            else:
+                lines.append("Customer: walk-in")
+            lines.append(f"Total {_rs(preview.total)}; paid now {_rs(preview.amount_paid)} by {sale.payment_method}; on credit {_rs(preview.amount_due)}")
+            lines.extend(f"Problem: {w}" for w in preview.warnings)
+            return lines
+        if action.tool == "record_payment":
+            row = (await db.execute(select(Customer.name, Customer.phone).where(Customer.id == uuid.UUID(str(payload["customer_id"])), Customer.tenant_id == principal.tenant_id))).first()
+            amount = Decimal(str(payload["amount"]))
+            return [f"{_rs(amount)} ({payload['method']}) from {(row[0] or row[1]) if row else 'unknown'}"]
+        if action.tool == "adjust_stock":
+            stock_row = (
+                await db.execute(
+                    select(Product.name, InventoryItem.qty_on_hand)
+                    .join(InventoryItem, InventoryItem.product_id == Product.id)
+                    .where(Product.id == uuid.UUID(str(payload["product_id"])), Product.tenant_id == principal.tenant_id)
+                )
+            ).first()
+            if stock_row is None:
+                return []
+            return [f"{stock_row[0]}: {int(payload['delta']):+d} ({payload['reason']}); {stock_row[1]} in stock now"]
+    except Exception:  # noqa: BLE001 - a stale or odd payload must not break the list
+        return []
+    return []
 
 
 async def _requester_name(db: AsyncSession, user_id: uuid.UUID | None) -> str | None:
@@ -73,7 +128,7 @@ async def list_actions(
             .offset(offset)
         )
     ).all()
-    return [_out(a, name or email) for a, name, email in rows], int(total)
+    return [_out(a, name or email, await _details(db, principal, a)) for a, name, email in rows], int(total)
 
 
 async def get_action(db: AsyncSession, principal: Principal, action_id: uuid.UUID) -> ApprovalOut:
@@ -86,7 +141,7 @@ async def get_action(db: AsyncSession, principal: Principal, action_id: uuid.UUI
     ).first()
     if row is None:
         raise NotFound("Approval")
-    return _out(row[0], row[1] or row[2])
+    return _out(row[0], row[1] or row[2], await _details(db, principal, row[0]))
 
 
 def _translate(exc: Exception) -> DomainError:

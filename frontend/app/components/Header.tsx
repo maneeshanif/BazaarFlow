@@ -42,7 +42,7 @@ export default function Header() {
   ];
 
   const agentChatLinks = [
-    { href: "/chat/sales", label: "Sales", icon: MessageSquare },
+    { href: "/sales/chat", label: "Sales", icon: MessageSquare },
   ];
 
   return (

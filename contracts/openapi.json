@@ -316,6 +316,13 @@
             ],
             "title": "Decision Note"
           },
+          "details": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Details",
+            "type": "array"
+          },
           "executed_at": {
             "anyOf": [
               {
@@ -399,6 +406,7 @@
           "agent",
           "tool",
           "summary",
+          "details",
           "payload",
           "status",
           "requested_by",

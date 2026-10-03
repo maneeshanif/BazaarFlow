@@ -190,7 +190,7 @@ Batch gate: tasks 49, 29, 44, 63, 37, 64, 65, 45 pass the full run; a chat sale 
   - Acceptance: each tool has its own unit tests (DONE: tests/unit/test_agent_tool_catalog.py)
   - Acceptance: authorize_call rejects unknown tools, roles below the minimum and approval-gated writes (DONE as a function, tested)
   - Acceptance: a forbidden call is rejected AT RUNTIME: the gate sits in the path of every agent tool call with a ToolContext (OPEN: needs phase 1, call sites do not pass a ToolContext yet; tools run raw through the SDK)
-- [ ] 44 Approvals center — F-021 (Overview; transaction; P0; roles: owner, manager)
+- [x] 44 Approvals center — F-021 (Overview; transaction; P0; roles: owner, manager)
   - Acceptance: A user with one of the roles (owner, manager) can complete the Overview flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-021 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
@@ -198,7 +198,7 @@ Batch gate: tasks 49, 29, 44, 63, 37, 64, 65, 45 pass the full run; a chat sale 
   - Acceptance: An approved action runs
   - Acceptance: a rejected action does not
   - Acceptance: the trace shows both
-- [ ] 37 Sales chat (agent) — F-006 (Sales; transaction; P0; roles: owner, manager, staff)
+- [x] 37 Sales chat (agent) — F-006 (Sales; transaction; P0; roles: owner, manager, staff)
   - Acceptance: A user with one of the roles (owner, manager, staff) can complete the Sales flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-006 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
@@ -207,7 +207,7 @@ Batch gate: tasks 49, 29, 44, 63, 37, 64, 65, 45 pass the full run; a chat sale 
   - Acceptance: the kill switch works without a deploy
 - [x] 65 Tracing with redaction [agents pack]
   - Acceptance: A trace of a run contains no personal data from the test fixtures
-- [ ] 45 Agent activity log — F-022 (Overview; list; P0; roles: owner, manager)
+- [x] 45 Agent activity log — F-022 (Overview; list; P0; roles: owner, manager)
   - Acceptance: A user with one of the roles (owner, manager) can complete the Overview flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-022 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored

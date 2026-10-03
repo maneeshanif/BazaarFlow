@@ -28,8 +28,8 @@ export const NAV: NavGroup[] = [
     label: "Overview",
     items: [
       { label: "Home", icon: "home", roles: ALL, href: "/dashboard" },
-      { label: "Agent activity", icon: "activity", roles: MANAGER_UP, soon: true },
-      { label: "Approvals", icon: "check-circle", roles: MANAGER_UP, soon: true },
+      { label: "Agent activity", icon: "activity", roles: MANAGER_UP, href: "/agent-activity" },
+      { label: "Approvals", icon: "check-circle", roles: MANAGER_UP, href: "/approvals" },
     ],
   },
   {
@@ -42,7 +42,7 @@ export const NAV: NavGroup[] = [
   {
     label: "Sales",
     items: [
-      { label: "Sales chat", icon: "bot", roles: ALL, href: "/dashboard/sales" },
+      { label: "Sales chat", icon: "bot", roles: ALL, href: "/sales/chat" },
       { label: "New sale", icon: "plus-circle", roles: ALL, href: "/sales/new" },
       { label: "Orders", icon: "receipt", roles: ALL, href: "/orders" },
       { label: "Customers", icon: "users", roles: MANAGER_UP, href: "/customers" },
@@ -116,7 +116,7 @@ export function tabsFor(role: Role): Tab[] {
   return [
     { label: "Home", icon: "home", href: "/dashboard" },
     second,
-    { label: "Sales", icon: "bot", href: "/dashboard/sales" },
+    { label: "Sales", icon: "bot", href: "/sales/chat" },
     { label: "Stock", icon: "package", href: "/inventory" },
     { label: "More", icon: "menu", menu: true },
   ];

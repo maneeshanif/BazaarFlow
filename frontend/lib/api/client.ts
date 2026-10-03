@@ -87,6 +87,14 @@ export async function apiPatch<T>(path: string, body: unknown): Promise<T> {
   }
 }
 
+export async function apiPut<T>(path: string, body: unknown): Promise<T> {
+  try {
+    return (await axios.put<T>(url(path), body, { timeout: REQUEST_TIMEOUT_MS })).data;
+  } catch (error) {
+    throw toApiError(error);
+  }
+}
+
 export async function apiDelete(path: string): Promise<void> {
   try {
     await axios.delete(url(path), { timeout: REQUEST_TIMEOUT_MS });

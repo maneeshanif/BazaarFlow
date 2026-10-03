@@ -12,7 +12,7 @@ const TONES: Record<string, Tone> = {
   delivered: "success", in_stock: "success", settled: "success",
   // warning
   pending: "warning", needs_human: "warning", low_stock: "warning", partial: "warning", awaiting_approval: "warning",
-  near_expiry: "warning", pending_approval: "warning", owes: "warning",
+  near_expiry: "warning", pending_approval: "warning", owes: "warning", step_limit: "warning", spend_limit: "warning",
   // info
   scheduled: "info", submitted: "info", in_progress: "info", queued: "info", generating: "info", running: "info",
   // danger
@@ -21,7 +21,7 @@ const TONES: Record<string, Tone> = {
   // accent
   ai_handling: "accent",
   // neutral
-  draft: "neutral", resolved: "neutral", open: "neutral", disabled: "neutral",
+  draft: "neutral", resolved: "neutral", open: "neutral", disabled: "neutral", paused: "neutral",
 };
 
 const normalise = (status: string): string => status.trim().toLowerCase().replace(/[\s-]+/g, "_");
