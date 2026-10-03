@@ -31,6 +31,7 @@ export function CustomerForm({ customer, onSaved }: { customer?: Customer; onSav
   );
   const [touched, setTouched] = useState<ReadonlySet<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
+  const [created, setCreated] = useState(false); // a new customer was added: a second click must not add them twice
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const save = useSubmit(async (v: Values) => {
@@ -59,10 +60,12 @@ export function CustomerForm({ customer, onSaved }: { customer?: Customer; onSav
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
+    if (created) return;
     setSubmitted(true);
     if (!parsed.success) return;
     const saved = await save.run(values);
     if (!saved) return;
+    if (!editing) setCreated(true);
     toast.success(editing ? `Saved changes to ${saved.name ?? saved.phone}` : `Added ${saved.name ?? saved.phone}`);
     onSaved?.(saved);
     if (!editing) router.push(`/customers/${saved.id}`);
@@ -92,7 +95,7 @@ export function CustomerForm({ customer, onSaved }: { customer?: Customer; onSav
             <Link href="/customers" className={buttonClass("secondary")}>
               Cancel
             </Link>
-            <Button type="submit" variant="primary" loading={save.pending}>
+            <Button type="submit" variant="primary" loading={save.pending} disabled={created}>
               {editing ? "Save changes" : "Add customer"}
             </Button>
           </>

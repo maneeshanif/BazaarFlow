@@ -163,15 +163,15 @@ Batch gate: schema and RLS migrations, API, UI and tests for 55, 56, 41, 51, 52,
   - Acceptance: A user with one of the roles (owner, manager) can complete the Sales flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-009 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 38 New sale — F-007 (Sales; transaction; P0; roles: owner, manager, staff)
+- [x] 38 New sale — F-007 (Sales; transaction; P0; roles: owner, manager, staff)
   - Acceptance: A user with one of the roles (owner, manager, staff) can complete the Sales flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-007 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 39 Orders list and detail — F-008 (Sales; list; P0; roles: owner, manager, staff)
+- [x] 39 Orders list and detail — F-008 (Sales; list; P0; roles: owner, manager, staff)
   - Acceptance: A user with one of the roles (owner, manager, staff) can complete the Sales flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-008 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 43 Team and roles — F-019 (Settings; master; P0; roles: owner)
+- [x] 43 Team and roles — F-019 (Settings; master; P0; roles: owner)
   - Acceptance: A user with one of the roles (owner) can complete the Settings flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-019 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored

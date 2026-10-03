@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { visit } from "./support";
+
 /**
  * Task 40 acceptance, against the REAL backend: an owner adds a customer through the form, finds them in the list,
  * edits them, and a staff member is kept out of the customers area. (Credit sales and payments are exercised in the
@@ -40,13 +42,13 @@ test("an owner adds, finds and edits a customer", async ({ page }) => {
   await expect(page.getByLabel("Balance")).toHaveText("Rs 0");
 
   // the same phone twice is refused under the phone field
-  await page.goto("/customers/new");
+  await visit(page, "/customers/new");
   await page.getByLabel(/^Phone/).fill(`0301${suffix}`);
   await page.getByRole("button", { name: "Add customer" }).click();
   await expect(page.getByText("A customer with this phone number already exists")).toBeVisible();
 
   // found by search, stored in international form
-  await page.goto("/customers");
+  await visit(page, "/customers");
   await page.getByRole("searchbox", { name: "Search" }).fill("E2E Customer");
   const row = page.getByRole("row", { name: /E2E Customer/ });
   await expect(row).toContainText(`+92301${suffix}`);
@@ -61,7 +63,7 @@ test("an owner adds, finds and edits a customer", async ({ page }) => {
 
 test("staff are kept out of the customers area", async ({ page }) => {
   await signIn(page, STAFF, "/dashboard");
-  await page.goto("/customers");
+  await visit(page, "/customers");
   await expect(page.getByText(/access is restricted/i)).toBeVisible();
   await expect(page.getByRole("link", { name: "Customers" })).toHaveCount(0);
 });

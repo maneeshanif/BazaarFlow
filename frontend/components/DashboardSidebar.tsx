@@ -32,7 +32,7 @@ const menuItems = [
   },
   {
     title: "Orders",
-    url: "/dashboard/orders",
+    url: "/orders",
     icon: ShoppingCart,
   },
   {

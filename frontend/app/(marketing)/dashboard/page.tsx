@@ -200,7 +200,7 @@ export default function DashboardPage() {
               <CardHeader className="border-b border-slate-200 dark:border-slate-700">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg font-semibold text-slate-900 dark:text-white">Recent Orders</CardTitle>
-                  <Link href="/dashboard/orders">
+                  <Link href="/orders">
                     <Button variant="ghost" size="sm" className="text-teal-600 hover:text-teal-700 hover:bg-teal-50">
                       View All →
                     </Button>

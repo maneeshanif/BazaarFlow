@@ -1,7 +1,10 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
-from app.api.controllers.sales_controller import router as ep
-from app.core.auth import ALL_ROLES, require_role
+from app.api.controllers.orders_controller import orders_router as orders_ep
+from app.api.controllers.orders_controller import sales_router as sales_ep
 
-router = APIRouter(prefix="/api/sales", tags=["sales"], dependencies=[Depends(require_role(*ALL_ROLES))])
-router.include_router(ep)
+sales_router = APIRouter(prefix="/sales", tags=["sales"])
+sales_router.include_router(sales_ep)
+
+orders_router = APIRouter(prefix="/orders", tags=["orders"])
+orders_router.include_router(orders_ep)

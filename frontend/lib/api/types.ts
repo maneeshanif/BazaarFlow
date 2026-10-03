@@ -15,4 +15,11 @@ export type CustomerUpdate = Schemas["CustomerUpdate"];
 export type LedgerEntry = Schemas["LedgerEntryOut"];
 export type Payment = Schemas["PaymentOut"];
 
+export type SaleCreate = Schemas["SaleCreate"];
+export type SalePreview = Schemas["SalePreview"];
+export type OrderDetail = Schemas["OrderDetail"];
+export type OrderSummary = Schemas["OrderSummary"];
+
+export type TeamMember = Schemas["TeamMemberOut"];
+
 export type Page<T> = { items: T[]; total: number; next_cursor: string | null };

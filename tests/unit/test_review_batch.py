@@ -123,8 +123,8 @@ def _paths(legacy: bool) -> set[str]:
 
 def test_legacy_routes_can_be_switched_off_and_the_webhooks_stay() -> None:
     on, off = _paths(True), _paths(False)
-    assert any(p.startswith("/api/sales") for p in on)
-    assert not any(p.startswith(("/api/inventory", "/api/sales", "/api/vendors", "/api/chat", "/api/marketing", "/api/logs")) for p in off)
+    assert any(p.startswith("/api/vendors") for p in on)
+    assert not any(p.startswith(("/api/inventory", "/api/vendors", "/api/chat", "/api/marketing", "/api/logs")) for p in off)
     assert {"/webhook", "/vapi/webhook"} <= off
 
 

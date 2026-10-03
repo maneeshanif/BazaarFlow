@@ -247,6 +247,133 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/orders/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Orders */
+        get: operations["list_orders_api_v1_orders__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/orders/{order_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Order */
+        get: operations["get_order_api_v1_orders__order_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/orders/{order_id}/reverse": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reverse Order
+         * @description Undo a posted sale (PRD §13.2: reversing is a manager's decision). Stock, payments and udhaar are put back.
+         */
+        post: operations["reverse_order_api_v1_orders__order_id__reverse_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sales/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Post Sale */
+        post: operations["post_sale_api_v1_sales__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/sales/preview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Preview Sale
+         * @description Add up a sale for the form (prices, totals, stock) without writing anything.
+         */
+        post: operations["preview_sale_api_v1_sales_preview_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/team/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Team */
+        get: operations["list_team_api_v1_team__get"];
+        put?: never;
+        /** Add Team Member */
+        post: operations["add_team_member_api_v1_team__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/team/{membership_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Team Member */
+        delete: operations["remove_team_member_api_v1_team__membership_id__delete"];
+        options?: never;
+        head?: never;
+        /** Change Team Member Role */
+        patch: operations["change_team_member_role_api_v1_team__membership_id__patch"];
+        trace?: never;
+    };
     "/auth/login": {
         parameters: {
             query?: never;
@@ -545,6 +672,127 @@ export interface components {
             tenant_id: string;
             user: components["schemas"]["UserOut"];
         };
+        /** OrderDetail */
+        OrderDetail: {
+            /** Amount Due */
+            amount_due: string;
+            /** Amount Paid */
+            amount_paid: string;
+            /** Channel */
+            channel: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Created By */
+            created_by: string | null;
+            /** Customer Id */
+            customer_id: string | null;
+            /** Customer Name */
+            customer_name: string | null;
+            /** Discount */
+            discount: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Item Count */
+            item_count: number;
+            /** Items */
+            items: components["schemas"]["OrderItemOut"][];
+            /** Note */
+            note: string | null;
+            /** Payments */
+            payments: components["schemas"]["OrderPaymentOut"][];
+            /** Status */
+            status: string;
+            /** Subtotal */
+            subtotal: string;
+            /** Total */
+            total: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /** OrderItemOut */
+        OrderItemOut: {
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Line Total */
+            line_total: string;
+            /**
+             * Product Id
+             * Format: uuid
+             */
+            product_id: string;
+            /** Product Name */
+            product_name: string;
+            /** Qty */
+            qty: number;
+            /** Unit Cost */
+            unit_cost: string | null;
+            /** Unit Price */
+            unit_price: string;
+        };
+        /** OrderPaymentOut */
+        OrderPaymentOut: {
+            /** Amount */
+            amount: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Method */
+            method: string;
+            /** Status */
+            status: string;
+        };
+        /** OrderSummary */
+        OrderSummary: {
+            /** Amount Due */
+            amount_due: string;
+            /** Amount Paid */
+            amount_paid: string;
+            /** Channel */
+            channel: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Customer Id */
+            customer_id: string | null;
+            /** Customer Name */
+            customer_name: string | null;
+            /** Discount */
+            discount: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Item Count */
+            item_count: number;
+            /** Status */
+            status: string;
+            /** Subtotal */
+            subtotal: string;
+            /** Total */
+            total: string;
+        };
         /** Page[CustomerOut] */
         Page_CustomerOut_: {
             /** Items */
@@ -558,6 +806,15 @@ export interface components {
         Page_LedgerEntryOut_: {
             /** Items */
             items: components["schemas"]["LedgerEntryOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
+        /** Page[OrderSummary] */
+        Page_OrderSummary_: {
+            /** Items */
+            items: components["schemas"]["OrderSummary"][];
             /** Next Cursor */
             next_cursor?: string | null;
             /** Total */
@@ -738,6 +995,107 @@ export interface components {
             shop_name: string;
         };
         /**
+         * ReverseRequest
+         * @description Why a posted sale is being undone (kept in the audit log and on the order).
+         */
+        ReverseRequest: {
+            /** Reason */
+            reason: string;
+        };
+        /**
+         * SaleCreate
+         * @description PRD F-007 New sale. The channel is set by the source (here: the point of sale), never by the caller.
+         */
+        SaleCreate: {
+            /** Amount Paid */
+            amount_paid?: number | string | null;
+            /** Customer Id */
+            customer_id?: string | null;
+            /**
+             * Discount
+             * @default 0.00
+             */
+            discount: number | string;
+            /** Items */
+            items: components["schemas"]["SaleLine"][];
+            /** Note */
+            note?: string | null;
+            /**
+             * Payment Method
+             * @enum {string}
+             */
+            payment_method: "cash" | "card" | "bank" | "wallet" | "udhaar";
+            /**
+             * Stock Override
+             * @default false
+             */
+            stock_override: boolean;
+        };
+        /** SaleLine */
+        SaleLine: {
+            /**
+             * Product Id
+             * Format: uuid
+             */
+            product_id: string;
+            /** Qty */
+            qty: number;
+            /** Unit Price */
+            unit_price?: number | string | null;
+        };
+        /** SalePreview */
+        SalePreview: {
+            /** Amount Due */
+            amount_due: string;
+            /** Amount Paid */
+            amount_paid: string;
+            /** Discount */
+            discount: string;
+            /** Lines */
+            lines: components["schemas"]["SalePreviewLine"][];
+            /** Subtotal */
+            subtotal: string;
+            /** Total */
+            total: string;
+            /** Warnings */
+            warnings: string[];
+        };
+        /** SalePreviewLine */
+        SalePreviewLine: {
+            /** Available */
+            available: number;
+            /** Enough Stock */
+            enough_stock: boolean;
+            /** Line Total */
+            line_total: string;
+            /**
+             * Product Id
+             * Format: uuid
+             */
+            product_id: string;
+            /** Product Name */
+            product_name: string;
+            /** Unit Price */
+            unit_price: string;
+        };
+        /**
+         * SalePreviewRequest
+         * @description What the New sale form asks the server to add up (the browser never does money arithmetic).
+         */
+        SalePreviewRequest: {
+            /** Amount Paid */
+            amount_paid?: number | string | null;
+            /**
+             * Discount
+             * @default 0.00
+             */
+            discount: number | string;
+            /** Items */
+            items?: components["schemas"]["SaleLine"][];
+            /** Payment Method */
+            payment_method?: ("cash" | "card" | "bank" | "wallet" | "udhaar") | null;
+        };
+        /**
          * StockMovementCreate
          * @description A manual stock change. ``delta`` is signed: positive adds stock, negative removes it.
          */
@@ -791,6 +1149,71 @@ export interface components {
              * Format: uuid
              */
             tenant_id: string;
+        };
+        /**
+         * TeamMemberCreate
+         * @description Add a person to the shop. A new person needs an initial password to be given to them; someone who already has
+         *     an account (for example in another shop) keeps theirs and ``password`` is ignored.
+         */
+        TeamMemberCreate: {
+            /**
+             * Email
+             * Format: email
+             */
+            email: string;
+            /** Name */
+            name: string;
+            /** Password */
+            password?: string | null;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "manager" | "staff";
+        };
+        /** TeamMemberOut */
+        TeamMemberOut: {
+            /** Email */
+            email: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Is Active */
+            is_active: boolean;
+            /** Is You */
+            is_you: boolean;
+            /**
+             * Joined At
+             * Format: date-time
+             */
+            joined_at: string;
+            /** Name */
+            name: string | null;
+            /**
+             * New Account
+             * @default false
+             */
+            new_account: boolean;
+            /** Role */
+            role: string;
+            /**
+             * User Id
+             * Format: uuid
+             */
+            user_id: string;
+        };
+        /**
+         * TeamMemberUpdate
+         * @description Only the role can change; unknown fields are rejected.
+         */
+        TeamMemberUpdate: {
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "manager" | "staff";
         };
         /** TenantMembershipOut */
         TenantMembershipOut: {
@@ -1527,6 +1950,294 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ProductOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_orders_api_v1_orders__get: {
+        parameters: {
+            query?: {
+                status?: string | null;
+                channel?: string | null;
+                customer_id?: string | null;
+                q?: string | null;
+                sort?: string;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_OrderSummary_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_order_api_v1_orders__order_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reverse_order_api_v1_orders__order_id__reverse_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReverseRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_sale_api_v1_sales__post: {
+        parameters: {
+            query?: never;
+            header?: {
+                "Idempotency-Key"?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaleCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OrderDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_sale_api_v1_sales_preview_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SalePreviewRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SalePreview"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_team_api_v1_team__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamMemberOut"][];
+                };
+            };
+        };
+    };
+    add_team_member_api_v1_team__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TeamMemberCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamMemberOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_team_member_api_v1_team__membership_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                membership_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    change_team_member_role_api_v1_team__membership_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                membership_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TeamMemberUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TeamMemberOut"];
                 };
             };
             /** @description Validation Error */

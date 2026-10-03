@@ -48,9 +48,9 @@ export default function PreviewContent() {
       <PageHeader title="Home" description="Foundation components, rendered with sample data." />
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <KpiCard label="Today's sales" value={formatMoney(42500)} delta="+8%" href="/dashboard/orders" />
-        <KpiCard label="Profit today" value={formatMoney(9800)} delta="+3%" href="/dashboard/orders" />
-        <KpiCard label="Orders today" value="31" delta="-2%" href="/dashboard/orders" />
+        <KpiCard label="Today's sales" value={formatMoney(42500)} delta="+8%" href="/orders" />
+        <KpiCard label="Profit today" value={formatMoney(9800)} delta="+3%" href="/orders" />
+        <KpiCard label="Orders today" value="31" delta="-2%" href="/orders" />
         <KpiCard label="Low-stock items" value="6" href="/inventory" />
       </div>
 

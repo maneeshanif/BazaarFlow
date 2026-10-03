@@ -18,6 +18,7 @@ from sqlalchemy.sql.elements import ColumnElement
 
 from app.core.audit import record_audit
 from app.core.problems import Conflict, DomainError, NotFound
+from app.core.search import escape_like
 from app.core.tenancy import Principal
 from app.models.inventory import InventoryItem
 from app.models.product import Product
@@ -33,10 +34,6 @@ SORTS: dict[str, Any] = {
     "created_at": Product.created_at,
     "qty": InventoryItem.qty_on_hand,
 }
-
-
-def _escape_like(text: str) -> str:
-    return text.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
 
 
 def to_out(product: Product, inventory: InventoryItem, role: TenantRole) -> ProductOut:
@@ -83,7 +80,7 @@ async def list_products(
         )
     conditions = _live_filters(principal.tenant_id)
     if q:
-        like = f"%{_escape_like(q.strip())}%"
+        like = f"%{escape_like(q.strip())}%"
         conditions.append(or_(Product.name.ilike(like, escape="\\"), Product.sku.ilike(like, escape="\\")))
     if category:
         conditions.append(Product.category == category)

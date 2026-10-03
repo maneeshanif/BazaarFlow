@@ -26,18 +26,18 @@ async function signIn(page: Page, email: string, password = PASSWORD) {
 }
 
 test("a visitor who is not signed in is sent to sign-in and comes back afterwards", async ({ page }) => {
-  await open(page, "/dashboard/orders");
-  await expect(page).toHaveURL(/\/sign-in\?next=%2Fdashboard%2Forders/);
+  await open(page, "/orders");
+  await expect(page).toHaveURL(/\/sign-in\?next=%2Forders/);
   await page.getByLabel("Email").fill(OWNER);
   await page.getByLabel("Password").fill(PASSWORD);
   await page.getByRole("button", { name: "Sign in" }).click();
-  await expect(page).toHaveURL(/\/dashboard\/orders$/);
+  await expect(page).toHaveURL(/\/orders$/);
   await expect(page.getByText(/access is restricted/i)).toHaveCount(0);
 });
 
 test("the sign-in redirect keeps the query string of the page that was asked for", async ({ page }) => {
-  await open(page, "/dashboard/orders?status=pending");
-  await expect(page).toHaveURL(/next=%2Fdashboard%2Forders%3Fstatus%3Dpending/);
+  await open(page, "/orders?status=pending");
+  await expect(page).toHaveURL(/next=%2Forders%3Fstatus%3Dpending/);
 });
 
 test("the sign-in form checks the input first, then signs in whatever the email's case (F-001)", async ({ page }) => {
@@ -105,7 +105,7 @@ test("a staff member is shown the restricted view on owner and manager pages, an
   await expect(page.getByText(/access is restricted/i)).toBeVisible();
   await open(page, "/dashboard/marketing/overview");
   await expect(page.getByText(/access is restricted/i)).toBeVisible();
-  await open(page, "/dashboard/orders");
+  await open(page, "/orders");
   await expect(page.getByText(/access is restricted/i)).toHaveCount(0);
 });
 

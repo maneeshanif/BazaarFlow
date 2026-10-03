@@ -17,6 +17,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.audit import record_audit
 from app.core.problems import Conflict, DomainError, NotFound
+from app.core.search import escape_like
 from app.core.tenancy import Principal
 from app.models.customer import Customer
 from app.models.payment import LedgerEntry
@@ -27,10 +28,6 @@ from app.services import ledger_service
 SORTS = ("name", "created_at", "balance")
 
 _SIGNED = case((LedgerEntry.direction == "debit", LedgerEntry.amount), else_=-LedgerEntry.amount)
-
-
-def _escape_like(text: str) -> str:
-    return text.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
 
 
 def _out(customer: Customer, balance: Decimal, role: TenantRole) -> CustomerOut:
@@ -90,7 +87,7 @@ async def list_customers(
     balance_col = func.coalesce(owed.c.owed, 0)
     conditions: list[Any] = [Customer.tenant_id == principal.tenant_id, Customer.deleted_at.is_(None)]
     if q:
-        like = f"%{_escape_like(q.strip())}%"
+        like = f"%{escape_like(q.strip())}%"
         conditions.append(or_(Customer.name.ilike(like, escape="\\"), Customer.phone.ilike(like, escape="\\")))
     if owing_only:
         conditions.append(balance_col > 0)

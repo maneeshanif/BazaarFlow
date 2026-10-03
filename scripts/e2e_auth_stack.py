@@ -26,7 +26,7 @@ PORT = 55440
 PW = {"postgres": "admin-pw", "migrator": "mig-pw", "app": "app-pw", "report": "rep-pw"}
 USER_PASSWORD = "e2e-password-1"
 # Specs that need the real stack (they skip themselves without E2E_AUTH). Add each new one here.
-STACK_SPECS = ["e2e/auth.spec.ts", "e2e/products.spec.ts", "e2e/register.spec.ts", "e2e/customers.spec.ts"]
+STACK_SPECS = ["e2e/auth.spec.ts", "e2e/products.spec.ts", "e2e/register.spec.ts", "e2e/customers.spec.ts", "e2e/sales.spec.ts", "e2e/team.spec.ts"]
 
 
 def sh(args: list[str], **kw) -> subprocess.CompletedProcess:

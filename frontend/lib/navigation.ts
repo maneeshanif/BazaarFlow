@@ -43,8 +43,8 @@ export const NAV: NavGroup[] = [
     label: "Sales",
     items: [
       { label: "Sales chat", icon: "bot", roles: ALL, href: "/dashboard/sales" },
-      { label: "New sale", icon: "plus-circle", roles: ALL, soon: true },
-      { label: "Orders", icon: "receipt", roles: ALL, href: "/dashboard/orders" },
+      { label: "New sale", icon: "plus-circle", roles: ALL, href: "/sales/new" },
+      { label: "Orders", icon: "receipt", roles: ALL, href: "/orders" },
       { label: "Customers", icon: "users", roles: MANAGER_UP, href: "/customers" },
     ],
   },
@@ -80,7 +80,7 @@ export const NAV: NavGroup[] = [
     label: "Settings",
     items: [
       { label: "Shop profile", icon: "store", roles: OWNER, href: "/dashboard/settings" },
-      { label: "Team", icon: "user-cog", roles: OWNER, soon: true },
+      { label: "Team", icon: "user-cog", roles: OWNER, href: "/team" },
       { label: "Integrations", icon: "plug", roles: OWNER, href: "/dashboard/marketing/credentials" },
     ],
   },
@@ -111,7 +111,7 @@ export type Tab = { label: string; icon: string; href?: string; menu?: true };
 export function tabsFor(role: Role): Tab[] {
   const second: Tab =
     role === "staff"
-      ? { label: "Orders", icon: "receipt", href: "/dashboard/orders" }
+      ? { label: "Orders", icon: "receipt", href: "/orders" }
       : { label: "Inbox", icon: "message-square", href: "/dashboard/support" };
   return [
     { label: "Home", icon: "home", href: "/dashboard" },

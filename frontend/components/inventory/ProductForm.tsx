@@ -54,6 +54,7 @@ export function ProductForm({ product, onSaved }: { product?: Product; onSaved?:
   // a field shows its message once it has been visited (blur) or a submit was tried, and clears as soon as it is valid
   const [touched, setTouched] = useState<ReadonlySet<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
+  const [created, setCreated] = useState(false); // a new product was added: a second click must not add it twice
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const save = useSubmit(async (v: Values) => {
@@ -96,10 +97,12 @@ export function ProductForm({ product, onSaved }: { product?: Product; onSaved?:
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
+    if (created) return;
     setSubmitted(true);
     if (!parsed.success) return;
     const saved = await save.run(values);
     if (!saved) return;
+    if (!editing) setCreated(true);
     toast.success(editing ? `Saved changes to ${saved.name}` : `Added ${saved.name} with ${saved.qty_on_hand} in stock`);
     onSaved?.(saved);
     if (!editing) router.push("/inventory");
@@ -135,7 +138,7 @@ export function ProductForm({ product, onSaved }: { product?: Product; onSaved?:
             <Link href="/inventory" className={buttonClass("secondary")}>
               Cancel
             </Link>
-            <Button type="submit" variant="primary" loading={save.pending}>
+            <Button type="submit" variant="primary" loading={save.pending} disabled={created}>
               {editing ? "Save changes" : "Add product"}
             </Button>
           </>

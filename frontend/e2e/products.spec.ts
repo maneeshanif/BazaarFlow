@@ -1,5 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
+import { visit } from "./support";
+
 /**
  * Tasks 41/51 acceptance, against the REAL backend and database: an owner adds a product through the form, the list
  * shows what was stored, stock changes are recorded, and staff can look but not change.
@@ -12,7 +14,7 @@ const OWNER = process.env.E2E_OWNER_EMAIL ?? "owner@example.com";
 const STAFF = process.env.E2E_STAFF_EMAIL ?? "staff@example.com";
 
 async function signIn(page: Page, email: string) {
-  await page.goto("/sign-in?next=%2Finventory");
+  await visit(page, "/sign-in?next=%2Finventory");
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password").fill(PASSWORD);
   await page.getByRole("button", { name: "Sign in" }).click();
@@ -54,7 +56,7 @@ test("an owner adds a product, sees it stored, and changes its stock", async ({ 
   await expect(page.getByText(`A product with SKU ${sku} already exists`)).toBeVisible();
 
   // change its stock; the history and the quantity agree
-  await page.goto("/inventory");
+  await visit(page, "/inventory");
   await page.getByRole("link", { name: "E2E Kurta" }).click();
   await page.getByLabel("Quantity change").fill("-4");
   await page.getByLabel("Reason").selectOption("adjustment");
@@ -75,6 +77,6 @@ test("staff can see products and stock but not add or change them", async ({ pag
   await expect(page.getByRole("table", { name: "Products" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Add product" })).toHaveCount(0);
   await expect(page.getByRole("columnheader", { name: "Cost" })).toHaveCount(0);
-  await page.goto("/inventory/new");
+  await visit(page, "/inventory/new");
   await expect(page.getByText(/access is restricted/i)).toBeVisible();
 });

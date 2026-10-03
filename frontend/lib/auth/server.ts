@@ -41,16 +41,30 @@ export function publicSession(tokens: BackendTokens) {
   return { access_token: tokens.access_token, tenant_id: tokens.tenant_id, role: tokens.role };
 }
 
+/** A kept-alive connection that the API closed while idle: the request never reached it, so one retry is safe. */
+function isStaleSocket(error: unknown): boolean {
+  const cause = (error as { cause?: { code?: string; message?: string } } | null)?.cause;
+  const text = `${(error as Error | null)?.message ?? ""} ${cause?.message ?? ""}`;
+  return ["ECONNRESET", "UND_ERR_SOCKET", "EPIPE"].includes(cause?.code ?? "") || /socket hang up|other side closed/i.test(text);
+}
+
 export async function callBackend(path: string, body: unknown, extraHeaders: Record<string, string> = {}): Promise<Response> {
   const headers: Record<string, string> = { "content-type": "application/json" };
   for (const [key, value] of Object.entries(extraHeaders)) if (value) headers[key] = value;
-  return fetch(backendUrl(path), {
-    method: "POST",
-    headers,
-    body: JSON.stringify(body),
-    cache: "no-store",
-    signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS), // a hung API must not hang the page
-  });
+  const send = () =>
+    fetch(backendUrl(path), {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+      cache: "no-store",
+      signal: AbortSignal.timeout(BACKEND_TIMEOUT_MS), // a hung API must not hang the page
+    });
+  try {
+    return await send();
+  } catch (error) {
+    if (isStaleSocket(error)) return send(); // once, and only for a reset connection (never for a timeout)
+    throw error;
+  }
 }
 
 /** True when the backend answered with a well-formed session (never trust a 200 blindly). */

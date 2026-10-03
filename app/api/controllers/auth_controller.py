@@ -173,7 +173,10 @@ async def login(body: LoginRequest) -> TokenOut:
                     extra={"tenants": [{"tenant_id": str(r.tenant_id), "tenant_name": r.name} for r in rows]},
                 )
             else:
-                failure = HTTPException(status.HTTP_403_FORBIDDEN, "No tenant for this account")
+                failure = HTTPException(
+                    status.HTTP_403_FORBIDDEN,
+                    "This account is not part of any shop. Ask the shop owner to add you again.",
+                )
             if chosen is not None:
                 await session.execute(
                     delete(LoginAttempt).where(LoginAttempt.email_hash == email_hash, LoginAttempt.succeeded.is_(False))
