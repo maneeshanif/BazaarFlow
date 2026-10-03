@@ -146,11 +146,47 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /** Get Customer */
+        get: operations["get_customer_api_v1_customers__customer_id__get"];
         put?: never;
         post?: never;
         /** Delete Customer */
         delete: operations["delete_customer_api_v1_customers__customer_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Customer */
+        patch: operations["update_customer_api_v1_customers__customer_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/customers/{customer_id}/ledger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Customer Ledger */
+        get: operations["customer_ledger_api_v1_customers__customer_id__ledger_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/customers/{customer_id}/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Record Payment */
+        post: operations["record_payment_api_v1_customers__customer_id__payments_post"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -393,10 +429,7 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /**
-         * CustomerCreate
-         * @description Limits match the column sizes, so over-long input is a 422 and never a database error.
-         */
+        /** CustomerCreate */
         CustomerCreate: {
             /** Address */
             address?: string | null;
@@ -411,6 +444,13 @@ export interface components {
         CustomerOut: {
             /** Address */
             address: string | null;
+            /** Balance */
+            balance?: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
             /** Email */
             email: string | null;
             /**
@@ -427,11 +467,56 @@ export interface components {
              * Format: uuid
              */
             tenant_id: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /**
+         * CustomerUpdate
+         * @description Partial update; unknown fields (tenant_id, balance) are rejected.
+         */
+        CustomerUpdate: {
+            /** Address */
+            address?: string | null;
+            /** Email */
+            email?: string | null;
+            /** Name */
+            name?: string | null;
+            /** Phone */
+            phone?: string | null;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** LedgerEntryOut */
+        LedgerEntryOut: {
+            /** Amount */
+            amount: string;
+            /** Balance After */
+            balance_after: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Direction
+             * @enum {string}
+             */
+            direction: "debit" | "credit";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Ref Id */
+            ref_id: string | null;
+            /** Ref Type */
+            ref_type: string | null;
         };
         /**
          * LoginRequest
@@ -460,6 +545,24 @@ export interface components {
             tenant_id: string;
             user: components["schemas"]["UserOut"];
         };
+        /** Page[CustomerOut] */
+        Page_CustomerOut_: {
+            /** Items */
+            items: components["schemas"]["CustomerOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
+        /** Page[LedgerEntryOut] */
+        Page_LedgerEntryOut_: {
+            /** Items */
+            items: components["schemas"]["LedgerEntryOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
         /** Page[ProductOut] */
         Page_ProductOut_: {
             /** Items */
@@ -477,6 +580,40 @@ export interface components {
             next_cursor?: string | null;
             /** Total */
             total: number;
+        };
+        /**
+         * PaymentCreate
+         * @description A customer settling part or all of what they owe.
+         */
+        PaymentCreate: {
+            /** Amount */
+            amount: number | string;
+            /**
+             * Method
+             * @enum {string}
+             */
+            method: "cash" | "card" | "bank" | "wallet";
+        };
+        /** PaymentOut */
+        PaymentOut: {
+            /** Amount */
+            amount: string;
+            /** Balance */
+            balance: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Customer Id */
+            customer_id: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Method */
+            method: string;
         };
         /** ProductCreate */
         ProductCreate: {
@@ -939,7 +1076,13 @@ export interface operations {
     };
     list_customers_api_v1_customers__get: {
         parameters: {
-            query?: never;
+            query?: {
+                q?: string | null;
+                owing_only?: boolean;
+                sort?: string;
+                limit?: number;
+                cursor?: string | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -952,7 +1095,16 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["CustomerOut"][];
+                    "application/json": components["schemas"]["Page_CustomerOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -990,6 +1142,37 @@ export interface operations {
             };
         };
     };
+    get_customer_api_v1_customers__customer_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                customer_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     delete_customer_api_v1_customers__customer_id__delete: {
         parameters: {
             query?: never;
@@ -1007,6 +1190,110 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_customer_api_v1_customers__customer_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                customer_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomerUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    customer_ledger_api_v1_customers__customer_id__ledger_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path: {
+                customer_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_LedgerEntryOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    record_payment_api_v1_customers__customer_id__payments_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                customer_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PaymentCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaymentOut"];
+                };
             };
             /** @description Validation Error */
             422: {

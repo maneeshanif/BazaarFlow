@@ -7,9 +7,9 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 1A, shop basics on the database (Phase 0 closed 2026-10-03)
-**Last completed:** 35
+**Last completed:** 40
 **In progress:** Phase 1A on branch `feat/phase-1-mvp`, strictly in the order listed
-**Next:** 40 (customers and udhaar ledger), then 38, 39, 43, in batch 1A order
+**Next:** 38 (new sale), then 39, 43, in batch 1A order
 **Blockers:** the owner has not yet said "let's build it"; 26 needs vendor sandbox accounts; DEMO_USER_PASSWORD must be set in `.env` (owner)
 
 ### Phase 0 status
@@ -58,7 +58,7 @@ Update this file after every completed task. Anyone reading it should immediatel
 - [x] 52 Form pattern: validation, error display, double-submit protection…
 - [x] 34 Sign in
 - [x] 35 Create account and shop
-- [ ] 40 Customers and udhaar ledger
+- [x] 40 Customers and udhaar ledger
 - [ ] 38 New sale
 - [ ] 39 Orders list and detail
 - [ ] 43 Team and roles

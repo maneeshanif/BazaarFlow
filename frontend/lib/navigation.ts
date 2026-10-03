@@ -45,7 +45,7 @@ export const NAV: NavGroup[] = [
       { label: "Sales chat", icon: "bot", roles: ALL, href: "/dashboard/sales" },
       { label: "New sale", icon: "plus-circle", roles: ALL, soon: true },
       { label: "Orders", icon: "receipt", roles: ALL, href: "/dashboard/orders" },
-      { label: "Customers", icon: "users", roles: MANAGER_UP, soon: true },
+      { label: "Customers", icon: "users", roles: MANAGER_UP, href: "/customers" },
     ],
   },
   {

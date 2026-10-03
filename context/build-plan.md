@@ -159,7 +159,7 @@ Batch gate: schema and RLS migrations, API, UI and tests for 55, 56, 41, 51, 52,
   - Acceptance: A user with one of the roles (public) can complete the Auth flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-002 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 40 Customers and udhaar ledger — F-009 (Sales; master; P0; roles: owner, manager)
+- [x] 40 Customers and udhaar ledger — F-009 (Sales; master; P0; roles: owner, manager)
   - Acceptance: A user with one of the roles (owner, manager) can complete the Sales flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-009 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored

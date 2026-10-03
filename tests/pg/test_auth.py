@@ -126,7 +126,7 @@ async def _add_member(app_engine: AsyncEngine, owner: dict[str, Any], email: str
 
 @pytest.mark.parametrize(
     ("role", "can_create", "can_delete"),
-    [("owner", True, True), ("manager", True, True), ("staff", True, False)],
+    [("owner", True, True), ("manager", True, False), ("staff", True, False)],  # PRD 14.2: only the owner deletes
 )
 async def test_roles_are_enforced_by_the_api(
     client: AsyncClient, app_engine: AsyncEngine, role: str, can_create: bool, can_delete: bool

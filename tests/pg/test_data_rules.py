@@ -28,7 +28,7 @@ async def test_deleting_a_customer_is_soft_and_the_phone_can_be_reused(
     ).json()
     assert (await client.delete(f"/api/v1/customers/{created['id']}", headers=headers)).status_code == 204
 
-    assert (await client.get("/api/v1/customers/", headers=headers)).json() == []
+    assert (await client.get("/api/v1/customers/", headers=headers)).json()["items"] == []
     async with tenant_session(uuid.UUID(acct["tenant_id"])) as session:
         row = (
             await session.execute(
