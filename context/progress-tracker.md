@@ -14,7 +14,7 @@ Update this file after every completed task. Anyone reading it should immediatel
 
 ### Phase 0 status
 
-**Phase 0: 26 of 31 tasks done, 5 left (02, 12, 21, 26, 29).** 02 and 12: need the green CI run on GitHub (and the owner rotating the leaked keys). 21: Vercel secrets. 26: Twilio (paused). 29: runtime enforcement is phase 1.
+**Phase 0: 26 of 31 tasks done. The other 5 (02, 12, 21, 26, 29) were deferred into Phase 1 by the owner on 2026-10-03; keys are rotated and `next` is 16.3.8.** 02 and 12: need the green CI run on GitHub (and the owner rotating the leaked keys). 21: Vercel secrets. 26: Twilio (paused). 29: runtime enforcement is phase 1.
 
 Done: 00, 01, 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 27, 28, 30. Partly done: 01, 02, 12. Blocked on the owner: 00, 09, 26.
 
@@ -24,7 +24,7 @@ Done: 00, 01, 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20
 
 - [x] 00 Architecture Decision Record + sign-off
 - [x] 01 Repo scaffold
-- [ ] 02 CI/CD + verification
+- [ ] 02 CI/CD + verification — deferred to Phase 1 (owner, 2026-10-03)
 - [x] 03 Database foundation
 - [x] 04 Authentication & authorization
 - [x] 05 Tenancy enforcement
@@ -34,7 +34,7 @@ Done: 00, 01, 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20
 - [x] 09 Supabase projects (dev/staging/prod), database roles migrator/app_…
 - [x] 10 Tenancy schema and RLS baseline migration
 - [x] 11 Architecture tests in CI
-- [ ] 12 Secret hygiene
+- [ ] 12 Secret hygiene — deferred to Phase 1 (owner, 2026-10-03)
 - [x] 13 Channel adapter interface (connect, send, receive, verify_webhook)…
 - [x] 14 Agent tool layer inside the API process: tools call services with…
 - [x] 15 Rewrite the 19 quarantined tests (pytest markers legacy_port and l…
@@ -43,19 +43,20 @@ Done: 00, 01, 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20
 - [x] 18 Scaffold the web app with the chosen framework, strict TypeScript,…
 - [x] 19 Design tokens and layout shell [web-app pack]
 - [x] 20 Authentication and role guard [web-app pack]
-- [ ] 21 Deploy a preview environment on a free tier [web-app pack]
+- [ ] 21 Deploy a preview environment on a free tier [web-app pack] — deferred to Phase 1 (owner, 2026-10-03)
 - [x] 22 Scaffold the API with lint, format, typecheck and a health endpoin…
 - [x] 23 Database foundation and first migration [backend-api pack]
 - [x] 24 Authentication and authorisation skeleton [backend-api pack]
 - [x] 25 OpenAPI contract and generated client with a drift check [backend-…
-- [ ] 26 Vendor accounts, sandbox access and credentials in the secret mana…
+- [ ] 26 Vendor accounts, sandbox access and credentials in the secret mana… — deferred to Phase 1 (owner, 2026-10-03)
 - [x] 27 Integration skill: install an upstream one or generate a project-l…
 - [x] 28 Agent service skeleton, separate from the API, with no database cr…
-- [ ] 29 Tool catalogue with schemas, permissions and a test per tool [agen…
+- [ ] 29 Tool catalogue with schemas, permissions and a test per tool [agen… — deferred to Phase 1 (owner, 2026-10-03)
 - [x] 30 Evaluation harness with a first golden set [agents pack]
 
 ## Phase 1 — Public demo launch: services moved from JSON to DB, inventory/sales/customers/udhaar with stock movements, sales chat agent, approvals center, agent activity log, home dashboard, app shell, landing page, demo seed
 
+- [ ] 02, 12, 21, 26, 29 carried over from Phase 0 (see above; CI proof, gitleaks baseline, Vercel preview, Twilio sandbox, tool-catalogue runtime gate)
 - [ ] 34 Sign in
 - [ ] 35 Create account and shop
 - [ ] 36 Home dashboard
