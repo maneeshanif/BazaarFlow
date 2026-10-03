@@ -68,12 +68,15 @@ def main(argv: list[str]) -> int:
         print(f"error: set {', '.join(missing)} in {ENV_PATH.name} first (see this file's docstring)", file=sys.stderr)
         return 1
 
-    from app.cli.provision_db import provision
+    from app.cli.provision_db import ProvisionError, provision
 
     migrator_pw, app_pw, report_pw = (secrets.token_urlsafe(32) for _ in range(3))
     urls = build_urls(ref, host, migrator_pw=migrator_pw, app_pw=app_pw, admin_pw=admin_pw)
     try:
         asyncio.run(provision(urls["ADMIN_URL"], "postgres", migrator_pw, app_pw, report_pw))
+    except ProvisionError as exc:  # names the failing step and the server's reason; contains no password
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
     except Exception as exc:  # noqa: BLE001 - name the failure class only: the message can echo connection details
         print(
             f"error: could not provision the roles ({type(exc).__name__}). Check the project ref, host and password.",

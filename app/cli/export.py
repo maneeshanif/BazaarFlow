@@ -7,6 +7,7 @@ Usage:
     python -m app.cli.export --tenant-id <uuid> --table inventory --format csv
     python -m app.cli.export --tenant-id <uuid> --table orders --format json
 """
+
 from __future__ import annotations
 
 import argparse
@@ -38,7 +39,9 @@ async def export_data(
         result: Any
 
         if table_name == "inventory":
-            result = await session.execute(select(InventoryItem).where(InventoryItem.tenant_id == tenant_id, live(InventoryItem)))
+            result = await session.execute(
+                select(InventoryItem).where(InventoryItem.tenant_id == tenant_id, live(InventoryItem))
+            )
             items = result.scalars().all()
             records = [
                 {

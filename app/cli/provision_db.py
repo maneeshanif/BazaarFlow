@@ -43,26 +43,40 @@ def _statements(db_name: str, migrator_pw: str, app_pw: str, report_pw: str) -> 
   END IF;
 END $$"""
         )
-        stmts.append(f"ALTER ROLE {role} WITH LOGIN NOSUPERUSER NOBYPASSRLS PASSWORD {_quote_literal(pw)}")
+        stmts.append(f"ALTER ROLE {role} WITH LOGIN PASSWORD {_quote_literal(pw)}")
         stmts.append(f"GRANT CONNECT ON DATABASE {db_name} TO {role}")
         stmts.append(f"GRANT USAGE ON SCHEMA public TO {role}")
     stmts.append("GRANT CREATE ON SCHEMA public TO migrator")
+    # Default privileges "FOR ROLE migrator" need the admin to be able to act as migrator. A hosted Postgres admin
+    # (Supabase's postgres) is not a superuser, so grant it the membership first (harmless for a superuser).
+    stmts.append("GRANT migrator TO CURRENT_USER")
     # Tables created by migrator are automatically usable by the runtime and reporting roles.
     stmts += [
         "ALTER DEFAULT PRIVILEGES FOR ROLE migrator IN SCHEMA public "
         "GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO app_user",
-        "ALTER DEFAULT PRIVILEGES FOR ROLE migrator IN SCHEMA public "
-        "GRANT USAGE, SELECT ON SEQUENCES TO app_user",
+        "ALTER DEFAULT PRIVILEGES FOR ROLE migrator IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO app_user",
         "ALTER DEFAULT PRIVILEGES FOR ROLE migrator IN SCHEMA public GRANT SELECT ON TABLES TO report_ro",
     ]
     return stmts
+
+
+class ProvisionError(RuntimeError):
+    """A provisioning step failed. The message names the step and the server's reason, never a password."""
+
+
+def _label(stmt: str) -> str:
+    """The statement up to any PASSWORD literal, collapsed to one line: safe to show."""
+    return " ".join(stmt.split("PASSWORD")[0].split())[:90]
 
 
 async def provision(admin_url: str, db_name: str, migrator_pw: str, app_pw: str, report_pw: str) -> None:
     conn = await asyncpg.connect(admin_url)
     try:
         for stmt in _statements(db_name, migrator_pw, app_pw, report_pw):
-            await conn.execute(stmt)
+            try:
+                await conn.execute(stmt)
+            except asyncpg.PostgresError as exc:
+                raise ProvisionError(f"step failed: {_label(stmt)} -> {type(exc).__name__}: {exc.message}") from None
     finally:
         await conn.close()
 

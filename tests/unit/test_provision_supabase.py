@@ -68,3 +68,12 @@ def test_a_failed_connection_reports_the_class_only_and_leaves_env_untouched(
     assert "very-secret-pw" not in captured.out + captured.err
     assert "ConnectionError" in captured.err
     assert "DATABASE_URL" not in env.read_text(encoding="utf-8"), "nothing is written when provisioning failed"
+
+
+def test_a_failed_step_is_named_without_leaking_the_password() -> None:
+    from app.cli.provision_db import _label, _statements
+
+    statements = _statements("postgres", "mig-secret-pw", "app-secret-pw", "rep-secret-pw")
+    alter = next(s for s in statements if s.startswith("ALTER ROLE migrator"))
+    assert _label(alter) == "ALTER ROLE migrator WITH LOGIN"
+    assert not any("secret" in _label(s) for s in statements)

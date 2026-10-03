@@ -82,7 +82,9 @@ async def run_checks(admin_url: str) -> list[str]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--admin-url", required=True, help="postgresql:// URL of an admin connection (direct, port 5432)")
+    parser.add_argument(
+        "--admin-url", required=True, help="postgresql:// URL of an admin connection (direct, port 5432)"
+    )
     args = parser.parse_args()
     problems = asyncio.run(run_checks(args.admin_url))
     if problems:
