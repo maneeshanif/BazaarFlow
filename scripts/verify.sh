@@ -287,6 +287,15 @@ echo "slowest steps:"
 grep -aE '^\[time\] ' "$LOG" | sed 's/^\[time\] //' | sort -rn | head -5 | sed 's/^/  /'
 if [ -n "$FAILS" ]; then
   echo "$FAILS"
+  if [ "${GITHUB_ACTIONS:-}" = "true" ]; then
+    # CI logs need a login to read; annotations do not. Put the failing step and the 30 lines before it on the run,
+    # so a red CI explains itself to anyone who can open the check (and to the public check-runs API).
+    grep -anE '^✗ ' "$LOG" | cut -d: -f1 | head -4 | while read -r n; do
+      from=$(( n > 30 ? n - 30 : 1 ))
+      body="$(sed -n "${from},${n}p" "$LOG" | tr -d '' | tail -c 3500 | sed 's/%/%25/g' | awk 'BEGIN{ORS="%0A"}{print}')"
+      echo "::error title=verify.sh step failed::${body}"
+    done
+  fi
   echo "verify: FAILED"
   exit 1
 fi
