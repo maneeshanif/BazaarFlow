@@ -51,7 +51,7 @@ export default function PreviewContent() {
         <KpiCard label="Today's sales" value={formatMoney(42500)} delta="+8%" href="/dashboard/orders" />
         <KpiCard label="Profit today" value={formatMoney(9800)} delta="+3%" href="/dashboard/orders" />
         <KpiCard label="Orders today" value="31" delta="-2%" href="/dashboard/orders" />
-        <KpiCard label="Low-stock items" value="6" href="/dashboard/inventory" />
+        <KpiCard label="Low-stock items" value="6" href="/inventory" />
       </div>
 
       <section aria-label="Products" className="flex flex-col gap-2">

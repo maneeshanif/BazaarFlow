@@ -3,7 +3,6 @@
   "app/(marketing)/agents/page.tsx": 41,
   "app/(marketing)/chat/sales/page.tsx": 181,
   "app/(marketing)/contact/page.tsx": 25,
-  "app/(marketing)/dashboard/inventory/page.tsx": 60,
   "app/(marketing)/dashboard/marketing/activity/page.tsx": 179,
   "app/(marketing)/dashboard/marketing/credentials/page.tsx": 28,
   "app/(marketing)/dashboard/marketing/insights/page.tsx": 33,

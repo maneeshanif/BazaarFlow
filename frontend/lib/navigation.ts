@@ -51,7 +51,7 @@ export const NAV: NavGroup[] = [
   {
     label: "Inventory",
     items: [
-      { label: "Products", icon: "package", roles: ALL, href: "/dashboard/inventory" },
+      { label: "Products", icon: "package", roles: ALL, href: "/inventory" },
       { label: "Stock movements", icon: "arrow-left-right", roles: MANAGER_UP, soon: true },
       { label: "Vendors", icon: "truck", roles: MANAGER_UP, soon: true },
     ],
@@ -117,7 +117,14 @@ export function tabsFor(role: Role): Tab[] {
     { label: "Home", icon: "home", href: "/dashboard" },
     second,
     { label: "Sales", icon: "bot", href: "/dashboard/sales" },
-    { label: "Stock", icon: "package", href: "/dashboard/inventory" },
+    { label: "Stock", icon: "package", href: "/inventory" },
     { label: "More", icon: "menu", menu: true },
   ];
+}
+
+/** The nav href that owns a pathname: the longest href the path starts with (so /inventory/abc marks Products). */
+export function activeHrefFor(pathname: string): string | undefined {
+  const hrefs = NAV.flatMap((g) => g.items.map((i) => i.href)).filter((h): h is string => Boolean(h));
+  const owners = hrefs.filter((h) => pathname === h || pathname.startsWith(`${h}/`));
+  return owners.sort((a, b) => b.length - a.length)[0];
 }

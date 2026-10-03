@@ -25,6 +25,8 @@ NAME = "bf-e2e-pg"
 PORT = 55440
 PW = {"postgres": "admin-pw", "migrator": "mig-pw", "app": "app-pw", "report": "rep-pw"}
 USER_PASSWORD = "e2e-password-1"
+# Specs that need the real stack (they skip themselves without E2E_AUTH). Add each new one here.
+STACK_SPECS = ["e2e/auth.spec.ts", "e2e/products.spec.ts"]
 
 
 def sh(args: list[str], **kw) -> subprocess.CompletedProcess:
@@ -143,7 +145,7 @@ def run_against_supabase() -> int:
         wait_for_api()
         subprocess.run(["npm", "run", "build"], cwd=FRONTEND, check=True, shell=os.name == "nt", capture_output=True)
         result = subprocess.run(
-            ["npx", "playwright", "test", *(sys.argv[1:] or ["e2e/auth.spec.ts"])],
+            ["npx", "playwright", "test", *(sys.argv[1:] or STACK_SPECS)],
             cwd=FRONTEND,
             env={
                 **os.environ,
@@ -249,7 +251,7 @@ def run_against_docker() -> int:
         # the test runs against a production build, so always build from the current source
         subprocess.run(["npm", "run", "build"], cwd=FRONTEND, check=True, shell=os.name == "nt", capture_output=True)
         result = subprocess.run(
-            ["npx", "playwright", "test", *(sys.argv[1:] or ["e2e/auth.spec.ts"])],
+            ["npx", "playwright", "test", *(sys.argv[1:] or STACK_SPECS)],
             cwd=FRONTEND,
             env={**os.environ, "E2E_AUTH": "1", "API_INTERNAL_URL": "http://localhost:8000"},
             shell=os.name == "nt",

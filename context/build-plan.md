@@ -141,14 +141,14 @@ Batch gate: schema and RLS migrations, API, UI and tests for 55, 56, 41, 51, 52,
 - [x] 55 First vertical slice: one resource with create, read, update, delete [backend-api pack]
   - Acceptance: Validation, authorisation and pagination are tested
   - Acceptance: error format matches the contract
-- [ ] 41 Products and stock — F-010 (Inventory; master; P0; roles: owner, manager (staff view))
+- [x] 41 Products and stock — F-010 (Inventory; master; P0; roles: owner, manager (staff view))
   - Acceptance: A user with one of the roles (owner, manager (staff view)) can complete the Inventory flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-010 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 51 First vertical slice through the UI, API and database [web-app pack]
+- [x] 51 First vertical slice through the UI, API and database [web-app pack]
   - Acceptance: The slice works end to end with one automated test
   - Acceptance: the pattern is written down
-- [ ] 52 Form pattern: validation, error display, double-submit protection [web-app pack]
+- [x] 52 Form pattern: validation, error display, double-submit protection [web-app pack]
   - Acceptance: Server and client reject the same invalid inputs
   - Acceptance: a second click does not create a second record
 - [ ] 34 Sign in — F-001 (Auth; master; P0; roles: public)

@@ -1,0 +1,14 @@
+{
+  "_comment": "One list of invalid product inputs. The API test (tests/pg/test_products_api.py) and the web test (frontend/tests/ui/product-validation.test.ts) both read it, so server and client reject the same things (task 52).",
+  "base": { "sku": "SKU-1", "name": "Classic Shirt", "price": "2500.00", "cost": "1800.00", "qty_on_hand": 10 },
+  "cases": [
+    { "field": "price", "value": "-1" },
+    { "field": "price", "value": "abc" },
+    { "field": "price", "value": "1.234" },
+    { "field": "sku", "value": "" },
+    { "field": "sku", "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" },
+    { "field": "name", "value": "a" },
+    { "field": "qty_on_hand", "value": -1 },
+    { "field": "reorder_level", "value": -5 }
+  ]
+}

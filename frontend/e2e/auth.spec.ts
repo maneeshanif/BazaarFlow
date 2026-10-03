@@ -70,7 +70,7 @@ test("a reload keeps the session (restored from the cookie) and API calls carry 
   });
   await signIn(page, OWNER);
   await expect(page).toHaveURL(/\/dashboard$/);
-  await open(page, "/dashboard/inventory");
+  await open(page, "/inventory");
   await expect(page.getByText(/access is restricted/i)).toHaveCount(0);
   await page.waitForLoadState("networkidle");
   expect(unauthorized, "no API call may be rejected as unauthenticated").toEqual([]);

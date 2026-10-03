@@ -33,6 +33,13 @@ After building any component, record: name, file path, purpose, variants, and th
 | Formatting (money, number, date) | `frontend/lib/format.ts` | built |
 | Navigation by role | `frontend/lib/navigation.ts` | built |
 | Status -> tone | `frontend/lib/status.ts` | built |
+| Button, buttonClass | `frontend/components/app/Button.tsx` | built (task 51) |
+| TextInput, SelectInput, TextArea, Checkbox | `frontend/components/form/Controls.tsx` | built (task 51) |
+| ConfirmDialog | `frontend/components/app/ConfirmDialog.tsx` | built (task 51) |
+| WorkspaceShell (signed-in frame for new pages) | `frontend/components/app/WorkspaceShell.tsx` | built (task 51) |
+| ProductForm, StockPanel (master form + stock history pattern) | `frontend/components/inventory/` | built (tasks 41, 51) |
+| useLoad (four states), useSubmit (one request at a time) | `frontend/hooks/` | built (task 52) |
+| API client and problem-details errors | `frontend/lib/api/client.ts` | built (task 51) |
 
 ---
 
@@ -68,3 +75,16 @@ Purpose: one dashboard figure that links to the records behind it. Value `font-m
 
 ### State views
 EmptyState (explains + offers the fixing action), ErrorState (`role="alert"`, "Try again", never a stack trace), UnauthorizedState ("Access is restricted", never a blank screen), TableSkeleton (rows that match the table).
+
+### Button / buttonClass
+Purpose: the one button. Variants primary (`bg-action text-fg-inverse`), secondary (`border border-border bg-surface`), ghost, danger (`bg-danger text-fg-inverse`); sizes sm/md/lg map to `h-control-sm|md|lg`. `loading` disables it and sets `aria-busy`. Use `buttonClass(variant, size)` for a Link that must look like a button.
+Don't: use `components/ui/button` (legacy shadcn colours) in new screens.
+
+### Controls
+Purpose: form controls on the control tokens: `h-control-md w-full rounded-md border bg-surface px-3 text-ui-base`, focus ring `ring-line-focus`, `invalid` switches the border to `border-danger` and sets `aria-invalid`. Numbers use `text-right font-mono tabular-nums`. Always inside a FormField.
+
+### Master form pattern (ProductForm)
+Compose FormShell mode="master"; fields in `grid grid-cols-1 gap-4 md:grid-cols-2`. A field shows its message once visited (blur) or after a submit attempt, and clears as soon as it is valid; never validate fields the person has not reached (it also shifts the layout under the cursor). Server errors: per-field under the field, the rest in one `role="alert"` banner at the top of the form. Submit through `useSubmit` (one request at a time, button `loading`). Success: toast that names the record. Destructive actions go through ConfirmDialog naming the record. Quantities that change only through movements are read-only and say how to change them.
+
+### List pattern (Products page)
+PageHeader with the primary action, a filter panel (`role="search"`), DataTable with all four states through `useLoad`, "Showing x to y of total" and Previous/Next with the API cursor. Empty state differs when filters are active ("No products match", with Clear filters) from truly empty (with the first-record action). Hide columns a role must not see (cost for staff) and the primary action for roles that cannot use it.

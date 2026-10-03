@@ -13,8 +13,8 @@
     "test": "vitest run",
     "check:tokens": "node scripts/check-tokens.mjs",
     "test:e2e": "playwright test",
-    "format:check": "prettier --check components/app components/form lib/auth \"app/api/auth\" \"app/(marketing)/sign-in\" lib/format.ts lib/navigation.ts lib/status.ts tests/ui e2e scripts/check-tokens.mjs scripts/check-audit.mjs \"app/(app)\" vitest.config.ts playwright.config.ts",
-    "format": "prettier --write components/app components/form lib/auth \"app/api/auth\" \"app/(marketing)/sign-in\" lib/format.ts lib/navigation.ts lib/status.ts tests/ui e2e scripts/check-tokens.mjs scripts/check-audit.mjs \"app/(app)\" vitest.config.ts playwright.config.ts",
+    "format:check": "prettier --check components/app components/form components/inventory lib/validation lib/api/client.ts lib/api/types.ts hooks/useLoad.ts hooks/useSubmit.ts lib/auth \"app/api/auth\" \"app/(marketing)/sign-in\" lib/format.ts lib/navigation.ts lib/status.ts tests/ui e2e scripts/check-tokens.mjs scripts/check-audit.mjs \"app/(app)\" vitest.config.ts playwright.config.ts",
+    "format": "prettier --write components/app components/form components/inventory lib/validation lib/api/client.ts lib/api/types.ts hooks/useLoad.ts hooks/useSubmit.ts lib/auth \"app/api/auth\" \"app/(marketing)/sign-in\" lib/format.ts lib/navigation.ts lib/status.ts tests/ui e2e scripts/check-tokens.mjs scripts/check-audit.mjs \"app/(app)\" vitest.config.ts playwright.config.ts",
     "gen:api": "openapi-typescript ../contracts/openapi.json -o lib/api/schema.d.ts",
     "check:audit": "node scripts/check-audit.mjs"
   },
@@ -52,7 +52,8 @@
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "three": "^0.181.0"
+    "three": "^0.181.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",

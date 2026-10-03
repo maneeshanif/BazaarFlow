@@ -37,7 +37,7 @@ const menuItems = [
   },
   {
     title: "Inventory",
-    url: "/dashboard/inventory",
+    url: "/inventory",
     icon: Package,
   },
   {

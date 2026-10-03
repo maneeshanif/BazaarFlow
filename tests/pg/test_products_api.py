@@ -185,3 +185,18 @@ async def test_stock_movements_keep_quantity_and_history_in_step(client: AsyncCl
     assert (
         moves["total"] == 3 and sum(m["delta"] for m in moves["items"]) == 10
     )  # history adds up to the quantity on hand
+
+
+async def test_every_input_in_the_shared_contract_list_is_rejected(client: AsyncClient) -> None:
+    """Task 52: the web client reads the same list (frontend/tests/ui/product-validation.test.ts)."""
+    import json
+    from pathlib import Path
+
+    shared = json.loads((Path(__file__).resolve().parents[2] / "contracts" / "invalid-product-inputs.json").read_text("utf-8"))
+    acct = await register(client, "Shop A")
+    for case in shared["cases"]:
+        res = await client.post(URL, json={**shared["base"], case["field"]: case["value"]}, headers=bearer(acct))
+        assert res.status_code == 422, f"{case['field']}={case['value']!r} should be rejected"
+        assert case["field"] in {e["field"] for e in res.json()["errors"]}
+    ok = await client.post(URL, json=shared["base"], headers=bearer(acct))
+    assert ok.status_code == 201, "the base input itself must be valid"

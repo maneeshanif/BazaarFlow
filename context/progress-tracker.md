@@ -7,9 +7,9 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 1A, shop basics on the database (Phase 0 closed 2026-10-03)
-**Last completed:** 55
+**Last completed:** 52
 **In progress:** Phase 1A on branch `feat/phase-1-mvp`, strictly in the order listed
-**Next:** 41 then 51 (products screen), in batch 1A order
+**Next:** 34 (sign-in to the F-001 spec), then 35, in batch 1A order
 **Blockers:** the owner has not yet said "let's build it"; 26 needs vendor sandbox accounts; DEMO_USER_PASSWORD must be set in `.env` (owner)
 
 ### Phase 0 status
@@ -53,9 +53,9 @@ Update this file after every completed task. Anyone reading it should immediatel
 
 - [x] 56 Tenant or branch scoping (if the PRD has it) [backend-api pack]
 - [x] 55 First vertical slice: one resource with create, read, update, dele…
-- [ ] 41 Products and stock
-- [ ] 51 First vertical slice through the UI, API and database [web-app pac…
-- [ ] 52 Form pattern: validation, error display, double-submit protection…
+- [x] 41 Products and stock
+- [x] 51 First vertical slice through the UI, API and database [web-app pac…
+- [x] 52 Form pattern: validation, error display, double-submit protection…
 - [ ] 34 Sign in
 - [ ] 35 Create account and shop
 - [ ] 40 Customers and udhaar ledger
