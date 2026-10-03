@@ -6,17 +6,15 @@ Update this file after every completed task. Anyone reading it should immediatel
 
 ## Current Status
 
-**Phase:** Phase 0 — Foundation: spec harness, CI (`verify.sh`), Supabase projects and roles (§3.8), Data API lockdown, Alembic baseline, tenancy tables, RLS, JWT claims, role dependencies, architecture tests, secret hygiene (remove committed DSN script)
-**Last completed:** 00 (ADR accepted), 01 (.env.example committed)
-**In progress:** Phase 0, in task order (see Phase 0 status below)
-**Next:** first backend deploy to FastAPI Cloud (app bazaarflow-api), then CI evidence for 02 and 12
-**Blockers:** 00 needs the owner's sign-off; 09 needs Supabase credentials; 26 needs vendor sandbox accounts
+**Phase:** Phase 1A, shop basics on the database (Phase 0 closed 2026-10-03)
+**Last completed:** 30 (Phase 0 closed 2026-10-03; its open tasks moved into Phase 1)
+**In progress:** Phase 1A on branch `feat/phase-1-mvp`, strictly in the order listed
+**Next:** 56 (tenant scoping proof for the new tables), then 55, 41 ... in order; owner says "let's build it" first
+**Blockers:** the owner has not yet said "let's build it"; 26 needs vendor sandbox accounts; DEMO_USER_PASSWORD must be set in `.env` (owner)
 
 ### Phase 0 status
 
-**Phase 0: 26 of 31 tasks done. The other 5 (02, 12, 21, 26, 29) were deferred into Phase 1 by the owner on 2026-10-03; keys are rotated and `next` is 16.3.8.** 02 and 12: need the green CI run on GitHub (and the owner rotating the leaked keys). 21: Vercel secrets. 26: Twilio (paused). 29: runtime enforcement is phase 1.
-
-Done: 00, 01, 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 22, 23, 24, 25, 27, 28, 30. Partly done: 01, 02, 12. Blocked on the owner: 00, 09, 26.
+**Phase 0 is closed: 26 tasks done.** 02, 12, 21, 26 and 29 moved into Phase 1 (1C and 1B) on 2026-10-03; leaked keys are rotated and `next` is 16.3.8.
 
 ---
 
@@ -24,7 +22,6 @@ Done: 00, 01, 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20
 
 - [x] 00 Architecture Decision Record + sign-off
 - [x] 01 Repo scaffold
-- [ ] 02 CI/CD + verification — deferred to Phase 1 (owner, 2026-10-03)
 - [x] 03 Database foundation
 - [x] 04 Authentication & authorization
 - [x] 05 Tenancy enforcement
@@ -34,7 +31,6 @@ Done: 00, 01, 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20
 - [x] 09 Supabase projects (dev/staging/prod), database roles migrator/app_…
 - [x] 10 Tenancy schema and RLS baseline migration
 - [x] 11 Architecture tests in CI
-- [ ] 12 Secret hygiene — deferred to Phase 1 (owner, 2026-10-03)
 - [x] 13 Channel adapter interface (connect, send, receive, verify_webhook)…
 - [x] 14 Agent tool layer inside the API process: tools call services with…
 - [x] 15 Rewrite the 19 quarantined tests (pytest markers legacy_port and l…
@@ -43,56 +39,57 @@ Done: 00, 01, 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20
 - [x] 18 Scaffold the web app with the chosen framework, strict TypeScript,…
 - [x] 19 Design tokens and layout shell [web-app pack]
 - [x] 20 Authentication and role guard [web-app pack]
-- [ ] 21 Deploy a preview environment on a free tier [web-app pack] — deferred to Phase 1 (owner, 2026-10-03)
 - [x] 22 Scaffold the API with lint, format, typecheck and a health endpoin…
 - [x] 23 Database foundation and first migration [backend-api pack]
 - [x] 24 Authentication and authorisation skeleton [backend-api pack]
 - [x] 25 OpenAPI contract and generated client with a drift check [backend-…
-- [ ] 26 Vendor accounts, sandbox access and credentials in the secret mana… — deferred to Phase 1 (owner, 2026-10-03)
 - [x] 27 Integration skill: install an upstream one or generate a project-l…
 - [x] 28 Agent service skeleton, separate from the API, with no database cr…
-- [ ] 29 Tool catalogue with schemas, permissions and a test per tool [agen… — deferred to Phase 1 (owner, 2026-10-03)
 - [x] 30 Evaluation harness with a first golden set [agents pack]
 
 ## Phase 1 — Public demo launch: services moved from JSON to DB, inventory/sales/customers/udhaar with stock movements, sales chat agent, approvals center, agent activity log, home dashboard, app shell, landing page, demo seed
 
-- [ ] 02, 12, 21, 26, 29 carried over from Phase 0 (see above; CI proof, gitleaks baseline, Vercel preview, Twilio sandbox, tool-catalogue runtime gate)
-- [ ] 34 Sign in
-- [ ] 35 Create account and shop
-- [ ] 36 Home dashboard
-- [ ] 37 Sales chat (agent)
-- [ ] 38 New sale
-- [ ] 39 Orders list and detail
-- [ ] 40 Customers and udhaar ledger
+### Phase 1A — Shop basics on the database
+
+- [ ] 56 Tenant or branch scoping (if the PRD has it) [backend-api pack]
+- [ ] 55 First vertical slice: one resource with create, read, update, dele…
 - [ ] 41 Products and stock
-- [ ] 42 Marketing studio
-- [ ] 43 Team and roles
-- [ ] 44 Approvals center
-- [ ] 45 Agent activity log
-- [ ] 46 Public landing page
-- [ ] 47 Public live demo
-- [ ] 48 Owner home dashboard
-- [ ] 49 Integration: LLM provider (Gemini or OpenAI)
-- [ ] 50 Integration: Supabase Storage
 - [ ] 51 First vertical slice through the UI, API and database [web-app pac…
 - [ ] 52 Form pattern: validation, error display, double-submit protection…
-- [ ] 53 Accessibility and performance gates [web-app pack]
-- [ ] 54 End-to-end smoke test of the critical flow [web-app pack]
-- [ ] 55 First vertical slice: one resource with create, read, update, dele…
-- [ ] 56 Tenant or branch scoping (if the PRD has it) [backend-api pack]
-- [ ] 57 Structured logging, request ids and error reporting [backend-api p…
-- [ ] 58 Backups and one timed restore [backend-api pack]
-- [ ] 59 Authentication to the vendor (OAuth or key) with token refresh [in…
-- [ ] 60 One end-to-end integration flow against the sandbox [integrations…
-- [ ] 61 Webhook endpoint with signature verification and idempotency [inte…
-- [ ] 62 Failure handling and alerting [integrations pack]
+- [ ] 34 Sign in
+- [ ] 35 Create account and shop
+- [ ] 40 Customers and udhaar ledger
+- [ ] 38 New sale
+- [ ] 39 Orders list and detail
+- [ ] 43 Team and roles
+
+### Phase 1B — AI on the database
+
+- [ ] 49 Integration: LLM provider (Gemini or OpenAI)
+- [ ] 29 Tool catalogue with schemas, permissions and a test per tool [agen…
+- [ ] 44 Approvals center
 - [ ] 63 First agent flow end to end with human approval on side effects [a…
+- [ ] 37 Sales chat (agent)
 - [ ] 64 Run caps, spend cap and kill switch [agents pack]
 - [ ] 65 Tracing with redaction [agents pack]
-- [ ] 66 One complete call flow with confirmation of captured data [voice-a…
-- [ ] 67 Barge-in, silence and noise handling [voice-agents pack]
-- [ ] 68 Human handoff and keypad fallback [voice-agents pack]
-- [ ] 69 Consent notice, redaction and retention [voice-agents pack]
+- [ ] 45 Agent activity log
+
+### Phase 1C — Dashboard and launch
+
+- [ ] 50 Integration: Supabase Storage
+- [ ] 42 Marketing studio
+- [ ] 36 Home dashboard
+- [ ] 48 Owner home dashboard
+- [ ] 46 Public landing page
+- [ ] 47 Public live demo
+- [ ] 57 Structured logging, request ids and error reporting [backend-api p…
+- [ ] 58 Backups and one timed restore [backend-api pack]
+- [ ] 53 Accessibility and performance gates [web-app pack]
+- [ ] 54 End-to-end smoke test of the critical flow [web-app pack]
+- [ ] 02 CI/CD + verification
+- [ ] 12 Secret hygiene
+- [ ] 21 Deploy a preview environment on a free tier [web-app pack]
+- [ ] 26 Vendor accounts, sandbox access and credentials in the secret mana…
 
 ## Phase 2 — Channels and onboarding: Twilio sandbox WhatsApp, unified inbox with AI/Human toggle, onboarding wizard, per-tenant encrypted integrations, Facebook connect + scheduler on DB, finance overview, vendors, daily briefing, platform admin
 
@@ -113,6 +110,12 @@ Done: 00, 01, 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20
 - [ ] 84 Integration: Facebook/Instagram Graph API
 - [ ] 85 Integration: Pexels images
 
+Deferred from Phase 1 (integration pack):
+- [ ] 59 Authentication to the vendor (OAuth or key) with token refresh [in…
+- [ ] 60 One end-to-end integration flow against the sandbox [integrations…
+- [ ] 61 Webhook endpoint with signature verification and idempotency [inte…
+- [ ] 62 Failure handling and alerting [integrations pack]
+
 ## Phase 3 — Voice, automation recipes, marketing insights, Meta Embedded Signup, Urdu/RTL, reorder workflow
 
 - [ ] 86 Marketing insights
@@ -122,26 +125,24 @@ Done: 00, 01, 03, 04, 05, 06, 07, 08, 09, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20
 - [ ] 90 Integration: Meta WhatsApp Cloud API (Embedded Signup)
 - [ ] 91 Integration: VAPI voice
 
+Deferred from Phase 1 (voice pack):
+- [ ] 66 One complete call flow with confirmation of captured data [voice-a…
+- [ ] 67 Barge-in, silence and noise handling [voice-agents pack]
+- [ ] 68 Human handoff and keypad fallback [voice-agents pack]
+- [ ] 69 Consent notice, redaction and retention [voice-agents pack]
+
 ## Phase 4 — Commercial: pricing and billing, compliance items (Q-001, Q-005), React Flow builder (if trigger met), marketplace connectors
 
 - [ ] 92 (no forms, dashboards or integrations are assigned to this phase i…
 
-## Open Questions
-
-Q-001 to Q-006 are in PRD §0.4; none blocks Phase 0. Resolve or escalate before the task that depends on each.
-
----
-
 ## Needs a human
 
-Details and options for each item are in `context/progress-log.md` (entry "Needs a human, 2026-10-02").
+Older items (ADR sign-off, `.env.example`, key rotation, `next` bump, pushing the branch) are resolved; see `context/progress-log.md`.
 
 | Task | Question |
 | --- | --- |
-| 00 | Approve `docs/adr/0001-stack-decision.md`? |
-| 01, 12 | Let the agent read `.env.example` (no values in it), or add the keys from `docs/operations/env-vars.md` yourself |
-| 02, 12 | Rotate the Google/Gemini key and the Facebook/Meta tokens found in git history, then choose: gitleaks baseline or history rewrite |
-| 02 | Bump `next` 16.0.0 -> >= 16.3.8 (clears 1 critical + 12 high npm findings; touches the files holding your Sentry edits) |
-| 02 | Push the branch so CI can run |
-| 09 | Supabase dev project credentials |
-| 22-24, 28, 31-33 | Skip, merge or keep the pack tasks that duplicate or contradict the PRD |
+| 02 | Check the GitHub Actions run for the pushed commit and confirm it is green (no `gh` CLI here) |
+| 21 | Vercel secrets, needed after batch 1C |
+| 26 | Twilio sandbox account (paused) |
+
+Open questions Q-001 to Q-006 are in PRD §0.4; resolve each before the task that depends on it.

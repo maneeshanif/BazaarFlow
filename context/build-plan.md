@@ -47,9 +47,6 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [x] 01 Repo scaffold — folders per PRD §3.4 (`.`, `frontend`), package managers, `.env.example` with empty values
   - Acceptance: Every folder in PRD §3.4 exists and each part builds or runs an empty smoke test
   - Acceptance: `.env.example` lists every variable with an empty value; no real secret is committed (DONE: committed by the owner's instruction; verified byte-identical to docs/operations/env.example.proposed, whose names are enforced against docs/operations/env-vars.md by tests/architecture/test_env_docs.py)
-- [ ] 02 CI/CD + verification — one workflow per lane (api, web) calling `scripts/verify.sh`; secret scan; dependency scan
-  - Acceptance: Every lane has a workflow that calls `scripts/verify.sh`; a deliberately broken commit turns CI red
-  - Acceptance: Secret scan and dependency scan run and pass on the clean tree
 - [x] 03 Database foundation — PostgreSQL (Supabase), SQLite for local tests only + Alembic (async); first migration; naming and key conventions from PRD §12.2; migration check in `verify.sh`
   - Acceptance: The first migration applies to an empty database and the migration check in `verify.sh` passes
   - Acceptance: Table, column and key names follow PRD §12.2
@@ -80,10 +77,6 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
   - Acceptance: Every table has tenant_id + forced RLS + a policy, and anon/authenticated have no grants (tests/pg/test_schema_rules.py)
   - Acceptance: Every route has an explicit authorization decision and only the expected routes are public (tests/architecture/test_authorization.py)
   - Acceptance: No agent tool takes a tenant/user/role argument (tests/architecture/test_agent_tools.py) and these tests run in the `api` CI lane (verify.sh with Docker)
-- [ ] 12 Secret hygiene — remove default SECRET_KEY fallback in settings (fail fast when unset outside tests), .env.example complete, gitleaks passing — PRD RK-06
-  - Acceptance: The API refuses to start without SECRET_KEY unless APP_ENV=test or ALLOW_INSECURE_DEV_SECRET is set outside production (tests/unit/test_settings_secret.py)
-  - Acceptance: `.env.example` lists every variable in docs/operations/env-vars.md with an empty value
-  - Acceptance: gitleaks passes on the full history in CI and locally
 - [x] 13 Channel adapter interface (connect, send, receive, verify_webhook) with a fake adapter for tests — PRD §3.7 constraint 11
   - Acceptance: A ChannelAdapter interface with connect, send, receive and verify_webhook exists, with an in-memory fake that passes the interface check, idempotent sends and signature verification (tests/unit/test_audit_and_channels.py)
   - Acceptance: Provider SDKs and hard-coded provider hosts appear only in app/integrations, apart from a shrink-only legacy list (tests/architecture/test_provider_isolation.py)
@@ -108,9 +101,6 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
   - Acceptance: login, logout and silent token refresh work end to end against the real backend (e2e/auth.spec.ts, 8 tests via scripts/e2e_auth_stack.py)
   - Acceptance: a role without access sees the restricted view, and the API itself answers 401/403 (UI guard is a convenience)
   - Acceptance: the refresh token is an httpOnly cookie, never in JS or storage
-- [ ] 21 Deploy a preview environment on a free tier [web-app pack]
-  - Acceptance: Every pull request gets a preview URL
-  - Acceptance: production deploy is one command
 - [x] 22 Scaffold the API with lint, format, typecheck and a health endpoint [backend-api pack]
   - Acceptance: the service starts from a clean clone (DONE: scripts/check_clean_clone.sh clones HEAD, installs from the lockfiles, starts the API and the agent service, type-checks the web app)
   - Acceptance: the health endpoint answers (DONE: same script; tests/architecture/test_repo_layout.py)
@@ -123,19 +113,11 @@ Exit gate: CI green; two seeded tenants cannot read each other's rows through an
 - [x] 25 OpenAPI contract and generated client with a drift check [backend-api pack]
   - Acceptance: the drift check fails when an endpoint changes without regeneration (tests/architecture/test_openapi_contract.py; mutation-checked)
   - Acceptance: TypeScript client types are generated from contracts/openapi.json and checked byte for byte
-- [ ] 26 Vendor accounts, sandbox access and credentials in the secret manager [integrations pack]
-  - Acceptance: A sandbox call succeeds from the dev environment
-  - Acceptance: no credential is in the repository
 - [x] 27 Integration skill: install an upstream one or generate a project-local one [integrations pack]
   - Acceptance: the skill cites the vendor documentation URL and date (.claude/skills/integration-twilio-whatsapp/SKILL.md: two Twilio URLs, read 2026-10-03)
 - [x] 28 Agent service skeleton, separate from the API, with no database credentials [agents pack]
   - Acceptance: The service starts
   - Acceptance: its environment contains no database variable (checked by a test)
-- [ ] 29 Tool catalogue with schemas, permissions and a test per tool [agents pack]
-  - Acceptance: every tool an agent can call (16 functions and the 2 delegation wrappers) is declared with permission and approval (DONE: app/agents/tools/manifest.py; an undeclared tool fails the suite)
-  - Acceptance: each tool has its own unit tests (DONE: tests/unit/test_agent_tool_catalog.py)
-  - Acceptance: authorize_call rejects unknown tools, roles below the minimum and approval-gated writes (DONE as a function, tested)
-  - Acceptance: a forbidden call is rejected AT RUNTIME: the gate sits in the path of every agent tool call with a ToolContext (OPEN: needs phase 1, call sites do not pass a ToolContext yet; tools run raw through the SDK)
 - [x] 30 Evaluation harness with a first golden set [agents pack]
   - Acceptance: the suite runs in the fast tier against recorded model responses (tests/unit/evals; no network or key; 12 golden cases)
   - Acceptance: the harness catches regressions: removing a tool from an agent fails a case; a tool that crashes, a customer-facing tool leaking stock, or an injected invented tool fails a case (mutation-checked). Limit: replayed turns are hand-recorded, so a prompt change alone does not fail a case; re-record against the live model for that.
@@ -145,6 +127,30 @@ Each task: confirm the acceptance criteria (`/architect` turns them into failing
 
 Exit gate: A new visitor signs up, adds a product, records a sale by chat, sees stock and dashboard update, approves a pending action; all within 15 minutes
 
+Phase 1 is built in three ordered batches. Work goes strictly top to bottom: finish a task, then the next one, and never start a batch before the previous batch has passed `bash scripts/verify.sh --slow --all` (fast tier after every task). Design decisions: `docs/superpowers/specs/2026-10-03-phase-1-design.md`. Deferred out of Phase 1: integration pack 59-62 (to Phase 2) and voice pack 66-69 (to Phase 3).
+
+### Phase 1A — Shop basics on the database
+
+Tenant-scoped products, stock movements, customers, udhaar, sales and team, with sign-in/sign-up and the form pattern.
+
+Batch gate: schema and RLS migrations, API, UI and tests for 55, 56, 41, 51, 52, 34, 35, 40, 38, 39, 43 pass the full run; a visitor can sign up, add a product and record a manual sale.
+
+- [ ] 56 Tenant or branch scoping (if the PRD has it) [backend-api pack]
+  - Acceptance: A test proves tenant A cannot read or write tenant B
+  - Acceptance: no tenant context returns nothing
+- [ ] 55 First vertical slice: one resource with create, read, update, delete [backend-api pack]
+  - Acceptance: Validation, authorisation and pagination are tested
+  - Acceptance: error format matches the contract
+- [ ] 41 Products and stock — F-010 (Inventory; master; P0; roles: owner, manager (staff view))
+  - Acceptance: A user with one of the roles (owner, manager (staff view)) can complete the Inventory flow; a user without them gets 403
+  - Acceptance: Validation and required fields match the field spec for F-010 in PRD §5.3 (one test per rule)
+  - Acceptance: One end-to-end test drives the form and checks what was stored
+- [ ] 51 First vertical slice through the UI, API and database [web-app pack]
+  - Acceptance: The slice works end to end with one automated test
+  - Acceptance: the pattern is written down
+- [ ] 52 Form pattern: validation, error display, double-submit protection [web-app pack]
+  - Acceptance: Server and client reject the same invalid inputs
+  - Acceptance: a second click does not create a second record
 - [ ] 34 Sign in — F-001 (Auth; master; P0; roles: public)
   - Acceptance: A user with one of the roles (public) can complete the Auth flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-001 in PRD §5.3 (one test per rule)
@@ -153,13 +159,9 @@ Exit gate: A new visitor signs up, adds a product, records a sale by chat, sees 
   - Acceptance: A user with one of the roles (public) can complete the Auth flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-002 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 36 Home dashboard — F-004 (Overview; report; P0; roles: owner, manager, staff)
-  - Acceptance: A user with one of the roles (owner, manager, staff) can complete the Overview flow; a user without them gets 403
-  - Acceptance: Validation and required fields match the field spec for F-004 in PRD §5.3 (one test per rule)
-  - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 37 Sales chat (agent) — F-006 (Sales; transaction; P0; roles: owner, manager, staff)
-  - Acceptance: A user with one of the roles (owner, manager, staff) can complete the Sales flow; a user without them gets 403
-  - Acceptance: Validation and required fields match the field spec for F-006 in PRD §5.3 (one test per rule)
+- [ ] 40 Customers and udhaar ledger — F-009 (Sales; master; P0; roles: owner, manager)
+  - Acceptance: A user with one of the roles (owner, manager) can complete the Sales flow; a user without them gets 403
+  - Acceptance: Validation and required fields match the field spec for F-009 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
 - [ ] 38 New sale — F-007 (Sales; transaction; P0; roles: owner, manager, staff)
   - Acceptance: A user with one of the roles (owner, manager, staff) can complete the Sales flow; a user without them gets 403
@@ -169,30 +171,67 @@ Exit gate: A new visitor signs up, adds a product, records a sale by chat, sees 
   - Acceptance: A user with one of the roles (owner, manager, staff) can complete the Sales flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-008 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 40 Customers and udhaar ledger — F-009 (Sales; master; P0; roles: owner, manager)
-  - Acceptance: A user with one of the roles (owner, manager) can complete the Sales flow; a user without them gets 403
-  - Acceptance: Validation and required fields match the field spec for F-009 in PRD §5.3 (one test per rule)
-  - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 41 Products and stock — F-010 (Inventory; master; P0; roles: owner, manager (staff view))
-  - Acceptance: A user with one of the roles (owner, manager (staff view)) can complete the Inventory flow; a user without them gets 403
-  - Acceptance: Validation and required fields match the field spec for F-010 in PRD §5.3 (one test per rule)
-  - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 42 Marketing studio — F-014 (Marketing; transaction; P0; roles: owner, manager)
-  - Acceptance: A user with one of the roles (owner, manager) can complete the Marketing flow; a user without them gets 403
-  - Acceptance: Validation and required fields match the field spec for F-014 in PRD §5.3 (one test per rule)
-  - Acceptance: One end-to-end test drives the form and checks what was stored
 - [ ] 43 Team and roles — F-019 (Settings; master; P0; roles: owner)
   - Acceptance: A user with one of the roles (owner) can complete the Settings flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-019 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
+
+### Phase 1B — AI on the database
+
+LLM provider, permission gate in the agent runtime, approvals, the sales chat agent, run caps, tracing and the activity log.
+
+Batch gate: tasks 49, 29, 44, 63, 37, 64, 65, 45 pass the full run; a chat sale waits in approvals and executes only after approval.
+
+- [ ] 49 Integration: LLM provider (Gemini or OpenAI) — I-005 (out; REST)
+  - Acceptance: A contract test against a recorded or sandbox response proves the happy path
+  - Acceptance: A timeout, an error response and a duplicate delivery are each handled by a test
+- [ ] 29 Tool catalogue with schemas, permissions and a test per tool [agents pack] *(carried over from Phase 0)*
+  - Acceptance: every tool an agent can call (16 functions and the 2 delegation wrappers) is declared with permission and approval (DONE: app/agents/tools/manifest.py; an undeclared tool fails the suite)
+  - Acceptance: each tool has its own unit tests (DONE: tests/unit/test_agent_tool_catalog.py)
+  - Acceptance: authorize_call rejects unknown tools, roles below the minimum and approval-gated writes (DONE as a function, tested)
+  - Acceptance: a forbidden call is rejected AT RUNTIME: the gate sits in the path of every agent tool call with a ToolContext (OPEN: needs phase 1, call sites do not pass a ToolContext yet; tools run raw through the SDK)
 - [ ] 44 Approvals center — F-021 (Overview; transaction; P0; roles: owner, manager)
   - Acceptance: A user with one of the roles (owner, manager) can complete the Overview flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-021 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
+- [ ] 63 First agent flow end to end with human approval on side effects [agents pack]
+  - Acceptance: An approved action runs
+  - Acceptance: a rejected action does not
+  - Acceptance: the trace shows both
+- [ ] 37 Sales chat (agent) — F-006 (Sales; transaction; P0; roles: owner, manager, staff)
+  - Acceptance: A user with one of the roles (owner, manager, staff) can complete the Sales flow; a user without them gets 403
+  - Acceptance: Validation and required fields match the field spec for F-006 in PRD §5.3 (one test per rule)
+  - Acceptance: One end-to-end test drives the form and checks what was stored
+- [ ] 64 Run caps, spend cap and kill switch [agents pack]
+  - Acceptance: Exceeding a cap stops the run with a clear message
+  - Acceptance: the kill switch works without a deploy
+- [ ] 65 Tracing with redaction [agents pack]
+  - Acceptance: A trace of a run contains no personal data from the test fixtures
 - [ ] 45 Agent activity log — F-022 (Overview; list; P0; roles: owner, manager)
   - Acceptance: A user with one of the roles (owner, manager) can complete the Overview flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-022 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
+
+### Phase 1C — Dashboard and launch
+
+Storage, marketing studio drafts, dashboards, landing page, per-visitor demo, hardening, and the Phase 0 carry-overs (CI proof, secrets, preview deploy, vendor accounts).
+
+Batch gate: tasks 50, 42, 36, 48, 46, 47, 57, 58, 53, 54, 02, 12, 21, 26 pass the full run; the exit gate above is met in the browser.
+
+- [ ] 50 Integration: Supabase Storage — I-007 (out; REST)
+  - Acceptance: A contract test against a recorded or sandbox response proves the happy path
+  - Acceptance: A timeout, an error response and a duplicate delivery are each handled by a test
+- [ ] 42 Marketing studio — F-014 (Marketing; transaction; P0; roles: owner, manager)
+  - Acceptance: A user with one of the roles (owner, manager) can complete the Marketing flow; a user without them gets 403
+  - Acceptance: Validation and required fields match the field spec for F-014 in PRD §5.3 (one test per rule)
+  - Acceptance: One end-to-end test drives the form and checks what was stored
+- [ ] 36 Home dashboard — F-004 (Overview; report; P0; roles: owner, manager, staff)
+  - Acceptance: A user with one of the roles (owner, manager, staff) can complete the Overview flow; a user without them gets 403
+  - Acceptance: Validation and required fields match the field spec for F-004 in PRD §5.3 (one test per rule)
+  - Acceptance: One end-to-end test drives the form and checks what was stored
+- [ ] 48 Owner home dashboard — D-001 (role: owner, manager; KPIs: Today's sales, Profit today, Orders today, Low-stock items, Unpaid udhaar, Approvals waiting, AI briefing)
+  - Acceptance: Each KPI (Today's sales, Profit today, Orders today, Low-stock items, Unpaid udhaar, Approvals waiting, AI briefing) matches a hand-computed value on a seeded dataset
+  - Acceptance: Only role owner, manager can open it; an empty dataset shows an empty state, not an error
 - [ ] 46 Public landing page — F-026 (Public; page; P0; roles: public)
   - Acceptance: A user with one of the roles (public) can complete the Public flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-026 in PRD §5.3 (one test per rule)
@@ -201,68 +240,28 @@ Exit gate: A new visitor signs up, adds a product, records a sale by chat, sees 
   - Acceptance: A user with one of the roles (public) can complete the Public flow; a user without them gets 403
   - Acceptance: Validation and required fields match the field spec for F-027 in PRD §5.3 (one test per rule)
   - Acceptance: One end-to-end test drives the form and checks what was stored
-- [ ] 48 Owner home dashboard — D-001 (role: owner, manager; KPIs: Today's sales, Profit today, Orders today, Low-stock items, Unpaid udhaar, Approvals waiting, AI briefing)
-  - Acceptance: Each KPI (Today's sales, Profit today, Orders today, Low-stock items, Unpaid udhaar, Approvals waiting, AI briefing) matches a hand-computed value on a seeded dataset
-  - Acceptance: Only role owner, manager can open it; an empty dataset shows an empty state, not an error
-- [ ] 49 Integration: LLM provider (Gemini or OpenAI) — I-005 (out; REST)
-  - Acceptance: A contract test against a recorded or sandbox response proves the happy path
-  - Acceptance: A timeout, an error response and a duplicate delivery are each handled by a test
-- [ ] 50 Integration: Supabase Storage — I-007 (out; REST)
-  - Acceptance: A contract test against a recorded or sandbox response proves the happy path
-  - Acceptance: A timeout, an error response and a duplicate delivery are each handled by a test
-- [ ] 51 First vertical slice through the UI, API and database [web-app pack]
-  - Acceptance: The slice works end to end with one automated test
-  - Acceptance: the pattern is written down
-- [ ] 52 Form pattern: validation, error display, double-submit protection [web-app pack]
-  - Acceptance: Server and client reject the same invalid inputs
-  - Acceptance: a second click does not create a second record
+- [ ] 57 Structured logging, request ids and error reporting [backend-api pack]
+  - Acceptance: A failed request can be traced from the response id to the log line
+- [ ] 58 Backups and one timed restore [backend-api pack]
+  - Acceptance: The restore completes within the PRD recovery target
 - [ ] 53 Accessibility and performance gates [web-app pack]
   - Acceptance: axe finds no serious issue on the slice
   - Acceptance: the performance budget lane passes
 - [ ] 54 End-to-end smoke test of the critical flow [web-app pack]
   - Acceptance: One browser test signs in and completes the main task
-- [ ] 55 First vertical slice: one resource with create, read, update, delete [backend-api pack]
-  - Acceptance: Validation, authorisation and pagination are tested
-  - Acceptance: error format matches the contract
-- [ ] 56 Tenant or branch scoping (if the PRD has it) [backend-api pack]
-  - Acceptance: A test proves tenant A cannot read or write tenant B
-  - Acceptance: no tenant context returns nothing
-- [ ] 57 Structured logging, request ids and error reporting [backend-api pack]
-  - Acceptance: A failed request can be traced from the response id to the log line
-- [ ] 58 Backups and one timed restore [backend-api pack]
-  - Acceptance: The restore completes within the PRD recovery target
-- [ ] 59 Authentication to the vendor (OAuth or key) with token refresh [integrations pack]
-  - Acceptance: Expired token refreshes without user action
-  - Acceptance: revoked token produces a clear re-consent path
-- [ ] 60 One end-to-end integration flow against the sandbox [integrations pack]
-  - Acceptance: Contract test passes against a recorded response
-  - Acceptance: timeout, 429 and error response each have a test
-- [ ] 61 Webhook endpoint with signature verification and idempotency [integrations pack]
-  - Acceptance: A replayed event is ignored
-  - Acceptance: a bad signature is rejected
-- [ ] 62 Failure handling and alerting [integrations pack]
-  - Acceptance: A forced vendor outage shows the defined degraded behaviour and raises an alert
-- [ ] 63 First agent flow end to end with human approval on side effects [agents pack]
-  - Acceptance: An approved action runs
-  - Acceptance: a rejected action does not
-  - Acceptance: the trace shows both
-- [ ] 64 Run caps, spend cap and kill switch [agents pack]
-  - Acceptance: Exceeding a cap stops the run with a clear message
-  - Acceptance: the kill switch works without a deploy
-- [ ] 65 Tracing with redaction [agents pack]
-  - Acceptance: A trace of a run contains no personal data from the test fixtures
-- [ ] 66 One complete call flow with confirmation of captured data [voice-agents pack]
-  - Acceptance: Names, numbers and dates are read back
-  - Acceptance: wrong data can be corrected by the caller
-- [ ] 67 Barge-in, silence and noise handling [voice-agents pack]
-  - Acceptance: Each behaviour has a recorded test case that passes
-- [ ] 68 Human handoff and keypad fallback [voice-agents pack]
-  - Acceptance: A forced trigger transfers the call with context
-- [ ] 69 Consent notice, redaction and retention [voice-agents pack]
-  - Acceptance: The notice plays
-  - Acceptance: a transcript in the test set contains no personal data after redaction
-
-Each task: confirm the acceptance criteria (`/architect` turns them into failing tests first), then build, then `bash scripts/verify.sh`, then `/review`.
+- [ ] 02 CI/CD + verification — one workflow per lane (api, web) calling `scripts/verify.sh`; secret scan; dependency scan *(carried over from Phase 0)*
+  - Acceptance: Every lane has a workflow that calls `scripts/verify.sh`; a deliberately broken commit turns CI red
+  - Acceptance: Secret scan and dependency scan run and pass on the clean tree
+- [ ] 12 Secret hygiene — remove default SECRET_KEY fallback in settings (fail fast when unset outside tests), .env.example complete, gitleaks passing — PRD RK-06 *(carried over from Phase 0)*
+  - Acceptance: The API refuses to start without SECRET_KEY unless APP_ENV=test or ALLOW_INSECURE_DEV_SECRET is set outside production (tests/unit/test_settings_secret.py)
+  - Acceptance: `.env.example` lists every variable in docs/operations/env-vars.md with an empty value
+  - Acceptance: gitleaks passes on the full history in CI and locally
+- [ ] 21 Deploy a preview environment on a free tier [web-app pack] *(carried over from Phase 0)*
+  - Acceptance: Every pull request gets a preview URL
+  - Acceptance: production deploy is one command
+- [ ] 26 Vendor accounts, sandbox access and credentials in the secret manager [integrations pack] *(carried over from Phase 0)*
+  - Acceptance: A sandbox call succeeds from the dev environment
+  - Acceptance: no credential is in the repository
 
 ## Phase 2 — Channels and onboarding: Twilio sandbox WhatsApp, unified inbox with AI/Human toggle, onboarding wizard, per-tenant encrypted integrations, Facebook connect + scheduler on DB, finance overview, vendors, daily briefing, platform admin
 
@@ -329,6 +328,19 @@ Exit gate: A tenant connects WhatsApp sandbox and Facebook in the wizard; a cust
 
 Each task: confirm the acceptance criteria (`/architect` turns them into failing tests first), then build, then `bash scripts/verify.sh`, then `/review`.
 
+Deferred from Phase 1 (integration pack):
+- [ ] 59 Authentication to the vendor (OAuth or key) with token refresh [integrations pack]
+  - Acceptance: Expired token refreshes without user action
+  - Acceptance: revoked token produces a clear re-consent path
+- [ ] 60 One end-to-end integration flow against the sandbox [integrations pack]
+  - Acceptance: Contract test passes against a recorded response
+  - Acceptance: timeout, 429 and error response each have a test
+- [ ] 61 Webhook endpoint with signature verification and idempotency [integrations pack]
+  - Acceptance: A replayed event is ignored
+  - Acceptance: a bad signature is rejected
+- [ ] 62 Failure handling and alerting [integrations pack]
+  - Acceptance: A forced vendor outage shows the defined degraded behaviour and raises an alert
+
 ## Phase 3 — Voice, automation recipes, marketing insights, Meta Embedded Signup, Urdu/RTL, reorder workflow
 
 Exit gate: A VAPI call is answered and logged; an owner enables the low-stock recipe and receives a drafted vendor message; embedded signup connects a number without developer tools
@@ -362,6 +374,20 @@ Exit gate: A VAPI call is answered and logged; an owner enables the low-stock re
 - [ ] 91 Integration: VAPI voice — I-004 (both; REST + webhook)
   - Acceptance: A contract test against a recorded or sandbox response proves the happy path
   - Acceptance: A timeout, an error response and a duplicate delivery are each handled by a test
+
+Each task: confirm the acceptance criteria (`/architect` turns them into failing tests first), then build, then `bash scripts/verify.sh`, then `/review`.
+
+Deferred from Phase 1 (voice pack):
+- [ ] 66 One complete call flow with confirmation of captured data [voice-agents pack]
+  - Acceptance: Names, numbers and dates are read back
+  - Acceptance: wrong data can be corrected by the caller
+- [ ] 67 Barge-in, silence and noise handling [voice-agents pack]
+  - Acceptance: Each behaviour has a recorded test case that passes
+- [ ] 68 Human handoff and keypad fallback [voice-agents pack]
+  - Acceptance: A forced trigger transfers the call with context
+- [ ] 69 Consent notice, redaction and retention [voice-agents pack]
+  - Acceptance: The notice plays
+  - Acceptance: a transcript in the test set contains no personal data after redaction
 
 Each task: confirm the acceptance criteria (`/architect` turns them into failing tests first), then build, then `bash scripts/verify.sh`, then `/review`.
 
