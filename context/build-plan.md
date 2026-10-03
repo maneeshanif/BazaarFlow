@@ -242,7 +242,7 @@ Batch gate: tasks 50, 42, 36, 48, 46, 47, 57, 58, 53, 54, 02, 12, 21, 26 pass th
   - Acceptance: One end-to-end test drives the form and checks what was stored
 - [x] 57 Structured logging, request ids and error reporting [backend-api pack]
   - Acceptance: A failed request can be traced from the response id to the log line
-- [ ] 58 Backups and one timed restore [backend-api pack]
+- [x] 58 Backups and one timed restore [backend-api pack]
   - Acceptance: The restore completes within the PRD recovery target
 - [ ] 53 Accessibility and performance gates [web-app pack]
   - Acceptance: axe finds no serious issue on the slice

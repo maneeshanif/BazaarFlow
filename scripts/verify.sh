@@ -259,7 +259,7 @@ lane_infra() {
     # Whole history, minus the reviewed baseline: a new secret anywhere fails. Same scan as CI (security.yml).
     slow_step "infra: secret scan (gitleaks, baselined)" env MSYS_NO_PATHCONV=1 docker run --rm -v "$(host_path "$ROOT"):/repo" zricethezav/gitleaks:v8.30.1 detect --source /repo --redact --no-banner --baseline-path /repo/.gitleaks-baseline.json
   fi
-  step "infra: verify.sh syntax" bash -n scripts/verify.sh
+  step "infra: shell script syntax" bash -c "bash -n scripts/verify.sh && bash -n scripts/backup.sh"
 }
 
 

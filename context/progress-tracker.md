@@ -7,9 +7,9 @@ Update this file after every completed task. Anyone reading it should immediatel
 ## Current Status
 
 **Phase:** Phase 1A, shop basics on the database (Phase 0 closed 2026-10-03)
-**Last completed:** 57
+**Last completed:** 58
 **In progress:** Phase 1A on branch `feat/phase-1-mvp`, strictly in the order listed
-**Next:** 1C task 58 backups
+**Next:** 1C task 53 accessibility and performance
 **Blockers:** the owner has not yet said "let's build it"; 26 needs vendor sandbox accounts; DEMO_USER_PASSWORD must be set in `.env` (owner)
 
 ### Phase 0 status
@@ -83,7 +83,7 @@ Update this file after every completed task. Anyone reading it should immediatel
 - [x] 46 Public landing page
 - [x] 47 Public live demo
 - [x] 57 Structured logging, request ids and error reporting [backend-api p…
-- [ ] 58 Backups and one timed restore [backend-api pack]
+- [x] 58 Backups and one timed restore [backend-api pack]
 - [ ] 53 Accessibility and performance gates [web-app pack]
 - [ ] 54 End-to-end smoke test of the critical flow [web-app pack]
 - [ ] 02 CI/CD + verification
