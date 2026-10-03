@@ -68,3 +68,11 @@ async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
         yield ac
 
     app.dependency_overrides.clear()
+
+@pytest.fixture(autouse=True)
+def _fresh_rate_limit_window() -> None:
+    """Every test starts with an empty per-IP request window: on a fast machine the whole suite shares one address and
+    would otherwise hit the 200 requests a minute limit (it did on CI)."""
+    from app.middleware import rate_limiter
+
+    rate_limiter._windows.clear()
