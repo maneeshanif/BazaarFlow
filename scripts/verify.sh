@@ -28,6 +28,12 @@ set -uo pipefail
 ROOT="$(git rev-parse --show-toplevel)"
 cd "$ROOT"
 
+# CI has no .env, and the API refuses to start without SECRET_KEY (task 12). Verification only needs a throwaway key,
+# which the settings accept explicitly outside production; a real SECRET_KEY, if present, is left alone.
+if [ -z "${SECRET_KEY:-}" ] && ! grep -qs '^SECRET_KEY=.' "$ROOT/.env" 2>/dev/null; then
+  export ALLOW_INSECURE_DEV_SECRET=true
+fi
+
 BASE="origin/main"
 MODE="changed"
 LIST_ONLY=0
