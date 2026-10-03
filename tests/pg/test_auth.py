@@ -79,7 +79,8 @@ async def test_wrong_password_and_unknown_email_are_rejected_identically(client:
     wrong = await client.post("/api/v1/auth/login", json={"email": acct["email"], "password": "not-the-password"})
     unknown = await client.post("/api/v1/auth/login", json={"email": "nobody@example.com", "password": "whatever-123"})
     assert wrong.status_code == unknown.status_code == 401
-    assert wrong.json() == unknown.json()
+    # Everything except the per-request correlation id must match, so the response cannot reveal which one it was.
+    assert {**wrong.json(), "request_id": None} == {**unknown.json(), "request_id": None}
 
 
 async def test_expired_and_malformed_tokens_are_rejected(client: AsyncClient) -> None:
@@ -141,7 +142,9 @@ async def test_roles_are_enforced_by_the_api(
         token = res.json()
 
     created = await client.post(
-        "/api/v1/customers/", json={"phone": f"+92300{uuid.uuid4().int % 10**7:07d}", "name": "X"}, headers=bearer(token)
+        "/api/v1/customers/",
+        json={"phone": f"+92300{uuid.uuid4().int % 10**7:07d}", "name": "X"},
+        headers=bearer(token),
     )
     assert (created.status_code == 201) is can_create, created.text
     deleted = await client.delete(f"/api/v1/customers/{created.json()['id']}", headers=bearer(token))
@@ -169,7 +172,9 @@ async def test_switch_tenant_requires_membership(client: AsyncClient) -> None:
     assert same.status_code == 200
 
 
-async def test_platform_admin_role_is_required_for_operator_routes(client: AsyncClient, app_engine: AsyncEngine) -> None:
+async def test_platform_admin_role_is_required_for_operator_routes(
+    client: AsyncClient, app_engine: AsyncEngine
+) -> None:
     """PRD §14.2: platform_admin may use operator routes; an owner (a tenant role) may not."""
     owner = await register(client, "Shop A")
     assert (await client.get("/api/logs/", headers=bearer(owner))).status_code == 403

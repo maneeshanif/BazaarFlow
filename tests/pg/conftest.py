@@ -152,3 +152,39 @@ async def register(client: AsyncClient, shop: str = "Ali Mart", email: str | Non
 
 def bearer(account: dict[str, Any]) -> dict[str, str]:
     return {"Authorization": f"Bearer {account['access_token']}"}
+
+
+async def member(client: AsyncClient, engine: AsyncEngine, owner: dict[str, Any], role: str) -> dict[str, Any]:
+    """Add a user with the given role to the owner's shop (what the invite flow does); return their login response."""
+    from sqlalchemy import text
+
+    from app.core.security import hash_password
+    from app.core.tenancy import apply_context
+
+    email = f"{role}-{uuid.uuid4().hex[:8]}@example.com"
+    user_id = uuid.uuid4()
+    tenant_id = uuid.UUID(owner["tenant_id"])
+    session = AsyncSession(engine)
+    await session.begin()
+    try:
+        await apply_context(session, tenant_id=tenant_id, user_id=user_id)
+        await session.execute(
+            text(
+                "INSERT INTO users (id, email, hashed_password, is_platform_admin, is_active, created_at, updated_at) "
+                "VALUES (:id, :email, :pw, false, true, now(), now())"
+            ),
+            {"id": user_id, "email": email, "pw": hash_password("staff-password-1")},
+        )
+        await session.execute(
+            text(
+                "INSERT INTO memberships (id, tenant_id, user_id, role, created_at, updated_at) "
+                "VALUES (gen_random_uuid(), :t, :u, :r, now(), now())"
+            ),
+            {"t": tenant_id, "u": user_id, "r": role},
+        )
+        await session.commit()
+    finally:
+        await session.close()
+    res = await client.post("/api/v1/auth/login", json={"email": email, "password": "staff-password-1"})
+    assert res.status_code == 200, res.text
+    return {**res.json(), "email": email}

@@ -135,10 +135,10 @@ Tenant-scoped products, stock movements, customers, udhaar, sales and team, with
 
 Batch gate: schema and RLS migrations, API, UI and tests for 55, 56, 41, 51, 52, 34, 35, 40, 38, 39, 43 pass the full run; a visitor can sign up, add a product and record a manual sale.
 
-- [ ] 56 Tenant or branch scoping (if the PRD has it) [backend-api pack]
+- [x] 56 Tenant or branch scoping (if the PRD has it) [backend-api pack]
   - Acceptance: A test proves tenant A cannot read or write tenant B
   - Acceptance: no tenant context returns nothing
-- [ ] 55 First vertical slice: one resource with create, read, update, delete [backend-api pack]
+- [x] 55 First vertical slice: one resource with create, read, update, delete [backend-api pack]
   - Acceptance: Validation, authorisation and pagination are tested
   - Acceptance: error format matches the contract
 - [ ] 41 Products and stock — F-010 (Inventory; master; P0; roles: owner, manager (staff view))

@@ -23,13 +23,6 @@ async def test_vendors_endpoints(client: AsyncClient) -> None:
 
 
 @pytest.mark.asyncio
-async def test_inventory_endpoints(client: AsyncClient) -> None:
-    """Test inventory listing route."""
-    response = await client.get("/api/inventory")
-    assert response.status_code in (200, 501)
-
-
-@pytest.mark.asyncio
 async def test_logs_endpoint(client: AsyncClient) -> None:
     """Test system logs retrieval route."""
     response = await client.get("/api/logs")

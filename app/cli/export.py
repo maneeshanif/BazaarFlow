@@ -26,6 +26,7 @@ from app.crud.soft_delete import live
 from app.models.customer import Customer
 from app.models.inventory import InventoryItem
 from app.models.order import Order
+from app.models.product import Product
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger("bazaarflow.export")
@@ -40,18 +41,19 @@ async def export_data(
 
         if table_name == "inventory":
             result = await session.execute(
-                select(InventoryItem).where(InventoryItem.tenant_id == tenant_id, live(InventoryItem))
+                select(Product, InventoryItem)
+                .join(InventoryItem, InventoryItem.product_id == Product.id)
+                .where(Product.tenant_id == tenant_id, live(Product))
             )
-            items = result.scalars().all()
             records = [
                 {
-                    "sku": item.sku,
-                    "name": item.name,
-                    "price": item.price,
-                    "stock_count": item.stock_count,
-                    "category": item.category,
+                    "sku": product.sku,
+                    "name": product.name,
+                    "price": product.price,
+                    "stock_count": item.qty_on_hand,
+                    "category": product.category,
                 }
-                for item in items
+                for product, item in result.all()
             ]
         elif table_name == "orders":
             result = await session.execute(select(Order).where(Order.tenant_id == tenant_id))
@@ -60,9 +62,9 @@ async def export_data(
                 {
                     "id": str(order.id),
                     "tenant_id": str(order.tenant_id),
-                    "product_name": order.product_name,
-                    "quantity": order.quantity,
-                    "payment_status": order.payment_status,
+                    "status": order.status,
+                    "total": order.total,
+                    "channel": order.channel,
                     "created_at": order.created_at.isoformat() if order.created_at else None,
                 }
                 for order in orders

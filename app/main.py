@@ -3,6 +3,7 @@
 Run with:
     uvicorn app.main:app --reload --port 8000
 """
+
 from __future__ import annotations
 
 import logging
@@ -18,6 +19,7 @@ from sqlalchemy.orm.exc import StaleDataError
 from app.api.routers.main_router import main_router
 from app.api.routers.v1 import api_v1_router
 from app.core.auth import public_route
+from app.core.problems import install_problem_handlers
 from app.core.settings import settings
 from app.middleware.rate_limiter import RateLimiterMiddleware
 from app.middleware.request_logger import RequestLoggerMiddleware
@@ -60,6 +62,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
 @app.exception_handler(StaleDataError)
 async def stale_data_handler(_request: Request, _exc: StaleDataError) -> JSONResponse:
     """Another request changed the same row first (optimistic concurrency, PRD §12.2): reload and retry."""
@@ -68,6 +71,8 @@ async def stale_data_handler(_request: Request, _exc: StaleDataError) -> JSONRes
         content={"detail": "The record was changed by someone else. Reload it and try again."},
     )
 
+
+install_problem_handlers(app)
 
 # Custom Middlewares
 app.add_middleware(RequestLoggerMiddleware)

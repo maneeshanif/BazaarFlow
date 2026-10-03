@@ -23,11 +23,12 @@ TABLES: dict[str, Table] = dict(Base.metadata.tables)
 def _is_tz(column_type: object) -> bool:
     return isinstance(column_type, DateTime) and bool(column_type.timezone)
 
+
 # Not tenant-owned by design (reason is the contract; see tests/pg/test_schema_rules.py).
 GLOBAL = {"users", "tenants", "refresh_tokens", "login_attempts"}
 # Append-only tables have no updated_at.
-APPEND_ONLY = {"audit_logs", "login_attempts"}
-SOFT_DELETE = {"customers", "vendors", "inventory_items"}
+APPEND_ONLY = {"audit_logs", "login_attempts", "stock_movements", "ledger_entries"}
+SOFT_DELETE = {"customers", "vendors", "products"}
 VERSIONED = {"orders", "inventory_items"}
 MONEY_WORDS = ("price", "cost", "amount", "balance", "total", "budget")
 # Unique constraints that are global on purpose.
@@ -53,7 +54,9 @@ def test_names_are_lower_snake_case_and_tables_are_plural() -> None:
 
 def test_every_primary_key_is_a_single_uuid_column_named_id() -> None:
     bad = [
-        n for n, t in TABLES.items() if [c.name for c in t.primary_key.columns] != ["id"] or not isinstance(t.c.id.type, Uuid)
+        n
+        for n, t in TABLES.items()
+        if [c.name for c in t.primary_key.columns] != ["id"] or not isinstance(t.c.id.type, Uuid)
     ]
     assert not bad, f"primary keys must be a UUID column named id: {bad}"
 
@@ -116,7 +119,9 @@ def test_every_tenant_table_has_an_index_that_starts_with_tenant_id() -> None:
 def test_unique_constraints_on_tenant_tables_are_per_tenant() -> None:
     bad = []
     for t in _tenant_tables():
-        uniques: list[tuple[str, ...]] = [tuple(c.name for c in u.columns) for u in t.constraints if isinstance(u, UniqueConstraint)]
+        uniques: list[tuple[str, ...]] = [
+            tuple(c.name for c in u.columns) for u in t.constraints if isinstance(u, UniqueConstraint)
+        ]
         uniques += [tuple(c.name for c in i.columns) for i in t.indexes if isinstance(i, Index) and i.unique]
         uniques += [(c.name,) for c in t.c if c.unique and not c.primary_key]
         for cols in uniques:

@@ -26,18 +26,25 @@ TENANT_TABLES = [
     "customers",
     "facebook_accounts",
     "inventory_items",
+    "ledger_entries",
     "marketing_posts",
     "memberships",
     "messages",
+    "order_items",
     "orders",
+    "payments",
+    "products",
     "scheduled_campaigns",
+    "stock_movements",
     "support_tickets",
     "tenant_integrations",
     "vendors",
 ]
 
 
-async def _session(engine: AsyncEngine, tenant_id: uuid.UUID | None = None, user_id: uuid.UUID | None = None) -> AsyncSession:
+async def _session(
+    engine: AsyncEngine, tenant_id: uuid.UUID | None = None, user_id: uuid.UUID | None = None
+) -> AsyncSession:
     session = AsyncSession(engine, expire_on_commit=False)
     await session.begin()
     await apply_context(session, tenant_id=tenant_id, user_id=user_id)
@@ -48,7 +55,9 @@ async def test_no_context_means_no_rows(client: AsyncClient, app_engine: AsyncEn
     a = await register(client, "Shop A")
     b = await register(client, "Shop B")
     for acct in (a, b):
-        res = await client.post("/api/v1/customers/", json={"phone": "+923000000001", "name": "Walk-in"}, headers=bearer(acct))
+        res = await client.post(
+            "/api/v1/customers/", json={"phone": "+923000000001", "name": "Walk-in"}, headers=bearer(acct)
+        )
         assert res.status_code == 201, res.text
 
     session = await _session(app_engine)  # no app.tenant_id, no app.user_id
@@ -65,7 +74,9 @@ async def test_a_tenant_context_only_sees_its_own_rows(client: AsyncClient, app_
     a = await register(client, "Shop A")
     b = await register(client, "Shop B")
     for acct in (a, b):
-        await client.post("/api/v1/customers/", json={"phone": "+923000000002", "name": "Someone"}, headers=bearer(acct))
+        await client.post(
+            "/api/v1/customers/", json={"phone": "+923000000002", "name": "Someone"}, headers=bearer(acct)
+        )
     tenant_a = uuid.UUID(a["tenant_id"])
     tenant_b = uuid.UUID(b["tenant_id"])
 
@@ -93,7 +104,9 @@ async def test_cannot_modify_or_create_rows_of_another_tenant(client: AsyncClien
 
     session = await _session(app_engine, tenant_id=tenant_a)
     try:
-        updated = await session.execute(text("UPDATE customers SET name = 'pwned' WHERE tenant_id = :t"), {"t": tenant_b})
+        updated = await session.execute(
+            text("UPDATE customers SET name = 'pwned' WHERE tenant_id = :t"), {"t": tenant_b}
+        )
         assert cast("CursorResult[Any]", updated).rowcount == 0
         deleted = await session.execute(text("DELETE FROM customers WHERE tenant_id = :t"), {"t": tenant_b})
         assert cast("CursorResult[Any]", deleted).rowcount == 0

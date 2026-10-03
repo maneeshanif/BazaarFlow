@@ -26,6 +26,8 @@ from app.core.security import hash_password
 from app.core.tenancy import tenant_session
 from app.models.customer import Customer
 from app.models.inventory import InventoryItem
+from app.models.product import Product
+from app.models.stock import StockMovement
 from app.models.tenant import AuditLog, Membership, Tenant, TenantRole
 from app.models.user import User
 
@@ -144,16 +146,33 @@ async def seed_database() -> None:
 
         inventory = _load_json(DATA_DIR / "inventory_items.json") or _FALLBACK_INVENTORY
         for item in inventory:
+            price = _money(item.get("price", "0")) or Decimal("0.00")
+            product_id = uuid.uuid4()
+            qty = max(int(item.get("stock_count", item.get("stock_level", 0))), 0)
             session.add(
-                InventoryItem(
+                Product(
+                    id=product_id,
                     tenant_id=tenant_id,
-                    sku=item.get("sku", f"SKU-{uuid.uuid4().hex[:6].upper()}"),
-                    name=item.get("name", "Sample Product"),
-                    price=_money(item.get("price", "0")),
-                    stock_count=int(item.get("stock_count", item.get("stock_level", 0))),
-                    category=item.get("category", "General"),
+                    sku=str(item.get("sku", f"SKU-{uuid.uuid4().hex[:6].upper()}"))[:40],
+                    name=str(item.get("name", "Sample Product"))[:120],
+                    price=price,
+                    cost=(price * Decimal("0.70")).quantize(Decimal("0.01")),
+                    category=str(item.get("category", "General"))[:60],
                 )
             )
+            await session.flush()
+            session.add(InventoryItem(tenant_id=tenant_id, product_id=product_id, qty_on_hand=qty, reorder_level=5))
+            if qty > 0:
+                session.add(
+                    StockMovement(
+                        tenant_id=tenant_id,
+                        product_id=product_id,
+                        delta=qty,
+                        reason="opening",
+                        actor_type="system",
+                        note="Seeded opening stock",
+                    )
+                )
         for phone, name in (("+923001000001", "Ali Raza"), ("+923001000002", "Sara Khan")):
             session.add(Customer(tenant_id=tenant_id, phone=phone, name=name))
         session.add(

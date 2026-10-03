@@ -90,7 +90,9 @@ async def _seed_legacy_rows(url: str) -> None:
 async def test_text_prices_become_numeric_using_the_first_number_and_never_abort_the_upgrade(scratch_db: str) -> None:
     await asyncio.to_thread(command.upgrade, _cfg(), "20261002_03")
     await _seed_legacy_rows(scratch_db)
-    await asyncio.to_thread(command.upgrade, _cfg(), "20261002_04")  # must not raise, whatever the legacy text looked like
+    await asyncio.to_thread(
+        command.upgrade, _cfg(), "20261002_04"
+    )  # must not raise, whatever the legacy text looked like
 
     conn = await asyncpg.connect(scratch_db)
     try:
@@ -135,7 +137,7 @@ async def test_downgrade_keeps_soft_deleted_rows_instead_of_deleting_them(scratc
 
 async def test_downgrade_works_when_a_soft_deleted_sku_is_very_long(scratch_db: str) -> None:
     """The renamed sku (original + '#deleted-' + uuid) must still fit VARCHAR(100)."""
-    await asyncio.to_thread(command.upgrade, _cfg(), "head")
+    await asyncio.to_thread(command.upgrade, _cfg(), "20261002_04")  # the shape this test inserts into
     conn = await asyncpg.connect(scratch_db)
     try:
         await conn.execute(

@@ -156,6 +156,61 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/inventory/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Products */
+        get: operations["list_products_api_v1_inventory__get"];
+        put?: never;
+        /** Create Product */
+        post: operations["create_product_api_v1_inventory__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/inventory/{product_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Product */
+        get: operations["get_product_api_v1_inventory__product_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete Product */
+        delete: operations["delete_product_api_v1_inventory__product_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Product */
+        patch: operations["update_product_api_v1_inventory__product_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/inventory/{product_id}/stock-movements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Stock Movements */
+        get: operations["list_stock_movements_api_v1_inventory__product_id__stock_movements_get"];
+        put?: never;
+        /** Add Stock Movement */
+        post: operations["add_stock_movement_api_v1_inventory__product_id__stock_movements_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/login": {
         parameters: {
             query?: never;
@@ -405,6 +460,118 @@ export interface components {
             tenant_id: string;
             user: components["schemas"]["UserOut"];
         };
+        /** Page[ProductOut] */
+        Page_ProductOut_: {
+            /** Items */
+            items: components["schemas"]["ProductOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
+        /** Page[StockMovementOut] */
+        Page_StockMovementOut_: {
+            /** Items */
+            items: components["schemas"]["StockMovementOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
+        /** ProductCreate */
+        ProductCreate: {
+            /**
+             * Active
+             * @default true
+             */
+            active: boolean;
+            /** Category */
+            category?: string | null;
+            /** Cost */
+            cost?: number | string | null;
+            /** Name */
+            name: string;
+            /** Price */
+            price: number | string;
+            /**
+             * Qty On Hand
+             * @default 0
+             */
+            qty_on_hand: number;
+            /** Reorder Level */
+            reorder_level?: number | null;
+            /** Sku */
+            sku: string;
+            /** Vendor Id */
+            vendor_id?: string | null;
+        };
+        /** ProductOut */
+        ProductOut: {
+            /** Active */
+            active: boolean;
+            /** Category */
+            category: string | null;
+            /** Cost */
+            cost: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Image Url */
+            image_url: string | null;
+            /** Low Stock */
+            low_stock: boolean;
+            /** Name */
+            name: string;
+            /** Price */
+            price: string;
+            /** Qty On Hand */
+            qty_on_hand: number;
+            /** Reorder Level */
+            reorder_level: number;
+            /** Sku */
+            sku: string;
+            /**
+             * Tenant Id
+             * Format: uuid
+             */
+            tenant_id: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Vendor Id */
+            vendor_id: string | null;
+        };
+        /**
+         * ProductUpdate
+         * @description Partial update. Unknown fields are rejected, so ``qty_on_hand`` and ``tenant_id`` can never be smuggled in.
+         */
+        ProductUpdate: {
+            /** Active */
+            active?: boolean | null;
+            /** Category */
+            category?: string | null;
+            /** Cost */
+            cost?: number | string | null;
+            /** Name */
+            name?: string | null;
+            /** Price */
+            price?: number | string | null;
+            /** Reorder Level */
+            reorder_level?: number | null;
+            /** Sku */
+            sku?: string | null;
+            /** Vendor Id */
+            vendor_id?: string | null;
+        };
         /** RefreshRequest */
         RefreshRequest: {
             /** Refresh Token */
@@ -432,6 +599,53 @@ export interface components {
             phone: string;
             /** Shop Name */
             shop_name: string;
+        };
+        /**
+         * StockMovementCreate
+         * @description A manual stock change. ``delta`` is signed: positive adds stock, negative removes it.
+         */
+        StockMovementCreate: {
+            /** Delta */
+            delta: number;
+            /** Note */
+            note?: string | null;
+            /**
+             * Reason
+             * @enum {string}
+             */
+            reason: "purchase" | "adjustment" | "return";
+        };
+        /** StockMovementOut */
+        StockMovementOut: {
+            /** Actor Id */
+            actor_id: string | null;
+            /** Actor Type */
+            actor_type: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Delta */
+            delta: number;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Note */
+            note: string | null;
+            /**
+             * Product Id
+             * Format: uuid
+             */
+            product_id: string;
+            /** Reason */
+            reason: string;
+            /** Ref Id */
+            ref_id: string | null;
+            /** Ref Type */
+            ref_type: string | null;
         };
         /** SwitchTenantRequest */
         SwitchTenantRequest: {
@@ -793,6 +1007,240 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_products_api_v1_inventory__get: {
+        parameters: {
+            query?: {
+                q?: string | null;
+                category?: string | null;
+                active?: boolean | null;
+                low_stock?: boolean | null;
+                sort?: string;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_ProductOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_product_api_v1_inventory__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_product_api_v1_inventory__product_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_product_api_v1_inventory__product_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_product_api_v1_inventory__product_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProductUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_stock_movements_api_v1_inventory__product_id__stock_movements_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path: {
+                product_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_StockMovementOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_stock_movement_api_v1_inventory__product_id__stock_movements_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                product_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["StockMovementCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProductOut"];
+                };
             };
             /** @description Validation Error */
             422: {

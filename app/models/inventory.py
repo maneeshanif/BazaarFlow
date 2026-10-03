@@ -1,35 +1,24 @@
-"""InventoryItem ORM model: the product catalog per tenant (replaced by products + stock_movements in phase 1)."""
+"""InventoryItem ORM model: the stock level of one product (PRD §12.3). Quantity changes only via stock_movements."""
+
 from __future__ import annotations
 
-from decimal import Decimal
+import uuid
 
-from sqlalchemy import Index, Integer, Numeric, String, Text, text
+from sqlalchemy import CheckConstraint, ForeignKey, Integer, UniqueConstraint, Uuid
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
-from app.models.common import BaseModelMixin, SoftDeleteMixin, TenantMixin
+from app.models.common import BaseModelMixin, TenantMixin
 
 
-class InventoryItem(BaseModelMixin, TenantMixin, SoftDeleteMixin, Base):
+class InventoryItem(BaseModelMixin, TenantMixin, Base):
     __tablename__ = "inventory_items"
     __table_args__ = (
-        # A sku is unique per tenant among live rows, so a soft-deleted sku can be created again.
-        Index(
-            "uq_inventory_items_tenant_sku",
-            "tenant_id",
-            "sku",
-            unique=True,
-            postgresql_where=text("deleted_at IS NULL"),
-            sqlite_where=text("deleted_at IS NULL"),
-        ),
+        CheckConstraint("qty_on_hand >= 0", name="ck_inventory_items_qty_non_negative"),
+        UniqueConstraint("tenant_id", "product_id", name="uq_inventory_items_tenant_product"),
     )
-    sku: Mapped[str] = mapped_column(String(100), nullable=True)
-    name: Mapped[str] = mapped_column(String(255), nullable=False)
-    category: Mapped[str] = mapped_column(String(100), nullable=True)
-    stock_count: Mapped[int] = mapped_column(Integer, default=0)
-    price: Mapped[Decimal | None] = mapped_column(Numeric(14, 2), nullable=True)
-    incoming_units: Mapped[int] = mapped_column(Integer, default=0)
-    min_threshold: Mapped[int] = mapped_column(Integer, default=0)
-    description: Mapped[str] = mapped_column(Text, nullable=True)
+    product_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey("products.id", ondelete="CASCADE"), nullable=False)
+    qty_on_hand: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    reorder_level: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     __mapper_args__ = {"version_id_col": version}
