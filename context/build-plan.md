@@ -249,17 +249,17 @@ Batch gate: tasks 50, 42, 36, 48, 46, 47, 57, 58, 53, 54, 02, 12, 21, 26 pass th
   - Acceptance: the performance budget lane passes
 - [x] 54 End-to-end smoke test of the critical flow [web-app pack]
   - Acceptance: One browser test signs in and completes the main task
-- [ ] 02 CI/CD + verification — one workflow per lane (api, web) calling `scripts/verify.sh`; secret scan; dependency scan *(carried over from Phase 0)*
+- [x] 02 CI/CD + verification — one workflow per lane (api, web) calling `scripts/verify.sh`; secret scan; dependency scan *(carried over from Phase 0)*
   - Acceptance: Every lane has a workflow that calls `scripts/verify.sh`; a deliberately broken commit turns CI red
   - Acceptance: Secret scan and dependency scan run and pass on the clean tree
-- [ ] 12 Secret hygiene — remove default SECRET_KEY fallback in settings (fail fast when unset outside tests), .env.example complete, gitleaks passing — PRD RK-06 *(carried over from Phase 0)*
+- [x] 12 Secret hygiene — remove default SECRET_KEY fallback in settings (fail fast when unset outside tests), .env.example complete, gitleaks passing — PRD RK-06 *(carried over from Phase 0)*
   - Acceptance: The API refuses to start without SECRET_KEY unless APP_ENV=test or ALLOW_INSECURE_DEV_SECRET is set outside production (tests/unit/test_settings_secret.py)
   - Acceptance: `.env.example` lists every variable in docs/operations/env-vars.md with an empty value
   - Acceptance: gitleaks passes on the full history in CI and locally
-- [ ] 21 Deploy a preview environment on a free tier [web-app pack] *(carried over from Phase 0)*
+- [x] 21 Deploy a preview environment on a free tier [web-app pack] *(carried over from Phase 0)*
   - Acceptance: Every pull request gets a preview URL
   - Acceptance: production deploy is one command
-- [ ] 26 Vendor accounts, sandbox access and credentials in the secret manager [integrations pack] *(carried over from Phase 0)*
+- [x] 26 Vendor accounts, sandbox access and credentials in the secret manager [integrations pack] *(carried over from Phase 0)*
   - Acceptance: A sandbox call succeeds from the dev environment
   - Acceptance: no credential is in the repository
 

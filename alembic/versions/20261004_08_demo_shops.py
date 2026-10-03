@@ -26,7 +26,7 @@ def upgrade() -> None:
         return
     op.add_column("tenants", sa.Column("demo_expires_at", sa.DateTime(timezone=True), nullable=True))
     op.add_column("tenants", sa.Column("agent_cap_usd", sa.Numeric(8, 2), nullable=True))
-    op.create_index("ix_tenants_demo_expires_at", "tenants", ["demo_expires_at"], postgresql_where=sa.text("demo_expires_at IS NOT NULL"))
+    op.create_index("ix_tenants_demo_expires_at", "tenants", ["demo_expires_at"])
 
 
 def downgrade() -> None:

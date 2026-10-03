@@ -52,7 +52,7 @@ class Tenant(BaseModelMixin, Base):
     # The owner's kill switch for the AI assistant: off means no agent run starts for this shop (no deploy needed).
     agents_enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, server_default=text("true"))
     # A visitor's temporary demo shop is deleted after this moment (app.cli.purge_demos); null for every real shop.
-    demo_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    demo_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, index=True)
     # This shop's own monthly AI allowance in USD; null means the platform default.
     agent_cap_usd: Mapped[Decimal | None] = mapped_column(Numeric(8, 2), nullable=True)
 
