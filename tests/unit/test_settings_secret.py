@@ -17,7 +17,7 @@ def _settings(**kwargs: Any) -> Settings:
 @pytest.mark.parametrize("env", ["development", "production", "staging", "prod", "Production", "", "anything"])
 def test_a_missing_secret_key_refuses_to_start(env: str) -> None:
     with pytest.raises(ValidationError, match="SECRET_KEY"):
-        _settings(APP_ENV=env, SECRET_KEY="")
+        _settings(APP_ENV=env, SECRET_KEY="", ALLOW_INSECURE_DEV_SECRET=False)  # not inherited from the environment
 
 
 def test_a_real_secret_key_is_accepted_everywhere() -> None:
