@@ -12,7 +12,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator, model_valida
 Goal = Literal["promote_product", "announce_offer", "festival_greeting", "general"]
 Tone = Literal["friendly", "professional", "festive"]
 Language = Literal["english", "roman_urdu"]
-PostStatus = Literal["draft", "pending_approval", "approved", "archived"]
+PostStatus = Literal["draft", "pending_approval", "approved", "queued", "published", "failed", "cancelled", "archived"]
 
 _TAG = re.compile(r"^#[A-Za-z0-9_]{2,40}$")
 

@@ -304,6 +304,78 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/conversations/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Conversations */
+        get: operations["list_conversations_api_v1_conversations__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations/{conversation_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Conversation */
+        get: operations["get_conversation_api_v1_conversations__conversation_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update Conversation
+         * @description Switch AI / Human, resolve or reopen, assign. Switching to Human stops the AI for this conversation at once.
+         */
+        patch: operations["update_conversation_api_v1_conversations__conversation_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/conversations/{conversation_id}/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Send Message */
+        post: operations["send_message_api_v1_conversations__conversation_id__messages_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/conversations/{conversation_id}/messages/{message_id}/retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Retry Message */
+        post: operations["retry_message_api_v1_conversations__conversation_id__messages__message_id__retry_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/customers/": {
         parameters: {
             query?: never;
@@ -466,6 +538,44 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/integrations/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Integrations */
+        get: operations["list_integrations_api_v1_integrations__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/integrations/{provider}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Connect Integration
+         * @description Check the credentials with the provider, then save them encrypted. The answer never contains them.
+         */
+        put: operations["connect_integration_api_v1_integrations__provider__put"];
+        post?: never;
+        /** Disconnect Integration */
+        delete: operations["disconnect_integration_api_v1_integrations__provider__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/inventory/": {
         parameters: {
             query?: never;
@@ -541,6 +651,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/marketing/activity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Activity */
+        get: operations["list_activity_api_v1_marketing_activity_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/marketing/activity/{post_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel Post */
+        post: operations["cancel_post_api_v1_marketing_activity__post_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/marketing/activity/{post_id}/queue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Queue Post */
+        post: operations["queue_post_api_v1_marketing_activity__post_id__queue_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/marketing/activity/{post_id}/retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Retry Post */
+        post: operations["retry_post_api_v1_marketing_activity__post_id__retry_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/marketing/posts/": {
         parameters: {
             query?: never;
@@ -605,6 +783,158 @@ export interface paths {
         put?: never;
         /** Submit Post */
         post: operations["submit_post_api_v1_marketing_posts__post_id__submit_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/marketing/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Schedule */
+        get: operations["get_schedule_api_v1_marketing_schedule_get"];
+        /** Put Schedule */
+        put: operations["put_schedule_api_v1_marketing_schedule_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/onboarding/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get State */
+        get: operations["get_state_api_v1_onboarding__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/onboarding/channels/continue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Finish Channels
+         * @description Step 2 is done when the owner moves on: WhatsApp and Facebook connected, or skipped.
+         */
+        post: operations["finish_channels_api_v1_onboarding_channels_continue_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/onboarding/finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Finish
+         * @description Finish without a test message.
+         */
+        post: operations["finish_api_v1_onboarding_finish_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/onboarding/products/continue": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Finish Products */
+        post: operations["finish_products_api_v1_onboarding_products_continue_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/onboarding/products/import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Import Products
+         * @description Step 3: import a CSV. Valid rows are imported; each bad row is listed with its line and reason.
+         */
+        post: operations["import_products_api_v1_onboarding_products_import_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/onboarding/shop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Save Shop
+         * @description Step 1 (required): the shop's name, the owner's phone and the city.
+         */
+        put: operations["save_shop_api_v1_onboarding_shop_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/onboarding/test-message": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Test Message
+         * @description Step 4: a WhatsApp test to the owner's phone. A success makes the shop live; a failure explains itself.
+         */
+        post: operations["test_message_api_v1_onboarding_test_message_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -952,6 +1282,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/webhooks/twilio": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Twilio Webhook */
+        post: operations["twilio_webhook_api_v1_webhooks_twilio_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/auth/login": {
         parameters: {
             query?: never;
@@ -1134,6 +1481,41 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** ActivityOut */
+        ActivityOut: {
+            /** Attempts */
+            attempts: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Last Error */
+            last_error: string | null;
+            /** Message */
+            message: string;
+            /** Published At */
+            published_at: string | null;
+            /** Scheduled For */
+            scheduled_for: string | null;
+            /**
+             * Source
+             * @enum {string}
+             */
+            source: "manual" | "schedule";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending_approval" | "approved" | "queued" | "published" | "failed" | "cancelled";
+            /** Title */
+            title: string;
+        };
         /** AgentApprovalRate */
         AgentApprovalRate: {
             /** Approved */
@@ -1445,6 +1827,92 @@ export interface components {
             /** Session Id */
             session_id: string;
         };
+        /**
+         * ConnectRequest
+         * @description ``credentials`` is checked against the provider's own shape in the service, so the error names the right field.
+         */
+        ConnectRequest: {
+            /** Credentials */
+            credentials: {
+                [key: string]: string;
+            };
+        };
+        /** ContextPanel */
+        ContextPanel: {
+            /** Balance */
+            balance: string | null;
+            /** Customer Name */
+            customer_name: string | null;
+            /** Customer Phone */
+            customer_phone: string | null;
+            /** Recent Orders */
+            recent_orders: components["schemas"]["RecentOrder"][];
+            /** Suggested Actions */
+            suggested_actions: string[];
+        };
+        /** ConversationDetail */
+        ConversationDetail: {
+            context: components["schemas"]["ContextPanel"];
+            conversation: components["schemas"]["ConversationOut"];
+            /** Messages */
+            messages: components["schemas"]["MessageOut"][];
+            /** Provider Notice */
+            provider_notice: string | null;
+        };
+        /** ConversationOut */
+        ConversationOut: {
+            /** Assigned To */
+            assigned_to: string | null;
+            /** Channel */
+            channel: string;
+            /** Contact Name */
+            contact_name: string | null;
+            /** Customer Id */
+            customer_id: string | null;
+            /** Handoff Note */
+            handoff_note: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Last Message At
+             * Format: date-time
+             */
+            last_message_at: string;
+            /** Last Message Text */
+            last_message_text: string | null;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "ai" | "human";
+            /** Phone */
+            phone: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "open" | "ai_handling" | "needs_human" | "resolved";
+        };
+        /**
+         * ConversationUpdate
+         * @description Partial update: hand the thread to a person or back to the AI, resolve or reopen it, assign it.
+         */
+        ConversationUpdate: {
+            /** Assigned To */
+            assigned_to?: string | null;
+            /** Mode */
+            mode?: ("ai" | "human") | null;
+            /** Status */
+            status?: ("open" | "resolved") | null;
+            /**
+             * Unassign
+             * @default false
+             */
+            unassign: boolean;
+        };
         /** CountFigure */
         CountFigure: {
             /** Change Percent */
@@ -1616,6 +2084,52 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** ImportReport */
+        ImportReport: {
+            /** Failed */
+            failed: components["schemas"]["RowError"][];
+            /** Imported */
+            imported: number;
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "created" | "shop_set" | "whatsapp_connected" | "products_added" | "live";
+        };
+        /** ImportRequest */
+        ImportRequest: {
+            /** Csv */
+            csv: string;
+        };
+        /** IntegrationOut */
+        IntegrationOut: {
+            /** Available */
+            available: boolean;
+            /** Connected At */
+            connected_at: string | null;
+            /** External Id */
+            external_id: string | null;
+            /** Label */
+            label: string;
+            /** Last Error */
+            last_error: string | null;
+            /**
+             * Provider
+             * @enum {string}
+             */
+            provider: "whatsapp_twilio" | "whatsapp_meta" | "facebook" | "instagram" | "vapi";
+            /** Reconnect Required */
+            reconnect_required: boolean;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "not_connected" | "pending" | "connected" | "error" | "revoked";
+            /** Token Hint */
+            token_hint: string | null;
+            /** Webhook Url */
+            webhook_url: string | null;
+        };
         /** LedgerEntryOut */
         LedgerEntryOut: {
             /** Amount */
@@ -1669,6 +2183,32 @@ export interface components {
             tenant_id: string;
             user: components["schemas"]["UserOut"];
         };
+        /** MessageOut */
+        MessageOut: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Direction
+             * @enum {string}
+             */
+            direction: "inbound" | "outbound";
+            /** Error */
+            error?: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Sender */
+            sender: ("customer" | "ai" | "staff") | null;
+            /** Status */
+            status: string;
+            /** Text */
+            text: string | null;
+        };
         /** MoneyFigure */
         MoneyFigure: {
             /** Change Percent */
@@ -1677,6 +2217,26 @@ export interface components {
             previous: string;
             /** Value */
             value: string;
+        };
+        /** OnboardingOut */
+        OnboardingOut: {
+            /** Facebook Connected */
+            facebook_connected: boolean;
+            /** Owner Phone */
+            owner_phone: string | null;
+            /** Product Count */
+            product_count: number;
+            /** Shop Name */
+            shop_name: string;
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "created" | "shop_set" | "whatsapp_connected" | "products_added" | "live";
+            /** Steps */
+            steps: components["schemas"]["Step"][];
+            /** Whatsapp Connected */
+            whatsapp_connected: boolean;
         };
         /** OrderDetail */
         OrderDetail: {
@@ -1799,6 +2359,15 @@ export interface components {
             /** Total */
             total: string;
         };
+        /** Page[ActivityOut] */
+        Page_ActivityOut_: {
+            /** Items */
+            items: components["schemas"]["ActivityOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
         /** Page[AgentRunOut] */
         Page_AgentRunOut_: {
             /** Items */
@@ -1821,6 +2390,15 @@ export interface components {
         Page_CashBookEntry_: {
             /** Items */
             items: components["schemas"]["CashBookEntry"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
+        /** Page[ConversationOut] */
+        Page_ConversationOut_: {
+            /** Items */
+            items: components["schemas"]["ConversationOut"][];
             /** Next Cursor */
             next_cursor?: string | null;
             /** Total */
@@ -2064,7 +2642,7 @@ export interface components {
              * Status
              * @enum {string}
              */
-            status: "draft" | "pending_approval" | "approved" | "archived";
+            status: "draft" | "pending_approval" | "approved" | "queued" | "published" | "failed" | "cancelled" | "archived";
             /** Title */
             title: string;
             /**
@@ -2197,6 +2775,23 @@ export interface components {
             /** Total */
             total: string;
         };
+        /** RecentOrder */
+        RecentOrder: {
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Status */
+            status: string;
+            /** Total */
+            total: string;
+        };
         /** RefreshRequest */
         RefreshRequest: {
             /** Refresh Token */
@@ -2225,6 +2820,13 @@ export interface components {
             /** Shop Name */
             shop_name: string;
         };
+        /** ReplyRequest */
+        ReplyRequest: {
+            /** Idempotency Key */
+            idempotency_key?: string | null;
+            /** Text */
+            text: string;
+        };
         /**
          * ReverseRequest
          * @description Why a posted sale is being undone (kept in the audit log and on the order).
@@ -2232,6 +2834,15 @@ export interface components {
         ReverseRequest: {
             /** Reason */
             reason: string;
+        };
+        /** RowError */
+        RowError: {
+            /** Error */
+            error: string;
+            /** Row */
+            row: number;
+            /** Sku */
+            sku: string | null;
         };
         /**
          * SaleCreate
@@ -2326,6 +2937,122 @@ export interface components {
             /** Payment Method */
             payment_method?: ("cash" | "card" | "bank" | "wallet" | "udhaar") | null;
         };
+        /**
+         * ScheduleIn
+         * @description F-015. The window is in the shop's local time; ``posts_per_day`` is spread evenly across it.
+         */
+        ScheduleIn: {
+            /**
+             * Approval Mode
+             * @default manual
+             * @enum {string}
+             */
+            approval_mode: "manual" | "auto";
+            /** Enabled */
+            enabled: boolean;
+            /**
+             * Goal
+             * @default general
+             * @enum {string}
+             */
+            goal: "announce_offer" | "festival_greeting" | "general";
+            /**
+             * Language
+             * @default english
+             * @enum {string}
+             */
+            language: "english" | "roman_urdu";
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Posts Per Day
+             * @default 1
+             */
+            posts_per_day: number;
+            /**
+             * Tone
+             * @default friendly
+             * @enum {string}
+             */
+            tone: "friendly" | "professional" | "festive";
+            /**
+             * Window End
+             * Format: time
+             * @default 20:00:00
+             */
+            window_end: string;
+            /**
+             * Window Start
+             * Format: time
+             * @default 10:00:00
+             */
+            window_start: string;
+        };
+        /** ScheduleOut */
+        ScheduleOut: {
+            /**
+             * Approval Mode
+             * @default manual
+             * @enum {string}
+             */
+            approval_mode: "manual" | "auto";
+            /** Configured */
+            configured: boolean;
+            /** Enabled */
+            enabled: boolean;
+            /** Facebook Connected */
+            facebook_connected: boolean;
+            /**
+             * Goal
+             * @default general
+             * @enum {string}
+             */
+            goal: "announce_offer" | "festival_greeting" | "general";
+            /**
+             * Language
+             * @default english
+             * @enum {string}
+             */
+            language: "english" | "roman_urdu";
+            /** Next Post At */
+            next_post_at: string | null;
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Posts Per Day
+             * @default 1
+             */
+            posts_per_day: number;
+            /**
+             * Tone
+             * @default friendly
+             * @enum {string}
+             */
+            tone: "friendly" | "professional" | "festive";
+            /**
+             * Window End
+             * Format: time
+             * @default 20:00:00
+             */
+            window_end: string;
+            /**
+             * Window Start
+             * Format: time
+             * @default 10:00:00
+             */
+            window_start: string;
+        };
+        /**
+         * ScheduleRequest
+         * @description Put an approved post in the publishing queue for a given moment.
+         */
+        ScheduleRequest: {
+            /**
+             * Scheduled For
+             * Format: date-time
+             */
+            scheduled_for: string;
+        };
         /** ShopSettingsOut */
         ShopSettingsOut: {
             /** Agent Cap Usd */
@@ -2382,6 +3109,18 @@ export interface components {
             /** Owner Phone */
             owner_phone?: string | null;
         };
+        /**
+         * ShopStep
+         * @description The one required step: the same rules as the shop profile (F-020) and sign-up (F-002).
+         */
+        ShopStep: {
+            /** City */
+            city?: string | null;
+            /** Name */
+            name: string;
+            /** Owner Phone */
+            owner_phone: string;
+        };
         /** ShopVendorCreate */
         ShopVendorCreate: {
             /** Name */
@@ -2427,6 +3166,23 @@ export interface components {
             name?: string | null;
             /** Phone */
             phone?: string | null;
+        };
+        /** Step */
+        Step: {
+            /**
+             * Key
+             * @enum {string}
+             */
+            key: "shop" | "channels" | "products" | "test";
+            /** Label */
+            label: string;
+            /** Required */
+            required: boolean;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "done" | "current" | "pending";
         };
         /**
          * StockMovementCreate
@@ -2609,6 +3365,18 @@ export interface components {
          * @enum {string}
          */
         TenantRole: "owner" | "manager" | "staff";
+        /** TestMessageResult */
+        TestMessageResult: {
+            /** Detail */
+            detail: string;
+            /** Sent */
+            sent: boolean;
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "created" | "shop_set" | "whatsapp_connected" | "products_added" | "live";
+        };
         /** TokenOut */
         TokenOut: {
             /** Access Token */
@@ -2792,6 +3560,14 @@ export interface components {
              * Format: uuid
              */
             vendor_id: string;
+        };
+        /** WebhookResult */
+        WebhookResult: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ok" | "ignored";
         };
     };
     responses: never;
@@ -3332,6 +4108,173 @@ export interface operations {
             };
         };
     };
+    list_conversations_api_v1_conversations__get: {
+        parameters: {
+            query?: {
+                status?: ("open" | "ai_handling" | "needs_human" | "resolved") | null;
+                q?: string | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_ConversationOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_conversation_api_v1_conversations__conversation_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                conversation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_conversation_api_v1_conversations__conversation_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                conversation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConversationUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConversationOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    send_message_api_v1_conversations__conversation_id__messages_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                conversation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReplyRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    retry_message_api_v1_conversations__conversation_id__messages__message_id__retry_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                conversation_id: string;
+                message_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MessageOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_customers_api_v1_customers__get: {
         parameters: {
             query?: {
@@ -3712,6 +4655,92 @@ export interface operations {
             };
         };
     };
+    list_integrations_api_v1_integrations__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IntegrationOut"][];
+                };
+            };
+        };
+    };
+    connect_integration_api_v1_integrations__provider__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                provider: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConnectRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IntegrationOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    disconnect_integration_api_v1_integrations__provider__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                provider: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["IntegrationOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_products_api_v1_inventory__get: {
         parameters: {
             query?: {
@@ -3982,10 +5011,140 @@ export interface operations {
             };
         };
     };
+    list_activity_api_v1_marketing_activity_get: {
+        parameters: {
+            query?: {
+                status?: ("pending_approval" | "approved" | "queued" | "published" | "failed" | "cancelled") | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_ActivityOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_post_api_v1_marketing_activity__post_id__cancel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivityOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    queue_post_api_v1_marketing_activity__post_id__queue_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScheduleRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivityOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    retry_post_api_v1_marketing_activity__post_id__retry_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                post_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ActivityOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_posts_api_v1_marketing_posts__get: {
         parameters: {
             query?: {
-                status?: ("draft" | "pending_approval" | "approved" | "archived") | null;
+                status?: ("draft" | "pending_approval" | "approved" | "queued" | "published" | "failed" | "cancelled" | "archived") | null;
                 limit?: number;
                 cursor?: string | null;
             };
@@ -4170,6 +5329,225 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_schedule_api_v1_marketing_schedule_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduleOut"];
+                };
+            };
+        };
+    };
+    put_schedule_api_v1_marketing_schedule_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ScheduleIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduleOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_state_api_v1_onboarding__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OnboardingOut"];
+                };
+            };
+        };
+    };
+    finish_channels_api_v1_onboarding_channels_continue_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OnboardingOut"];
+                };
+            };
+        };
+    };
+    finish_api_v1_onboarding_finish_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OnboardingOut"];
+                };
+            };
+        };
+    };
+    finish_products_api_v1_onboarding_products_continue_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OnboardingOut"];
+                };
+            };
+        };
+    };
+    import_products_api_v1_onboarding_products_import_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ImportRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ImportReport"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    save_shop_api_v1_onboarding_shop_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShopStep"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OnboardingOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    test_message_api_v1_onboarding_test_message_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TestMessageResult"];
                 };
             };
         };
@@ -4949,6 +6327,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    twilio_webhook_api_v1_webhooks_twilio_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WebhookResult"];
                 };
             };
         };

@@ -8,12 +8,17 @@ from fastapi import APIRouter
 
 from app.api.routers.agent_router import approvals_router, chat_router, runs_router
 from app.api.routers.auth_router import router as auth_router
+from app.api.routers.channel_webhook_router import router as channel_webhook_router
 from app.api.routers.customers_router import router as customers_router
 from app.api.routers.dashboard_router import router as dashboard_router
 from app.api.routers.demo_router import router as demo_router
 from app.api.routers.finance_router import router as finance_router
+from app.api.routers.inbox_router import router as inbox_router
+from app.api.routers.integrations_router import router as integrations_router
 from app.api.routers.inventory_router import router as inventory_router
+from app.api.routers.marketing_schedule_router import router as marketing_schedule_router
 from app.api.routers.marketing_studio_router import router as marketing_studio_router
+from app.api.routers.onboarding_router import router as onboarding_router
 from app.api.routers.payables_router import router as payables_router
 from app.api.routers.platform_router import router as platform_router
 from app.api.routers.sales_router import orders_router, sales_router
@@ -38,3 +43,5 @@ api_v1_router.include_router(payables_router)
 api_v1_router.include_router(settings_router)
 api_v1_router.include_router(finance_router)
 api_v1_router.include_router(platform_router)
+for _r in (channel_webhook_router, inbox_router, integrations_router, marketing_schedule_router, onboarding_router):
+    api_v1_router.include_router(_r)

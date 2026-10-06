@@ -189,7 +189,8 @@ async def mark_approved(db: AsyncSession, principal: Principal, post_id: uuid.UU
     ).scalar_one_or_none()
     if post is None or post.status != PENDING:
         raise Conflict("The post changed after it was sent for approval.", code="post_changed")
-    post.status = APPROVED
+    # a post the scheduler drafted already has its time: approving it puts it in the publishing queue
+    post.status = "queued" if post.scheduled_for is not None else APPROVED
     await db.flush()
     record_audit(
         db,

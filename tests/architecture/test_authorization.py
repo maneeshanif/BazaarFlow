@@ -70,6 +70,7 @@ def test_only_expected_routes_are_public() -> None:
         "/auth/logout",
         "/webhook",
         "/vapi/webhook",
+        "/api/v1/webhooks/twilio",  # signed by Twilio, verified per shop before anything is stored
     )
     unexpected = [p for p in public if not p.startswith(allowed_prefixes)]
     assert not unexpected, f"Unexpected public routes: {unexpected}"
@@ -79,4 +80,4 @@ def test_versioned_routes_are_not_double_prefixed_and_only_real_v1_routers_are_m
     paths = {path for path, _methods, _dep in _all_routes()}
     assert not [p for p in paths if p.startswith("/api/v1/api")], "legacy routers must not be mounted under /api/v1"
     v1_areas = {p.split("/")[3] for p in paths if p.startswith("/api/v1/")}
-    assert v1_areas <= {"auth", "customers", "inventory", "sales", "orders", "team", "chat", "approvals", "agent-runs", "marketing", "dashboard", "demo", "vendors", "settings", "finance", "platform"}, f"unexpected /api/v1 areas: {v1_areas}"
+    assert v1_areas <= {"auth", "customers", "inventory", "sales", "orders", "team", "chat", "approvals", "agent-runs", "marketing", "dashboard", "demo", "vendors", "settings", "finance", "platform", "conversations", "integrations", "onboarding", "webhooks"}, f"unexpected /api/v1 areas: {v1_areas}"

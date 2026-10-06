@@ -82,13 +82,23 @@ class TenantIntegration(BaseModelMixin, TenantMixin, Base):
     """Per-tenant provider connection. Credentials are stored encrypted, never returned by the API."""
 
     __tablename__ = "tenant_integrations"
-    __table_args__ = (UniqueConstraint("provider", "external_id", name="uq_tenant_integrations_provider_external"),)
+    __table_args__ = (
+        UniqueConstraint("provider", "external_id", name="uq_tenant_integrations_provider_external"),
+        UniqueConstraint("tenant_id", "provider", name="uq_tenant_integrations_tenant_provider"),
+        CheckConstraint(
+            "provider in ('whatsapp_twilio', 'whatsapp_meta', 'facebook', 'instagram', 'vapi')",
+            name="ck_tenant_integrations_provider",
+        ),
+        CheckConstraint("status in ('pending', 'connected', 'error', 'revoked')", name="ck_tenant_integrations_status"),
+    )
 
     provider: Mapped[str] = mapped_column(String(40), nullable=False)
     external_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
     credentials_enc: Mapped[str | None] = mapped_column(Text, nullable=True)
     status: Mapped[str] = mapped_column(String(20), default="pending", nullable=False)
     last_error: Mapped[str | None] = mapped_column(Text, nullable=True)
+    connected_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 
 class AuditLog(Base):

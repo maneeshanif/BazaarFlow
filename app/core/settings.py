@@ -119,6 +119,14 @@ class Settings(BaseSettings):
     # Legacy v1 routers share one JSON store across tenants: off in production/staging unless set to true
     LEGACY_V1_ROUTES: bool | None = None
 
+    # -- Integrations (Phase 2) ----------------------------------------------------
+    # Fernet key(s), comma separated (first encrypts, all decrypt), for per-shop provider credentials. Required in production.
+    INTEGRATIONS_ENCRYPTION_KEY: str = ""
+    # The exact public address of this API: Twilio signs the webhook URL, so it must match what Twilio calls.
+    PUBLIC_BASE_URL: str = "http://localhost:8000"
+    PROVIDER_TIMEOUT_SECONDS: float = 10.0
+    PROVIDER_MAX_RETRIES: int = 3
+
     # -- Scheduler -------------------------------------------------------------
     MARKETING_SCHEDULER_ENABLED: bool = True
 

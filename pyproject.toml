@@ -30,6 +30,9 @@ dependencies = [
     "pyjwt>=2.15.1",
     "passlib[bcrypt]>=1.7.4",
     "tzdata>=2026.3",
+    # -- Provider integrations (Phase 2) -----------------------------------------
+    "cryptography>=44.0.0",
+    "twilio>=9.4.0",
 ]
 
 [dependency-groups]
@@ -90,6 +93,10 @@ exclude = ['^backend/', '^frontend/', '^[.]claude/', '^[.]codex/', '^[.]gemini/'
 "app/services/**" = ["E402"]
 "app/integrations/**" = ["E402"]
 "app/repositories/**" = ["E402"]
+[[tool.mypy.overrides]]
+module = ["twilio", "twilio.*"]
+ignore_missing_imports = true  # the Twilio SDK ships no type marker
+
 [[tool.mypy.overrides]]
 module = ["asyncpg", "asyncpg.*"]
 ignore_missing_imports = true  # asyncpg ships no type stubs

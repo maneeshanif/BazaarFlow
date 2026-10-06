@@ -89,3 +89,18 @@ async def platform_session(user_id: uuid.UUID) -> AsyncIterator[AsyncSession]:
             if _is_postgres(session):
                 await session.execute(text("SELECT set_config('app.platform_admin', 'true', true)"))
             yield session
+
+
+@asynccontextmanager
+async def system_session() -> AsyncIterator[AsyncSession]:
+    """A read-only look across shops for a background job that must find work before it knows whose it is.
+
+    It sets ``app.system_job``, which opens a SELECT policy on the few tables a job scans (which shops have posts due or
+    a schedule on). The job reads only shop ids from it, then does each shop's work in that shop's own ``tenant_session``.
+    Only code under ``app/cli`` and ``app/services/marketing_publisher.py`` may use it; an architecture test guards that.
+    """
+    async with database.AsyncSessionLocal() as session:
+        async with session.begin():
+            if _is_postgres(session):
+                await session.execute(text("SELECT set_config('app.system_job', 'true', true)"))
+            yield session

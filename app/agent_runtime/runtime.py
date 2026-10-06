@@ -21,7 +21,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.agent_runtime.agents import build_sales_agent
 from app.agent_runtime.context import ProposedAction, RuntimeContext
-from app.agent_runtime.llm import build_model, describe_failure
+from app.agent_runtime.llm import build_model as build_model  # re-exported: tests and other agents patch/use it here
+from app.agent_runtime.llm import describe_failure
 from app.agents.tools.shop_tools import forget_drafts
 from app.core.settings import settings
 from app.core.tenancy import Principal

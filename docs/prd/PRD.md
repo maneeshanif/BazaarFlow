@@ -383,6 +383,67 @@ Every screen follows: **Header** (title + status chip + primary action) → **Fi
 ### 5.4 Other forms
 Fields for P1 and P2 forms are specified when their phase starts, by the `architect` skill, and recorded here before implementation (change control §25).
 
+#### 5.4.1 Phase 2 field specifications (recorded 2026-10-06, built in batches 2D and 2E; the owner confirms or changes them)
+Written by the assistant while the owner was away, from §5.2, §6, §7, §10 and the data model in §12. They add no field beyond what those sections name; where a rule was a judgment call it is marked **(assumed)**.
+
+**F-011 Stock movements** (list; owner, manager)
+| Field | Type | Rule | Notes |
+| --- | --- | --- | --- |
+| product, delta, reason, ref, actor, note, created_at | read-only list | newest first; 50 per page | reasons: opening, sale, purchase, adjustment, return, reversal |
+| filters: product_id, reason, since, until | filter | reason must be one of the above | movements are never edited or deleted |
+
+**F-012 Vendors and payables** (master; owner, manager; delete and payables report owner only)
+| Field | Type | Required | Validation / rule | Notes |
+| --- | --- | --- | --- | --- |
+| name | text | yes | 2-120 chars | |
+| phone | phone | no | 7-20 digits, optional leading + | used for reorder messages |
+| bill.amount | money | yes | > 0, 2 decimals | adds to what the shop owes |
+| bill.due_date | date | no | ISO date | drives "overdue" |
+| bill.reference | text | no | ≤ 60 chars | vendor invoice number |
+| bill.note | text | no | ≤ 255 chars | |
+| payment.amount | money | yes | > 0 and ≤ what is owed | refused above the balance |
+| payment.method | select | yes | cash, card, bank, wallet | |
+What the shop owes a vendor is the sum of its append-only ledger entries (bill = debit, payment = credit); a vendor owed money cannot be deleted. Payments clear the oldest bills first (assumed) when overdue is worked out.
+
+**F-013 Finance overview and ledger** (report; owner, manager view)
+| Field | Type | Rule | Notes |
+| --- | --- | --- | --- |
+| range | select | today, 7d, 30d (default 30d) | shop-local days |
+| revenue, split, receivables | figures | all roles that may open the page | receivables aged first-in-first-out: 0-7, 8-14, 15-30, over 30 days (assumed) |
+| gross margin, vendor payables | figures | owner only (assumed: "manager view" hides them) | margin = profit ÷ revenue of orders whose every line has a cost |
+| cash book | list | direction in/out, since, until | money in = payments received; out = payments to vendors |
+
+**F-020 Shop profile and settings** (settings; owner)
+| Field | Type | Required | Validation / rule | Notes |
+| --- | --- | --- | --- | --- |
+| name | text | yes | 2-80 chars | |
+| owner_phone | phone | no | E.164 | briefings and alerts |
+| city | text | no | ≤ 60 chars | |
+| auto_post_limit | money | no | 0 to 10,000,000; empty = platform default (0) | the largest sale the AI may post without approval |
+| plan, currency, timezone, AI monthly allowance, AI switch | read-only | | set by BazaarFlow, or on the agent page |
+
+**F-025 Platform admin: tenants** (master; platform admin)
+Lists every shop (name, plan, status, users, last activity), searchable, with a filter for status and an option to include visitor demos. The only change is **suspend** (reason 3-200 chars, kept in the audit log) and **reactivate**; a suspended shop is refused at sign-in and on the next request. An operator cannot suspend the shop they are signed in to. Impersonation is **not built** (§14 lists it; it needs an owner decision on consent and expiry).
+
+**D-002, D-003 and D-004 as built**
+| Dashboard | KPI | Definition |
+| --- | --- | --- |
+| D-002 | Revenue trend | posted-order totals per shop-local day (7 days, or 30 for the 30d range) |
+| D-002 | Gross margin | as F-013 |
+| D-002 | Receivables aging | as F-013 |
+| D-002 | Vendor payables | owed, overdue and vendor count |
+| D-002 | Cash vs udhaar split | of the range's sales, the part paid at the counter and the part put on udhaar |
+| D-003 | Agent runs today | agent runs created today |
+| D-003 | Approval rate | approved (approved, executed, failed after approval) ÷ decided (those plus rejected) in the range; expired and pending excluded (assumed) |
+| D-003 | Failed runs | runs with outcome failed in the range |
+| D-003 | AI spend vs cap | this month's spend against the shop's monthly allowance |
+| D-003 | Time saved estimate | 2 minutes per finished run + 3 minutes per approved action carried out (assumed, shown beside the number) |
+| D-004 | Tenants | real shops (visitor demos counted apart); delta vs shops that existed 7 days ago |
+| D-004 | Active tenants (7 d) | real shops with an order, agent run or message in 7 days |
+| D-004 | Messages/day | average per day over 7 days (messages today shown too) |
+| D-004 | AI spend | this month, all shops |
+| D-004 | Error rate | failed agent runs ÷ agent runs in 7 days (assumed: the platform stores no request-level error count) |
+
 ## 6. Key Screen — Detailed Requirements
 **F-006 Sales chat and F-005 Inbox carry the product.**
 - Layout (desktop): three panes — conversation list, thread, context panel (customer, recent orders, udhaar balance, suggested actions). Phone: list → thread as separate screens.

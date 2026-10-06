@@ -28,4 +28,4 @@ def test_the_only_overrides_are_for_packages_without_stubs() -> None:
         modules = override["module"] if isinstance(override["module"], list) else [override["module"]]
         assert set(override) <= {"module", "ignore_missing_imports"}, override
         assert override.get("ignore_missing_imports") is True, override
-        assert all(m.split(".")[0] in {"asyncpg"} for m in modules), f"unexpected override for {modules}"
+        assert all(m.split(".")[0] in {"asyncpg", "twilio"} for m in modules), f"unexpected override for {modules}"

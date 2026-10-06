@@ -2,10 +2,12 @@
 
 from app.models.agent import ActionStatus, AgentAction
 from app.models.agent_run import AgentRun
+from app.models.conversation import Conversation, WebhookEvent
 from app.models.customer import Customer
 from app.models.facebook import FacebookAccount
 from app.models.inventory import InventoryItem
 from app.models.marketing import MarketingPost, ScheduledCampaign
+from app.models.marketing_schedule import MarketingSchedule
 from app.models.message import Message, MessageDirection
 from app.models.order import Order, OrderItem
 from app.models.payment import LedgerEntry, Payment
@@ -22,12 +24,14 @@ __all__ = [
     "AgentAction",
     "AgentRun",
     "AuditLog",
+    "Conversation",
     "Customer",
     "FacebookAccount",
     "InventoryItem",
     "LedgerEntry",
     "LoginAttempt",
     "MarketingPost",
+    "MarketingSchedule",
     "Membership",
     "Message",
     "MessageDirection",
@@ -43,6 +47,7 @@ __all__ = [
     "TenantIntegration",
     "TenantRole",
     "User",
+    "WebhookEvent",
     "Vendor",
     "VendorBill",
     "VendorPayment",

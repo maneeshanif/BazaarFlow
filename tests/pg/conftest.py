@@ -188,3 +188,29 @@ async def member(client: AsyncClient, engine: AsyncEngine, owner: dict[str, Any]
     res = await client.post("/api/v1/auth/login", json={"email": email, "password": "staff-password-1"})
     assert res.status_code == 200, res.text
     return {**res.json(), "email": email}
+
+
+async def _no_sleep(_seconds: float) -> None:
+    return None
+
+
+@pytest_asyncio.fixture
+async def providers(monkeypatch: pytest.MonkeyPatch, admin_conn: asyncpg.Connection) -> AsyncIterator[Any]:
+    """Fake Twilio, Facebook and Pexels (recorded fixtures, no network, no waiting). See ``channel_support``.
+
+    The container is shared by every test, and a Twilio account or Facebook page can serve one shop only, so each test
+    starts with no integrations connected.
+    """
+    import httpx
+
+    await admin_conn.execute("DELETE FROM tenant_integrations")
+    from app.integrations import factory
+    from tests.pg.channel_support import FakeProviders
+
+    fake = FakeProviders()
+    monkeypatch.setattr(factory.providers, "transport", httpx.MockTransport(fake.handler))
+    monkeypatch.setattr(factory.providers, "sleep", _no_sleep)
+    monkeypatch.setattr(settings, "PUBLIC_BASE_URL", "https://api.bazaarflow.test")
+    monkeypatch.setattr(settings, "PEXELS_API_KEY", "pexels-test-key")
+    monkeypatch.setattr(settings, "PROVIDER_MAX_RETRIES", 3)
+    yield fake

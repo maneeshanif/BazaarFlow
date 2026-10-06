@@ -1,0 +1,1 @@
+SmsSid=SM5ef8f4f1c0a14e5da0c8f3f8c3f1d3a1&SmsStatus=delivered&MessageStatus=delivered&To=whatsapp%3A%2B923001234567&MessageSid=SM5ef8f4f1c0a14e5da0c8f3f8c3f1d3a1&AccountSid=ACaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&From=whatsapp%3A%2B14155238886&ApiVersion=2010-04-01

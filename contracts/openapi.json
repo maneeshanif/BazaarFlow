@@ -1,6 +1,101 @@
 {
   "components": {
     "schemas": {
+      "ActivityOut": {
+        "properties": {
+          "attempts": {
+            "title": "Attempts",
+            "type": "integer"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "last_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Error"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
+          },
+          "scheduled_for": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scheduled For"
+          },
+          "source": {
+            "enum": [
+              "manual",
+              "schedule"
+            ],
+            "title": "Source",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "pending_approval",
+              "approved",
+              "queued",
+              "published",
+              "failed",
+              "cancelled"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "message",
+          "status",
+          "source",
+          "scheduled_for",
+          "published_at",
+          "attempts",
+          "last_error",
+          "created_at"
+        ],
+        "title": "ActivityOut",
+        "type": "object"
+      },
       "AgentApprovalRate": {
         "properties": {
           "approved": {
@@ -818,6 +913,288 @@
         "title": "ChatResponse",
         "type": "object"
       },
+      "ConnectRequest": {
+        "additionalProperties": false,
+        "description": "``credentials`` is checked against the provider's own shape in the service, so the error names the right field.",
+        "properties": {
+          "credentials": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Credentials",
+            "type": "object"
+          }
+        },
+        "required": [
+          "credentials"
+        ],
+        "title": "ConnectRequest",
+        "type": "object"
+      },
+      "ContextPanel": {
+        "properties": {
+          "balance": {
+            "anyOf": [
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Balance"
+          },
+          "customer_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer Name"
+          },
+          "customer_phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer Phone"
+          },
+          "recent_orders": {
+            "items": {
+              "$ref": "#/components/schemas/RecentOrder"
+            },
+            "title": "Recent Orders",
+            "type": "array"
+          },
+          "suggested_actions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Suggested Actions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "customer_name",
+          "customer_phone",
+          "balance",
+          "recent_orders",
+          "suggested_actions"
+        ],
+        "title": "ContextPanel",
+        "type": "object"
+      },
+      "ConversationDetail": {
+        "properties": {
+          "context": {
+            "$ref": "#/components/schemas/ContextPanel"
+          },
+          "conversation": {
+            "$ref": "#/components/schemas/ConversationOut"
+          },
+          "messages": {
+            "items": {
+              "$ref": "#/components/schemas/MessageOut"
+            },
+            "title": "Messages",
+            "type": "array"
+          },
+          "provider_notice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider Notice"
+          }
+        },
+        "required": [
+          "conversation",
+          "messages",
+          "context",
+          "provider_notice"
+        ],
+        "title": "ConversationDetail",
+        "type": "object"
+      },
+      "ConversationOut": {
+        "properties": {
+          "assigned_to": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assigned To"
+          },
+          "channel": {
+            "title": "Channel",
+            "type": "string"
+          },
+          "contact_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contact Name"
+          },
+          "customer_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer Id"
+          },
+          "handoff_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Handoff Note"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "last_message_at": {
+            "format": "date-time",
+            "title": "Last Message At",
+            "type": "string"
+          },
+          "last_message_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Message Text"
+          },
+          "mode": {
+            "enum": [
+              "ai",
+              "human"
+            ],
+            "title": "Mode",
+            "type": "string"
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "open",
+              "ai_handling",
+              "needs_human",
+              "resolved"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "channel",
+          "phone",
+          "contact_name",
+          "customer_id",
+          "status",
+          "mode",
+          "assigned_to",
+          "handoff_note",
+          "last_message_at",
+          "last_message_text"
+        ],
+        "title": "ConversationOut",
+        "type": "object"
+      },
+      "ConversationUpdate": {
+        "additionalProperties": false,
+        "description": "Partial update: hand the thread to a person or back to the AI, resolve or reopen it, assign it.",
+        "properties": {
+          "assigned_to": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assigned To"
+          },
+          "mode": {
+            "anyOf": [
+              {
+                "enum": [
+                  "ai",
+                  "human"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mode"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "open",
+                  "resolved"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "unassign": {
+            "default": false,
+            "title": "Unassign",
+            "type": "boolean"
+          }
+        },
+        "title": "ConversationUpdate",
+        "type": "object"
+      },
       "CountFigure": {
         "properties": {
           "change_percent": {
@@ -1350,6 +1727,163 @@
         "title": "HTTPValidationError",
         "type": "object"
       },
+      "ImportReport": {
+        "properties": {
+          "failed": {
+            "items": {
+              "$ref": "#/components/schemas/RowError"
+            },
+            "title": "Failed",
+            "type": "array"
+          },
+          "imported": {
+            "title": "Imported",
+            "type": "integer"
+          },
+          "state": {
+            "enum": [
+              "created",
+              "shop_set",
+              "whatsapp_connected",
+              "products_added",
+              "live"
+            ],
+            "title": "State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "imported",
+          "failed",
+          "state"
+        ],
+        "title": "ImportReport",
+        "type": "object"
+      },
+      "ImportRequest": {
+        "additionalProperties": false,
+        "properties": {
+          "csv": {
+            "maxLength": 200000,
+            "minLength": 1,
+            "title": "Csv",
+            "type": "string"
+          }
+        },
+        "required": [
+          "csv"
+        ],
+        "title": "ImportRequest",
+        "type": "object"
+      },
+      "IntegrationOut": {
+        "properties": {
+          "available": {
+            "title": "Available",
+            "type": "boolean"
+          },
+          "connected_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Connected At"
+          },
+          "external_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "External Id"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "last_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Error"
+          },
+          "provider": {
+            "enum": [
+              "whatsapp_twilio",
+              "whatsapp_meta",
+              "facebook",
+              "instagram",
+              "vapi"
+            ],
+            "title": "Provider",
+            "type": "string"
+          },
+          "reconnect_required": {
+            "title": "Reconnect Required",
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "not_connected",
+              "pending",
+              "connected",
+              "error",
+              "revoked"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "token_hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Token Hint"
+          },
+          "webhook_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Url"
+          }
+        },
+        "required": [
+          "provider",
+          "label",
+          "available",
+          "status",
+          "external_id",
+          "token_hint",
+          "last_error",
+          "reconnect_required",
+          "connected_at",
+          "webhook_url"
+        ],
+        "title": "IntegrationOut",
+        "type": "object"
+      },
       "LedgerEntryOut": {
         "properties": {
           "amount": {
@@ -1480,6 +2014,80 @@
         "title": "MeOut",
         "type": "object"
       },
+      "MessageOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "direction": {
+            "enum": [
+              "inbound",
+              "outbound"
+            ],
+            "title": "Direction",
+            "type": "string"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "sender": {
+            "anyOf": [
+              {
+                "enum": [
+                  "customer",
+                  "ai",
+                  "staff"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sender"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          }
+        },
+        "required": [
+          "id",
+          "direction",
+          "sender",
+          "text",
+          "status",
+          "created_at"
+        ],
+        "title": "MessageOut",
+        "type": "object"
+      },
       "MoneyFigure": {
         "properties": {
           "change_percent": {
@@ -1510,6 +2118,66 @@
           "change_percent"
         ],
         "title": "MoneyFigure",
+        "type": "object"
+      },
+      "OnboardingOut": {
+        "properties": {
+          "facebook_connected": {
+            "title": "Facebook Connected",
+            "type": "boolean"
+          },
+          "owner_phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Phone"
+          },
+          "product_count": {
+            "title": "Product Count",
+            "type": "integer"
+          },
+          "shop_name": {
+            "title": "Shop Name",
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "created",
+              "shop_set",
+              "whatsapp_connected",
+              "products_added",
+              "live"
+            ],
+            "title": "State",
+            "type": "string"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/Step"
+            },
+            "title": "Steps",
+            "type": "array"
+          },
+          "whatsapp_connected": {
+            "title": "Whatsapp Connected",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "state",
+          "steps",
+          "whatsapp_connected",
+          "facebook_connected",
+          "product_count",
+          "owner_phone",
+          "shop_name"
+        ],
+        "title": "OnboardingOut",
         "type": "object"
       },
       "OrderDetail": {
@@ -1830,6 +2498,39 @@
         "title": "OrderSummary",
         "type": "object"
       },
+      "Page_ActivityOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ActivityOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "Page[ActivityOut]",
+        "type": "object"
+      },
       "Page_AgentRunOut_": {
         "properties": {
           "items": {
@@ -1927,6 +2628,39 @@
           "total"
         ],
         "title": "Page[CashBookEntry]",
+        "type": "object"
+      },
+      "Page_ConversationOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ConversationOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "Page[ConversationOut]",
         "type": "object"
       },
       "Page_CustomerOut_": {
@@ -2606,6 +3340,10 @@
               "draft",
               "pending_approval",
               "approved",
+              "queued",
+              "published",
+              "failed",
+              "cancelled",
               "archived"
             ],
             "title": "Status",
@@ -3053,6 +3791,37 @@
         "title": "Receivables",
         "type": "object"
       },
+      "RecentOrder": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "total": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Total",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "total",
+          "status",
+          "created_at"
+        ],
+        "title": "RecentOrder",
+        "type": "object"
+      },
       "RefreshRequest": {
         "properties": {
           "refresh_token": {
@@ -3127,6 +3896,35 @@
         "title": "RegisterRequest",
         "type": "object"
       },
+      "ReplyRequest": {
+        "properties": {
+          "idempotency_key": {
+            "anyOf": [
+              {
+                "maxLength": 80,
+                "minLength": 8,
+                "pattern": "^[A-Za-z0-9_-]+$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Idempotency Key"
+          },
+          "text": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "ReplyRequest",
+        "type": "object"
+      },
       "ReverseRequest": {
         "description": "Why a posted sale is being undone (kept in the audit log and on the order).",
         "properties": {
@@ -3141,6 +3939,36 @@
           "reason"
         ],
         "title": "ReverseRequest",
+        "type": "object"
+      },
+      "RowError": {
+        "properties": {
+          "error": {
+            "title": "Error",
+            "type": "string"
+          },
+          "row": {
+            "title": "Row",
+            "type": "integer"
+          },
+          "sku": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sku"
+          }
+        },
+        "required": [
+          "row",
+          "sku",
+          "error"
+        ],
+        "title": "RowError",
         "type": "object"
       },
       "SaleCreate": {
@@ -3428,6 +4256,211 @@
         "title": "SalePreviewRequest",
         "type": "object"
       },
+      "ScheduleIn": {
+        "additionalProperties": false,
+        "description": "F-015. The window is in the shop's local time; ``posts_per_day`` is spread evenly across it.",
+        "properties": {
+          "approval_mode": {
+            "default": "manual",
+            "enum": [
+              "manual",
+              "auto"
+            ],
+            "title": "Approval Mode",
+            "type": "string"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "goal": {
+            "default": "general",
+            "enum": [
+              "announce_offer",
+              "festival_greeting",
+              "general"
+            ],
+            "title": "Goal",
+            "type": "string"
+          },
+          "language": {
+            "default": "english",
+            "enum": [
+              "english",
+              "roman_urdu"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "maxLength": 300,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "posts_per_day": {
+            "default": 1,
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Posts Per Day",
+            "type": "integer"
+          },
+          "tone": {
+            "default": "friendly",
+            "enum": [
+              "friendly",
+              "professional",
+              "festive"
+            ],
+            "title": "Tone",
+            "type": "string"
+          },
+          "window_end": {
+            "default": "20:00:00",
+            "format": "time",
+            "title": "Window End",
+            "type": "string"
+          },
+          "window_start": {
+            "default": "10:00:00",
+            "format": "time",
+            "title": "Window Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "enabled"
+        ],
+        "title": "ScheduleIn",
+        "type": "object"
+      },
+      "ScheduleOut": {
+        "additionalProperties": false,
+        "properties": {
+          "approval_mode": {
+            "default": "manual",
+            "enum": [
+              "manual",
+              "auto"
+            ],
+            "title": "Approval Mode",
+            "type": "string"
+          },
+          "configured": {
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "facebook_connected": {
+            "title": "Facebook Connected",
+            "type": "boolean"
+          },
+          "goal": {
+            "default": "general",
+            "enum": [
+              "announce_offer",
+              "festival_greeting",
+              "general"
+            ],
+            "title": "Goal",
+            "type": "string"
+          },
+          "language": {
+            "default": "english",
+            "enum": [
+              "english",
+              "roman_urdu"
+            ],
+            "title": "Language",
+            "type": "string"
+          },
+          "next_post_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Post At"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "maxLength": 300,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "posts_per_day": {
+            "default": 1,
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Posts Per Day",
+            "type": "integer"
+          },
+          "tone": {
+            "default": "friendly",
+            "enum": [
+              "friendly",
+              "professional",
+              "festive"
+            ],
+            "title": "Tone",
+            "type": "string"
+          },
+          "window_end": {
+            "default": "20:00:00",
+            "format": "time",
+            "title": "Window End",
+            "type": "string"
+          },
+          "window_start": {
+            "default": "10:00:00",
+            "format": "time",
+            "title": "Window Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "enabled",
+          "configured",
+          "facebook_connected",
+          "next_post_at"
+        ],
+        "title": "ScheduleOut",
+        "type": "object"
+      },
+      "ScheduleRequest": {
+        "description": "Put an approved post in the publishing queue for a given moment.",
+        "properties": {
+          "scheduled_for": {
+            "format": "date-time",
+            "title": "Scheduled For",
+            "type": "string"
+          }
+        },
+        "required": [
+          "scheduled_for"
+        ],
+        "title": "ScheduleRequest",
+        "type": "object"
+      },
       "ShopSettingsOut": {
         "properties": {
           "agent_cap_usd": {
@@ -3607,6 +4640,41 @@
         "title": "ShopSettingsUpdate",
         "type": "object"
       },
+      "ShopStep": {
+        "additionalProperties": false,
+        "description": "The one required step: the same rules as the shop profile (F-020) and sign-up (F-002).",
+        "properties": {
+          "city": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "name": {
+            "maxLength": 80,
+            "minLength": 2,
+            "title": "Name",
+            "type": "string"
+          },
+          "owner_phone": {
+            "pattern": "^\\+[1-9][0-9]{7,14}$",
+            "title": "Owner Phone",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "owner_phone"
+        ],
+        "title": "ShopStep",
+        "type": "object"
+      },
       "ShopVendorCreate": {
         "properties": {
           "name": {
@@ -3720,6 +4788,45 @@
           }
         },
         "title": "ShopVendorUpdate",
+        "type": "object"
+      },
+      "Step": {
+        "properties": {
+          "key": {
+            "enum": [
+              "shop",
+              "channels",
+              "products",
+              "test"
+            ],
+            "title": "Key",
+            "type": "string"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "required": {
+            "title": "Required",
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "done",
+              "current",
+              "pending"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "label",
+          "status",
+          "required"
+        ],
+        "title": "Step",
         "type": "object"
       },
       "StockMovementCreate": {
@@ -4138,6 +5245,36 @@
         ],
         "title": "TenantRole",
         "type": "string"
+      },
+      "TestMessageResult": {
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          },
+          "sent": {
+            "title": "Sent",
+            "type": "boolean"
+          },
+          "state": {
+            "enum": [
+              "created",
+              "shop_set",
+              "whatsapp_connected",
+              "products_added",
+              "live"
+            ],
+            "title": "State",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sent",
+          "state",
+          "detail"
+        ],
+        "title": "TestMessageResult",
+        "type": "object"
       },
       "TokenOut": {
         "properties": {
@@ -4617,6 +5754,23 @@
           "balance"
         ],
         "title": "VendorPaymentOut",
+        "type": "object"
+      },
+      "WebhookResult": {
+        "properties": {
+          "status": {
+            "enum": [
+              "ok",
+              "ignored"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "WebhookResult",
         "type": "object"
       }
     },
@@ -5486,6 +6640,333 @@
         ]
       }
     },
+    "/api/v1/conversations/": {
+      "get": {
+        "operationId": "list_conversations_api_v1_conversations__get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "open",
+                    "ai_handling",
+                    "needs_human",
+                    "resolved"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 80,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 60,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_ConversationOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Conversations",
+        "tags": [
+          "inbox"
+        ]
+      }
+    },
+    "/api/v1/conversations/{conversation_id}": {
+      "get": {
+        "operationId": "get_conversation_api_v1_conversations__conversation_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "conversation_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Conversation Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversationDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Conversation",
+        "tags": [
+          "inbox"
+        ]
+      },
+      "patch": {
+        "description": "Switch AI / Human, resolve or reopen, assign. Switching to Human stops the AI for this conversation at once.",
+        "operationId": "update_conversation_api_v1_conversations__conversation_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "conversation_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Conversation Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConversationUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConversationOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Conversation",
+        "tags": [
+          "inbox"
+        ]
+      }
+    },
+    "/api/v1/conversations/{conversation_id}/messages": {
+      "post": {
+        "operationId": "send_message_api_v1_conversations__conversation_id__messages_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "conversation_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Conversation Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReplyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Send Message",
+        "tags": [
+          "inbox"
+        ]
+      }
+    },
+    "/api/v1/conversations/{conversation_id}/messages/{message_id}/retry": {
+      "post": {
+        "operationId": "retry_message_api_v1_conversations__conversation_id__messages__message_id__retry_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "conversation_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Conversation Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "message_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Message Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Retry Message",
+        "tags": [
+          "inbox"
+        ]
+      }
+    },
     "/api/v1/customers/": {
       "get": {
         "operationId": "list_customers_api_v1_customers__get",
@@ -6211,6 +7692,141 @@
         ]
       }
     },
+    "/api/v1/integrations/": {
+      "get": {
+        "operationId": "list_integrations_api_v1_integrations__get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/IntegrationOut"
+                  },
+                  "title": "Response List Integrations Api V1 Integrations  Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Integrations",
+        "tags": [
+          "integrations"
+        ]
+      }
+    },
+    "/api/v1/integrations/{provider}": {
+      "delete": {
+        "operationId": "disconnect_integration_api_v1_integrations__provider__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "provider",
+            "required": true,
+            "schema": {
+              "maxLength": 30,
+              "title": "Provider",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Disconnect Integration",
+        "tags": [
+          "integrations"
+        ]
+      },
+      "put": {
+        "description": "Check the credentials with the provider, then save them encrypted. The answer never contains them.",
+        "operationId": "connect_integration_api_v1_integrations__provider__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "provider",
+            "required": true,
+            "schema": {
+              "maxLength": 30,
+              "title": "Provider",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Connect Integration",
+        "tags": [
+          "integrations"
+        ]
+      }
+    },
     "/api/v1/inventory/": {
       "get": {
         "operationId": "list_products_api_v1_inventory__get",
@@ -6818,6 +8434,251 @@
         ]
       }
     },
+    "/api/v1/marketing/activity": {
+      "get": {
+        "operationId": "list_activity_api_v1_marketing_activity_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "pending_approval",
+                    "approved",
+                    "queued",
+                    "published",
+                    "failed",
+                    "cancelled"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 60,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_ActivityOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Activity",
+        "tags": [
+          "marketing"
+        ]
+      }
+    },
+    "/api/v1/marketing/activity/{post_id}/cancel": {
+      "post": {
+        "operationId": "cancel_post_api_v1_marketing_activity__post_id__cancel_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Post Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Cancel Post",
+        "tags": [
+          "marketing"
+        ]
+      }
+    },
+    "/api/v1/marketing/activity/{post_id}/queue": {
+      "post": {
+        "operationId": "queue_post_api_v1_marketing_activity__post_id__queue_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Post Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Queue Post",
+        "tags": [
+          "marketing"
+        ]
+      }
+    },
+    "/api/v1/marketing/activity/{post_id}/retry": {
+      "post": {
+        "operationId": "retry_post_api_v1_marketing_activity__post_id__retry_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "post_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Post Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivityOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Retry Post",
+        "tags": [
+          "marketing"
+        ]
+      }
+    },
     "/api/v1/marketing/posts/": {
       "get": {
         "operationId": "list_posts_api_v1_marketing_posts__get",
@@ -6833,6 +8694,10 @@
                     "draft",
                     "pending_approval",
                     "approved",
+                    "queued",
+                    "published",
+                    "failed",
+                    "cancelled",
                     "archived"
                   ],
                   "type": "string"
@@ -7140,6 +9005,303 @@
         "summary": "Submit Post",
         "tags": [
           "marketing"
+        ]
+      }
+    },
+    "/api/v1/marketing/schedule": {
+      "get": {
+        "operationId": "get_schedule_api_v1_marketing_schedule_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Schedule",
+        "tags": [
+          "marketing"
+        ]
+      },
+      "put": {
+        "operationId": "put_schedule_api_v1_marketing_schedule_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScheduleIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Put Schedule",
+        "tags": [
+          "marketing"
+        ]
+      }
+    },
+    "/api/v1/onboarding/": {
+      "get": {
+        "operationId": "get_state_api_v1_onboarding__get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get State",
+        "tags": [
+          "onboarding"
+        ]
+      }
+    },
+    "/api/v1/onboarding/channels/continue": {
+      "post": {
+        "description": "Step 2 is done when the owner moves on: WhatsApp and Facebook connected, or skipped.",
+        "operationId": "finish_channels_api_v1_onboarding_channels_continue_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Finish Channels",
+        "tags": [
+          "onboarding"
+        ]
+      }
+    },
+    "/api/v1/onboarding/finish": {
+      "post": {
+        "description": "Finish without a test message.",
+        "operationId": "finish_api_v1_onboarding_finish_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Finish",
+        "tags": [
+          "onboarding"
+        ]
+      }
+    },
+    "/api/v1/onboarding/products/continue": {
+      "post": {
+        "operationId": "finish_products_api_v1_onboarding_products_continue_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Finish Products",
+        "tags": [
+          "onboarding"
+        ]
+      }
+    },
+    "/api/v1/onboarding/products/import": {
+      "post": {
+        "description": "Step 3: import a CSV. Valid rows are imported; each bad row is listed with its line and reason.",
+        "operationId": "import_products_api_v1_onboarding_products_import_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImportReport"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Import Products",
+        "tags": [
+          "onboarding"
+        ]
+      }
+    },
+    "/api/v1/onboarding/shop": {
+      "put": {
+        "description": "Step 1 (required): the shop's name, the owner's phone and the city.",
+        "operationId": "save_shop_api_v1_onboarding_shop_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShopStep"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnboardingOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Save Shop",
+        "tags": [
+          "onboarding"
+        ]
+      }
+    },
+    "/api/v1/onboarding/test-message": {
+      "post": {
+        "description": "Step 4: a WhatsApp test to the owner's phone. A success makes the shop live; a failure explains itself.",
+        "operationId": "test_message_api_v1_onboarding_test_message_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestMessageResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Test Message",
+        "tags": [
+          "onboarding"
         ]
       }
     },
@@ -8547,6 +10709,27 @@
         "summary": "Pay Vendor",
         "tags": [
           "vendors"
+        ]
+      }
+    },
+    "/api/v1/webhooks/twilio": {
+      "post": {
+        "operationId": "twilio_webhook_api_v1_webhooks_twilio_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Twilio Webhook",
+        "tags": [
+          "webhooks"
         ]
       }
     },
