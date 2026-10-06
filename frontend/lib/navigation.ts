@@ -97,7 +97,7 @@ const PLATFORM: NavGroup = {
   items: [
     { label: "Platform overview", icon: "bar-chart", roles: ALL, href: "/platform" },
     { label: "Tenants", icon: "building", roles: ALL, href: "/platform/tenants" },
-    { label: "System logs", icon: "scroll-text", roles: ALL, href: "/logs" },
+    { label: "System logs", icon: "scroll-text", roles: ALL, href: "/platform/logs" },
   ],
 };
 

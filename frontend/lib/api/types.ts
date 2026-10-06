@@ -56,3 +56,5 @@ export type MarketingActivity = Schemas["ActivityOut"];
 export type Onboarding = Schemas["OnboardingOut"];
 export type ImportReport = Schemas["ImportReport"];
 export type TestMessageResult = Schemas["TestMessageResult"];
+export type SystemLog = Schemas["LogRow"];
+export type SystemLogDetail = Schemas["LogDetail"];
