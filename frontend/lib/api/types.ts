@@ -42,3 +42,5 @@ export type VendorPayment = Schemas["VendorPaymentOut"];
 export type VendorLedgerEntry = Schemas["VendorLedgerEntryOut"];
 export type PayableRow = Schemas["PayableRow"];
 export type ShopSettings = Schemas["ShopSettingsOut"];
+export type FinanceOverview = Schemas["FinanceOverview"];
+export type CashBookEntry = Schemas["CashBookEntry"];

@@ -58,7 +58,10 @@ export const NAV: NavGroup[] = [
   },
   {
     label: "Finance",
-    items: [{ label: "Finance overview", icon: "wallet", roles: MANAGER_UP, soon: true }],
+    items: [
+      { label: "Finance overview", icon: "wallet", roles: MANAGER_UP, href: "/finance" },
+      { label: "Finance dashboard", icon: "bar-chart", roles: OWNER, href: "/finance/dashboard" },
+    ],
   },
   {
     label: "Marketing",

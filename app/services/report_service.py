@@ -56,6 +56,7 @@ class ProfitSummary:
     profit: Decimal
     orders_counted: int
     orders_without_cost: int  # left out: a line has no cost, so its profit cannot be known
+    revenue: Decimal = Decimal("0.00")  # total of the counted orders (what the margin is a share of)
 
 
 def _in_range(tenant_id: uuid.UUID, start: datetime, end: datetime) -> list[object]:
@@ -84,15 +85,16 @@ async def profit(db: AsyncSession, tenant_id: uuid.UUID, start: datetime, end: d
             .group_by(Order.id, Order.total)
         )
     ).all()
-    total = Decimal("0.00")
+    total = revenue = Decimal("0.00")
     counted = skipped = 0
     for _order_id, order_total, cost, unknown in rows:
         if unknown:
             skipped += 1
             continue
         counted += 1
+        revenue += Decimal(order_total)
         total += Decimal(order_total) - Decimal(cost or 0)
-    return ProfitSummary(profit=_money(total), orders_counted=counted, orders_without_cost=skipped)
+    return ProfitSummary(profit=_money(total), orders_counted=counted, orders_without_cost=skipped, revenue=_money(revenue))
 
 
 async def low_stock_count(db: AsyncSession, tenant_id: uuid.UUID) -> int:

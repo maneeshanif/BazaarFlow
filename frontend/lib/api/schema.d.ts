@@ -389,6 +389,63 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/finance/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Dashboard
+         * @description D-002: the owner's finance dashboard (all five KPIs).
+         */
+        get: operations["dashboard_api_v1_finance_dashboard_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/finance/ledger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Cash Book */
+        get: operations["cash_book_api_v1_finance_ledger_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/finance/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Overview
+         * @description F-013. A manager gets the revenue, the cash/credit split and the receivables; the owner also gets margin and payables.
+         */
+        get: operations["overview_api_v1_finance_overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/inventory/": {
         parameters: {
             query?: never;
@@ -1071,6 +1128,15 @@ export interface components {
             /** Enabled */
             enabled: boolean;
         };
+        /** AgingBucket */
+        AgingBucket: {
+            /** Amount */
+            amount: string;
+            /** Customers */
+            customers: number;
+            /** Label */
+            label: string;
+        };
         /**
          * ApprovalEdit
          * @description Replace the proposed payload (for example a smaller quantity). It is re-validated like a new request.
@@ -1127,6 +1193,44 @@ export interface components {
         ApprovalReject: {
             /** Reason */
             reason: string;
+        };
+        /** CashBookEntry */
+        CashBookEntry: {
+            /** Amount */
+            amount: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Direction
+             * @enum {string}
+             */
+            direction: "in" | "out";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "sale_payment" | "udhaar_payment" | "vendor_payment";
+            /** Method */
+            method: string;
+            /** Party Id */
+            party_id: string | null;
+        };
+        /** CashCreditSplit */
+        CashCreditSplit: {
+            /** Credit Percent */
+            credit_percent: number | null;
+            /** On Credit */
+            on_credit: string;
+            /** Paid Now */
+            paid_now: string;
         };
         /**
          * ChatAction
@@ -1295,6 +1399,53 @@ export interface components {
              * @enum {string}
              */
             tone: "friendly" | "professional" | "festive";
+        };
+        /** FinanceOverview */
+        FinanceOverview: {
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            gross_margin: components["schemas"]["GrossMargin"] | null;
+            /** Is Empty */
+            is_empty: boolean;
+            payables: components["schemas"]["Payables"] | null;
+            /**
+             * Range
+             * @enum {string}
+             */
+            range: "today" | "7d" | "30d";
+            receivables: components["schemas"]["Receivables"];
+            revenue: components["schemas"]["MoneyFigure"];
+            /** Role */
+            role: string;
+            split: components["schemas"]["CashCreditSplit"];
+            /** Trend */
+            trend: components["schemas"]["FinanceTrendDay"][];
+        };
+        /** FinanceTrendDay */
+        FinanceTrendDay: {
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Orders */
+            orders: number;
+            /** Revenue */
+            revenue: string;
+        };
+        /** GrossMargin */
+        GrossMargin: {
+            /** Margin Percent */
+            margin_percent: number | null;
+            /** Orders Without Cost */
+            orders_without_cost: number;
+            /** Profit */
+            profit: string;
+            /** Revenue Counted */
+            revenue_counted: string;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -1502,6 +1653,15 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** Page[CashBookEntry] */
+        Page_CashBookEntry_: {
+            /** Items */
+            items: components["schemas"]["CashBookEntry"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
         /** Page[CustomerOut] */
         Page_CustomerOut_: {
             /** Items */
@@ -1603,6 +1763,15 @@ export interface components {
              * Format: uuid
              */
             vendor_id: string;
+        };
+        /** Payables */
+        Payables: {
+            /** Overdue */
+            overdue: string;
+            /** Total */
+            total: string;
+            /** Vendors */
+            vendors: number;
         };
         /**
          * PaymentCreate
@@ -1783,6 +1952,13 @@ export interface components {
             previous: string;
             /** Value */
             value: string;
+        };
+        /** Receivables */
+        Receivables: {
+            /** Buckets */
+            buckets: components["schemas"]["AgingBucket"][];
+            /** Total */
+            total: string;
         };
         /** RefreshRequest */
         RefreshRequest: {
@@ -3162,6 +3338,103 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TokenOut"];
+                };
+            };
+        };
+    };
+    dashboard_api_v1_finance_dashboard_get: {
+        parameters: {
+            query?: {
+                range?: "today" | "7d" | "30d";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinanceOverview"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cash_book_api_v1_finance_ledger_get: {
+        parameters: {
+            query?: {
+                direction?: ("in" | "out") | null;
+                since?: string | null;
+                until?: string | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_CashBookEntry_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    overview_api_v1_finance_overview_get: {
+        parameters: {
+            query?: {
+                range?: "today" | "7d" | "30d";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinanceOverview"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

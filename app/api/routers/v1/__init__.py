@@ -11,6 +11,7 @@ from app.api.routers.auth_router import router as auth_router
 from app.api.routers.customers_router import router as customers_router
 from app.api.routers.dashboard_router import router as dashboard_router
 from app.api.routers.demo_router import router as demo_router
+from app.api.routers.finance_router import router as finance_router
 from app.api.routers.inventory_router import router as inventory_router
 from app.api.routers.marketing_studio_router import router as marketing_studio_router
 from app.api.routers.payables_router import router as payables_router
@@ -34,3 +35,4 @@ api_v1_router.include_router(dashboard_router)
 api_v1_router.include_router(demo_router)
 api_v1_router.include_router(payables_router)
 api_v1_router.include_router(settings_router)
+api_v1_router.include_router(finance_router)
