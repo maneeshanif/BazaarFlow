@@ -1662,6 +1662,72 @@
         "title": "Page[ProductOut]",
         "type": "object"
       },
+      "Page_ShopVendorOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ShopVendorOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "Page[ShopVendorOut]",
+        "type": "object"
+      },
+      "Page_StockMovementListItem_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/StockMovementListItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "Page[StockMovementListItem]",
+        "type": "object"
+      },
       "Page_StockMovementOut_": {
         "properties": {
           "items": {
@@ -1693,6 +1759,96 @@
           "total"
         ],
         "title": "Page[StockMovementOut]",
+        "type": "object"
+      },
+      "Page_VendorLedgerEntryOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/VendorLedgerEntryOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "Page[VendorLedgerEntryOut]",
+        "type": "object"
+      },
+      "PayableRow": {
+        "description": "One vendor in the payables report (R-005).",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "next_due": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Due"
+          },
+          "overdue": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Overdue",
+            "type": "string"
+          },
+          "owed": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Owed",
+            "type": "string"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "vendor_id": {
+            "format": "uuid",
+            "title": "Vendor Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "vendor_id",
+          "name",
+          "phone",
+          "owed",
+          "overdue",
+          "next_due"
+        ],
+        "title": "PayableRow",
         "type": "object"
       },
       "PaymentCreate": {
@@ -2604,6 +2760,300 @@
         "title": "SalePreviewRequest",
         "type": "object"
       },
+      "ShopSettingsOut": {
+        "properties": {
+          "agent_cap_usd": {
+            "anyOf": [
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Agent Cap Usd"
+          },
+          "agents_enabled": {
+            "title": "Agents Enabled",
+            "type": "boolean"
+          },
+          "auto_post_limit": {
+            "anyOf": [
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auto Post Limit"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "currency": {
+            "title": "Currency",
+            "type": "string"
+          },
+          "effective_auto_post_limit": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Effective Auto Post Limit",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "onboarding_state": {
+            "title": "Onboarding State",
+            "type": "string"
+          },
+          "owner_phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Phone"
+          },
+          "plan": {
+            "title": "Plan",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "timezone": {
+            "title": "Timezone",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "slug",
+          "plan",
+          "currency",
+          "timezone",
+          "owner_phone",
+          "city",
+          "onboarding_state",
+          "agents_enabled",
+          "agent_cap_usd",
+          "auto_post_limit",
+          "effective_auto_post_limit",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ShopSettingsOut",
+        "type": "object"
+      },
+      "ShopSettingsUpdate": {
+        "additionalProperties": false,
+        "description": "Partial update. Unknown fields (plan, currency, tenant_id, agents_enabled) are rejected.",
+        "properties": {
+          "auto_post_limit": {
+            "anyOf": [
+              {
+                "maximum": 10000000.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,12}|(?=[\\d.]{1,15}0*$)\\d{0,12}\\.\\d{0,2}0*$)",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auto Post Limit"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 80,
+                "minLength": 2,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "owner_phone": {
+            "anyOf": [
+              {
+                "pattern": "^\\+[1-9][0-9]{7,14}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner Phone"
+          }
+        },
+        "title": "ShopSettingsUpdate",
+        "type": "object"
+      },
+      "ShopVendorCreate": {
+        "properties": {
+          "name": {
+            "maxLength": 120,
+            "minLength": 2,
+            "title": "Name",
+            "type": "string"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "pattern": "^\\+?[0-9]{7,20}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "ShopVendorCreate",
+        "type": "object"
+      },
+      "ShopVendorOut": {
+        "properties": {
+          "balance": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Balance",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          },
+          "tenant_id": {
+            "format": "uuid",
+            "title": "Tenant Id",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "tenant_id",
+          "name",
+          "phone",
+          "balance",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "ShopVendorOut",
+        "type": "object"
+      },
+      "ShopVendorUpdate": {
+        "additionalProperties": false,
+        "description": "Partial update; unknown fields (tenant_id, balance) are rejected.",
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 2,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "phone": {
+            "anyOf": [
+              {
+                "pattern": "^\\+?[0-9]{7,20}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone"
+          }
+        },
+        "title": "ShopVendorUpdate",
+        "type": "object"
+      },
       "StockMovementCreate": {
         "description": "A manual stock change. ``delta`` is signed: positive adds stock, negative removes it.",
         "properties": {
@@ -2640,6 +3090,107 @@
           "reason"
         ],
         "title": "StockMovementCreate",
+        "type": "object"
+      },
+      "StockMovementListItem": {
+        "description": "A movement in the shop-wide list (F-011): the same row plus which product it moved.",
+        "properties": {
+          "actor_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor Id"
+          },
+          "actor_type": {
+            "title": "Actor Type",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "delta": {
+            "title": "Delta",
+            "type": "integer"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "product_id": {
+            "format": "uuid",
+            "title": "Product Id",
+            "type": "string"
+          },
+          "product_name": {
+            "title": "Product Name",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "ref_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref Id"
+          },
+          "ref_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref Type"
+          },
+          "sku": {
+            "title": "Sku",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "product_id",
+          "delta",
+          "reason",
+          "ref_type",
+          "ref_id",
+          "actor_type",
+          "actor_id",
+          "note",
+          "created_at",
+          "product_name",
+          "sku"
+        ],
+        "title": "StockMovementListItem",
         "type": "object"
       },
       "StockMovementOut": {
@@ -3108,6 +3659,281 @@
           "message"
         ],
         "title": "VapiWebhookRequest",
+        "type": "object"
+      },
+      "VendorBillCreate": {
+        "properties": {
+          "amount": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,12}|(?=[\\d.]{1,15}0*$)\\d{0,12}\\.\\d{0,2}0*$)",
+                "type": "string"
+              }
+            ],
+            "title": "Amount"
+          },
+          "due_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Due Date"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 255,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "reference": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference"
+          }
+        },
+        "required": [
+          "amount"
+        ],
+        "title": "VendorBillCreate",
+        "type": "object"
+      },
+      "VendorBillOut": {
+        "properties": {
+          "amount": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Amount",
+            "type": "string"
+          },
+          "balance": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Balance",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "due_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Due Date"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "reference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reference"
+          },
+          "vendor_id": {
+            "format": "uuid",
+            "title": "Vendor Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "vendor_id",
+          "amount",
+          "due_date",
+          "reference",
+          "note",
+          "created_at",
+          "balance"
+        ],
+        "title": "VendorBillOut",
+        "type": "object"
+      },
+      "VendorLedgerEntryOut": {
+        "properties": {
+          "amount": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Amount",
+            "type": "string"
+          },
+          "balance_after": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Balance After",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "direction": {
+            "enum": [
+              "debit",
+              "credit"
+            ],
+            "title": "Direction",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "ref_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref Id"
+          },
+          "ref_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref Type"
+          }
+        },
+        "required": [
+          "id",
+          "direction",
+          "amount",
+          "ref_type",
+          "ref_id",
+          "created_at",
+          "balance_after"
+        ],
+        "title": "VendorLedgerEntryOut",
+        "type": "object"
+      },
+      "VendorPaymentCreate": {
+        "properties": {
+          "amount": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,12}|(?=[\\d.]{1,15}0*$)\\d{0,12}\\.\\d{0,2}0*$)",
+                "type": "string"
+              }
+            ],
+            "title": "Amount"
+          },
+          "method": {
+            "enum": [
+              "cash",
+              "card",
+              "bank",
+              "wallet"
+            ],
+            "title": "Method",
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount",
+          "method"
+        ],
+        "title": "VendorPaymentCreate",
+        "type": "object"
+      },
+      "VendorPaymentOut": {
+        "properties": {
+          "amount": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Amount",
+            "type": "string"
+          },
+          "balance": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*\\d*\\.?\\d*$",
+            "title": "Balance",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "method": {
+            "title": "Method",
+            "type": "string"
+          },
+          "vendor_id": {
+            "format": "uuid",
+            "title": "Vendor Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "vendor_id",
+          "amount",
+          "method",
+          "created_at",
+          "balance"
+        ],
+        "title": "VendorPaymentOut",
         "type": "object"
       }
     },
@@ -4607,6 +5433,149 @@
         ]
       }
     },
+    "/api/v1/inventory/movements": {
+      "get": {
+        "description": "Stock movements of the whole shop (F-011). Declared before ``/{product_id}`` so ``movements`` is not an id.",
+        "operationId": "list_all_stock_movements_api_v1_inventory_movements_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "product_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Product Id"
+            }
+          },
+          {
+            "in": "query",
+            "name": "reason",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "opening",
+                    "sale",
+                    "purchase",
+                    "adjustment",
+                    "return",
+                    "reversal"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Reason"
+            }
+          },
+          {
+            "in": "query",
+            "name": "since",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Since"
+            }
+          },
+          {
+            "in": "query",
+            "name": "until",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Until"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 60,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_StockMovementListItem_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List All Stock Movements",
+        "tags": [
+          "inventory"
+        ]
+      }
+    },
     "/api/v1/inventory/{product_id}": {
       "delete": {
         "operationId": "delete_product_api_v1_inventory__product_id__delete",
@@ -5574,6 +6543,76 @@
         ]
       }
     },
+    "/api/v1/settings/shop": {
+      "get": {
+        "operationId": "get_shop_api_v1_settings_shop_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShopSettingsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Shop",
+        "tags": [
+          "settings"
+        ]
+      },
+      "patch": {
+        "operationId": "update_shop_api_v1_settings_shop_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShopSettingsUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShopSettingsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Shop",
+        "tags": [
+          "settings"
+        ]
+      }
+    },
     "/api/v1/team/": {
       "get": {
         "operationId": "list_team_api_v1_team__get",
@@ -5742,6 +6781,511 @@
         "summary": "Change Team Member Role",
         "tags": [
           "team"
+        ]
+      }
+    },
+    "/api/v1/vendors/": {
+      "get": {
+        "operationId": "list_vendors_api_v1_vendors__get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 80,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "in": "query",
+            "name": "owing_only",
+            "required": false,
+            "schema": {
+              "default": false,
+              "title": "Owing Only",
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 60,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_ShopVendorOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Vendors",
+        "tags": [
+          "vendors"
+        ]
+      },
+      "post": {
+        "operationId": "create_vendor_api_v1_vendors__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShopVendorCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShopVendorOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Create Vendor",
+        "tags": [
+          "vendors"
+        ]
+      }
+    },
+    "/api/v1/vendors/payables": {
+      "get": {
+        "description": "R-005. Declared before ``/{vendor_id}`` so ``payables`` is not read as an id.",
+        "operationId": "payables_report_api_v1_vendors_payables_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PayableRow"
+                  },
+                  "title": "Response Payables Report Api V1 Vendors Payables Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Payables Report",
+        "tags": [
+          "vendors"
+        ]
+      }
+    },
+    "/api/v1/vendors/{vendor_id}": {
+      "delete": {
+        "operationId": "delete_vendor_api_v1_vendors__vendor_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "vendor_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Vendor Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Delete Vendor",
+        "tags": [
+          "vendors"
+        ]
+      },
+      "get": {
+        "operationId": "get_vendor_api_v1_vendors__vendor_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "vendor_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Vendor Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShopVendorOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Vendor",
+        "tags": [
+          "vendors"
+        ]
+      },
+      "patch": {
+        "operationId": "update_vendor_api_v1_vendors__vendor_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "vendor_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Vendor Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShopVendorUpdate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShopVendorOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Update Vendor",
+        "tags": [
+          "vendors"
+        ]
+      }
+    },
+    "/api/v1/vendors/{vendor_id}/bills": {
+      "post": {
+        "operationId": "add_bill_api_v1_vendors__vendor_id__bills_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "vendor_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Vendor Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VendorBillCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorBillOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Add Bill",
+        "tags": [
+          "vendors"
+        ]
+      }
+    },
+    "/api/v1/vendors/{vendor_id}/ledger": {
+      "get": {
+        "operationId": "vendor_ledger_api_v1_vendors__vendor_id__ledger_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "vendor_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Vendor Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 60,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_VendorLedgerEntryOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Vendor Ledger",
+        "tags": [
+          "vendors"
+        ]
+      }
+    },
+    "/api/v1/vendors/{vendor_id}/payments": {
+      "post": {
+        "operationId": "pay_vendor_api_v1_vendors__vendor_id__payments_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "vendor_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Vendor Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VendorPaymentCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VendorPaymentOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Pay Vendor",
+        "tags": [
+          "vendors"
         ]
       }
     },

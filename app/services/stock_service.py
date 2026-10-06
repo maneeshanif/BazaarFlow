@@ -8,6 +8,7 @@ Every change writes a ``stock_movements`` row and an audit row in the caller's t
 from __future__ import annotations
 
 import uuid
+from datetime import datetime
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -111,3 +112,42 @@ async def list_movements(
         )
     ).scalars()
     return list(rows), int(total)
+
+
+async def list_all_movements(
+    db: AsyncSession,
+    tenant_id: uuid.UUID,
+    *,
+    product_id: uuid.UUID | None = None,
+    reason: str | None = None,
+    since: datetime | None = None,
+    until: datetime | None = None,
+    limit: int,
+    offset: int,
+) -> tuple[list[tuple[StockMovement, str, str]], int]:
+    """Every stock movement of the shop, newest first, with the product's name and sku (PRD F-011)."""
+    from sqlalchemy import func
+
+    from app.models.product import Product
+
+    conditions = [StockMovement.tenant_id == tenant_id]
+    if product_id is not None:
+        conditions.append(StockMovement.product_id == product_id)
+    if reason is not None:
+        conditions.append(StockMovement.reason == reason)
+    if since is not None:
+        conditions.append(StockMovement.created_at >= since)
+    if until is not None:
+        conditions.append(StockMovement.created_at < until)
+    total = (await db.execute(select(func.count()).select_from(StockMovement).where(*conditions))).scalar_one()
+    rows = (
+        await db.execute(
+            select(StockMovement, Product.name, Product.sku)
+            .join(Product, Product.id == StockMovement.product_id)
+            .where(*conditions)
+            .order_by(StockMovement.created_at.desc(), StockMovement.id.desc())
+            .limit(limit)
+            .offset(offset)
+        )
+    ).all()
+    return [(m, name, sku) for m, name, sku in rows], int(total)

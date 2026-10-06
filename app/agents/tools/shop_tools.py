@@ -26,7 +26,15 @@ from app.core.problems import DomainError
 from app.core.settings import settings
 from app.models.agent import ActionStatus, AgentAction
 from app.schemas.order import SaleCreate, SaleLine, SalePreviewRequest
-from app.services import approvals, customer_service, ledger_service, order_service, product_service, report_service
+from app.services import (
+    approvals,
+    customer_service,
+    ledger_service,
+    order_service,
+    product_service,
+    report_service,
+    shop_settings_service,
+)
 
 Ctx = RunContextWrapper[RuntimeContext]
 Handler = Callable[[RuntimeContext, bool], Awaitable[str]]
@@ -288,7 +296,7 @@ async def post_order(
         if sale.customer_id is None and preview.amount_due > 0:
             raise DomainError("Choose the customer: part of this sale is on credit", code="customer_required_for_credit")
         summary = f"Post a sale of {_rs(preview.total)} ({len(sale.items)} item line{'s' if len(sale.items) != 1 else ''}, {payment_method})"
-        limit = settings.AGENT_AUTO_POST_LIMIT
+        limit = await shop_settings_service.effective_auto_post_limit(rc.db, rc.principal.tenant_id)
         if limit > 0 and preview.total <= limit:  # the shop allows small sales without asking
             from app.agent_runtime.executors import post_order_payload
 

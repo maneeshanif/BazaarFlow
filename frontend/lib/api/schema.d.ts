@@ -407,6 +407,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/inventory/movements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List All Stock Movements
+         * @description Stock movements of the whole shop (F-011). Declared before ``/{product_id}`` so ``movements`` is not an id.
+         */
+        get: operations["list_all_stock_movements_api_v1_inventory_movements_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/inventory/{product_id}": {
         parameters: {
             query?: never;
@@ -605,6 +625,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/settings/shop": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Shop */
+        get: operations["get_shop_api_v1_settings_shop_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Shop */
+        patch: operations["update_shop_api_v1_settings_shop_patch"];
+        trace?: never;
+    };
     "/api/v1/team/": {
         parameters: {
             query?: never;
@@ -639,6 +677,114 @@ export interface paths {
         head?: never;
         /** Change Team Member Role */
         patch: operations["change_team_member_role_api_v1_team__membership_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/vendors/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Vendors */
+        get: operations["list_vendors_api_v1_vendors__get"];
+        put?: never;
+        /** Create Vendor */
+        post: operations["create_vendor_api_v1_vendors__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vendors/payables": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Payables Report
+         * @description R-005. Declared before ``/{vendor_id}`` so ``payables`` is not read as an id.
+         */
+        get: operations["payables_report_api_v1_vendors_payables_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vendors/{vendor_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Vendor */
+        get: operations["get_vendor_api_v1_vendors__vendor_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete Vendor */
+        delete: operations["delete_vendor_api_v1_vendors__vendor_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Vendor */
+        patch: operations["update_vendor_api_v1_vendors__vendor_id__patch"];
+        trace?: never;
+    };
+    "/api/v1/vendors/{vendor_id}/bills": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Bill */
+        post: operations["add_bill_api_v1_vendors__vendor_id__bills_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vendors/{vendor_id}/ledger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Vendor Ledger */
+        get: operations["vendor_ledger_api_v1_vendors__vendor_id__ledger_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/vendors/{vendor_id}/payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pay Vendor */
+        post: operations["pay_vendor_api_v1_vendors__vendor_id__payments_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/auth/login": {
@@ -1401,6 +1547,24 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** Page[ShopVendorOut] */
+        Page_ShopVendorOut_: {
+            /** Items */
+            items: components["schemas"]["ShopVendorOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
+        /** Page[StockMovementListItem] */
+        Page_StockMovementListItem_: {
+            /** Items */
+            items: components["schemas"]["StockMovementListItem"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
         /** Page[StockMovementOut] */
         Page_StockMovementOut_: {
             /** Items */
@@ -1409,6 +1573,36 @@ export interface components {
             next_cursor?: string | null;
             /** Total */
             total: number;
+        };
+        /** Page[VendorLedgerEntryOut] */
+        Page_VendorLedgerEntryOut_: {
+            /** Items */
+            items: components["schemas"]["VendorLedgerEntryOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
+        /**
+         * PayableRow
+         * @description One vendor in the payables report (R-005).
+         */
+        PayableRow: {
+            /** Name */
+            name: string;
+            /** Next Due */
+            next_due: string | null;
+            /** Overdue */
+            overdue: string;
+            /** Owed */
+            owed: string;
+            /** Phone */
+            phone: string | null;
+            /**
+             * Vendor Id
+             * Format: uuid
+             */
+            vendor_id: string;
         };
         /**
          * PaymentCreate
@@ -1719,6 +1913,108 @@ export interface components {
             /** Payment Method */
             payment_method?: ("cash" | "card" | "bank" | "wallet" | "udhaar") | null;
         };
+        /** ShopSettingsOut */
+        ShopSettingsOut: {
+            /** Agent Cap Usd */
+            agent_cap_usd: string | null;
+            /** Agents Enabled */
+            agents_enabled: boolean;
+            /** Auto Post Limit */
+            auto_post_limit: string | null;
+            /** City */
+            city: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Currency */
+            currency: string;
+            /** Effective Auto Post Limit */
+            effective_auto_post_limit: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Onboarding State */
+            onboarding_state: string;
+            /** Owner Phone */
+            owner_phone: string | null;
+            /** Plan */
+            plan: string;
+            /** Slug */
+            slug: string;
+            /** Timezone */
+            timezone: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /**
+         * ShopSettingsUpdate
+         * @description Partial update. Unknown fields (plan, currency, tenant_id, agents_enabled) are rejected.
+         */
+        ShopSettingsUpdate: {
+            /** Auto Post Limit */
+            auto_post_limit?: number | string | null;
+            /** City */
+            city?: string | null;
+            /** Name */
+            name?: string | null;
+            /** Owner Phone */
+            owner_phone?: string | null;
+        };
+        /** ShopVendorCreate */
+        ShopVendorCreate: {
+            /** Name */
+            name: string;
+            /** Phone */
+            phone?: string | null;
+        };
+        /** ShopVendorOut */
+        ShopVendorOut: {
+            /** Balance */
+            balance: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string | null;
+            /**
+             * Tenant Id
+             * Format: uuid
+             */
+            tenant_id: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+        };
+        /**
+         * ShopVendorUpdate
+         * @description Partial update; unknown fields (tenant_id, balance) are rejected.
+         */
+        ShopVendorUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Phone */
+            phone?: string | null;
+        };
         /**
          * StockMovementCreate
          * @description A manual stock change. ``delta`` is signed: positive adds stock, negative removes it.
@@ -1733,6 +2029,45 @@ export interface components {
              * @enum {string}
              */
             reason: "purchase" | "adjustment" | "return";
+        };
+        /**
+         * StockMovementListItem
+         * @description A movement in the shop-wide list (F-011): the same row plus which product it moved.
+         */
+        StockMovementListItem: {
+            /** Actor Id */
+            actor_id: string | null;
+            /** Actor Type */
+            actor_type: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Delta */
+            delta: number;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Note */
+            note: string | null;
+            /**
+             * Product Id
+             * Format: uuid
+             */
+            product_id: string;
+            /** Product Name */
+            product_name: string;
+            /** Reason */
+            reason: string;
+            /** Ref Id */
+            ref_id: string | null;
+            /** Ref Type */
+            ref_type: string | null;
+            /** Sku */
+            sku: string;
         };
         /** StockMovementOut */
         StockMovementOut: {
@@ -1940,6 +2275,105 @@ export interface components {
                 [key: string]: unknown;
             } | null;
             message: components["schemas"]["VapiMessage"];
+        };
+        /** VendorBillCreate */
+        VendorBillCreate: {
+            /** Amount */
+            amount: number | string;
+            /** Due Date */
+            due_date?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Reference */
+            reference?: string | null;
+        };
+        /** VendorBillOut */
+        VendorBillOut: {
+            /** Amount */
+            amount: string;
+            /** Balance */
+            balance: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Due Date */
+            due_date: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Note */
+            note: string | null;
+            /** Reference */
+            reference: string | null;
+            /**
+             * Vendor Id
+             * Format: uuid
+             */
+            vendor_id: string;
+        };
+        /** VendorLedgerEntryOut */
+        VendorLedgerEntryOut: {
+            /** Amount */
+            amount: string;
+            /** Balance After */
+            balance_after: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Direction
+             * @enum {string}
+             */
+            direction: "debit" | "credit";
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Ref Id */
+            ref_id: string | null;
+            /** Ref Type */
+            ref_type: string | null;
+        };
+        /** VendorPaymentCreate */
+        VendorPaymentCreate: {
+            /** Amount */
+            amount: number | string;
+            /**
+             * Method
+             * @enum {string}
+             */
+            method: "cash" | "card" | "bank" | "wallet";
+        };
+        /** VendorPaymentOut */
+        VendorPaymentOut: {
+            /** Amount */
+            amount: string;
+            /** Balance */
+            balance: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Method */
+            method: string;
+            /**
+             * Vendor Id
+             * Format: uuid
+             */
+            vendor_id: string;
         };
     };
     responses: never;
@@ -2802,6 +3236,42 @@ export interface operations {
             };
         };
     };
+    list_all_stock_movements_api_v1_inventory_movements_get: {
+        parameters: {
+            query?: {
+                product_id?: string | null;
+                reason?: ("opening" | "sale" | "purchase" | "adjustment" | "return" | "reversal") | null;
+                since?: string | null;
+                until?: string | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_StockMovementListItem_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_product_api_v1_inventory__product_id__get: {
         parameters: {
             query?: never;
@@ -3329,6 +3799,59 @@ export interface operations {
             };
         };
     };
+    get_shop_api_v1_settings_shop_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShopSettingsOut"];
+                };
+            };
+        };
+    };
+    update_shop_api_v1_settings_shop_patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShopSettingsUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShopSettingsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_team_api_v1_team__get: {
         parameters: {
             query?: never;
@@ -3433,6 +3956,292 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TeamMemberOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_vendors_api_v1_vendors__get: {
+        parameters: {
+            query?: {
+                q?: string | null;
+                owing_only?: boolean;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_ShopVendorOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_vendor_api_v1_vendors__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShopVendorCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShopVendorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    payables_report_api_v1_vendors_payables_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PayableRow"][];
+                };
+            };
+        };
+    };
+    get_vendor_api_v1_vendors__vendor_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShopVendorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_vendor_api_v1_vendors__vendor_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_vendor_api_v1_vendors__vendor_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ShopVendorUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShopVendorOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_bill_api_v1_vendors__vendor_id__bills_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VendorBillCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VendorBillOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    vendor_ledger_api_v1_vendors__vendor_id__ledger_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path: {
+                vendor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_VendorLedgerEntryOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pay_vendor_api_v1_vendors__vendor_id__payments_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                vendor_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VendorPaymentCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VendorPaymentOut"];
                 };
             };
             /** @description Validation Error */

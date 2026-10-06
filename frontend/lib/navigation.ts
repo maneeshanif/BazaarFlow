@@ -52,8 +52,8 @@ export const NAV: NavGroup[] = [
     label: "Inventory",
     items: [
       { label: "Products", icon: "package", roles: ALL, href: "/inventory" },
-      { label: "Stock movements", icon: "arrow-left-right", roles: MANAGER_UP, soon: true },
-      { label: "Vendors", icon: "truck", roles: MANAGER_UP, soon: true },
+      { label: "Stock movements", icon: "arrow-left-right", roles: MANAGER_UP, href: "/inventory/movements" },
+      { label: "Vendors", icon: "truck", roles: MANAGER_UP, href: "/vendors" },
     ],
   },
   {
@@ -79,7 +79,7 @@ export const NAV: NavGroup[] = [
   {
     label: "Settings",
     items: [
-      { label: "Shop profile", icon: "store", roles: OWNER, href: "/dashboard/settings" },
+      { label: "Shop profile", icon: "store", roles: OWNER, href: "/settings" },
       { label: "Team", icon: "user-cog", roles: OWNER, href: "/team" },
       { label: "Integrations", icon: "plug", roles: OWNER, href: "/dashboard/marketing/credentials" },
     ],

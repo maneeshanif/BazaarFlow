@@ -7,6 +7,7 @@ export type Product = Schemas["ProductOut"];
 export type ProductCreate = Schemas["ProductCreate"];
 export type ProductUpdate = Schemas["ProductUpdate"];
 export type StockMovement = Schemas["StockMovementOut"];
+export type StockMovementListItem = Schemas["StockMovementListItem"];
 export type StockMovementCreate = Schemas["StockMovementCreate"];
 
 export type Customer = Schemas["CustomerOut"];
@@ -34,3 +35,10 @@ export type MarketingPost = Schemas["PostOut"];
 export type DraftBrief = Schemas["DraftRequest"];
 export type Dashboard = Schemas["DashboardOut"];
 export type DashboardRange = Dashboard["range"];
+
+export type ShopVendor = Schemas["ShopVendorOut"];
+export type VendorBill = Schemas["VendorBillOut"];
+export type VendorPayment = Schemas["VendorPaymentOut"];
+export type VendorLedgerEntry = Schemas["VendorLedgerEntryOut"];
+export type PayableRow = Schemas["PayableRow"];
+export type ShopSettings = Schemas["ShopSettingsOut"];

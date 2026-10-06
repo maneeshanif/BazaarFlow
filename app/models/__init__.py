@@ -15,7 +15,7 @@ from app.models.stock import StockMovement
 from app.models.support import SupportTicket
 from app.models.tenant import AuditLog, Membership, Tenant, TenantIntegration, TenantRole
 from app.models.user import User
-from app.models.vendor import Vendor
+from app.models.vendor import Vendor, VendorBill, VendorPayment
 
 __all__ = [
     "ActionStatus",
@@ -44,4 +44,6 @@ __all__ = [
     "TenantRole",
     "User",
     "Vendor",
+    "VendorBill",
+    "VendorPayment",
 ]

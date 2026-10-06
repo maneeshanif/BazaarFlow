@@ -39,6 +39,7 @@ class Tenant(BaseModelMixin, Base):
     """The isolation boundary. RLS is keyed on this table's own ``id``."""
 
     __tablename__ = "tenants"
+    __table_args__ = (CheckConstraint("auto_post_limit >= 0", name="ck_tenants_auto_post_limit_non_negative"),)
 
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     slug: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
@@ -55,6 +56,8 @@ class Tenant(BaseModelMixin, Base):
     demo_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, index=True)
     # This shop's own monthly AI allowance in USD; null means the platform default.
     agent_cap_usd: Mapped[Decimal | None] = mapped_column(Numeric(8, 2), nullable=True)
+    # The largest sale (PKR) the sales agent may post without asking the owner; null means the platform default (0).
+    auto_post_limit: Mapped[Decimal | None] = mapped_column(Numeric(14, 2), nullable=True)
 
 
 class Membership(BaseModelMixin, TenantMixin, Base):

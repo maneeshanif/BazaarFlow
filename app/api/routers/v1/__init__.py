@@ -13,7 +13,9 @@ from app.api.routers.dashboard_router import router as dashboard_router
 from app.api.routers.demo_router import router as demo_router
 from app.api.routers.inventory_router import router as inventory_router
 from app.api.routers.marketing_studio_router import router as marketing_studio_router
+from app.api.routers.payables_router import router as payables_router
 from app.api.routers.sales_router import orders_router, sales_router
+from app.api.routers.settings_router import router as settings_router
 from app.api.routers.team_router import router as team_router
 
 api_v1_router = APIRouter(prefix="/api/v1")
@@ -30,3 +32,5 @@ api_v1_router.include_router(runs_router)
 api_v1_router.include_router(marketing_studio_router)
 api_v1_router.include_router(dashboard_router)
 api_v1_router.include_router(demo_router)
+api_v1_router.include_router(payables_router)
+api_v1_router.include_router(settings_router)

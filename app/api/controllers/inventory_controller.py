@@ -5,7 +5,8 @@ Controllers stay thin: validation lives in the schemas, rules in ``product_servi
 
 from __future__ import annotations
 
-from typing import Annotated
+from datetime import datetime
+from typing import Annotated, Literal
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, Query, Response, status
@@ -19,6 +20,7 @@ from app.schemas.product import (
     ProductOut,
     ProductUpdate,
     StockMovementCreate,
+    StockMovementListItem,
     StockMovementOut,
 )
 from app.services import product_service, stock_service
@@ -54,6 +56,29 @@ async def create_product(
     db: TenantDb,
 ) -> ProductOut:
     return await product_service.create_product(db, principal, body)
+
+
+@router.get("/movements", response_model=Page[StockMovementListItem])
+async def list_all_stock_movements(
+    principal: Annotated[Principal, Depends(require_role(*MANAGER_UP))],
+    db: TenantDb,
+    product_id: UUID | None = None,
+    reason: Literal["opening", "sale", "purchase", "adjustment", "return", "reversal"] | None = None,
+    since: datetime | None = None,
+    until: datetime | None = None,
+    limit: Annotated[int, Query(ge=1, le=MAX_LIMIT)] = DEFAULT_LIMIT,
+    cursor: Annotated[str | None, Query(max_length=60)] = None,
+) -> Page[StockMovementListItem]:
+    """Stock movements of the whole shop (F-011). Declared before ``/{product_id}`` so ``movements`` is not an id."""
+    offset = decode_cursor(cursor)
+    rows, total = await stock_service.list_all_movements(
+        db, principal.tenant_id, product_id=product_id, reason=reason, since=since, until=until, limit=limit, offset=offset
+    )
+    items = [
+        StockMovementListItem(**StockMovementOut.model_validate(m).model_dump(), product_name=name, sku=sku)
+        for m, name, sku in rows
+    ]
+    return Page[StockMovementListItem](items=items, total=total, next_cursor=next_cursor(offset, limit, total))
 
 
 @router.get("/{product_id}", response_model=ProductOut)

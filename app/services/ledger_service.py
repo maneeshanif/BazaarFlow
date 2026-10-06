@@ -48,8 +48,10 @@ async def add_entry(
     return entry
 
 
-async def balances(db: AsyncSession, tenant_id: uuid.UUID, customer_ids: list[uuid.UUID]) -> dict[uuid.UUID, Decimal]:
-    """What each customer owes (customers with no entries owe zero)."""
+async def balances(
+    db: AsyncSession, tenant_id: uuid.UUID, customer_ids: list[uuid.UUID], *, party_type: str = "customer"
+) -> dict[uuid.UUID, Decimal]:
+    """What each party owes (customers: they owe the shop; vendors: the shop owes them). No entries means zero."""
     if not customer_ids:
         return {}
     rows = (
@@ -57,7 +59,7 @@ async def balances(db: AsyncSession, tenant_id: uuid.UUID, customer_ids: list[uu
             select(LedgerEntry.party_id, func.coalesce(func.sum(_SIGNED), 0))
             .where(
                 LedgerEntry.tenant_id == tenant_id,
-                LedgerEntry.party_type == "customer",
+                LedgerEntry.party_type == party_type,
                 LedgerEntry.party_id.in_(customer_ids),
             )
             .group_by(LedgerEntry.party_id)
@@ -105,7 +107,7 @@ async def top_debtor(db: AsyncSession, tenant_id: uuid.UUID) -> tuple[str, Decim
 
 
 async def list_entries(
-    db: AsyncSession, tenant_id: uuid.UUID, customer_id: uuid.UUID, *, limit: int, offset: int
+    db: AsyncSession, tenant_id: uuid.UUID, customer_id: uuid.UUID, *, limit: int, offset: int, party_type: str = "customer"
 ) -> tuple[list[tuple[LedgerEntry, Decimal]], int]:
     """Entries newest first, each with the running balance after it (computed oldest first so it always adds up)."""
     running = func.sum(_SIGNED).over(order_by=(LedgerEntry.created_at, LedgerEntry.id))
@@ -113,7 +115,7 @@ async def list_entries(
         select(LedgerEntry, running.label("balance_after"))
         .where(
             LedgerEntry.tenant_id == tenant_id,
-            LedgerEntry.party_type == "customer",
+            LedgerEntry.party_type == party_type,
             LedgerEntry.party_id == customer_id,
         )
         .subquery()

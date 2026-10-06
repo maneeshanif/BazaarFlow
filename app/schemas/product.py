@@ -96,3 +96,10 @@ class StockMovementOut(BaseModel):
     note: str | None
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)
+
+
+class StockMovementListItem(StockMovementOut):
+    """A movement in the shop-wide list (F-011): the same row plus which product it moved."""
+
+    product_name: str
+    sku: str
