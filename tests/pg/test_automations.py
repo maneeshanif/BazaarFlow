@@ -163,15 +163,15 @@ async def test_the_daily_brief_goes_to_the_owner_once_after_nine(client: AsyncCl
     owner = await register(client, "Shop A")
     await connect_twilio(client, owner)
     await enable(client, owner, "daily_brief")
-    await automation_service.tick(local(8, 30))
+    await automation_service.tick(local(8, 30, day=20))
     assert providers.calls("twilio.send") == []  # too early
-    await automation_service.tick(local(9, 5))
+    await automation_service.tick(local(9, 5, day=20))
     sent = providers.calls("twilio.send")
     assert len(sent) == 1 and b"923001234567" in sent[0].content and b"business+brief" in sent[0].content
-    await automation_service.tick(local(9, 40))
-    await automation_service.tick(local(15, 0))
+    await automation_service.tick(local(9, 40, day=20))
+    await automation_service.tick(local(15, 0, day=20))
     assert len(providers.calls("twilio.send")) == 1  # once a day
-    await automation_service.tick(local(9, 5, day=8))
+    await automation_service.tick(local(9, 5, day=21))
     assert len(providers.calls("twilio.send")) == 2  # and again the next morning
     runs = (await client.get(f"{URL}runs", params={"automation": "daily_brief"}, headers=bearer(owner))).json()
     assert runs["total"] == 2 and all(r["trigger_source"] == "schedule" and r["status"] == "succeeded" for r in runs["items"])
@@ -311,12 +311,15 @@ async def test_failures_are_recorded_counted_and_raise_an_alert_on_the_third(
     assert row["consecutive_failures"] == 0 and row["needs_attention"] is False
 
 
-async def test_a_recipe_without_its_integration_fails_with_a_reason_and_sends_nothing(client: AsyncClient, providers: FakeProviders) -> None:
+async def test_a_recipe_without_its_integration_fails_with_a_reason_and_sends_nothing(
+    client: AsyncClient, providers: FakeProviders, admin_conn: asyncpg.Connection
+) -> None:
     owner = await register(client, "Shop A")
     await connect_twilio(client, owner)
-    await enable(client, owner, "daily_brief")
+    await _waiting_conversation(admin_conn, owner, 20)  # independent of the time of day
+    await enable(client, owner, "unanswered_message_alert")
     await client.delete("/api/v1/integrations/whatsapp_twilio", headers=bearer(owner))
-    failed = await run(client, owner, "daily_brief")
+    failed = await run(client, owner, "unanswered_message_alert")
     assert failed["status"] == "failed" and "not connected" in failed["error"]
     assert providers.calls("twilio.send") == []
 
