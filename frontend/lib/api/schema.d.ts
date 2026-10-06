@@ -284,6 +284,80 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/automations/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Automations */
+        get: operations["list_automations_api_v1_automations__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/automations/runs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Runs
+         * @description Declared before ``/{key}`` so ``runs`` is not read as a recipe key.
+         */
+        get: operations["list_runs_api_v1_automations_runs_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/automations/{key}/run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Run Now
+         * @description Run a switched-on recipe once, now. Safe to repeat: nothing is sent twice.
+         */
+        post: operations["run_now_api_v1_automations__key__run_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/automations/{key}/toggle": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Toggle */
+        post: operations["toggle_api_v1_automations__key__toggle_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/chat/sales": {
         parameters: {
             query?: never;
@@ -1564,7 +1638,7 @@ export interface components {
              * Source
              * @enum {string}
              */
-            source: "manual" | "schedule";
+            source: "manual" | "schedule" | "automation";
             /**
              * Status
              * @enum {string}
@@ -1796,6 +1870,30 @@ export interface components {
         ApprovalReject: {
             /** Reason */
             reason: string;
+        };
+        /** AutomationOut */
+        AutomationOut: {
+            /** Consecutive Failures */
+            consecutive_failures: number;
+            /** Description */
+            description: string;
+            /** Enabled */
+            enabled: boolean;
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            last_run: components["schemas"]["LastRun"] | null;
+            /** Last Run At */
+            last_run_at: string | null;
+            /** Needs Attention */
+            needs_attention: boolean;
+            /** Requirements Met */
+            requirements_met: boolean;
+            /** Requires */
+            requires: string[];
+            /** Trigger */
+            trigger: string;
         };
         /** CashBookEntry */
         CashBookEntry: {
@@ -2196,6 +2294,20 @@ export interface components {
             token_hint: string | null;
             /** Webhook Url */
             webhook_url: string | null;
+        };
+        /** LastRun */
+        LastRun: {
+            /** Error */
+            error: string | null;
+            /** Finished At */
+            finished_at: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "running" | "succeeded" | "failed";
+            /** Summary */
+            summary: string | null;
         };
         /** LedgerEntryOut */
         LedgerEntryOut: {
@@ -2635,6 +2747,15 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** Page[RunOut] */
+        Page_RunOut_: {
+            /** Items */
+            items: components["schemas"]["RunOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
         /** Page[ShopVendorOut] */
         Page_ShopVendorOut_: {
             /** Items */
@@ -3020,6 +3141,39 @@ export interface components {
             row: number;
             /** Sku */
             sku: string | null;
+        };
+        /** RunOut */
+        RunOut: {
+            /** Automation Key */
+            automation_key: string;
+            /** Error */
+            error: string | null;
+            /** Finished At */
+            finished_at: string | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Label */
+            label: string;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "queued" | "running" | "succeeded" | "failed";
+            /** Summary */
+            summary: string | null;
+            /**
+             * Trigger Source
+             * @enum {string}
+             */
+            trigger_source: "schedule" | "manual";
         };
         /**
          * SaleCreate
@@ -3553,6 +3707,11 @@ export interface components {
              * @enum {string}
              */
             state: "created" | "shop_set" | "whatsapp_connected" | "products_added" | "live";
+        };
+        /** ToggleRequest */
+        ToggleRequest: {
+            /** Enabled */
+            enabled: boolean;
         };
         /** TokenOut */
         TokenOut: {
@@ -4256,6 +4415,126 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TokenOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_automations_api_v1_automations__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AutomationOut"][];
+                };
+            };
+        };
+    };
+    list_runs_api_v1_automations_runs_get: {
+        parameters: {
+            query?: {
+                automation?: string | null;
+                status?: ("queued" | "running" | "succeeded" | "failed") | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_RunOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    run_now_api_v1_automations__key__run_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    toggle_api_v1_automations__key__toggle_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ToggleRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AutomationOut"];
                 };
             };
             /** @description Validation Error */

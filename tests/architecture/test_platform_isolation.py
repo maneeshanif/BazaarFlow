@@ -54,7 +54,7 @@ def test_every_platform_route_requires_an_operator_and_closes_its_session_before
         assert db and all(d.scope == "function" for d in db), f"{path} must use get_platform_db(scope='function')"  # type: ignore[attr-defined]
 
 
-SYSTEM_ALLOWED = {"app/core/tenancy.py", "app/services/marketing_publisher.py"}
+SYSTEM_ALLOWED = {"app/core/tenancy.py", "app/services/marketing_publisher.py", "app/services/automation_service.py"}
 
 
 def test_only_the_scheduler_opens_a_system_session() -> None:

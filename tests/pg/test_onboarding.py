@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 import httpx
 import pytest
 from httpx import AsyncClient
@@ -18,12 +20,12 @@ SHOP = {"name": "Ali Mart Lahore", "owner_phone": "+923001234567", "city": "Laho
 CSV = "sku,name,price,cost,qty,category\nSH-1,Classic Shirt,2500,1800,10,Clothes\nCAP-1,Cap,500,,5,\n"
 
 
-async def state(client: AsyncClient, owner: dict[str, object]) -> dict[str, object]:
-    out: dict[str, object] = (await client.get(URL, headers=bearer(owner))).json()
+async def state(client: AsyncClient, owner: dict[str, Any]) -> dict[str, Any]:
+    out: dict[str, Any] = (await client.get(URL, headers=bearer(owner))).json()
     return out
 
 
-async def through_products(client: AsyncClient, owner: dict[str, object]) -> None:
+async def through_products(client: AsyncClient, owner: dict[str, Any]) -> None:
     assert (await client.put(f"{URL}shop", json=SHOP, headers=bearer(owner))).status_code == 200
     assert (await client.post(f"{URL}channels/continue", headers=bearer(owner))).status_code == 200
     assert (await client.post(f"{URL}products/continue", headers=bearer(owner))).status_code == 200
@@ -32,8 +34,8 @@ async def through_products(client: AsyncClient, owner: dict[str, object]) -> Non
 async def test_a_new_shop_starts_at_the_first_step_and_only_the_owner_can_use_the_wizard(client: AsyncClient, app_engine: AsyncEngine) -> None:
     owner = await register(client, "Shop A")
     body = await state(client, owner)
-    assert body["state"] == "created" and [s["status"] for s in body["steps"]] == ["current", "pending", "pending", "pending"]  # type: ignore[union-attr]
-    assert [s["required"] for s in body["steps"]] == [True, False, False, False]  # type: ignore[union-attr]
+    assert body["state"] == "created" and [s["status"] for s in body["steps"]] == ["current", "pending", "pending", "pending"]
+    assert [s["required"] for s in body["steps"]] == [True, False, False, False]
     for role in ("manager", "staff"):
         other = await member(client, app_engine, owner, role)
         assert (await client.get(URL, headers=bearer(other))).status_code == 403

@@ -48,7 +48,7 @@ export function ActivityView() {
   const rows: Row[] = (list.data?.items ?? []).map((p) => ({
     ...p,
     when: formatDateTime(p.published_at ?? p.scheduled_for ?? p.created_at),
-    origin: p.source === "schedule" ? "Schedule" : "Studio",
+    origin: p.source === "schedule" ? "Schedule" : p.source === "automation" ? "Automation" : "Studio",
     reason: p.last_error ?? "",
     actions: p.status,
   }));

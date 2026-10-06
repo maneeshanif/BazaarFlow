@@ -58,7 +58,7 @@ class ActivityOut(BaseModel):
     title: str
     message: str
     status: ActivityStatus
-    source: Literal["manual", "schedule"]
+    source: Literal["manual", "schedule", "automation"]
     scheduled_for: datetime | None
     published_at: datetime | None
     attempts: int

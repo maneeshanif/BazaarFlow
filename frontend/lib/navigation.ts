@@ -79,7 +79,7 @@ export const NAV: NavGroup[] = [
   },
   {
     label: "Automations",
-    items: [{ label: "Recipes", icon: "workflow", roles: MANAGER_UP, soon: true }],
+    items: [{ label: "Recipes", icon: "workflow", roles: MANAGER_UP, href: "/automations" }],
   },
   {
     label: "Settings",

@@ -1,4 +1,4 @@
-"""Run the marketing scheduler (PRD W-004): draft the day's posts and publish the queued ones.
+"""Run the scheduler (PRD W-004, W-008): draft and publish marketing posts, and run the switched-on automation recipes.
 
     uv run python -m app.cli.run_scheduler            # forever, one pass every 60 seconds
     uv run python -m app.cli.run_scheduler --once     # a single pass (cron, or a one-off check)
@@ -16,6 +16,7 @@ import argparse
 import asyncio
 import logging
 
+from app.services import automation_service
 from app.services.marketing_publisher import tick
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
@@ -33,6 +34,8 @@ async def run(once: bool, interval: int) -> None:
             result.failed,
             result.paused,
         )
+        runs = await automation_service.tick()
+        logger.info("automation pass: %s run(s) recorded", runs)
         if once:
             return
         await asyncio.sleep(interval)

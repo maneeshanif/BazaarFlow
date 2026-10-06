@@ -73,6 +73,17 @@ async def execute_action(
         from app.services import marketing_studio_service  # local import: the writer pulls in the whole agent runtime
 
         return await marketing_studio_service.mark_approved(db, approver, uuid.UUID(str(payload["post_id"])))
+    if tool == "send_whatsapp_message":
+        from app.services.automation_recipes import (  # local import: avoids a cycle with the services
+            RecipeError,
+            send_whatsapp,
+        )
+
+        try:
+            sent = await send_whatsapp(db, approver.tenant_id, str(payload["phone"]), str(payload["text"]), f"action-{action_id}")
+        except RecipeError as exc:
+            raise DomainError(str(exc), code="send_failed") from exc
+        return "Sent the WhatsApp message" if sent else "That message had already been sent"
     raise DomainError(f"Nothing knows how to run the action '{tool}'", code="unknown_action")
 
 
