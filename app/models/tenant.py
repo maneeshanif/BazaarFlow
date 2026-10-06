@@ -39,7 +39,10 @@ class Tenant(BaseModelMixin, Base):
     """The isolation boundary. RLS is keyed on this table's own ``id``."""
 
     __tablename__ = "tenants"
-    __table_args__ = (CheckConstraint("auto_post_limit >= 0", name="ck_tenants_auto_post_limit_non_negative"),)
+    __table_args__ = (
+        CheckConstraint("auto_post_limit >= 0", name="ck_tenants_auto_post_limit_non_negative"),
+        CheckConstraint("status in ('active', 'suspended')", name="ck_tenants_status"),
+    )
 
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     slug: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)

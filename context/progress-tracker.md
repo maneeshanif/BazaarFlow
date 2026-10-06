@@ -6,9 +6,9 @@ Update this file after every completed task. Anyone reading it should immediatel
 
 ## Current Status
 
-**Phase:** Phase 1A, shop basics on the database (Phase 0 closed 2026-10-03)
-**Last completed:** 54
-**In progress:** Phase 1A on branch `feat/phase-1-mvp`, strictly in the order listed
+**Phase:** Phase 2, batch 2D done (shop data, finance, platform admin); batch 2E (channels) next. Phase 1 code closed 2026-10-04
+**Last completed:** 82
+**In progress:** Phase 2 on branch `feat/phase-1-mvp` (owner is away; see docs/superpowers/specs/2026-10-06-phase-2-design.md)
 **Next:** owner actions: 02 (confirm CI green after this push), 12 (copy .env.example), 21 (Vercel secrets), 26 (Twilio sandbox)
 **Blockers:** the owner has not yet said "let's build it"; 26 needs vendor sandbox accounts; DEMO_USER_PASSWORD must be set in `.env` (owner)
 
@@ -95,17 +95,17 @@ Update this file after every completed task. Anyone reading it should immediatel
 
 - [ ] 70 Onboarding wizard
 - [ ] 71 Unified inbox
-- [ ] 72 Stock movements
-- [ ] 73 Vendors and payables
-- [ ] 74 Finance overview and ledger
+- [x] 72 Stock movements
+- [x] 73 Vendors and payables
+- [x] 74 Finance overview and ledger
 - [ ] 75 Marketing schedule
 - [ ] 76 Marketing activity
 - [ ] 77 Integrations (WhatsApp, Facebook, VAPI)
-- [ ] 78 Shop profile and settings
-- [ ] 79 Platform admin: tenants
-- [ ] 80 Finance dashboard
-- [ ] 81 Agent command center dashboard
-- [ ] 82 Platform overview dashboard
+- [x] 78 Shop profile and settings
+- [x] 79 Platform admin: tenants
+- [x] 80 Finance dashboard
+- [x] 81 Agent command center dashboard
+- [x] 82 Platform overview dashboard
 - [ ] 83 Integration: Twilio WhatsApp (sandbox, later production sender)
 - [ ] 84 Integration: Facebook/Instagram Graph API
 - [ ] 85 Integration: Pexels images

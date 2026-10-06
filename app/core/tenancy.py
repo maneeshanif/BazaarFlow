@@ -74,3 +74,18 @@ async def anonymous_session(user_id: uuid.UUID | None = None) -> AsyncIterator[A
         async with session.begin():
             await apply_context(session, user_id=user_id)
             yield session
+
+
+@asynccontextmanager
+async def platform_session(user_id: uuid.UUID) -> AsyncIterator[AsyncSession]:
+    """A cross-tenant transaction for a verified BazaarFlow operator (the architecture's named ``system_session``).
+
+    It sets ``app.platform_admin`` so the narrow ``platform_select`` / ``platform_update`` policies apply. Only
+    ``get_platform_db`` (behind ``require_platform_admin``) may open it; an architecture test guards that.
+    """
+    async with database.AsyncSessionLocal() as session:
+        async with session.begin():
+            await apply_context(session, user_id=user_id)
+            if _is_postgres(session):
+                await session.execute(text("SELECT set_config('app.platform_admin', 'true', true)"))
+            yield session

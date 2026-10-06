@@ -45,3 +45,5 @@ export type ShopSettings = Schemas["ShopSettingsOut"];
 export type FinanceOverview = Schemas["FinanceOverview"];
 export type CashBookEntry = Schemas["CashBookEntry"];
 export type AgentDashboard = Schemas["AgentDashboard"];
+export type PlatformTenant = Schemas["PlatformTenantOut"];
+export type PlatformOverview = Schemas["PlatformOverview"];

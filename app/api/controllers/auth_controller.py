@@ -148,7 +148,7 @@ async def login(body: LoginRequest) -> TokenOut:
             await apply_context(session, user_id=user.id)
             rows = (
                 await session.execute(
-                    select(Membership.tenant_id, Membership.role, Tenant.name)
+                    select(Membership.tenant_id, Membership.role, Tenant.name, Tenant.status)
                     .join(Tenant, Tenant.id == Membership.tenant_id)
                     .where(Membership.user_id == user.id)
                     .order_by(Tenant.name)
@@ -173,6 +173,11 @@ async def login(body: LoginRequest) -> TokenOut:
                     status.HTTP_403_FORBIDDEN,
                     "This account is not part of any shop. Ask the shop owner to add you again.",
                 )
+            if chosen is not None and chosen.status != "active" and not user.is_platform_admin:
+                failure = HTTPException(
+                    status.HTTP_403_FORBIDDEN, "This shop has been suspended. Contact BazaarFlow support."
+                )
+                chosen = None
             if chosen is not None:
                 await session.execute(
                     delete(LoginAttempt).where(LoginAttempt.email_hash == email_hash, LoginAttempt.succeeded.is_(False))

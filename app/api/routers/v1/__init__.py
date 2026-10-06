@@ -15,6 +15,7 @@ from app.api.routers.finance_router import router as finance_router
 from app.api.routers.inventory_router import router as inventory_router
 from app.api.routers.marketing_studio_router import router as marketing_studio_router
 from app.api.routers.payables_router import router as payables_router
+from app.api.routers.platform_router import router as platform_router
 from app.api.routers.sales_router import orders_router, sales_router
 from app.api.routers.settings_router import router as settings_router
 from app.api.routers.team_router import router as team_router
@@ -36,3 +37,4 @@ api_v1_router.include_router(demo_router)
 api_v1_router.include_router(payables_router)
 api_v1_router.include_router(settings_router)
 api_v1_router.include_router(finance_router)
+api_v1_router.include_router(platform_router)

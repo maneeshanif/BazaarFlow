@@ -17,9 +17,10 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.audit import record_audit
 from app.core.security import verify_token
-from app.core.tenancy import Principal, anonymous_session, tenant_session
-from app.models.tenant import Membership, TenantRole
+from app.core.tenancy import Principal, anonymous_session, platform_session, tenant_session
+from app.models.tenant import Membership, Tenant, TenantRole
 from app.models.user import User
 
 _bearer = HTTPBearer(auto_error=False)
@@ -81,8 +82,9 @@ async def _confirm_still_valid(principal: Principal) -> None:
     async with anonymous_session(user_id=principal.user_id) as session:
         row = (
             await session.execute(
-                select(Membership.role, User.is_active, User.is_platform_admin)
+                select(Membership.role, User.is_active, User.is_platform_admin, Tenant.status)
                 .join(User, User.id == Membership.user_id)
+                .join(Tenant, Tenant.id == Membership.tenant_id)
                 .where(Membership.user_id == principal.user_id, Membership.tenant_id == principal.tenant_id)
             )
         ).first()
@@ -93,6 +95,9 @@ async def _confirm_still_valid(principal: Principal) -> None:
         or bool(row.is_platform_admin) != principal.is_platform_admin
     ):
         raise _UNAUTHENTICATED
+    if row.status != "active" and not row.is_platform_admin:
+        # a suspended shop is locked out on the very next request; operators keep access to their own shop
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="This shop has been suspended")
 
 
 def require_role(*roles: TenantRole) -> Callable[..., Awaitable[Principal]]:
@@ -125,4 +130,21 @@ async def get_tenant_db(principal: Principal = Depends(get_principal)) -> AsyncI
     sent; an architecture test enforces this.
     """
     async with tenant_session(principal.tenant_id, principal.user_id) as session:
+        yield session
+
+
+async def get_platform_db(request: Request, principal: Principal = Depends(require_platform_admin)) -> AsyncIterator[AsyncSession]:
+    """A cross-tenant session for an operator. Every request leaves an audit row (no tenant) naming the route.
+
+    Use it as ``Depends(get_platform_db, scope="function")`` so the transaction commits before the response is sent.
+    """
+    async with platform_session(principal.user_id) as session:
+        record_audit(
+            session,
+            "platform.access",
+            tenant_id=None,
+            actor_id=principal.user_id,
+            entity="platform",
+            after={"method": request.method, "path": request.url.path},
+        )
         yield session

@@ -93,7 +93,8 @@ export const NAV: NavGroup[] = [
 const PLATFORM: NavGroup = {
   label: "Platform",
   items: [
-    { label: "Tenants", icon: "building", roles: ALL, soon: true },
+    { label: "Platform overview", icon: "bar-chart", roles: ALL, href: "/platform" },
+    { label: "Tenants", icon: "building", roles: ALL, href: "/platform/tenants" },
     { label: "System logs", icon: "scroll-text", roles: ALL, href: "/logs" },
   ],
 };
