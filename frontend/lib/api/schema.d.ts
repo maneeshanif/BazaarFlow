@@ -1413,6 +1413,78 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/voice/assistant-config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Assistant Config
+         * @description The assistant to create in VAPI: consent notice first, interruption, a call-length limit, and the tools this server answers.
+         */
+        get: operations["assistant_config_api_v1_voice_assistant_config_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/voice/calls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Calls */
+        get: operations["list_calls_api_v1_voice_calls_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/voice/calls/{call_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Call */
+        get: operations["get_call_api_v1_voice_calls__call_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/voice/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Settings */
+        get: operations["get_settings_api_v1_voice_settings_get"];
+        /** Put Settings */
+        put: operations["put_settings_api_v1_voice_settings_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/webhooks/twilio": {
         parameters: {
             query?: never;
@@ -1424,6 +1496,26 @@ export interface paths {
         put?: never;
         /** Twilio Webhook */
         post: operations["twilio_webhook_api_v1_webhooks_twilio_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/webhooks/vapi": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Vapi Webhook
+         * @description VAPI server messages for a shop's voice assistant. Public by design; trusted only after the shop's bearer token checks out.
+         */
+        post: operations["vapi_webhook_api_v1_webhooks_vapi_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1870,6 +1962,15 @@ export interface components {
         ApprovalReject: {
             /** Reason */
             reason: string;
+        };
+        /** AssistantConfig */
+        AssistantConfig: {
+            /** Assistant */
+            assistant: {
+                [key: string]: unknown;
+            };
+            /** Notes */
+            notes: string[];
         };
         /** AutomationOut */
         AutomationOut: {
@@ -2787,6 +2888,15 @@ export interface components {
         Page_VendorLedgerEntryOut_: {
             /** Items */
             items: components["schemas"]["VendorLedgerEntryOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
+        /** Page[VoiceCallOut] */
+        Page_VoiceCallOut_: {
+            /** Items */
+            items: components["schemas"]["VoiceCallOut"][];
             /** Next Cursor */
             next_cursor?: string | null;
             /** Total */
@@ -3913,6 +4023,141 @@ export interface components {
              * Format: uuid
              */
             vendor_id: string;
+        };
+        /** VoiceCallDetail */
+        VoiceCallDetail: {
+            /** Avg Latency Ms */
+            avg_latency_ms: number | null;
+            /** Caller Hint */
+            caller_hint: string | null;
+            /** Consent Notice */
+            consent_notice: string | null;
+            /** Cost Usd */
+            cost_usd: string;
+            /** Duration Seconds */
+            duration_seconds: number;
+            /** Ended At */
+            ended_at: string | null;
+            /** Ended Reason */
+            ended_reason: string | null;
+            /** Escalated */
+            escalated: boolean;
+            /** Handoff Note */
+            handoff_note: string | null;
+            /** Has Ticket */
+            has_ticket: boolean;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Max Latency Ms */
+            max_latency_ms: number | null;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ringing" | "in_progress" | "completed" | "escalated" | "failed";
+            /** Summary */
+            summary: string | null;
+            /** Transcript */
+            transcript: string | null;
+            /** Transcript Removed */
+            transcript_removed: boolean;
+            /** Turn Count */
+            turn_count: number;
+            /** Turn Latencies Ms */
+            turn_latencies_ms: number[];
+        };
+        /** VoiceCallOut */
+        VoiceCallOut: {
+            /** Avg Latency Ms */
+            avg_latency_ms: number | null;
+            /** Caller Hint */
+            caller_hint: string | null;
+            /** Cost Usd */
+            cost_usd: string;
+            /** Duration Seconds */
+            duration_seconds: number;
+            /** Ended At */
+            ended_at: string | null;
+            /** Ended Reason */
+            ended_reason: string | null;
+            /** Escalated */
+            escalated: boolean;
+            /** Has Ticket */
+            has_ticket: boolean;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Max Latency Ms */
+            max_latency_ms: number | null;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "ringing" | "in_progress" | "completed" | "escalated" | "failed";
+            /** Turn Count */
+            turn_count: number;
+        };
+        /**
+         * VoiceSettingsIn
+         * @description F-023 settings. The consent notice cannot be blank: it is spoken at the start of every call.
+         */
+        VoiceSettingsIn: {
+            /** Consent Notice */
+            consent_notice: string;
+            /** Enabled */
+            enabled: boolean;
+            /** Greeting */
+            greeting: string;
+            /** Handoff Phone */
+            handoff_phone?: string | null;
+            /** Max Call Seconds */
+            max_call_seconds: number;
+            /** Monthly Cap Usd */
+            monthly_cap_usd: number | string;
+            /** Retention Days */
+            retention_days: number;
+        };
+        /** VoiceSettingsOut */
+        VoiceSettingsOut: {
+            /** Configured */
+            configured: boolean;
+            /** Consent Notice */
+            consent_notice: string;
+            /** Enabled */
+            enabled: boolean;
+            /** Greeting */
+            greeting: string;
+            /** Handoff Phone */
+            handoff_phone?: string | null;
+            /** Max Call Seconds */
+            max_call_seconds: number;
+            /** Month Spend Usd */
+            month_spend_usd: string;
+            /** Monthly Cap Usd */
+            monthly_cap_usd: string;
+            /** Percent Used */
+            percent_used: number;
+            /** Retention Days */
+            retention_days: number;
+            /** Vapi Connected */
+            vapi_connected: boolean;
+            /** Webhook Url */
+            webhook_url: string;
         };
         /** WebhookResult */
         WebhookResult: {
@@ -6903,6 +7148,144 @@ export interface operations {
             };
         };
     };
+    assistant_config_api_v1_voice_assistant_config_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AssistantConfig"];
+                };
+            };
+        };
+    };
+    list_calls_api_v1_voice_calls_get: {
+        parameters: {
+            query?: {
+                status?: ("ringing" | "in_progress" | "completed" | "escalated" | "failed") | null;
+                since?: string | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_VoiceCallOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_call_api_v1_voice_calls__call_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                call_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VoiceCallDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_settings_api_v1_voice_settings_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VoiceSettingsOut"];
+                };
+            };
+        };
+    };
+    put_settings_api_v1_voice_settings_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoiceSettingsIn"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VoiceSettingsOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     twilio_webhook_api_v1_webhooks_twilio_post: {
         parameters: {
             query?: never;
@@ -6919,6 +7302,28 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WebhookResult"];
+                };
+            };
+        };
+    };
+    vapi_webhook_api_v1_webhooks_vapi_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
                 };
             };
         };

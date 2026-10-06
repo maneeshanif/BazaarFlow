@@ -19,6 +19,7 @@ from app.models.support import SupportTicket
 from app.models.tenant import AuditLog, Membership, Tenant, TenantIntegration, TenantRole
 from app.models.user import User
 from app.models.vendor import Vendor, VendorBill, VendorPayment
+from app.models.voice import VoiceCall, VoiceSettings
 
 __all__ = [
     "ActionStatus",
@@ -54,4 +55,6 @@ __all__ = [
     "Vendor",
     "VendorBill",
     "VendorPayment",
+    "VoiceCall",
+    "VoiceSettings",
 ]

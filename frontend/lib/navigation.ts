@@ -75,7 +75,7 @@ export const NAV: NavGroup[] = [
   },
   {
     label: "Voice",
-    items: [{ label: "Call log", icon: "headphones", roles: MANAGER_UP, soon: true }],
+    items: [{ label: "Call log", icon: "headphones", roles: MANAGER_UP, href: "/voice" }],
   },
   {
     label: "Automations",

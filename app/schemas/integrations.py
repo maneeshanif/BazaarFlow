@@ -15,7 +15,7 @@ Provider = Literal["whatsapp_twilio", "whatsapp_meta", "facebook", "instagram", 
 Status = Literal["not_connected", "pending", "connected", "error", "revoked"]
 
 PROVIDERS: tuple[str, ...] = ("whatsapp_twilio", "whatsapp_meta", "facebook", "instagram", "vapi")
-AVAILABLE: frozenset[str] = frozenset({"whatsapp_twilio", "facebook"})  # the rest arrive in Phase 3 or later
+AVAILABLE: frozenset[str] = frozenset({"whatsapp_twilio", "facebook", "vapi"})  # Meta Cloud API and Instagram come later
 LABELS: dict[str, str] = {
     "whatsapp_twilio": "WhatsApp (Twilio sandbox)",
     "whatsapp_meta": "WhatsApp (Meta Cloud API)",
@@ -40,6 +40,16 @@ class FacebookCredentials(BaseModel):
 
     page_id: Annotated[str, StringConstraints(strip_whitespace=True, pattern=r"^[0-9]{5,30}$")]
     access_token: Annotated[str, StringConstraints(strip_whitespace=True, min_length=20, max_length=600)]
+
+
+class VapiCredentials(BaseModel):
+    """The shop's VAPI assistant. ``webhook_secret`` is the token VAPI sends with each message; ``api_key`` is optional (it only lets us check the assistant exists)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    assistant_id: Annotated[str, StringConstraints(strip_whitespace=True, pattern=r"^[A-Za-z0-9_-]{8,64}$")]
+    webhook_secret: Annotated[str, StringConstraints(strip_whitespace=True, min_length=16, max_length=128)]
+    api_key: Annotated[str, StringConstraints(strip_whitespace=True, min_length=16, max_length=200)] | None = None
 
 
 class ConnectRequest(BaseModel):

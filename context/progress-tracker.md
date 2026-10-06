@@ -6,8 +6,8 @@ Update this file after every completed task. Anyone reading it should immediatel
 
 ## Current Status
 
-**Phase:** Phase 2 code complete (batches 2D and 2E); full slow gate for 2D/2E still to run. Phase 1 code closed 2026-10-04
-**Last completed:** 85
+**Phase:** Phases 2 and 3 code complete except the vendor-dependent tasks 31 and 90; full slow gate still to run. Phase 1 code closed 2026-10-04
+**Last completed:** 91
 **In progress:** Phase 2 on branch `feat/phase-1-mvp` (owner is away; see docs/superpowers/specs/2026-10-06-phase-2-design.md)
 **Next:** owner decisions on the "Needs a human" list below (Phase 3 and 4 have not been started); owner actions: 02 (confirm CI green after this push), 12 (copy .env.example), 21 (Vercel secrets), 26 (Twilio sandbox)
 **Blockers:** the owner has not yet said "let's build it"; 26 needs vendor sandbox accounts; DEMO_USER_PASSWORD must be set in `.env` (owner)
@@ -118,18 +118,18 @@ Deferred from Phase 1 (integration pack):
 
 ## Phase 3 — Voice, automation recipes, marketing insights, Meta Embedded Signup, Urdu/RTL, reorder workflow
 
-- [ ] 86 Marketing insights
-- [ ] 87 Voice calls and agent settings
-- [ ] 88 Automation recipes
-- [ ] 89 System logs
+- [x] 86 Marketing insights
+- [x] 87 Voice calls and agent settings
+- [x] 88 Automation recipes
+- [x] 89 System logs
 - [ ] 90 Integration: Meta WhatsApp Cloud API (Embedded Signup)
-- [ ] 91 Integration: VAPI voice
+- [x] 91 Integration: VAPI voice
 
 Deferred from Phase 1 (voice pack):
-- [ ] 66 One complete call flow with confirmation of captured data [voice-a…
-- [ ] 67 Barge-in, silence and noise handling [voice-agents pack]
-- [ ] 68 Human handoff and keypad fallback [voice-agents pack]
-- [ ] 69 Consent notice, redaction and retention [voice-agents pack]
+- [x] 66 One complete call flow with confirmation of captured data [voice-a…
+- [x] 67 Barge-in, silence and noise handling [voice-agents pack]
+- [x] 68 Human handoff and keypad fallback [voice-agents pack]
+- [x] 69 Consent notice, redaction and retention [voice-agents pack]
 
 ## Phase 4 — Commercial: pricing and billing, compliance items (Q-001, Q-005), React Flow builder (if trigger met), marketplace connectors
 
@@ -154,6 +154,8 @@ Older items (ADR sign-off, `.env.example`, key rotation, `next` bump, pushing th
 | Impersonation | Platform-admin impersonation (PRD §14) is not built; it needs your rules for consent and expiry |
 | Customer order drafts | W-003 step 3 (an order drafted by the customer agent) is not built: the AI answers prices and stock only and hands over for orders |
 | Legacy removal | The JSON-backed legacy routes, pages and Facebook manager (`/api/vendors`, `/api/marketing`, the Meta webhook, `app/(marketing)/dashboard/*`) are still mounted in development; the phase brief says replace-and-delete. Say when to remove them (it deletes about 20 test files with them) |
-| Not started | Phase 2 leftovers: daily briefing, reorder workflow, Facebook comment replies (W-004 step 4). Phases 3 and 4 (voice, recipes, insights, Embedded Signup, billing) |
+| Phase 3 left | Task 31 (a live hello-world call) needs a VAPI account and a number; task 90 (Meta Embedded Signup) needs a Meta app approved as a Tech Provider; the voice cost and per-turn latency fields of VAPI's end-of-call report, the keypad-to-person setting, silence timeout and noise filtering could not be confirmed from VAPI's docs and are listed as notes on the Voice page for you to set in the VAPI dashboard |
+| Phase 3 not built | Facebook comment replies (W-004 step 4), the draft purchase order of the reorder workflow (W-006 stores no order yet), Urdu/RTL UI. Phase 4 (billing) has no content in the PRD |
+| Recipe assumptions | After three failures in a row a recipe stays on, raises an audit row and shows a banner (it does not switch itself off); the owner is told in the app, not by WhatsApp |
 
 Open questions Q-001 to Q-006 are in PRD §0.4; resolve each before the task that depends on it.

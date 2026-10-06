@@ -42,13 +42,14 @@ from app.schemas.integrations import (
     FacebookCredentials,
     IntegrationOut,
     TwilioCredentials,
+    VapiCredentials,
 )
 
 logger = logging.getLogger("bazaarflow.integrations")
 
-_SCHEMAS: dict[str, type[BaseModel]] = {"whatsapp_twilio": TwilioCredentials, "facebook": FacebookCredentials}
-_SECRET_FIELD = {"whatsapp_twilio": "auth_token", "facebook": "access_token"}
-_NAMES = {"whatsapp_twilio": "Twilio", "facebook": "Facebook"}
+_SCHEMAS: dict[str, type[BaseModel]] = {"whatsapp_twilio": TwilioCredentials, "facebook": FacebookCredentials, "vapi": VapiCredentials}
+_SECRET_FIELD = {"whatsapp_twilio": "auth_token", "facebook": "access_token", "vapi": "webhook_secret"}
+_NAMES = {"whatsapp_twilio": "Twilio", "facebook": "Facebook", "vapi": "VAPI"}
 RECONNECT = "The provider rejected the saved credential. Paste a new one to reconnect."
 
 
@@ -131,8 +132,16 @@ def _explain(provider: str, error: ProviderError) -> DomainError:
     return DomainError(f"{name} is not answering right now. Try again in a few minutes.", code="provider_unavailable", status_code=502)
 
 
+def _build(provider: str, credentials: dict[str, Any]) -> Any:
+    if provider == "whatsapp_twilio":
+        return factory.build_twilio(credentials)
+    if provider == "vapi":
+        return factory.build_vapi(credentials)
+    return factory.build_facebook(credentials)
+
+
 async def _external_id(provider: str, tenant_id: uuid.UUID, credentials: dict[str, Any]) -> str:
-    adapter: Any = factory.build_twilio(credentials) if provider == "whatsapp_twilio" else factory.build_facebook(credentials)
+    adapter: Any = _build(provider, credentials)
     try:
         return str(await adapter.connect(tenant_id, credentials))
     finally:
@@ -210,7 +219,7 @@ async def adapter_for(db: AsyncSession, tenant_id: uuid.UUID, provider: str) -> 
         credentials = decrypt_credentials(row.credentials_enc)
     except (CredentialsUnreadable, EncryptionNotConfigured) as exc:
         raise DomainError(f"{name} needs to be reconnected in Settings -> Integrations.", code="integration_reconnect", status_code=409) from exc
-    return factory.build_twilio(credentials) if provider == "whatsapp_twilio" else factory.build_facebook(credentials)
+    return _build(provider, credentials)
 
 
 async def record_failure(db: AsyncSession, tenant_id: uuid.UUID, provider: str, error: ProviderError) -> None:

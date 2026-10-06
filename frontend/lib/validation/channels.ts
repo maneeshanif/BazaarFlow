@@ -13,6 +13,11 @@ export const facebookSchema = z.object({
   access_token: z.string().trim().min(20, "Paste the full Page access token").max(600, "That token is too long"),
 });
 
+export const vapiSchema = z.object({
+  assistant_id: z.string().trim().regex(/^[A-Za-z0-9_-]{8,64}$/, "The assistant id is 8 to 64 letters, numbers, dashes or underscores"),
+  webhook_secret: z.string().trim().min(16, "The token is at least 16 characters").max(128, "The token is at most 128 characters"),
+});
+
 export const scheduleSchema = z
   .object({
     enabled: z.boolean(),

@@ -697,6 +697,28 @@
         "title": "ApprovalReject",
         "type": "object"
       },
+      "AssistantConfig": {
+        "properties": {
+          "assistant": {
+            "additionalProperties": true,
+            "title": "Assistant",
+            "type": "object"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Notes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "assistant",
+          "notes"
+        ],
+        "title": "AssistantConfig",
+        "type": "object"
+      },
       "AutomationOut": {
         "properties": {
           "consecutive_failures": {
@@ -3543,6 +3565,39 @@
           "total"
         ],
         "title": "Page[VendorLedgerEntryOut]",
+        "type": "object"
+      },
+      "Page_VoiceCallOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/VoiceCallOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "Page[VoiceCallOut]",
         "type": "object"
       },
       "PayableRow": {
@@ -6444,6 +6499,458 @@
           "balance"
         ],
         "title": "VendorPaymentOut",
+        "type": "object"
+      },
+      "VoiceCallDetail": {
+        "properties": {
+          "avg_latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Latency Ms"
+          },
+          "caller_hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Caller Hint"
+          },
+          "consent_notice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Consent Notice"
+          },
+          "cost_usd": {
+            "title": "Cost Usd",
+            "type": "string"
+          },
+          "duration_seconds": {
+            "title": "Duration Seconds",
+            "type": "integer"
+          },
+          "ended_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ended At"
+          },
+          "ended_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ended Reason"
+          },
+          "escalated": {
+            "title": "Escalated",
+            "type": "boolean"
+          },
+          "handoff_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Handoff Note"
+          },
+          "has_ticket": {
+            "title": "Has Ticket",
+            "type": "boolean"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "max_latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Latency Ms"
+          },
+          "started_at": {
+            "format": "date-time",
+            "title": "Started At",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ringing",
+              "in_progress",
+              "completed",
+              "escalated",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          },
+          "transcript": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Transcript"
+          },
+          "transcript_removed": {
+            "title": "Transcript Removed",
+            "type": "boolean"
+          },
+          "turn_count": {
+            "title": "Turn Count",
+            "type": "integer"
+          },
+          "turn_latencies_ms": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Turn Latencies Ms",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "caller_hint",
+          "started_at",
+          "ended_at",
+          "duration_seconds",
+          "ended_reason",
+          "cost_usd",
+          "turn_count",
+          "avg_latency_ms",
+          "max_latency_ms",
+          "escalated",
+          "has_ticket",
+          "summary",
+          "transcript",
+          "handoff_note",
+          "consent_notice",
+          "turn_latencies_ms",
+          "transcript_removed"
+        ],
+        "title": "VoiceCallDetail",
+        "type": "object"
+      },
+      "VoiceCallOut": {
+        "properties": {
+          "avg_latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Avg Latency Ms"
+          },
+          "caller_hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Caller Hint"
+          },
+          "cost_usd": {
+            "title": "Cost Usd",
+            "type": "string"
+          },
+          "duration_seconds": {
+            "title": "Duration Seconds",
+            "type": "integer"
+          },
+          "ended_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ended At"
+          },
+          "ended_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ended Reason"
+          },
+          "escalated": {
+            "title": "Escalated",
+            "type": "boolean"
+          },
+          "has_ticket": {
+            "title": "Has Ticket",
+            "type": "boolean"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "max_latency_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Latency Ms"
+          },
+          "started_at": {
+            "format": "date-time",
+            "title": "Started At",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ringing",
+              "in_progress",
+              "completed",
+              "escalated",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "turn_count": {
+            "title": "Turn Count",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "caller_hint",
+          "started_at",
+          "ended_at",
+          "duration_seconds",
+          "ended_reason",
+          "cost_usd",
+          "turn_count",
+          "avg_latency_ms",
+          "max_latency_ms",
+          "escalated",
+          "has_ticket"
+        ],
+        "title": "VoiceCallOut",
+        "type": "object"
+      },
+      "VoiceSettingsIn": {
+        "additionalProperties": false,
+        "description": "F-023 settings. The consent notice cannot be blank: it is spoken at the start of every call.",
+        "properties": {
+          "consent_notice": {
+            "maxLength": 300,
+            "minLength": 10,
+            "title": "Consent Notice",
+            "type": "string"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "greeting": {
+            "maxLength": 200,
+            "minLength": 2,
+            "title": "Greeting",
+            "type": "string"
+          },
+          "handoff_phone": {
+            "anyOf": [
+              {
+                "pattern": "^\\+[1-9][0-9]{7,14}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Handoff Phone"
+          },
+          "max_call_seconds": {
+            "maximum": 900.0,
+            "minimum": 60.0,
+            "title": "Max Call Seconds",
+            "type": "integer"
+          },
+          "monthly_cap_usd": {
+            "anyOf": [
+              {
+                "maximum": 500.0,
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,4}|(?=[\\d.]{1,7}0*$)\\d{0,4}\\.\\d{0,2}0*$)",
+                "type": "string"
+              }
+            ],
+            "title": "Monthly Cap Usd"
+          },
+          "retention_days": {
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Retention Days",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "enabled",
+          "greeting",
+          "consent_notice",
+          "max_call_seconds",
+          "monthly_cap_usd",
+          "retention_days"
+        ],
+        "title": "VoiceSettingsIn",
+        "type": "object"
+      },
+      "VoiceSettingsOut": {
+        "additionalProperties": false,
+        "properties": {
+          "configured": {
+            "title": "Configured",
+            "type": "boolean"
+          },
+          "consent_notice": {
+            "maxLength": 300,
+            "minLength": 10,
+            "title": "Consent Notice",
+            "type": "string"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "greeting": {
+            "maxLength": 200,
+            "minLength": 2,
+            "title": "Greeting",
+            "type": "string"
+          },
+          "handoff_phone": {
+            "anyOf": [
+              {
+                "pattern": "^\\+[1-9][0-9]{7,14}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Handoff Phone"
+          },
+          "max_call_seconds": {
+            "maximum": 900.0,
+            "minimum": 60.0,
+            "title": "Max Call Seconds",
+            "type": "integer"
+          },
+          "month_spend_usd": {
+            "title": "Month Spend Usd",
+            "type": "string"
+          },
+          "monthly_cap_usd": {
+            "pattern": "^(?!^[-+.]*$)[+-]?0*(?:\\d{0,4}|(?=[\\d.]{1,7}0*$)\\d{0,4}\\.\\d{0,2}0*$)",
+            "title": "Monthly Cap Usd",
+            "type": "string"
+          },
+          "percent_used": {
+            "title": "Percent Used",
+            "type": "integer"
+          },
+          "retention_days": {
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Retention Days",
+            "type": "integer"
+          },
+          "vapi_connected": {
+            "title": "Vapi Connected",
+            "type": "boolean"
+          },
+          "webhook_url": {
+            "title": "Webhook Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "enabled",
+          "greeting",
+          "consent_notice",
+          "max_call_seconds",
+          "monthly_cap_usd",
+          "retention_days",
+          "configured",
+          "vapi_connected",
+          "month_spend_usd",
+          "percent_used",
+          "webhook_url"
+        ],
+        "title": "VoiceSettingsOut",
         "type": "object"
       },
       "WebhookResult": {
@@ -11903,6 +12410,258 @@
         ]
       }
     },
+    "/api/v1/voice/assistant-config": {
+      "get": {
+        "description": "The assistant to create in VAPI: consent notice first, interruption, a call-length limit, and the tools this server answers.",
+        "operationId": "assistant_config_api_v1_voice_assistant_config_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssistantConfig"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Assistant Config",
+        "tags": [
+          "voice"
+        ]
+      }
+    },
+    "/api/v1/voice/calls": {
+      "get": {
+        "operationId": "list_calls_api_v1_voice_calls_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "ringing",
+                    "in_progress",
+                    "completed",
+                    "escalated",
+                    "failed"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "since",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date-time",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Since"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 60,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_VoiceCallOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Calls",
+        "tags": [
+          "voice"
+        ]
+      }
+    },
+    "/api/v1/voice/calls/{call_id}": {
+      "get": {
+        "operationId": "get_call_api_v1_voice_calls__call_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "call_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Call Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoiceCallDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Call",
+        "tags": [
+          "voice"
+        ]
+      }
+    },
+    "/api/v1/voice/settings": {
+      "get": {
+        "operationId": "get_settings_api_v1_voice_settings_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoiceSettingsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Get Settings",
+        "tags": [
+          "voice"
+        ]
+      },
+      "put": {
+        "operationId": "put_settings_api_v1_voice_settings_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VoiceSettingsIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VoiceSettingsOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Put Settings",
+        "tags": [
+          "voice"
+        ]
+      }
+    },
     "/api/v1/webhooks/twilio": {
       "post": {
         "operationId": "twilio_webhook_api_v1_webhooks_twilio_post",
@@ -11919,6 +12678,30 @@
           }
         },
         "summary": "Twilio Webhook",
+        "tags": [
+          "webhooks"
+        ]
+      }
+    },
+    "/api/v1/webhooks/vapi": {
+      "post": {
+        "description": "VAPI server messages for a shop's voice assistant. Public by design; trusted only after the shop's bearer token checks out.",
+        "operationId": "vapi_webhook_api_v1_webhooks_vapi_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Vapi Webhook Api V1 Webhooks Vapi Post",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Vapi Webhook",
         "tags": [
           "webhooks"
         ]

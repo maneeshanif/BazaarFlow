@@ -26,6 +26,8 @@ TWILIO_TOKEN = "twilio-test-auth-token-0123456789"
 PAGE_ID = "1234567890"
 PAGE_TOKEN = "EAAB-test-page-access-token-for-shop"
 WEBHOOK = "/api/v1/webhooks/twilio"
+VAPI_ASSISTANT = "asst-0123456789abcdef"
+VAPI_SECRET = "vapi-bearer-token-for-tests-0001"
 
 
 class FakeProviders:
@@ -54,6 +56,8 @@ class FakeProviders:
             return "fb.page"
         if host == "api.pexels.com":
             return "pexels.search"
+        if host == "api.vapi.ai":
+            return "vapi.assistant"
         return "unknown"
 
     def _default(self, key: str) -> httpx.Response:
@@ -71,6 +75,8 @@ class FakeProviders:
             return httpx.Response(200, json=fixture_json("fb_comments.json"))
         if key == "fb.reply":
             return httpx.Response(200, json={"id": "2222222222_9999999999"})
+        if key == "vapi.assistant":
+            return httpx.Response(200, json={"id": VAPI_ASSISTANT, "name": "Shop phone assistant"})
         if key == "pexels.search":
             return httpx.Response(200, json=fixture_json("pexels_search.json"))
         return httpx.Response(404)
@@ -138,3 +144,12 @@ async def post_webhook(client: AsyncClient, form: dict[str, str], token: str = T
 
 def sid_of(form: dict[str, str]) -> str:
     return re.sub(r"\W", "", form["SmsMessageSid"])
+
+
+async def connect_vapi(client: AsyncClient, owner: dict[str, Any], assistant: str = VAPI_ASSISTANT, secret: str = VAPI_SECRET) -> dict[str, Any]:
+    res = await client.put(
+        "/api/v1/integrations/vapi", json={"credentials": {"assistant_id": assistant, "webhook_secret": secret}}, headers=bearer(owner)
+    )
+    assert res.status_code == 200, res.text
+    body: dict[str, Any] = res.json()
+    return body

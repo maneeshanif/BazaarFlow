@@ -1,0 +1,64 @@
+{
+  "description": "Recorded VAPI call sequences for the voice agent (PRD W-007, tasks 33, 66-69). Shape follows docs.vapi.ai server messages. The shop must have a product named 'Classic Shirt' and a customer 'Sara Khan' with phone +923001234567.",
+  "cases": [
+    {
+      "id": "price_and_stock_lookup",
+      "caller": "+923009990001",
+      "messages": [
+        {"type": "status-update", "status": "in-progress"},
+        {"type": "tool-calls", "tools": [{"id": "t1", "name": "lookup_product", "arguments": {"query": "shirt"}}]},
+        {"type": "end-of-call-report", "endedReason": "customer-ended-call", "cost": 0.04, "durationSeconds": 35, "turnLatencies": [820, 910]}
+      ],
+      "expect": {"status": "completed", "tool_results_contain": ["Classic Shirt", "Rs 2,500"], "ticket": false, "escalated": false, "turns": 2}
+    },
+    {
+      "id": "message_is_read_back_corrected_then_confirmed",
+      "caller": "+923009990002",
+      "messages": [
+        {"type": "status-update", "status": "in-progress"},
+        {"type": "tool-calls", "tools": [{"id": "t1", "name": "create_support_ticket", "arguments": {"contact": "Imran 03001112233", "issue_summary": "Wants a call about a bulk order", "confirmed": false}}]},
+        {"type": "tool-calls", "tools": [{"id": "t2", "name": "create_support_ticket", "arguments": {"contact": "Imran 03001112244", "issue_summary": "Wants a call about a bulk order", "confirmed": false}}]},
+        {"type": "tool-calls", "tools": [{"id": "t3", "name": "create_support_ticket", "arguments": {"contact": "Imran 03001112244", "issue_summary": "Wants a call about a bulk order", "confirmed": true}}]},
+        {"type": "end-of-call-report", "endedReason": "customer-ended-call", "cost": 0.05, "durationSeconds": 80}
+      ],
+      "expect": {"status": "completed", "tool_results_contain": ["0 3 0 0 1 1 1 2 2 3 3", "0 3 0 0 1 1 1 2 2 4 4", "reference"], "ticket": true, "tickets": 1, "ticket_contact": "Imran 03001112244"}
+    },
+    {
+      "id": "asks_for_a_person",
+      "caller": "+923009990003",
+      "messages": [
+        {"type": "status-update", "status": "in-progress"},
+        {"type": "tool-calls", "tools": [{"id": "t1", "name": "transfer_to_human", "arguments": {"reason": "Complaint about a late delivery"}}]},
+        {"type": "end-of-call-report", "endedReason": "assistant-forwarded-call", "cost": 0.02, "durationSeconds": 40}
+      ],
+      "expect": {"status": "escalated", "escalated": true, "handoff_note_contains": "late delivery", "ticket": true}
+    },
+    {
+      "id": "unknown_order_number",
+      "caller": "+923009990004",
+      "messages": [
+        {"type": "tool-calls", "tools": [{"id": "t1", "name": "order_status", "arguments": {}}]},
+        {"type": "end-of-call-report", "endedReason": "customer-ended-call", "cost": 0.01, "durationSeconds": 12}
+      ],
+      "expect": {"status": "completed", "tool_results_contain": ["could not find an order"], "ticket": false}
+    },
+    {
+      "id": "a_tool_the_agent_does_not_have",
+      "caller": "+923009990005",
+      "messages": [
+        {"type": "tool-calls", "tools": [{"id": "t1", "name": "refund_order", "arguments": {"order": "x"}}]},
+        {"type": "end-of-call-report", "endedReason": "customer-ended-call", "cost": 0.01, "durationSeconds": 9}
+      ],
+      "expect": {"status": "completed", "tool_errors_contain": ["cannot do that"], "ticket": false}
+    },
+    {
+      "id": "transcript_is_redacted",
+      "caller": "+923009990006",
+      "messages": [
+        {"type": "status-update", "status": "in-progress"},
+        {"type": "end-of-call-report", "endedReason": "customer-ended-call", "cost": 0.03, "durationSeconds": 50, "transcript": "AI: Hello. User: Hi I am Sara Khan, call me on 03001234567 or sara@example.com. User: my other number is +92 300 9990006.", "summary": "Sara Khan asked about a shirt."}
+      ],
+      "expect": {"status": "completed", "transcript_not_contains": ["Sara", "Khan", "03001234567", "sara@example.com", "9990006"], "summary_not_contains": ["Sara", "Khan"]}
+    }
+  ]
+}

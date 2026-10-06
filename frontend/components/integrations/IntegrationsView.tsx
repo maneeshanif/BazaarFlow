@@ -16,7 +16,7 @@ import { apiDelete, apiGet, apiPut } from "@/lib/api/client";
 import type { Integration } from "@/lib/api/types";
 import { formatDateTime } from "@/lib/format";
 import { fieldErrorsOf } from "@/lib/validation/common";
-import { facebookSchema, twilioSchema } from "@/lib/validation/channels";
+import { facebookSchema, twilioSchema, vapiSchema } from "@/lib/validation/channels";
 
 type FieldDef = { name: string; label: string; hint: string; secret?: boolean; mono?: boolean };
 
@@ -24,6 +24,10 @@ const FIELDS: Record<string, FieldDef[]> = {
   whatsapp_twilio: [
     { name: "account_sid", label: "Account SID", hint: "From your Twilio console. It starts with AC.", mono: true },
     { name: "auth_token", label: "Auth Token", hint: "From your Twilio console. It is saved encrypted and never shown again.", secret: true, mono: true },
+  ],
+  vapi: [
+    { name: "assistant_id", label: "Assistant id", hint: "From your VAPI dashboard.", mono: true },
+    { name: "webhook_secret", label: "Webhook token", hint: "The Bearer token you set for the server URL in VAPI. Saved encrypted and never shown again.", secret: true, mono: true },
   ],
   facebook: [
     { name: "page_id", label: "Page id", hint: "The number in your page's About section.", mono: true },
@@ -33,7 +37,7 @@ const FIELDS: Record<string, FieldDef[]> = {
 
 function ConnectForm({ integration, onDone }: { integration: Integration; onDone: () => void }) {
   const fields = FIELDS[integration.provider] ?? [];
-  const schema = integration.provider === "whatsapp_twilio" ? twilioSchema : facebookSchema;
+  const schema = integration.provider === "whatsapp_twilio" ? twilioSchema : integration.provider === "vapi" ? vapiSchema : facebookSchema;
   const [values, setValues] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const save = useSubmit((credentials: Record<string, string>) => apiPut<Integration>(`/integrations/${integration.provider}`, { credentials }));
@@ -139,6 +143,11 @@ function Card({ integration, onChanged }: { integration: Integration; onChanged:
         </dl>
       ) : null}
 
+      {integration.provider === "vapi" ? (
+        <p className="mt-3 text-ui-sm text-fg-muted">
+          In VAPI the server URL is <span className="break-all font-mono text-fg">your API address + /api/v1/webhooks/vapi</span>. The Voice page shows the exact assistant to create.
+        </p>
+      ) : null}
       {integration.webhook_url ? (
         <p className="mt-3 text-ui-sm text-fg-muted">
           In Twilio, set &quot;When a message comes in&quot; (POST) to <span className="break-all font-mono text-fg">{integration.webhook_url}</span>

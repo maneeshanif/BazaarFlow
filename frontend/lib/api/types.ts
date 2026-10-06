@@ -61,3 +61,7 @@ export type SystemLogDetail = Schemas["LogDetail"];
 export type MarketingInsights = Schemas["MarketingInsights"];
 export type Automation = Schemas["AutomationOut"];
 export type AutomationRunRow = Schemas["RunOut"];
+export type VoiceSettings = Schemas["VoiceSettingsOut"];
+export type VoiceCall = Schemas["VoiceCallOut"];
+export type VoiceCallDetail = Schemas["VoiceCallDetail"];
+export type AssistantConfig = Schemas["AssistantConfig"];

@@ -25,7 +25,9 @@ from app.core.tenancy import Principal, system_session, tenant_session
 from app.integrations.http import ProviderError
 from app.models.automation import Automation, AutomationRun
 from app.models.tenant import TenantIntegration
+from app.models.voice import VoiceSettings
 from app.schemas.automations import AutomationOut, LastRun, RunOut
+from app.services import voice_service
 from app.services.automation_recipes import RECIPES, Recipe, RecipeError
 
 logger = logging.getLogger("bazaarflow.automations")
@@ -239,6 +241,14 @@ async def tick(now: datetime | None = None) -> int:
     moment = now or datetime.now(timezone.utc)
     async with system_session() as scan:
         tenants = sorted((await scan.execute(select(Automation.tenant_id).where(Automation.enabled.is_(True)).distinct())).scalars(), key=str)
+    async with system_session() as scan:
+        voice_shops = sorted((await scan.execute(select(VoiceSettings.tenant_id))).scalars(), key=str)
+    for tenant_id in voice_shops:  # transcripts are kept only as long as each shop's retention period
+        try:
+            async with tenant_session(tenant_id) as db:
+                await voice_service.purge_expired(db, tenant_id, moment)
+        except Exception:
+            logger.exception("transcript purge failed for a shop", extra={"tenant_id": str(tenant_id)})
     recorded = 0
     for tenant_id in tenants:
         try:

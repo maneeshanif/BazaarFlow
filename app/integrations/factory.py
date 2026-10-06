@@ -16,6 +16,7 @@ from app.integrations.facebook_graph import FacebookGraphAdapter
 from app.integrations.http import Sleep
 from app.integrations.pexels import PexelsClient
 from app.integrations.twilio_whatsapp import SANDBOX_NUMBER, TwilioWhatsAppAdapter
+from app.integrations.vapi import VapiAdapter
 
 
 @dataclass
@@ -64,6 +65,18 @@ def build_facebook(credentials: dict[str, Any]) -> FacebookGraphAdapter:
 def build_pexels() -> PexelsClient:
     return PexelsClient(
         settings.PEXELS_API_KEY,
+        transport=providers.transport,
+        sleep=providers.sleep,
+        retries=settings.PROVIDER_MAX_RETRIES,
+        timeout=settings.PROVIDER_TIMEOUT_SECONDS,
+    )
+
+
+def build_vapi(credentials: dict[str, Any]) -> VapiAdapter:
+    return VapiAdapter(
+        str(credentials["assistant_id"]),
+        str(credentials["webhook_secret"]),
+        str(credentials.get("api_key") or ""),
         transport=providers.transport,
         sleep=providers.sleep,
         retries=settings.PROVIDER_MAX_RETRIES,
