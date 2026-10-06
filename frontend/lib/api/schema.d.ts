@@ -719,6 +719,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/marketing/insights": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Insights
+         * @description F-017: how the shop posts did.
+         */
+        get: operations["insights_api_v1_marketing_insights_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/marketing/posts/": {
         parameters: {
             query?: never;
@@ -2138,6 +2158,16 @@ export interface components {
             /** Csv */
             csv: string;
         };
+        /** InsightDay */
+        InsightDay: {
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Published */
+            published: number;
+        };
         /** IntegrationOut */
         IntegrationOut: {
             /** Available */
@@ -2273,6 +2303,41 @@ export interface components {
             password: string;
             /** Tenant Id */
             tenant_id?: string | null;
+        };
+        /** MarketingInsights */
+        MarketingInsights: {
+            /**
+             * Engagement
+             * @enum {string}
+             */
+            engagement: "available" | "unavailable" | "not_connected";
+            /** Engagement Note */
+            engagement_note: string | null;
+            /** Failed */
+            failed: number;
+            /** From Schedule */
+            from_schedule: number;
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Is Empty */
+            is_empty: boolean;
+            published: components["schemas"]["CountFigure"];
+            /** Queued */
+            queued: number;
+            /**
+             * Range
+             * @enum {string}
+             */
+            range: "today" | "7d" | "30d";
+            /** Success Percent */
+            success_percent: number | null;
+            /** Top Posts */
+            top_posts: components["schemas"]["TopPost"][];
+            /** Trend */
+            trend: components["schemas"]["InsightDay"][];
         };
         /** MeOut */
         MeOut: {
@@ -3506,6 +3571,23 @@ export interface components {
              * @default bearer
              */
             token_type: string;
+        };
+        /** TopPost */
+        TopPost: {
+            /** Comments */
+            comments: number | null;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /**
+             * Published At
+             * Format: date-time
+             */
+            published_at: string;
+            /** Title */
+            title: string;
         };
         /** TrendDay */
         TrendDay: {
@@ -5240,6 +5322,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ActivityOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    insights_api_v1_marketing_insights_get: {
+        parameters: {
+            query?: {
+                range?: "today" | "7d" | "30d";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MarketingInsights"];
                 };
             };
             /** @description Validation Error */

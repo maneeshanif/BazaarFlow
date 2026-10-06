@@ -11,8 +11,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.auth import MANAGER_UP, get_tenant_db, require_role
 from app.core.pagination import DEFAULT_LIMIT, MAX_LIMIT, Page, decode_cursor, next_cursor
 from app.core.tenancy import Principal
+from app.schemas.dashboard import DashboardRange
+from app.schemas.marketing_insights import MarketingInsights
 from app.schemas.marketing_schedule import ActivityOut, ActivityStatus, ScheduleIn, ScheduleOut, ScheduleRequest
-from app.services import marketing_schedule_service
+from app.services import marketing_insights_service, marketing_schedule_service
 
 router = APIRouter()
 
@@ -56,3 +58,9 @@ async def retry_post(post_id: UUID, principal: Manager, db: TenantDb) -> Activit
 @router.post("/activity/{post_id}/cancel", response_model=ActivityOut)
 async def cancel_post(post_id: UUID, principal: Manager, db: TenantDb) -> ActivityOut:
     return await marketing_schedule_service.cancel_post(db, principal, post_id)
+
+
+@router.get("/insights", response_model=MarketingInsights)
+async def insights(principal: Manager, db: TenantDb, range_: Annotated[DashboardRange, Query(alias="range")] = "30d") -> MarketingInsights:
+    """F-017: how the shop posts did."""
+    return await marketing_insights_service.insights(db, principal, range_)

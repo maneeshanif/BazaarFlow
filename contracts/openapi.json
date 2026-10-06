@@ -1776,6 +1776,25 @@
         "title": "ImportRequest",
         "type": "object"
       },
+      "InsightDay": {
+        "properties": {
+          "day": {
+            "format": "date",
+            "title": "Day",
+            "type": "string"
+          },
+          "published": {
+            "title": "Published",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "day",
+          "published"
+        ],
+        "title": "InsightDay",
+        "type": "object"
+      },
       "IntegrationOut": {
         "properties": {
           "available": {
@@ -2214,6 +2233,104 @@
           "password"
         ],
         "title": "LoginRequest",
+        "type": "object"
+      },
+      "MarketingInsights": {
+        "properties": {
+          "engagement": {
+            "enum": [
+              "available",
+              "unavailable",
+              "not_connected"
+            ],
+            "title": "Engagement",
+            "type": "string"
+          },
+          "engagement_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Engagement Note"
+          },
+          "failed": {
+            "title": "Failed",
+            "type": "integer"
+          },
+          "from_schedule": {
+            "title": "From Schedule",
+            "type": "integer"
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "is_empty": {
+            "title": "Is Empty",
+            "type": "boolean"
+          },
+          "published": {
+            "$ref": "#/components/schemas/CountFigure"
+          },
+          "queued": {
+            "title": "Queued",
+            "type": "integer"
+          },
+          "range": {
+            "enum": [
+              "today",
+              "7d",
+              "30d"
+            ],
+            "title": "Range",
+            "type": "string"
+          },
+          "success_percent": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Success Percent"
+          },
+          "top_posts": {
+            "items": {
+              "$ref": "#/components/schemas/TopPost"
+            },
+            "title": "Top Posts",
+            "type": "array"
+          },
+          "trend": {
+            "items": {
+              "$ref": "#/components/schemas/InsightDay"
+            },
+            "title": "Trend",
+            "type": "array"
+          }
+        },
+        "required": [
+          "range",
+          "published",
+          "failed",
+          "queued",
+          "success_percent",
+          "from_schedule",
+          "trend",
+          "top_posts",
+          "engagement",
+          "engagement_note",
+          "is_empty",
+          "generated_at"
+        ],
+        "title": "MarketingInsights",
         "type": "object"
       },
       "MeOut": {
@@ -5572,6 +5689,43 @@
           "role"
         ],
         "title": "TokenOut",
+        "type": "object"
+      },
+      "TopPost": {
+        "properties": {
+          "comments": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comments"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "published_at": {
+            "format": "date-time",
+            "title": "Published At",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "published_at",
+          "comments"
+        ],
+        "title": "TopPost",
         "type": "object"
       },
       "TrendDay": {
@@ -8939,6 +9093,60 @@
           }
         ],
         "summary": "Retry Post",
+        "tags": [
+          "marketing"
+        ]
+      }
+    },
+    "/api/v1/marketing/insights": {
+      "get": {
+        "description": "F-017: how the shop posts did.",
+        "operationId": "insights_api_v1_marketing_insights_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "range",
+            "required": false,
+            "schema": {
+              "default": "30d",
+              "enum": [
+                "today",
+                "7d",
+                "30d"
+              ],
+              "title": "Range",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarketingInsights"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Insights",
         "tags": [
           "marketing"
         ]

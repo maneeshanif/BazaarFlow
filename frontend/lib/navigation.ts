@@ -70,7 +70,7 @@ export const NAV: NavGroup[] = [
       { label: "Studio", icon: "megaphone", roles: MANAGER_UP, href: "/marketing" },
       { label: "Schedule", icon: "calendar", roles: MANAGER_UP, href: "/marketing/schedule" },
       { label: "Activity", icon: "activity", roles: MANAGER_UP, href: "/marketing/activity" },
-      { label: "Insights", icon: "bar-chart", roles: MANAGER_UP, href: "/dashboard/marketing/insights" },
+      { label: "Insights", icon: "bar-chart", roles: MANAGER_UP, href: "/marketing/insights" },
     ],
   },
   {

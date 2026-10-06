@@ -58,3 +58,4 @@ export type ImportReport = Schemas["ImportReport"];
 export type TestMessageResult = Schemas["TestMessageResult"];
 export type SystemLog = Schemas["LogRow"];
 export type SystemLogDetail = Schemas["LogDetail"];
+export type MarketingInsights = Schemas["MarketingInsights"];
