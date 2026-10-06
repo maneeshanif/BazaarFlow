@@ -52,3 +52,16 @@ def test_every_platform_route_requires_an_operator_and_closes_its_session_before
         assert any(getattr(d, "call", None) is require_platform_admin for d in deps), path
         db = [d for d in deps if getattr(d, "call", None) is get_platform_db]
         assert db and all(d.scope == "function" for d in db), f"{path} must use get_platform_db(scope='function')"  # type: ignore[attr-defined]
+
+
+SYSTEM_ALLOWED = {"app/core/tenancy.py", "app/services/marketing_publisher.py"}
+
+
+def test_only_the_scheduler_opens_a_system_session() -> None:
+    """``system_session`` opens a read-only look at which shops have posts or schedules; nothing else may use it."""
+    users = {
+        path.relative_to(APP.parent).as_posix()
+        for path in APP.rglob("*.py")
+        if "system_session" in path.read_text(encoding="utf-8")
+    }
+    assert users <= SYSTEM_ALLOWED, f"system_session used outside the scheduler: {sorted(users - SYSTEM_ALLOWED)}"

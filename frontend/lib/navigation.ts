@@ -36,7 +36,7 @@ export const NAV: NavGroup[] = [
   {
     label: "Inbox",
     items: [
-      { label: "Conversations", icon: "message-square", roles: ALL, soon: true },
+      { label: "Conversations", icon: "message-square", roles: ALL, href: "/inbox" },
       { label: "Support calls", icon: "phone", roles: MANAGER_UP, href: "/dashboard/support" },
     ],
   },
@@ -68,7 +68,8 @@ export const NAV: NavGroup[] = [
     label: "Marketing",
     items: [
       { label: "Studio", icon: "megaphone", roles: MANAGER_UP, href: "/marketing" },
-      { label: "Schedule", icon: "calendar", roles: MANAGER_UP, href: "/dashboard/marketing/schedule" },
+      { label: "Schedule", icon: "calendar", roles: MANAGER_UP, href: "/marketing/schedule" },
+      { label: "Activity", icon: "activity", roles: MANAGER_UP, href: "/marketing/activity" },
       { label: "Insights", icon: "bar-chart", roles: MANAGER_UP, href: "/dashboard/marketing/insights" },
     ],
   },
@@ -85,7 +86,8 @@ export const NAV: NavGroup[] = [
     items: [
       { label: "Shop profile", icon: "store", roles: OWNER, href: "/settings" },
       { label: "Team", icon: "user-cog", roles: OWNER, href: "/team" },
-      { label: "Integrations", icon: "plug", roles: OWNER, href: "/dashboard/marketing/credentials" },
+      { label: "Integrations", icon: "plug", roles: OWNER, href: "/integrations" },
+      { label: "Setup guide", icon: "check-circle", roles: OWNER, href: "/onboarding" },
     ],
   },
 ];

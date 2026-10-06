@@ -6,10 +6,10 @@ Update this file after every completed task. Anyone reading it should immediatel
 
 ## Current Status
 
-**Phase:** Phase 2, batch 2D done (shop data, finance, platform admin); batch 2E (channels) next. Phase 1 code closed 2026-10-04
-**Last completed:** 82
+**Phase:** Phase 2 code complete (batches 2D and 2E); full slow gate for 2D/2E still to run. Phase 1 code closed 2026-10-04
+**Last completed:** 85
 **In progress:** Phase 2 on branch `feat/phase-1-mvp` (owner is away; see docs/superpowers/specs/2026-10-06-phase-2-design.md)
-**Next:** owner actions: 02 (confirm CI green after this push), 12 (copy .env.example), 21 (Vercel secrets), 26 (Twilio sandbox)
+**Next:** owner decisions on the "Needs a human" list below (Phase 3 and 4 have not been started); owner actions: 02 (confirm CI green after this push), 12 (copy .env.example), 21 (Vercel secrets), 26 (Twilio sandbox)
 **Blockers:** the owner has not yet said "let's build it"; 26 needs vendor sandbox accounts; DEMO_USER_PASSWORD must be set in `.env` (owner)
 
 ### Phase 0 status
@@ -93,28 +93,28 @@ Update this file after every completed task. Anyone reading it should immediatel
 
 ## Phase 2 — Channels and onboarding: Twilio sandbox WhatsApp, unified inbox with AI/Human toggle, onboarding wizard, per-tenant encrypted integrations, Facebook connect + scheduler on DB, finance overview, vendors, daily briefing, platform admin
 
-- [ ] 70 Onboarding wizard
-- [ ] 71 Unified inbox
+- [x] 70 Onboarding wizard
+- [x] 71 Unified inbox
 - [x] 72 Stock movements
 - [x] 73 Vendors and payables
 - [x] 74 Finance overview and ledger
-- [ ] 75 Marketing schedule
-- [ ] 76 Marketing activity
-- [ ] 77 Integrations (WhatsApp, Facebook, VAPI)
+- [x] 75 Marketing schedule
+- [x] 76 Marketing activity
+- [x] 77 Integrations (WhatsApp, Facebook, VAPI)
 - [x] 78 Shop profile and settings
 - [x] 79 Platform admin: tenants
 - [x] 80 Finance dashboard
 - [x] 81 Agent command center dashboard
 - [x] 82 Platform overview dashboard
-- [ ] 83 Integration: Twilio WhatsApp (sandbox, later production sender)
-- [ ] 84 Integration: Facebook/Instagram Graph API
-- [ ] 85 Integration: Pexels images
+- [x] 83 Integration: Twilio WhatsApp (sandbox, later production sender)
+- [x] 84 Integration: Facebook/Instagram Graph API
+- [x] 85 Integration: Pexels images
 
 Deferred from Phase 1 (integration pack):
-- [ ] 59 Authentication to the vendor (OAuth or key) with token refresh [in…
-- [ ] 60 One end-to-end integration flow against the sandbox [integrations…
-- [ ] 61 Webhook endpoint with signature verification and idempotency [inte…
-- [ ] 62 Failure handling and alerting [integrations pack]
+- [x] 59 Authentication to the vendor (OAuth or key) with token refresh [in…
+- [x] 60 One end-to-end integration flow against the sandbox [integrations…
+- [x] 61 Webhook endpoint with signature verification and idempotency [inte…
+- [x] 62 Failure handling and alerting [integrations pack]
 
 ## Phase 3 — Voice, automation recipes, marketing insights, Meta Embedded Signup, Urdu/RTL, reorder workflow
 
@@ -148,5 +148,12 @@ Older items (ADR sign-off, `.env.example`, key rotation, `next` bump, pushing th
 | 02 | Check the GitHub Actions run for the pushed commit and confirm it is green (no `gh` CLI here) |
 | 21 | Vercel secrets, needed after batch 1C |
 | 26 | Twilio sandbox account (paused) |
+| 2D/2E gate | `verify.sh --slow --all` for batches 2D and 2E has **not** completed: the 2D run was stopped by the system for low memory at about 85% of the Postgres tests with no failure; 2E was checked per file instead (all new tests pass, ruff and mypy clean, 379 unit/architecture tests, 297 UI tests). Run `bash scripts/verify.sh --slow --all` once on a machine with free memory before merging |
+| Live providers | No live Twilio, Facebook or Pexels call has been made; adapters are proven against recorded responses in `tests/fixtures/providers/`. Needs task 26 plus `INTEGRATIONS_ENCRYPTION_KEY`, `PUBLIC_BASE_URL`, `PEXELS_API_KEY` (see `docs/operations/integrations.md`) |
+| Assumptions to confirm | PRD §5.4.1 marks each judgment call "(assumed)": manager view hides margin and payables; approval rate and time-saved formulas; error rate = failed agent runs; Twilio Account SID as the webhook routing key; AI hands over for anything beyond price and stock |
+| Impersonation | Platform-admin impersonation (PRD §14) is not built; it needs your rules for consent and expiry |
+| Customer order drafts | W-003 step 3 (an order drafted by the customer agent) is not built: the AI answers prices and stock only and hands over for orders |
+| Legacy removal | The JSON-backed legacy routes, pages and Facebook manager (`/api/vendors`, `/api/marketing`, the Meta webhook, `app/(marketing)/dashboard/*`) are still mounted in development; the phase brief says replace-and-delete. Say when to remove them (it deletes about 20 test files with them) |
+| Not started | Phase 2 leftovers: daily briefing, reorder workflow, Facebook comment replies (W-004 step 4). Phases 3 and 4 (voice, recipes, insights, Embedded Signup, billing) |
 
 Open questions Q-001 to Q-006 are in PRD §0.4; resolve each before the task that depends on it.
