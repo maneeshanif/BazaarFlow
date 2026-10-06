@@ -1,6 +1,96 @@
 {
   "components": {
     "schemas": {
+      "AgentApprovalRate": {
+        "properties": {
+          "approved": {
+            "title": "Approved",
+            "type": "integer"
+          },
+          "rate_percent": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rate Percent"
+          },
+          "rejected": {
+            "title": "Rejected",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "approved",
+          "rejected",
+          "rate_percent"
+        ],
+        "title": "AgentApprovalRate",
+        "type": "object"
+      },
+      "AgentDashboard": {
+        "description": "PRD D-003: the agent command center for owners and managers.",
+        "properties": {
+          "approval": {
+            "$ref": "#/components/schemas/AgentApprovalRate"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "failed_runs": {
+            "$ref": "#/components/schemas/CountFigure"
+          },
+          "generated_at": {
+            "format": "date-time",
+            "title": "Generated At",
+            "type": "string"
+          },
+          "is_empty": {
+            "title": "Is Empty",
+            "type": "boolean"
+          },
+          "range": {
+            "enum": [
+              "today",
+              "7d",
+              "30d"
+            ],
+            "title": "Range",
+            "type": "string"
+          },
+          "runs": {
+            "$ref": "#/components/schemas/CountFigure"
+          },
+          "runs_today": {
+            "title": "Runs Today",
+            "type": "integer"
+          },
+          "spend": {
+            "$ref": "#/components/schemas/AgentSpend"
+          },
+          "time_saved": {
+            "$ref": "#/components/schemas/AgentTimeSaved"
+          }
+        },
+        "required": [
+          "range",
+          "runs_today",
+          "runs",
+          "failed_runs",
+          "approval",
+          "spend",
+          "time_saved",
+          "enabled",
+          "is_empty",
+          "generated_at"
+        ],
+        "title": "AgentDashboard",
+        "type": "object"
+      },
       "AgentRunDetail": {
         "properties": {
           "action_ids": {
@@ -220,6 +310,30 @@
         "title": "AgentRunOut",
         "type": "object"
       },
+      "AgentSpend": {
+        "properties": {
+          "month_cap_usd": {
+            "title": "Month Cap Usd",
+            "type": "string"
+          },
+          "month_spend_usd": {
+            "title": "Month Spend Usd",
+            "type": "string"
+          },
+          "percent_used": {
+            "minimum": 0.0,
+            "title": "Percent Used",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "month_spend_usd",
+          "month_cap_usd",
+          "percent_used"
+        ],
+        "title": "AgentSpend",
+        "type": "object"
+      },
       "AgentStatus": {
         "properties": {
           "enabled": {
@@ -265,6 +379,34 @@
           "enabled"
         ],
         "title": "AgentSwitch",
+        "type": "object"
+      },
+      "AgentTimeSaved": {
+        "properties": {
+          "assumption": {
+            "title": "Assumption",
+            "type": "string"
+          },
+          "executed_actions": {
+            "title": "Executed Actions",
+            "type": "integer"
+          },
+          "minutes": {
+            "title": "Minutes",
+            "type": "integer"
+          },
+          "ok_runs": {
+            "title": "Ok Runs",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "minutes",
+          "ok_runs",
+          "executed_actions",
+          "assumption"
+        ],
+        "title": "AgentTimeSaved",
         "type": "object"
       },
       "AgingBucket": {
@@ -4384,6 +4526,60 @@
           }
         ],
         "summary": "List Runs",
+        "tags": [
+          "agent-runs"
+        ]
+      }
+    },
+    "/api/v1/agent-runs/dashboard": {
+      "get": {
+        "description": "D-003: the agent command center. Declared before ``/{run_id}`` so ``dashboard`` is not read as an id.",
+        "operationId": "agent_dashboard_api_v1_agent_runs_dashboard_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "range",
+            "required": false,
+            "schema": {
+              "default": "7d",
+              "enum": [
+                "today",
+                "7d",
+                "30d"
+              ],
+              "title": "Range",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentDashboard"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Agent Dashboard",
         "tags": [
           "agent-runs"
         ]

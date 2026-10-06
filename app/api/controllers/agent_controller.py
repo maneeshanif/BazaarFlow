@@ -19,6 +19,7 @@ from app.core.pagination import DEFAULT_LIMIT, MAX_LIMIT, Page, decode_cursor, n
 from app.core.tenancy import Principal
 from app.models.agent import AgentAction
 from app.schemas.agent import (
+    AgentDashboard,
     AgentRunDetail,
     AgentRunOut,
     AgentStatus,
@@ -30,7 +31,8 @@ from app.schemas.agent import (
     ChatRequest,
     ChatResponse,
 )
-from app.services import agent_run_service, approval_service
+from app.schemas.dashboard import DashboardRange
+from app.services import agent_dashboard_service, agent_run_service, approval_service
 
 chat_router = APIRouter()
 approvals_router = APIRouter()
@@ -111,6 +113,14 @@ async def list_runs(
 @runs_router.get("/status", response_model=AgentStatus)
 async def agent_status(principal: Manager, db: TenantDb) -> AgentStatus:
     return await agent_run_service.status(db, principal)
+
+
+@runs_router.get("/dashboard", response_model=AgentDashboard)
+async def agent_dashboard(
+    principal: Manager, db: TenantDb, range_: Annotated[DashboardRange, Query(alias="range")] = "7d"
+) -> AgentDashboard:
+    """D-003: the agent command center. Declared before ``/{run_id}`` so ``dashboard`` is not read as an id."""
+    return await agent_dashboard_service.dashboard(db, principal, range_)
 
 
 @runs_router.put("/switch", response_model=AgentStatus)

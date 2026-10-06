@@ -44,3 +44,4 @@ export type PayableRow = Schemas["PayableRow"];
 export type ShopSettings = Schemas["ShopSettingsOut"];
 export type FinanceOverview = Schemas["FinanceOverview"];
 export type CashBookEntry = Schemas["CashBookEntry"];
+export type AgentDashboard = Schemas["AgentDashboard"];

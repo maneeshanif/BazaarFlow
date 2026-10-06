@@ -21,6 +21,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/agent-runs/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Agent Dashboard
+         * @description D-003: the agent command center. Declared before ``/{run_id}`` so ``dashboard`` is not read as an id.
+         */
+        get: operations["agent_dashboard_api_v1_agent_runs_dashboard_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/agent-runs/status": {
         parameters: {
             query?: never;
@@ -1026,6 +1046,42 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AgentApprovalRate */
+        AgentApprovalRate: {
+            /** Approved */
+            approved: number;
+            /** Rate Percent */
+            rate_percent: number | null;
+            /** Rejected */
+            rejected: number;
+        };
+        /**
+         * AgentDashboard
+         * @description PRD D-003: the agent command center for owners and managers.
+         */
+        AgentDashboard: {
+            approval: components["schemas"]["AgentApprovalRate"];
+            /** Enabled */
+            enabled: boolean;
+            failed_runs: components["schemas"]["CountFigure"];
+            /**
+             * Generated At
+             * Format: date-time
+             */
+            generated_at: string;
+            /** Is Empty */
+            is_empty: boolean;
+            /**
+             * Range
+             * @enum {string}
+             */
+            range: "today" | "7d" | "30d";
+            runs: components["schemas"]["CountFigure"];
+            /** Runs Today */
+            runs_today: number;
+            spend: components["schemas"]["AgentSpend"];
+            time_saved: components["schemas"]["AgentTimeSaved"];
+        };
         /** AgentRunDetail */
         AgentRunDetail: {
             /** Action Ids */
@@ -1110,6 +1166,15 @@ export interface components {
             /** User Name */
             user_name: string | null;
         };
+        /** AgentSpend */
+        AgentSpend: {
+            /** Month Cap Usd */
+            month_cap_usd: string;
+            /** Month Spend Usd */
+            month_spend_usd: string;
+            /** Percent Used */
+            percent_used: number;
+        };
         /** AgentStatus */
         AgentStatus: {
             /** Enabled */
@@ -1127,6 +1192,17 @@ export interface components {
         AgentSwitch: {
             /** Enabled */
             enabled: boolean;
+        };
+        /** AgentTimeSaved */
+        AgentTimeSaved: {
+            /** Assumption */
+            assumption: string;
+            /** Executed Actions */
+            executed_actions: number;
+            /** Minutes */
+            minutes: number;
+            /** Ok Runs */
+            ok_runs: number;
         };
         /** AgingBucket */
         AgingBucket: {
@@ -2581,6 +2657,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Page_AgentRunOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    agent_dashboard_api_v1_agent_runs_dashboard_get: {
+        parameters: {
+            query?: {
+                range?: "today" | "7d" | "30d";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AgentDashboard"];
                 };
             };
             /** @description Validation Error */

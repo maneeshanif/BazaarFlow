@@ -8,6 +8,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
+from app.schemas.dashboard import CountFigure
+
 ActionStatusName = Literal["pending", "approved", "rejected", "executed", "failed", "expired"]
 RunOutcome = Literal["ok", "failed", "step_limit", "paused", "spend_limit"]
 
@@ -94,3 +96,37 @@ class AgentStatus(BaseModel):
 
 class AgentSwitch(BaseModel):
     enabled: bool
+
+
+class AgentApprovalRate(BaseModel):
+    approved: int  # approved, executed or failed after approval
+    rejected: int
+    rate_percent: int | None  # None when nothing was decided in the period
+
+
+class AgentSpend(BaseModel):
+    month_spend_usd: str
+    month_cap_usd: str
+    percent_used: int = Field(ge=0)
+
+
+class AgentTimeSaved(BaseModel):
+    minutes: int
+    ok_runs: int
+    executed_actions: int
+    assumption: str  # the rule behind the estimate, shown next to the number
+
+
+class AgentDashboard(BaseModel):
+    """PRD D-003: the agent command center for owners and managers."""
+
+    range: Literal["today", "7d", "30d"]
+    runs_today: int
+    runs: CountFigure
+    failed_runs: CountFigure
+    approval: AgentApprovalRate
+    spend: AgentSpend
+    time_saved: AgentTimeSaved
+    enabled: bool
+    is_empty: bool  # the shop has never run an agent
+    generated_at: datetime

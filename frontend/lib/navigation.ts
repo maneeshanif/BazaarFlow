@@ -28,6 +28,7 @@ export const NAV: NavGroup[] = [
     label: "Overview",
     items: [
       { label: "Home", icon: "home", roles: ALL, href: "/dashboard" },
+      { label: "Agent command center", icon: "bot", roles: MANAGER_UP, href: "/agent-center" },
       { label: "Agent activity", icon: "activity", roles: MANAGER_UP, href: "/agent-activity" },
       { label: "Approvals", icon: "check-circle", roles: MANAGER_UP, href: "/approvals" },
     ],
