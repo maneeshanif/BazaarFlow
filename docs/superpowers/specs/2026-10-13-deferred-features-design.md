@@ -60,6 +60,20 @@ field beyond PRD W-003, W-004, W-006, W-008 and §16 (Urdu/RTL).
   tenant cannot read another tenant's comments; an audit row is written.
 - UI: switching to Urdu sets `dir="rtl"`; a missing key falls back to English.
 
+## Built (2026-10-13)
+| Piece | Commit | Where |
+| --- | --- | --- |
+| Recipe retry, fallback, banner | `2c96261` | `automation_service._attempt/execute`, `automation_recipes.deferred_sends` |
+| Draft purchase orders | `9deff72` | migration 16, `purchase_order_service`, `/api/v1/purchase-orders` |
+| Customer order drafts | `de7af61` | `customer_tools.request_order`, executor `customer_order` |
+| Facebook comment replies | `7d4908f` | migration 17, `comment_reply_service`, `/api/v1/marketing/comments` |
+| Urdu/RTL, PO and comment screens | `0424e2e` | `frontend/lib/i18n`, `components/purchasing`, `components/marketing/CommentsView` |
+
+Decisions made while building: a draft PO for a vendor with no phone is stored once as an open draft (W-006 failure
+path); the reply approval mode reuses `marketing_schedules.approval_mode` (a shop with no schedule confirms every reply);
+a customer order posts on credit (udhaar) because nothing is paid yet, and its confirmation uses the new-order recipe's
+idempotency key so it is never sent twice.
+
 ## Needs a human (carried)
 No live Facebook, Twilio or Gemini call has been made; all four features are proven against recorded responses and the
 scripted model only.
