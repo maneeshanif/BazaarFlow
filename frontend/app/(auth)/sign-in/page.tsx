@@ -9,6 +9,7 @@ import { FormField } from "@/components/form/FormField";
 import { useSubmit } from "@/hooks/useSubmit";
 import { useAuth, type LoginResult } from "@/lib/auth/AuthProvider";
 import { safeNextPath } from "@/lib/auth/jwt";
+import { useT } from "@/lib/i18n/LocaleProvider";
 import { signInSchema } from "@/lib/validation/auth";
 import { fieldErrorsOf } from "@/lib/validation/common";
 
@@ -17,6 +18,7 @@ type Shop = { tenant_id: string; tenant_name: string };
 /** Sign in (PRD F-001): email, password and, only for accounts that belong to several shops, which shop to open. */
 function SignInForm() {
   const { login } = useAuth();
+  const t = useT();
   const router = useRouter();
   const next = safeNextPath(useSearchParams().get("next")) ?? "/dashboard";
   const [email, setEmail] = useState("");
@@ -63,7 +65,7 @@ function SignInForm() {
           className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-6 shadow-popover"
         >
           <div>
-            <h1 className="text-ui-xl font-semibold text-fg">Sign in</h1>
+            <h1 className="text-ui-xl font-semibold text-fg">{t("Sign in")}</h1>
             <p className="text-ui-sm text-fg-muted">Use the email and password you registered your shop with.</p>
           </div>
 

@@ -1,4 +1,7 @@
+"use client";
+
 import { forwardRef, type ButtonHTMLAttributes } from "react";
+import { useT } from "@/lib/i18n/LocaleProvider";
 import { cn } from "@/lib/utils";
 
 /**
@@ -44,6 +47,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
   { variant = "secondary", size = "md", loading = false, disabled, className, children, type = "button", ...rest },
   ref,
 ) {
+  const t = useT();
   return (
     <button
       ref={ref}
@@ -53,7 +57,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(function Button(
       className={buttonClass(variant, size, className)}
       {...rest}
     >
-      {children}
+      {typeof children === "string" ? t(children) : children}
     </button>
   );
 });

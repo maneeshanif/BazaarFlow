@@ -55,6 +55,7 @@ export const NAV: NavGroup[] = [
       { label: "Products", icon: "package", roles: ALL, href: "/inventory" },
       { label: "Stock movements", icon: "arrow-left-right", roles: MANAGER_UP, href: "/inventory/movements" },
       { label: "Vendors", icon: "truck", roles: MANAGER_UP, href: "/vendors" },
+      { label: "Purchase orders", icon: "receipt", roles: MANAGER_UP, href: "/purchase-orders" },
     ],
   },
   {
@@ -70,6 +71,7 @@ export const NAV: NavGroup[] = [
       { label: "Studio", icon: "megaphone", roles: MANAGER_UP, href: "/marketing" },
       { label: "Schedule", icon: "calendar", roles: MANAGER_UP, href: "/marketing/schedule" },
       { label: "Activity", icon: "activity", roles: MANAGER_UP, href: "/marketing/activity" },
+      { label: "Comments", icon: "message-square", roles: MANAGER_UP, href: "/marketing/comments" },
       { label: "Insights", icon: "bar-chart", roles: MANAGER_UP, href: "/marketing/insights" },
     ],
   },

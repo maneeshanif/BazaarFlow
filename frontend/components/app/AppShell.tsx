@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { Bell, LogOut, Search, UserCircle } from "lucide-react";
+import { LanguageSwitcher } from "@/components/app/LanguageSwitcher";
 import { NavIcon } from "@/components/app/icons";
+import { useT } from "@/lib/i18n/LocaleProvider";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { navFor, tabsFor, type NavGroup, type Role } from "@/lib/navigation";
 import { useAuth } from "@/lib/auth/AuthProvider";
@@ -22,11 +24,12 @@ type Props = {
 const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-line-focus";
 
 function NavList({ groups, activeHref, onNavigate }: { groups: NavGroup[]; activeHref?: string; onNavigate?: () => void }) {
+  const t = useT();
   return (
     <>
       {groups.map((group) => (
         <div key={group.label} className="mb-3">
-          <p className="px-3 pb-1 text-ui-2xs font-medium uppercase tracking-wide text-fg-subtle">{group.label}</p>
+          <p className="px-3 pb-1 text-ui-2xs font-medium uppercase tracking-wide text-fg-subtle">{t(group.label)}</p>
           <ul>
             {group.items.map((item) => {
               const base = "flex h-control-md items-center gap-2 rounded-md px-3 text-ui-base";
@@ -35,8 +38,8 @@ function NavList({ groups, activeHref, onNavigate }: { groups: NavGroup[]; activ
                   <li key={item.label}>
                     <span aria-disabled="true" title="Coming soon" className={cn(base, "cursor-not-allowed text-fg-subtle")}>
                       <NavIcon name={item.icon} />
-                      <span className="truncate">{item.label}</span>
-                      <span className="ml-auto text-ui-2xs">Soon</span>
+                      <span className="truncate">{t(item.label)}</span>
+                      <span className="ms-auto text-ui-2xs">{t("Soon")}</span>
                     </span>
                   </li>
                 );
@@ -55,7 +58,7 @@ function NavList({ groups, activeHref, onNavigate }: { groups: NavGroup[]; activ
                     )}
                   >
                     <NavIcon name={item.icon} />
-                    <span className="truncate">{item.label}</span>
+                    <span className="truncate">{t(item.label)}</span>
                   </Link>
                 </li>
               );
@@ -76,24 +79,25 @@ export function AppShell({ role, platformAdmin = false, tenantName, userName, ac
   const [drawerOpen, setDrawerOpen] = useState(false);
   const groups = navFor(role, { platformAdmin });
   const { logout } = useAuth();
+  const t = useT();
 
   return (
     <div className="min-h-screen bg-canvas text-fg">
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-action focus:px-3 focus:py-2 focus:text-fg-inverse"
+        className="sr-only focus:not-sr-only focus:fixed focus:start-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-action focus:px-3 focus:py-2 focus:text-fg-inverse"
       >
-        Skip to content
+        {t("Skip to content")}
       </a>
 
       <aside
         data-testid="sidebar"
-        className="fixed inset-y-0 left-0 z-30 hidden w-sidebar flex-col border-r border-border bg-surface lg:flex"
+        className="fixed inset-y-0 start-0 z-30 hidden w-sidebar flex-col border-e border-border bg-surface lg:flex"
       >
         <div className="flex h-topbar items-center border-b border-border px-4">
           <span className="truncate text-ui-md font-semibold text-fg">BazaarFlow</span>
         </div>
-        <nav aria-label="Main navigation" className="flex-1 overflow-y-auto p-2">
+        <nav aria-label={t("Main navigation")} className="flex-1 overflow-y-auto p-2">
           <NavList groups={groups} activeHref={activeHref} />
         </nav>
       </aside>
@@ -102,28 +106,29 @@ export function AppShell({ role, platformAdmin = false, tenantName, userName, ac
         <SheetContent side="left" className="w-sidebar max-w-full overflow-y-auto bg-surface p-2">
           <SheetTitle className="px-3 py-2 text-ui-md font-semibold text-fg">BazaarFlow</SheetTitle>
           <SheetDescription className="sr-only">Navigation</SheetDescription>
-          <nav aria-label="Drawer navigation">
+          <nav aria-label={t("Drawer navigation")}>
             <NavList groups={groups} activeHref={activeHref} onNavigate={() => setDrawerOpen(false)} />
           </nav>
         </SheetContent>
       </Sheet>
 
-      <div className="flex min-h-screen min-w-0 flex-col lg:pl-sidebar">
+      <div className="flex min-h-screen min-w-0 flex-col lg:ps-sidebar">
         <header className="sticky top-0 z-20 flex h-topbar items-center gap-2 border-b border-border bg-surface px-4">
           <button
             type="button"
-            aria-label="Open navigation"
+            aria-label={t("Open navigation")}
             onClick={() => setDrawerOpen(true)}
             className={cn("inline-flex h-control-md w-control-md items-center justify-center rounded-md text-fg-muted hover:bg-surface-hover lg:hidden", focusRing)}
           >
             <NavIcon name="menu" className="h-5 w-5" />
           </button>
           <span className="truncate text-ui-base font-medium text-fg">{tenantName}</span>
-          <div className="ml-auto flex items-center gap-1">
-            <button type="button" aria-label="Search" className={cn("inline-flex h-control-md w-control-md items-center justify-center rounded-md text-fg-muted hover:bg-surface-hover", focusRing)}>
+          <div className="ms-auto flex items-center gap-1">
+            <LanguageSwitcher className="me-1" />
+            <button type="button" aria-label={t("Search")} className={cn("inline-flex h-control-md w-control-md items-center justify-center rounded-md text-fg-muted hover:bg-surface-hover", focusRing)}>
               <Search aria-hidden className="h-4 w-4" />
             </button>
-            <button type="button" aria-label="Notifications" className={cn("inline-flex h-control-md w-control-md items-center justify-center rounded-md text-fg-muted hover:bg-surface-hover", focusRing)}>
+            <button type="button" aria-label={t("Notifications")} className={cn("inline-flex h-control-md w-control-md items-center justify-center rounded-md text-fg-muted hover:bg-surface-hover", focusRing)}>
               <Bell aria-hidden className="h-4 w-4" />
             </button>
             <button type="button" aria-label={`User menu${userName ? `: ${userName}` : ""}`} className={cn("inline-flex h-control-md w-control-md items-center justify-center rounded-md text-fg-muted hover:bg-surface-hover", focusRing)}>
@@ -131,7 +136,7 @@ export function AppShell({ role, platformAdmin = false, tenantName, userName, ac
             </button>
             <button
               type="button"
-              aria-label="Sign out"
+              aria-label={t("Sign out")}
               onClick={() => void logout()}
               className={cn(
                 "inline-flex h-control-md w-control-md items-center justify-center rounded-md text-fg-muted hover:bg-surface-hover",
@@ -149,14 +154,14 @@ export function AppShell({ role, platformAdmin = false, tenantName, userName, ac
       </div>
 
       <nav
-        aria-label="Primary tabs"
+        aria-label={t("Primary tabs")}
         className="fixed inset-x-0 bottom-0 z-30 flex h-tabbar border-t border-border bg-surface lg:hidden"
       >
         {tabsFor(role).map((tab) => {
           const content = (
             <>
               <NavIcon name={tab.icon} className="h-5 w-5" />
-              <span className="text-ui-2xs">{tab.label}</span>
+              <span className="text-ui-2xs">{t(tab.label)}</span>
             </>
           );
           const cls = cn(

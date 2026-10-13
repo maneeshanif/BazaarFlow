@@ -65,3 +65,7 @@ export type VoiceSettings = Schemas["VoiceSettingsOut"];
 export type VoiceCall = Schemas["VoiceCallOut"];
 export type VoiceCallDetail = Schemas["VoiceCallDetail"];
 export type AssistantConfig = Schemas["AssistantConfig"];
+
+export type PurchaseOrder = Schemas["PurchaseOrderOut"];
+export type PurchaseOrderDetail = Schemas["PurchaseOrderDetail"];
+export type CommentReply = Schemas["CommentReplyOut"];

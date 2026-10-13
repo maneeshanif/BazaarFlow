@@ -1,4 +1,7 @@
+"use client";
+
 import { cn } from "@/lib/utils";
+import { useT } from "@/lib/i18n/LocaleProvider";
 import { labelFor, toneFor, type Tone } from "@/lib/status";
 
 const TONE_CLASS: Record<Tone, string> = {
@@ -15,6 +18,7 @@ const TONE_CLASS: Record<Tone, string> = {
  * looks the same on every screen.
  */
 export function StatusBadge({ status, label, className }: { status: string; label?: string; className?: string }) {
+  const t = useT();
   const tone = toneFor(status);
   return (
     <span
@@ -25,7 +29,7 @@ export function StatusBadge({ status, label, className }: { status: string; labe
         className,
       )}
     >
-      {label ?? labelFor(status)}
+      {t(label ?? labelFor(status))}
     </span>
   );
 }

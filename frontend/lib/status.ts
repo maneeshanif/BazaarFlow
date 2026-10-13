@@ -9,9 +9,9 @@ const TONES: Record<string, Tone> = {
   // success
   posted: "success", paid: "success", connected: "success", executed: "success", approved: "success",
   accepted: "success", reconciled: "success", active: "success", completed: "success", published: "success",
-  delivered: "success", in_stock: "success", settled: "success",
+  delivered: "success", sent: "success", in_stock: "success", settled: "success",
   // warning
-  pending: "warning", needs_human: "warning", low_stock: "warning", partial: "warning", awaiting_approval: "warning",
+  proposed: "warning", pending: "warning", needs_human: "warning", low_stock: "warning", partial: "warning", awaiting_approval: "warning",
   near_expiry: "warning", pending_approval: "warning", owes: "warning", step_limit: "warning", spend_limit: "warning",
   // info
   scheduled: "info", submitted: "info", in_progress: "info", queued: "info", generating: "info", running: "info",

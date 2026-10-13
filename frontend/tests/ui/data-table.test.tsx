@@ -20,8 +20,8 @@ describe("DataTable: four states, every time (ui-rules.md)", () => {
     const table = screen.getByRole("table", { name: "Products" });
     expect(within(table).getByText("Rs 2,500")).toBeInTheDocument();
     expect(within(table).getByText("posted")).toBeInTheDocument();
-    expect(within(table).getByText("5").className).toMatch(/text-right/);
-    expect(within(table).getByText("Rs 2,500").className).toMatch(/text-right/);
+    expect(within(table).getByText("5").className).toMatch(/text-end/);
+    expect(within(table).getByText("Rs 2,500").className).toMatch(/text-end/);
     expect(within(table).getByText("S-1").className).toMatch(/font-mono/);
   });
 
