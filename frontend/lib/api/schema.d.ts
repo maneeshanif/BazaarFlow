@@ -793,6 +793,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/marketing/comments/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Comment Replies */
+        get: operations["list_comment_replies_api_v1_marketing_comments__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/marketing/comments/{reply_id}/skip": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Skip Comment Reply */
+        post: operations["skip_comment_reply_api_v1_marketing_comments__reply_id__skip_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/marketing/insights": {
         parameters: {
             query?: never;
@@ -2134,6 +2168,43 @@ export interface components {
             /** Session Id */
             session_id: string;
         };
+        /** CommentReplyOut */
+        CommentReplyOut: {
+            /** Action Id */
+            action_id: string | null;
+            /** Author */
+            author: string | null;
+            /** Comment Text */
+            comment_text: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Last Error */
+            last_error: string | null;
+            /**
+             * Post Id
+             * Format: uuid
+             */
+            post_id: string;
+            /** Post Title */
+            post_title: string | null;
+            /** Posted At */
+            posted_at: string | null;
+            /** Reply Text */
+            reply_text: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "proposed" | "approved" | "posted" | "skipped" | "failed";
+        };
         /**
          * ConnectRequest
          * @description ``credentials`` is checked against the provider's own shape in the service, so the error names the right field.
@@ -2822,6 +2893,15 @@ export interface components {
         Page_CashBookEntry_: {
             /** Items */
             items: components["schemas"]["CashBookEntry"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
+        /** Page[CommentReplyOut] */
+        Page_CommentReplyOut_: {
+            /** Items */
+            items: components["schemas"]["CommentReplyOut"][];
             /** Next Cursor */
             next_cursor?: string | null;
             /** Total */
@@ -5991,6 +6071,70 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ActivityOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_comment_replies_api_v1_marketing_comments__get: {
+        parameters: {
+            query?: {
+                status?: ("proposed" | "approved" | "posted" | "skipped" | "failed") | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_CommentReplyOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    skip_comment_reply_api_v1_marketing_comments__reply_id__skip_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                reply_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CommentReplyOut"];
                 };
             };
             /** @description Validation Error */

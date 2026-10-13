@@ -217,7 +217,8 @@ async def test_a_failing_provider_is_retried_later_then_marked_failed_with_a_rea
     providers.on("fb.photos")
     again = await client.post(f"{ACTIVITY}/{failed['id']}/retry", headers=bearer(owner))
     assert again.status_code == 200 and again.json()["status"] == "queued" and again.json()["attempts"] == 0
-    assert (await marketing_publisher.tick(local(15, 40))).published == 1
+    # the retry is queued for "now" on the real clock, so the pass that picks it up is relative to the real clock too
+    assert (await marketing_publisher.tick(datetime.now(timezone.utc) + timedelta(minutes=1))).published == 1
 
 
 async def test_a_refused_token_pauses_publishing_until_the_owner_reconnects(client: AsyncClient, providers: FakeProviders) -> None:

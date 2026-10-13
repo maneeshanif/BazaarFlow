@@ -100,6 +100,10 @@ async def _details(db: AsyncSession, principal: Principal, action: AgentAction) 
             )
             lines.extend(f"Problem: {w}" for w in preview.warnings)
             return lines
+        if action.tool == "approve_comment_reply":
+            lines = [f"Comment: {payload.get('comment', '')}", f"Proposed reply: {payload.get('reply', '')}"]
+            lines.append("Approving posts the reply under the comment on Facebook.")
+            return lines
         if action.tool == "customer_order":
             items = payload.get("items", [])
             names = {

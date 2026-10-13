@@ -33,11 +33,12 @@ from app.core.problems import DomainError
 from app.core.tenancy import Principal, system_session, tenant_session
 from app.integrations import factory
 from app.integrations.http import ProviderError
+from app.models.comment_reply import CommentReply
 from app.models.marketing import MarketingPost
 from app.models.marketing_schedule import MarketingSchedule
 from app.models.tenant import Tenant, TenantRole
 from app.schemas.marketing_studio import DraftRequest
-from app.services import approvals, integration_service
+from app.services import approvals, comment_reply_service, integration_service
 from app.services.report_service import SHOP_TZ
 
 logger = logging.getLogger("bazaarflow.scheduler")
@@ -56,6 +57,8 @@ class TickResult:
     retried: int = 0
     failed: int = 0
     paused: int = 0
+    replies_proposed: int = 0
+    replies_posted: int = 0
 
     def add(self, other: TickResult) -> None:
         self.generated += other.generated
@@ -63,6 +66,8 @@ class TickResult:
         self.retried += other.retried
         self.failed += other.failed
         self.paused += other.paused
+        self.replies_proposed += other.replies_proposed
+        self.replies_posted += other.replies_posted
 
 
 def slots_for(day: date, start: time, end: time, count: int) -> list[datetime]:
@@ -232,12 +237,28 @@ async def tick(now: datetime | None = None) -> TickResult:
     async with system_session() as scan:
         due = set((await scan.execute(select(MarketingPost.tenant_id).where(MarketingPost.status == "queued", MarketingPost.scheduled_for <= moment))).scalars())
         scheduled = set((await scan.execute(select(MarketingSchedule.tenant_id).where(MarketingSchedule.enabled.is_(True)))).scalars())
+        # shops with a recently published post (its comments may need an answer) or an approved reply waiting to go out
+        commented = set(
+            (
+                await scan.execute(
+                    select(MarketingPost.tenant_id).where(
+                        MarketingPost.status == "published",
+                        MarketingPost.fb_post_id.is_not(None),
+                        MarketingPost.published_at >= moment - comment_reply_service.WINDOW,
+                    )
+                )
+            ).scalars()
+        )
+        replying = set((await scan.execute(select(CommentReply.tenant_id).where(CommentReply.status == "approved"))).scalars())
     total = TickResult()
-    for tenant_id in sorted(due | scheduled, key=str):
+    for tenant_id in sorted(due | scheduled | commented | replying, key=str):
         try:
             async with tenant_session(tenant_id) as db:
                 result = TickResult(generated=await generate_for_tenant(db, tenant_id, moment))
                 result.add(await publish_for_tenant(db, tenant_id, moment))
+                replies = await comment_reply_service.run_for_tenant(db, tenant_id, moment)
+                result.replies_proposed = replies.proposed + replies.queued
+                result.replies_posted = replies.posted
             total.add(result)
         except Exception:  # one shop's failure must not stop the others
             logger.exception("scheduler failed for a shop", extra={"tenant_id": str(tenant_id)})

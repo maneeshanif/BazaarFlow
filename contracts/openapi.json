@@ -1016,6 +1016,123 @@
         "title": "ChatResponse",
         "type": "object"
       },
+      "CommentReplyOut": {
+        "properties": {
+          "action_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Action Id"
+          },
+          "author": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Author"
+          },
+          "comment_text": {
+            "title": "Comment Text",
+            "type": "string"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "id": {
+            "format": "uuid",
+            "title": "Id",
+            "type": "string"
+          },
+          "last_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Error"
+          },
+          "post_id": {
+            "format": "uuid",
+            "title": "Post Id",
+            "type": "string"
+          },
+          "post_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Post Title"
+          },
+          "posted_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Posted At"
+          },
+          "reply_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reply Text"
+          },
+          "status": {
+            "enum": [
+              "proposed",
+              "approved",
+              "posted",
+              "skipped",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "post_id",
+          "post_title",
+          "author",
+          "comment_text",
+          "reply_text",
+          "status",
+          "action_id",
+          "last_error",
+          "created_at",
+          "posted_at"
+        ],
+        "title": "CommentReplyOut",
+        "type": "object"
+      },
       "ConnectRequest": {
         "additionalProperties": false,
         "description": "``credentials`` is checked against the provider's own shape in the service, so the error names the right field.",
@@ -3136,6 +3253,39 @@
           "total"
         ],
         "title": "Page[CashBookEntry]",
+        "type": "object"
+      },
+      "Page_CommentReplyOut_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CommentReplyOut"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "total": {
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "Page[CommentReplyOut]",
         "type": "object"
       },
       "Page_ConversationOut_": {
@@ -10378,6 +10528,144 @@
           }
         ],
         "summary": "Retry Post",
+        "tags": [
+          "marketing"
+        ]
+      }
+    },
+    "/api/v1/marketing/comments/": {
+      "get": {
+        "operationId": "list_comment_replies_api_v1_marketing_comments__get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "proposed",
+                    "approved",
+                    "posted",
+                    "skipped",
+                    "failed"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cursor",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 60,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_CommentReplyOut_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "List Comment Replies",
+        "tags": [
+          "marketing"
+        ]
+      }
+    },
+    "/api/v1/marketing/comments/{reply_id}/skip": {
+      "post": {
+        "operationId": "skip_comment_reply_api_v1_marketing_comments__reply_id__skip_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reply_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Reply Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CommentReplyOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "summary": "Skip Comment Reply",
         "tags": [
           "marketing"
         ]

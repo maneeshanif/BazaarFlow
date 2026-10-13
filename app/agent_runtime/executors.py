@@ -107,6 +107,10 @@ async def execute_action(
         from app.services import marketing_studio_service  # local import: the writer pulls in the whole agent runtime
 
         return await marketing_studio_service.mark_approved(db, approver, uuid.UUID(str(payload["post_id"])))
+    if tool == "approve_comment_reply":
+        from app.services import comment_reply_service  # local import: the service pulls in the writer and the adapters
+
+        return await comment_reply_service.mark_approved(db, approver, uuid.UUID(str(payload["comment_reply_id"])))
     if tool == "customer_order":
         return await _post_customer_order(db, approver, action_id, payload)
     if tool == "send_whatsapp_message":

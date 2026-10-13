@@ -25,6 +25,8 @@ class MarketingPost(BaseModelMixin, TenantMixin, Base):
     attempts: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default=text("0"))
     last_error: Mapped[str | None] = mapped_column(String(500), nullable=True)
     source: Mapped[str] = mapped_column(String(10), nullable=False, default="manual", server_default=text("'manual'"))
+    # W-004 step 4: when the scheduler last read this post's Facebook comments
+    comments_checked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
 class ScheduledCampaign(BaseModelMixin, TenantMixin, Base):
     __tablename__ = "scheduled_campaigns"

@@ -10,6 +10,7 @@ from app.api.routers.agent_router import approvals_router, chat_router, runs_rou
 from app.api.routers.auth_router import router as auth_router
 from app.api.routers.automations_router import router as automations_router
 from app.api.routers.channel_webhook_router import router as channel_webhook_router
+from app.api.routers.comment_replies_router import router as comment_replies_router
 from app.api.routers.customers_router import router as customers_router
 from app.api.routers.dashboard_router import router as dashboard_router
 from app.api.routers.demo_router import router as demo_router
@@ -47,5 +48,14 @@ api_v1_router.include_router(settings_router)
 api_v1_router.include_router(finance_router)
 api_v1_router.include_router(platform_router)
 api_v1_router.include_router(purchase_orders_router)
-for _r in (voice_router, automations_router, channel_webhook_router, inbox_router, integrations_router, marketing_schedule_router, onboarding_router):
+for _r in (
+    voice_router,
+    automations_router,
+    channel_webhook_router,
+    inbox_router,
+    integrations_router,
+    marketing_schedule_router,
+    comment_replies_router,
+    onboarding_router,
+):
     api_v1_router.include_router(_r)

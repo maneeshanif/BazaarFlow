@@ -3,6 +3,7 @@
 from app.models.agent import ActionStatus, AgentAction
 from app.models.agent_run import AgentRun
 from app.models.automation import Automation, AutomationRun
+from app.models.comment_reply import CommentReply
 from app.models.conversation import Conversation, WebhookEvent
 from app.models.customer import Customer
 from app.models.facebook import FacebookAccount
@@ -27,6 +28,7 @@ __all__ = [
     "AgentAction",
     "AgentRun",
     "AuditLog",
+    "CommentReply",
     "Automation",
     "AutomationRun",
     "Conversation",
