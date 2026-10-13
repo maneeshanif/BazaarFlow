@@ -100,6 +100,22 @@ async def _details(db: AsyncSession, principal: Principal, action: AgentAction) 
             )
             lines.extend(f"Problem: {w}" for w in preview.warnings)
             return lines
+        if action.tool == "customer_order":
+            items = payload.get("items", [])
+            names = {
+                pid: name
+                for pid, name in (
+                    await db.execute(
+                        select(Product.id, Product.name).where(
+                            Product.id.in_([uuid.UUID(str(i["product_id"])) for i in items]), Product.tenant_id == principal.tenant_id
+                        )
+                    )
+                ).all()
+            }
+            lines = [f"{i['qty']} x {names.get(uuid.UUID(str(i['product_id'])), 'a product that no longer exists')}" for i in items]
+            lines.append(f"Customer: {payload.get('customer_name') or payload.get('phone')} ({payload.get('phone')})")
+            lines.append("Approving posts the order on credit (udhaar) and tells the customer on WhatsApp.")
+            return lines
         if action.tool == "approve_post":
             lines = [f"Title: {payload['title']}", str(payload["message"])]
             if payload.get("hashtags"):

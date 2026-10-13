@@ -50,6 +50,18 @@ async def lock_customer(db: AsyncSession, tenant_id: uuid.UUID, customer_id: uui
     return row
 
 
+async def find_by_phone(db: AsyncSession, tenant_id: uuid.UUID, phone: str) -> Customer | None:
+    """The live customer with this phone number, comparing digits only (+92 300 ... and 92300... are the same person)."""
+    digits = "".join(ch for ch in phone if ch.isdigit())
+    return (
+        await db.execute(
+            select(Customer)
+            .where(Customer.tenant_id == tenant_id, Customer.deleted_at.is_(None), func.replace(Customer.phone, "+", "") == digits)
+            .limit(1)
+        )
+    ).scalar_one_or_none()
+
+
 async def get_live(db: AsyncSession, tenant_id: uuid.UUID, customer_id: uuid.UUID) -> Customer:
     row = (
         await db.execute(

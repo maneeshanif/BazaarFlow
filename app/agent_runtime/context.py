@@ -40,6 +40,10 @@ class RuntimeContext:
     redactor: Redactor = field(default_factory=Redactor)
     actions: list[ProposedAction] = field(default_factory=list)
     steps: list[TraceStep] = field(default_factory=list)
+    # set only for the customer-facing agent: the person on the other end of the WhatsApp conversation
+    contact_phone: str | None = None
+    contact_name: str | None = None
+    conversation_id: uuid.UUID | None = None
 
     def tool_context(self) -> ToolContext:
         return ToolContext(

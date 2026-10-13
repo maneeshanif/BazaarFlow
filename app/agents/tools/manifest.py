@@ -27,6 +27,8 @@ DECLARATIONS: dict[str, ToolSpec] = {
     "recent_pending_payments": declare_tool("recent_pending_payments", access="read", min_role=_MANAGER),
     # customer-facing order draft: PRD 36.9 says orders created by customers go to approval
     "create_customer_order": declare_tool("create_customer_order", access="write", approval="required"),
+    # the DB-backed customer agent's order request (PRD W-003): files an approval, posts nothing
+    "request_order": declare_tool("request_order", access="write", approval="required"),
     # marketing
     "marketing_inventory_snapshot": declare_tool("marketing_inventory_snapshot", access="read", min_role=_MANAGER),
     "marketing_sales_insights": declare_tool("marketing_sales_insights", access="read", min_role=_MANAGER),
