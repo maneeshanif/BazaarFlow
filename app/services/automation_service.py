@@ -11,6 +11,7 @@ runs the due recipes inside each shop's own ``tenant_session``.
 
 from __future__ import annotations
 
+import asyncio
 import logging
 import uuid
 from datetime import datetime, timezone
@@ -28,10 +29,12 @@ from app.models.tenant import TenantIntegration
 from app.models.voice import VoiceSettings
 from app.schemas.automations import AutomationOut, LastRun, RunOut
 from app.services import voice_service
-from app.services.automation_recipes import RECIPES, Recipe, RecipeError
+from app.services.automation_recipes import RECIPES, Outcome, Recipe, RecipeError, deferred_sends
 
 logger = logging.getLogger("bazaarflow.automations")
 FAILURE_ALERT_AT = 3
+MAX_ATTEMPTS = 3  # one try and two retries of a failure that may pass by itself
+RETRY_DELAY_SECONDS = 1.0  # tests set this to 0
 
 
 def _recipe(key: str) -> Recipe:
@@ -146,24 +149,44 @@ async def _record_run(
     return run
 
 
+async def _attempt(
+    db: AsyncSession, tenant_id: uuid.UUID, automation: Automation, recipe: Recipe, now: datetime
+) -> tuple[Outcome | None, str | None, bool]:
+    """One try of a recipe: (outcome, error, whether the error may pass by itself). A failed try leaves nothing behind."""
+    try:
+        async with db.begin_nested():  # a failed run leaves nothing half done
+            return await recipe.run(db, tenant_id, now), None, False
+    except RecipeError as exc:
+        return None, str(exc), exc.transient
+    except DomainError as exc:
+        return None, exc.detail, False
+    except ProviderError:
+        return None, "The provider did not answer. It will be tried again.", True
+    except Exception:  # a bug must not stop the other recipes or shops
+        logger.exception("automation crashed", extra={"automation": automation.key, "tenant_id": str(tenant_id)})
+        return None, "Something went wrong. It will be tried again.", False
+
+
 async def execute(db: AsyncSession, tenant_id: uuid.UUID, automation: Automation, now: datetime, *, source: str) -> AutomationRun | None:
     """Run one recipe once. Returns the recorded run, or None when it had nothing to do (and nothing is recorded)."""
     recipe = RECIPES[automation.key]
     started = datetime.now(timezone.utc)
-    error: str | None = None
-    outcome = None
-    try:
-        async with db.begin_nested():  # a failed run leaves nothing half done
-            outcome = await recipe.run(db, tenant_id, now)
-    except RecipeError as exc:
-        error = str(exc)
-    except DomainError as exc:
-        error = exc.detail
-    except ProviderError:
-        error = "The provider did not answer. It will be tried again."
-    except Exception:  # a bug must not stop the other recipes or shops
-        logger.exception("automation crashed", extra={"automation": automation.key, "tenant_id": str(tenant_id)})
-        error = "Something went wrong. It will be tried again."
+    outcome, error, transient = await _attempt(db, tenant_id, automation, recipe, now)
+    attempts = 1
+    while error is not None and transient and attempts < MAX_ATTEMPTS:  # only a failure that may pass by itself is retried
+        await asyncio.sleep(RETRY_DELAY_SECONDS * attempts)
+        outcome, error, transient = await _attempt(db, tenant_id, automation, recipe, now)
+        attempts += 1
+    if error is not None and transient and recipe.defers_sends:
+        # the provider kept refusing: file each message as an approval so the owner can send it when WhatsApp is back
+        with deferred_sends():
+            outcome, fallback_error, _ = await _attempt(db, tenant_id, automation, recipe, now)
+        if fallback_error is None and outcome is not None:
+            error = None
+            if outcome.count:
+                outcome = Outcome(
+                    f"WhatsApp was not available, so {outcome.count} message(s) were filed for your approval instead.", outcome.count
+                )
     if error is not None:
         automation.consecutive_failures += 1
         run = await _record_run(db, tenant_id, automation, status="failed", source=source, summary=None, error=error, started=started)

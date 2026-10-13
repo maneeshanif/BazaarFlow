@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import dataclasses
 import uuid
 from datetime import datetime, timedelta, timezone
 from typing import Any
@@ -14,6 +15,7 @@ from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from app.services import automation_service
+from app.services.automation_recipes import RECIPES, Outcome, RecipeError
 from tests.pg.agent_support import scripted_provider  # noqa: F401  (autouse fixture: the offline writer)
 from tests.pg.channel_support import FakeProviders, connect_twilio
 from tests.pg.conftest import bearer, member, register
@@ -27,6 +29,11 @@ KARACHI = timezone(timedelta(hours=5))
 
 def local(hour: int, minute: int = 0, day: int = 7) -> datetime:
     return datetime(2026, 10, day, hour, minute, tzinfo=KARACHI).astimezone(timezone.utc)
+
+
+@pytest.fixture(autouse=True)
+def no_retry_delay(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(automation_service, "RETRY_DELAY_SECONDS", 0)
 
 
 @pytest_asyncio.fixture(autouse=True)
@@ -294,7 +301,7 @@ async def test_failures_are_recorded_counted_and_raise_an_alert_on_the_third(
     await connect_twilio(client, owner)
     await _waiting_conversation(admin_conn, owner, 20)
     await enable(client, owner, "unanswered_message_alert")
-    providers.on("twilio.send", httpx.ReadTimeout("slow"))
+    await client.delete("/api/v1/integrations/whatsapp_twilio", headers=bearer(owner))  # a failure that will not pass by itself
     for expected in (1, 2, 3):
         failed = await run(client, owner, "unanswered_message_alert")
         assert failed["status"] == "failed" and failed["error"]
@@ -304,11 +311,93 @@ async def test_failures_are_recorded_counted_and_raise_an_alert_on_the_third(
     alerts = await admin_conn.fetch("SELECT action FROM audit_logs WHERE action = 'automation.failing' AND tenant_id = $1", uuid.UUID(owner["tenant_id"]))
     assert len(alerts) == 1
 
-    providers.on("twilio.send")  # the provider recovers
+    await connect_twilio(client, owner)  # the owner reconnects WhatsApp
     ok = await run(client, owner, "unanswered_message_alert")
     assert ok["status"] == "succeeded"
     row = next(r for r in (await client.get(URL, headers=bearer(owner))).json() if r["key"] == "unanswered_message_alert")
     assert row["consecutive_failures"] == 0 and row["needs_attention"] is False
+
+
+# -- retry, then fallback, then the banner (W-008) ---------------------------------------------------------------
+
+
+def _stub(monkeypatch: pytest.MonkeyPatch, key: str, run_fn: Any) -> None:
+    monkeypatch.setitem(RECIPES, key, dataclasses.replace(RECIPES[key], run=run_fn))
+
+
+async def test_a_failure_that_passes_by_itself_is_retried_and_counts_as_no_failure(
+    client: AsyncClient, providers: FakeProviders, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    owner = await register(client, "Shop A")
+    await connect_twilio(client, owner)
+    await enable(client, owner, "unanswered_message_alert")
+    calls = {"n": 0}
+
+    async def flaky(db: Any, tenant_id: uuid.UUID, now: datetime) -> Outcome:
+        calls["n"] += 1
+        if calls["n"] < 3:
+            raise RecipeError("busy", transient=True)
+        return Outcome("Alerted the owner about 1 waiting message(s).", 1)
+
+    _stub(monkeypatch, "unanswered_message_alert", flaky)
+    done = await run(client, owner, "unanswered_message_alert")
+    assert calls["n"] == 3 and done["status"] == "succeeded"
+    row = next(r for r in (await client.get(URL, headers=bearer(owner))).json() if r["key"] == "unanswered_message_alert")
+    assert row["consecutive_failures"] == 0
+
+
+async def test_a_configuration_error_is_not_retried(client: AsyncClient, providers: FakeProviders, monkeypatch: pytest.MonkeyPatch) -> None:
+    owner = await register(client, "Shop A")
+    await connect_twilio(client, owner)
+    await enable(client, owner, "unanswered_message_alert")
+    calls = {"n": 0}
+
+    async def missing_phone(db: Any, tenant_id: uuid.UUID, now: datetime) -> Outcome:
+        calls["n"] += 1
+        raise RecipeError("Add your phone number in Settings.")
+
+    _stub(monkeypatch, "unanswered_message_alert", missing_phone)
+    failed = await run(client, owner, "unanswered_message_alert")
+    assert calls["n"] == 1 and failed["status"] == "failed"
+
+
+async def test_when_whatsapp_keeps_failing_the_message_is_filed_for_approval_instead(
+    client: AsyncClient, providers: FakeProviders, admin_conn: asyncpg.Connection
+) -> None:
+    owner = await register(client, "Shop A")
+    await connect_twilio(client, owner)
+    await _waiting_conversation(admin_conn, owner, 20)
+    await enable(client, owner, "unanswered_message_alert")
+    providers.on("twilio.send", httpx.ReadTimeout("slow"))  # every attempt times out
+    done = await run(client, owner, "unanswered_message_alert")
+    assert done["status"] == "succeeded" and "filed for your approval" in done["summary"]
+    waiting = await pending(client, owner)
+    assert len(waiting) == 1 and waiting[0]["tool"] == "send_whatsapp_message" and "Sara" in waiting[0]["summary"]
+    row = next(r for r in (await client.get(URL, headers=bearer(owner))).json() if r["key"] == "unanswered_message_alert")
+    assert row["consecutive_failures"] == 0 and row["needs_attention"] is False
+    await run(client, owner, "unanswered_message_alert")
+    assert len(await pending(client, owner)) == 1  # the same waiting message is not filed twice
+
+
+async def test_when_the_fallback_fails_too_it_is_counted_and_the_banner_applies(
+    client: AsyncClient, providers: FakeProviders, admin_conn: asyncpg.Connection, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    owner = await register(client, "Shop A")
+    await connect_twilio(client, owner)
+    await enable(client, owner, "unanswered_message_alert")
+
+    async def always_down(db: Any, tenant_id: uuid.UUID, now: datetime) -> Outcome:
+        raise RecipeError("WhatsApp did not accept the message.", transient=True)
+
+    _stub(monkeypatch, "unanswered_message_alert", always_down)
+    for expected in (1, 2, 3):
+        failed = await run(client, owner, "unanswered_message_alert")
+        assert failed["status"] == "failed"
+        row = next(r for r in (await client.get(URL, headers=bearer(owner))).json() if r["key"] == "unanswered_message_alert")
+        assert row["consecutive_failures"] == expected
+    assert row["needs_attention"] is True and row["enabled"] is True
+    alerts = await admin_conn.fetch("SELECT action FROM audit_logs WHERE action = 'automation.failing' AND tenant_id = $1", uuid.UUID(owner["tenant_id"]))
+    assert len(alerts) == 1
 
 
 async def test_a_recipe_without_its_integration_fails_with_a_reason_and_sends_nothing(

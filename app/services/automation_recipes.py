@@ -12,7 +12,9 @@ alert to the owner) or files an approval (a vendor message, a payment reminder, 
 from __future__ import annotations
 
 import uuid
-from collections.abc import Awaitable, Callable
+from collections.abc import Awaitable, Callable, Iterator
+from contextlib import contextmanager
+from contextvars import ContextVar
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from decimal import Decimal
@@ -50,7 +52,14 @@ MAX_PER_RUN = 50
 
 
 class RecipeError(Exception):
-    """The recipe cannot do its job (a missing phone number, WhatsApp not connected). The message is shown to the owner."""
+    """The recipe cannot do its job (a missing phone number, WhatsApp not connected). The message is shown to the owner.
+
+    ``transient`` marks a failure that may pass by itself (the provider did not accept a message): only those are retried.
+    """
+
+    def __init__(self, message: str, *, transient: bool = False) -> None:
+        super().__init__(message)
+        self.transient = transient
 
 
 @dataclass
@@ -68,6 +77,22 @@ class Recipe:
     requires: tuple[str, ...]  # integrations that must be connected before it can be switched on
     run: Callable[[AsyncSession, uuid.UUID, datetime], Awaitable[Outcome]]
     due: Callable[[datetime, datetime | None], bool]  # (now, last_run_at) -> should the scheduler call it now
+    # True when a failed send can fall back to filing each message as an approval the owner sends later
+    defers_sends: bool = False
+
+
+# While the fallback pass runs, ``send_whatsapp`` files an approval instead of calling the provider. A context variable
+# keeps the six recipe functions unchanged: the fallback is the same recipe run with its sends turned into approvals.
+_defer_sends: ContextVar[bool] = ContextVar("defer_sends", default=False)
+
+
+@contextmanager
+def deferred_sends() -> Iterator[None]:
+    token = _defer_sends.set(True)
+    try:
+        yield
+    finally:
+        _defer_sends.reset(token)
 
 
 def _local(now: datetime) -> datetime:
@@ -83,10 +108,23 @@ def _rs(value: Decimal) -> str:
 
 
 async def send_whatsapp(db: AsyncSession, tenant_id: uuid.UUID, phone: str, text: str, key: str) -> bool:
-    """Send one WhatsApp message once. Returns False when this key was already sent; raises RecipeError when it cannot be."""
+    """Send one WhatsApp message once. Returns False when this key was already sent; raises RecipeError when it cannot be.
+
+    In the fallback pass (``deferred_sends``) nothing is sent: the message is filed as an approval, and the return value
+    says whether a new one was filed.
+    """
     existing = (await db.execute(select(Message).where(Message.tenant_id == tenant_id, Message.idempotency_key == key))).scalar_one_or_none()
     if existing is not None and existing.status in {"sent", "delivered"}:
         return False
+    if _defer_sends.get():
+        return await _file_approval(
+            db,
+            tenant_id,
+            agent="automation",
+            tool="send_whatsapp_message",
+            summary=f"Send this WhatsApp message (WhatsApp was not available): {text[:80]}",
+            payload={"phone": phone, "text": text, "purpose": "fallback", "source_key": key},
+        )
     try:
         adapter = await integration_service.adapter_for(db, tenant_id, "whatsapp_twilio")
     except DomainError as error:
@@ -109,13 +147,13 @@ async def send_whatsapp(db: AsyncSession, tenant_id: uuid.UUID, phone: str, text
         message.status, message.error = "send_failed", "WhatsApp did not accept the message."
         await integration_service.record_failure(db, tenant_id, "whatsapp_twilio", error)
         await db.flush()
-        raise RecipeError("WhatsApp did not accept the message. It will be tried again.") from error
+        raise RecipeError("WhatsApp did not accept the message. It will be tried again.", transient=True) from error
     finally:
         await adapter.aclose()
     if not result.ok:
         message.status, message.error = "send_failed", (result.error or "Not delivered")[:200]
         await db.flush()
-        raise RecipeError(message.error)
+        raise RecipeError(message.error, transient=True)
     message.status, message.error = "sent", None
     if result.provider_message_id:
         message.wa_message_id = result.provider_message_id
@@ -382,10 +420,10 @@ RECIPES: dict[str, Recipe] = {
     r.key: r
     for r in (
         Recipe("low_stock_vendor_draft", "Low stock: draft a vendor message", "Every night, drafts a reorder message to the vendor of each item that is running low. You approve it before anything is sent.", "nightly", (), low_stock_vendor_draft, _daily_at(2)),
-        Recipe("new_order_confirmation", "New order: confirm on WhatsApp", "When a sale is posted for a customer with a phone number, sends them a confirmation.", "order_posted", ("whatsapp_twilio",), new_order_confirmation, _always),
-        Recipe("daily_brief", "Daily 9 am business brief", "Sends you a short summary of yesterday and today on WhatsApp every morning.", "daily_09_00", ("whatsapp_twilio",), daily_brief, _daily_at(9)),
+        Recipe("new_order_confirmation", "New order: confirm on WhatsApp", "When a sale is posted for a customer with a phone number, sends them a confirmation.", "order_posted", ("whatsapp_twilio",), new_order_confirmation, _always, defers_sends=True),
+        Recipe("daily_brief", "Daily 9 am business brief", "Sends you a short summary of yesterday and today on WhatsApp every morning.", "daily_09_00", ("whatsapp_twilio",), daily_brief, _daily_at(9), defers_sends=True),
         Recipe("weekly_slow_stock_post", "Weekly post from slow-moving stock", "Every Monday, drafts a Facebook post about a product that has not sold for a month. You approve it first.", "weekly_monday", (), weekly_slow_stock_post, _always),
         Recipe("overdue_udhaar_reminder", "Overdue udhaar: payment reminder", "Drafts a polite reminder for each customer whose credit is over 14 days old. You approve each one; no customer is reminded twice in a week.", "daily_10_00", (), overdue_udhaar_reminder, _daily_at(10)),
-        Recipe("unanswered_message_alert", "Unanswered message: alert me", "Tells you on WhatsApp when a customer message has waited more than 15 minutes.", "message_waiting", ("whatsapp_twilio",), unanswered_message_alert, _always),
+        Recipe("unanswered_message_alert", "Unanswered message: alert me", "Tells you on WhatsApp when a customer message has waited more than 15 minutes.", "message_waiting", ("whatsapp_twilio",), unanswered_message_alert, _always, defers_sends=True),
     )
 }
