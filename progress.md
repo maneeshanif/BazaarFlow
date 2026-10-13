@@ -42,6 +42,19 @@
   - `tests/integration/test_health_and_controllers.py` integration test suite passing (5/5)
   - Full `uv sync` resolution with zero import/build errors
 
+- 2026-10-04: **Phase 1 code complete** (batches A, B, C; tasks 34-58, 63-65 done). Committed `75ab8c1` (secret-key test ignores `ALLOW_INSECURE_DEV_SECRET` from the environment); `verify.sh --lane api` passed (322 tests, mypy and ruff clean; Docker was off, so Postgres/RLS tests were skipped).
+- 2026-10-04: **Task 12 checked, NOT complete.** Done: no default `SECRET_KEY` fallback (tests guard it) and gitleaks runs in `.github/workflows/security.yml`. Open: `.env.example` is unchanged since the original commit and lacks 24 variables that `docs/operations/env.example.proposed` has (AGENT_*, AGENTS_ENABLED, DEMO_*, LLM_*, OPENAI_*, SIGNUP_MAX_PER_HOUR, STORAGE_*, SUPABASE_URL, SUPABASE_SERVICE_KEY). Fix: `cp docs/operations/env.example.proposed .env.example`.
+- 2026-10-04: **Phase status (as of 2026-10-04, superseded by the entries below):** Phase 0 and Phase 1 code closed; Phase 2 not started (tasks 70-85 and deferred 59-62 all open); Phases 3 and 4 not started. Phase 1 carry-overs still open: 02, 12, 21, 26.
+- 2026-10-06 to 2026-10-07: **Phase 2 and Phase 3 code built** on `feat/phase-1-mvp`: stock movements, vendors and payables, finance overview, platform admin, integrations (Twilio WhatsApp, Facebook, Pexels), unified inbox, marketing scheduler, onboarding wizard, system logs, marketing insights, automation recipes, VAPI voice agent. Still open: 31 (live VAPI call) and 90 (Meta Embedded Signup) need vendor accounts.
+- 2026-10-13: **Deferred workflow steps built** (design brief `docs/superpowers/specs/2026-10-13-deferred-features-design.md`):
+  - Recipes retry a transient failure (3 tries), then fall back to filing the messages as approvals, then the existing banner (`2c96261`).
+  - Draft purchase orders beside the low-stock reorder message, `/api/v1/purchase-orders` and a screen (`9deff72`).
+  - Customer order drafts: the WhatsApp agent's `request_order` files an approval; approving posts the sale on credit and confirms to the customer (`de7af61`).
+  - Facebook comment replies: read, propose, approve, post, `/api/v1/marketing/comments` and a screen (`7d4908f`).
+  - Urdu/RTL for the core screens, plus the Purchase orders and Comments screens (`0424e2e`).
+  - Verified: new Postgres tests, related regression suites, 315 UI tests, token check, typecheck, lint and a production build all pass. **The full `verify.sh --slow --all` gate has NOT completed**: Docker Desktop stopped partway through (fast tier passed: 385 tests, audit clean). Run it once Docker is back.
+- 2026-10-13: **Defaults chosen while the owner was away** (change on request): Gemini Flash with a 5 USD per shop per month AI cap; Urdu limited to core screens; platform-admin impersonation not built; legacy JSON routes kept mounted. Urdu strings need a native reader's review. No live Twilio, Facebook, Pexels or Gemini call has been made.
+
 ## In progress
 
 - **Services -> DB CRUD wiring**: replacing remaining JSON file store operations in service layers with async SQLAlchemy session calls via `app/crud/`
