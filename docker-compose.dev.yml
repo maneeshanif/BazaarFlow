@@ -1,0 +1,101 @@
+# Local development stack: Postgres, migrations and demo seed, the API (auto-reload) and the frontend (hot reload).
+#
+#   docker compose -f docker-compose.dev.yml up --build
+#
+# Frontend  http://localhost:3000        API  http://localhost:8000/docs        Postgres  localhost:5433
+# Sign in as demo@bazaarflow.app / Demo-Pass-2026!  (also demo-manager@ and demo-staff@, same password)
+#
+# Everything here is a throwaway: no provider keys, the scripted offline AI, in-memory file storage, no scheduler.
+# Reset the data with:  docker compose -f docker-compose.dev.yml down -v
+# This file is separate from docker-compose.yml, which is the production-shaped stack.
+
+x-db-env: &db-env
+  DATABASE_URL: postgresql+asyncpg://app_user:app-pw@db:5432/bazaarflow
+  DATABASE_URL_MIGRATIONS: postgresql+asyncpg://migrator:migrator-pw@db:5432/bazaarflow
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: admin-pw
+      POSTGRES_DB: bazaarflow
+    ports:
+      - "5433:5432"
+    volumes:
+      - dev_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bazaarflow"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  setup:
+    build:
+      context: .
+      dockerfile: backend.dev.Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./scripts/dev_bootstrap.py:/app/scripts/dev_bootstrap.py:ro
+    working_dir: /app
+    command: ["python", "scripts/dev_bootstrap.py"]
+    environment:
+      <<: *db-env
+      APP_ENV: development
+      ALLOW_INSECURE_DEV_SECRET: "true"
+      DEV_ADMIN_URL: postgresql://postgres:admin-pw@db:5432/bazaarflow
+      MIGRATOR_PASSWORD: migrator-pw
+      APP_USER_PASSWORD: app-pw
+      REPORT_RO_PASSWORD: report-pw
+      DEMO_USER_PASSWORD: Demo-Pass-2026!
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend.dev.Dockerfile
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+    environment:
+      <<: *db-env
+      APP_ENV: development
+      ALLOW_INSECURE_DEV_SECRET: "true"
+      LLM_PROVIDER: ${LLM_PROVIDER:-scripted}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      STORAGE_PROVIDER: fake
+      MARKETING_SCHEDULER_ENABLED: "false"
+      FRONTEND_ORIGIN: http://localhost:3000
+      PUBLIC_BASE_URL: http://localhost:8000
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - dev_node_modules:/app/node_modules
+      - dev_next_cache:/app/.next
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+      NEXT_TELEMETRY_DISABLED: "1"
+      WATCHPACK_POLLING: "true"
+    command: ["sh", "-c", "([ -x node_modules/.bin/next ] || npm ci) && npm run dev -- -H 0.0.0.0 -p 3000"]
+
+volumes:
+  dev_pgdata:
+  dev_node_modules:
+  dev_next_cache:

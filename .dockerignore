@@ -1,0 +1,13 @@
+.git
+.venv
+**/node_modules
+**/.next
+**/__pycache__
+frontend
+tests
+docs
+.env
+.env.*
+!.env.example
+dev.db
+*.pdf
