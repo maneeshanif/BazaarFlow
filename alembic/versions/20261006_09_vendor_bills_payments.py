@@ -34,7 +34,7 @@ def _common() -> list[sa.Column]:  # type: ignore[type-arg]
     ]
 
 
-def _tail() -> list[sa.SchemaItem]:
+def _tail() -> list[sa.schema.SchemaItem]:
     return [
         sa.Column("created_by", sa.Uuid(), nullable=True),
         sa.Column("created_at", sa.DateTime(timezone=True), nullable=False),
