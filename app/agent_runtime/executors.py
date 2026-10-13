@@ -17,7 +17,7 @@ from app.core.problems import DomainError
 from app.core.tenancy import Principal
 from app.models.tenant import TenantRole
 from app.schemas.order import OrderDetail, SaleCreate
-from app.services import ledger_service, order_service, stock_service
+from app.services import ledger_service, order_service, purchase_order_service, stock_service
 
 
 async def post_order_payload(
@@ -83,6 +83,8 @@ async def execute_action(
             sent = await send_whatsapp(db, approver.tenant_id, str(payload["phone"]), str(payload["text"]), f"action-{action_id}")
         except RecipeError as exc:
             raise DomainError(str(exc), code="send_failed") from exc
+        # a reorder message that went out completes its draft purchase order (W-006: approved -> sent)
+        await purchase_order_service.mark_sent_for_action(db, approver.tenant_id, action_id)
         return "Sent the WhatsApp message" if sent else "That message had already been sent"
     raise DomainError(f"Nothing knows how to run the action '{tool}'", code="unknown_action")
 

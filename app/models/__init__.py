@@ -13,6 +13,7 @@ from app.models.message import Message, MessageDirection
 from app.models.order import Order, OrderItem
 from app.models.payment import LedgerEntry, Payment
 from app.models.product import Product
+from app.models.purchase_order import PurchaseOrder, PurchaseOrderItem
 from app.models.security import LoginAttempt, RefreshToken
 from app.models.stock import StockMovement
 from app.models.support import SupportTicket
@@ -43,6 +44,8 @@ __all__ = [
     "OrderItem",
     "Payment",
     "Product",
+    "PurchaseOrder",
+    "PurchaseOrderItem",
     "RefreshToken",
     "ScheduledCampaign",
     "StockMovement",

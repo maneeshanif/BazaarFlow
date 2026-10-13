@@ -22,6 +22,7 @@ from app.api.routers.marketing_studio_router import router as marketing_studio_r
 from app.api.routers.onboarding_router import router as onboarding_router
 from app.api.routers.payables_router import router as payables_router
 from app.api.routers.platform_router import router as platform_router
+from app.api.routers.purchase_orders_router import router as purchase_orders_router
 from app.api.routers.sales_router import orders_router, sales_router
 from app.api.routers.settings_router import router as settings_router
 from app.api.routers.team_router import router as team_router
@@ -45,5 +46,6 @@ api_v1_router.include_router(payables_router)
 api_v1_router.include_router(settings_router)
 api_v1_router.include_router(finance_router)
 api_v1_router.include_router(platform_router)
+api_v1_router.include_router(purchase_orders_router)
 for _r in (voice_router, automations_router, channel_webhook_router, inbox_router, integrations_router, marketing_schedule_router, onboarding_router):
     api_v1_router.include_router(_r)

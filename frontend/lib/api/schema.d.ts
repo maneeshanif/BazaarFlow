@@ -1214,6 +1214,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/purchase-orders/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Purchase Orders */
+        get: operations["list_purchase_orders_api_v1_purchase_orders__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/purchase-orders/{order_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Purchase Order */
+        get: operations["get_purchase_order_api_v1_purchase_orders__order_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/purchase-orders/{order_id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Cancel Purchase Order */
+        post: operations["cancel_purchase_order_api_v1_purchase_orders__order_id__cancel_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/sales/": {
         parameters: {
             query?: never;
@@ -2848,6 +2899,15 @@ export interface components {
             /** Total */
             total: number;
         };
+        /** Page[PurchaseOrderOut] */
+        Page_PurchaseOrderOut_: {
+            /** Items */
+            items: components["schemas"]["PurchaseOrderOut"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+            /** Total */
+            total: number;
+        };
         /** Page[RunOut] */
         Page_RunOut_: {
             /** Items */
@@ -3175,6 +3235,91 @@ export interface components {
             previous: string;
             /** Value */
             value: string;
+        };
+        /** PurchaseOrderDetail */
+        PurchaseOrderDetail: {
+            /** Action Id */
+            action_id: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Item Count */
+            item_count: number;
+            /** Items */
+            items: components["schemas"]["PurchaseOrderItemOut"][];
+            /** Note */
+            note: string | null;
+            /** Sent At */
+            sent_at: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "drafted" | "approved" | "sent" | "cancelled";
+            /** Total */
+            total: string;
+            /** Vendor Has Phone */
+            vendor_has_phone: boolean;
+            /**
+             * Vendor Id
+             * Format: uuid
+             */
+            vendor_id: string;
+            /** Vendor Name */
+            vendor_name: string;
+        };
+        /** PurchaseOrderItemOut */
+        PurchaseOrderItemOut: {
+            /** Name */
+            name: string;
+            /** Product Id */
+            product_id: string | null;
+            /** Qty */
+            qty: number;
+            /** Unit Cost */
+            unit_cost: string | null;
+        };
+        /** PurchaseOrderOut */
+        PurchaseOrderOut: {
+            /** Action Id */
+            action_id: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Id
+             * Format: uuid
+             */
+            id: string;
+            /** Item Count */
+            item_count: number;
+            /** Sent At */
+            sent_at: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "drafted" | "approved" | "sent" | "cancelled";
+            /** Total */
+            total: string;
+            /** Vendor Has Phone */
+            vendor_has_phone: boolean;
+            /**
+             * Vendor Id
+             * Format: uuid
+             */
+            vendor_id: string;
+            /** Vendor Name */
+            vendor_name: string;
         };
         /** Receivables */
         Receivables: {
@@ -6611,6 +6756,101 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PlatformTenantOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_purchase_orders_api_v1_purchase_orders__get: {
+        parameters: {
+            query?: {
+                status?: ("drafted" | "approved" | "sent" | "cancelled") | null;
+                limit?: number;
+                cursor?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Page_PurchaseOrderOut_"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_purchase_order_api_v1_purchase_orders__order_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PurchaseOrderDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    cancel_purchase_order_api_v1_purchase_orders__order_id__cancel_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                order_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PurchaseOrderDetail"];
                 };
             };
             /** @description Validation Error */

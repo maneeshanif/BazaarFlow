@@ -38,10 +38,12 @@ from app.models.message import Message, MessageDirection
 from app.models.order import Order, OrderItem
 from app.models.payment import LedgerEntry
 from app.models.product import Product
+from app.models.purchase_order import PurchaseOrder
 from app.models.tenant import Tenant, TenantRole
 from app.models.vendor import Vendor
 from app.schemas.marketing_studio import DraftRequest
-from app.services import approvals, dashboard_service, integration_service
+from app.services import approvals, dashboard_service, integration_service, purchase_order_service
+from app.services.purchase_order_service import DraftLine
 from app.services.report_service import SHOP_TZ
 
 AUTOMATION_ACTOR = uuid.UUID("00000000-0000-0000-0000-00000000a3a3")
@@ -117,7 +119,7 @@ async def send_whatsapp(db: AsyncSession, tenant_id: uuid.UUID, phone: str, text
     if existing is not None and existing.status in {"sent", "delivered"}:
         return False
     if _defer_sends.get():
-        return await _file_approval(
+        filed = await _file_approval(
             db,
             tenant_id,
             agent="automation",
@@ -125,6 +127,7 @@ async def send_whatsapp(db: AsyncSession, tenant_id: uuid.UUID, phone: str, text
             summary=f"Send this WhatsApp message (WhatsApp was not available): {text[:80]}",
             payload={"phone": phone, "text": text, "purpose": "fallback", "source_key": key},
         )
+        return filed is not None
     try:
         adapter = await integration_service.adapter_for(db, tenant_id, "whatsapp_twilio")
     except DomainError as error:
@@ -168,8 +171,10 @@ async def _owner_phone(db: AsyncSession, tenant_id: uuid.UUID) -> tuple[str, str
     return tenant.owner_phone, tenant.name
 
 
-async def _file_approval(db: AsyncSession, tenant_id: uuid.UUID, *, agent: str, tool: str, summary: str, payload: dict[str, Any]) -> bool:
-    """File an approval unless an identical one is already waiting. Returns whether a new one was filed."""
+async def _file_approval(
+    db: AsyncSession, tenant_id: uuid.UUID, *, agent: str, tool: str, summary: str, payload: dict[str, Any]
+) -> AgentAction | None:
+    """File an approval unless an identical one is already waiting. Returns the new action, or None when one was waiting."""
     digest = approvals.payload_hash(payload)
     waiting = (
         await db.execute(
@@ -179,15 +184,14 @@ async def _file_approval(db: AsyncSession, tenant_id: uuid.UUID, *, agent: str, 
         )
     ).first()
     if waiting is not None:
-        return False
-    await approvals.request_action(
+        return None
+    return await approvals.request_action(
         ToolContext(tenant_id=tenant_id, user_id=AUTOMATION_ACTOR, role=TenantRole.manager, session=db),
         agent=agent,
         tool=tool,
         summary=summary,
         payload=payload,
     )
-    return True
 
 
 # -- 1. low stock -> a drafted vendor message --------------------------------------------------------------------
@@ -214,16 +218,33 @@ async def low_stock_vendor_draft(db: AsyncSession, tenant_id: uuid.UUID, now: da
     for product, inventory, vendor in rows:
         if vendor is None or not vendor.phone:
             no_phone += 1
-            continue
+        if vendor is None:
+            continue  # no vendor on the product: nobody to order from, so no order is drafted
         by_vendor.setdefault(vendor.id, (vendor, []))[1].append((product, inventory))
     filed = 0
     shop = (await db.execute(select(Tenant.name).where(Tenant.id == tenant_id))).scalar_one()
     for vendor, items in by_vendor.values():
-        lines = [f"- {p.name}: {max(i.reorder_level * 2 - i.qty_on_hand, 1)} (we have {i.qty_on_hand})" for p, i in items]
+        quantities = {p.id: max(i.reorder_level * 2 - i.qty_on_hand, 1) for p, i in items}
+        order_lines = [DraftLine(p.id, p.name, quantities[p.id], p.cost) for p, _i in items]
+        if not vendor.phone:
+            # W-006 failure path: the order stays a draft with a warning; one open draft per vendor is enough
+            open_draft = (
+                await db.execute(
+                    select(PurchaseOrder.id).where(
+                        PurchaseOrder.tenant_id == tenant_id, PurchaseOrder.vendor_id == vendor.id, PurchaseOrder.status == "drafted", PurchaseOrder.action_id.is_(None)
+                    )
+                )
+            ).first()
+            if open_draft is None:
+                await purchase_order_service.create_draft(db, tenant_id, vendor_id=vendor.id, lines=order_lines, action_id=None)
+            continue
+        lines = [f"- {p.name}: {quantities[p.id]} (we have {i.qty_on_hand})" for p, i in items]
         text = f"Hello {vendor.name}, this is {shop}. We are running low and would like to order:\n" + "\n".join(lines) + "\nPlease confirm availability and price."
         payload = {"phone": vendor.phone, "text": text, "vendor_id": str(vendor.id), "purpose": "reorder"}
-        if await _file_approval(db, tenant_id, agent="automation", tool="send_whatsapp_message", summary=f"Send a reorder message to {vendor.name} ({len(items)} items)", payload=payload):
+        action = await _file_approval(db, tenant_id, agent="automation", tool="send_whatsapp_message", summary=f"Send a reorder message to {vendor.name} ({len(items)} items)", payload=payload)
+        if action is not None:
             filed += 1
+            await purchase_order_service.create_draft(db, tenant_id, vendor_id=vendor.id, lines=order_lines, action_id=action.id)
     warning = f" {no_phone} low item(s) have no vendor phone number, so no message was drafted for them." if no_phone else ""
     return Outcome(f"Drafted {filed} vendor message(s) for approval.{warning}" if (filed or no_phone) else "Nothing is low on stock.", filed + no_phone)
 
