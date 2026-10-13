@@ -1,56 +1,74 @@
 {
   "diagrams": [
     {
+      "name": "Overview",
+      "output": "overview.md",
+      "template": "overview.template.md",
+      "columns": false,
+      "hide_fk_to": ["tenants"],
+      "tables": {
+        "Tenancy and security": ["tenants", "users", "memberships", "refresh_tokens", "login_attempts", "tenant_integrations", "webhook_events", "audit_logs"],
+        "Catalog, inventory and sales": ["products", "inventory_items", "stock_movements", "customers", "orders", "order_items", "payments", "ledger_entries"],
+        "Purchasing and vendors": ["vendors", "vendor_bills", "vendor_payments", "purchase_orders", "purchase_order_items"],
+        "Conversations, support and voice": ["conversations", "messages", "support_tickets", "voice_calls", "voice_settings"],
+        "Marketing": ["facebook_accounts", "marketing_posts", "scheduled_campaigns", "marketing_schedules", "comment_replies"],
+        "AI and automation": ["agent_actions", "agent_runs", "automations", "automation_runs"]
+      }
+    },
+    {
       "name": "Tenancy and security",
       "output": "tenancy-security.md",
       "template": "tenancy-security.template.md",
       "tables": {
-        "Tenancy and security": [
-          "tenants",
-          "users",
-          "memberships",
-          "tenant_integrations",
-          "audit_logs"
-        ]
+        "Tenancy and security": ["tenants", "users", "memberships", "refresh_tokens", "login_attempts", "tenant_integrations", "webhook_events", "audit_logs"]
       }
     },
     {
-      "name": "Catalog, sales and finance",
+      "name": "Catalog, inventory and sales",
       "output": "catalog-sales-finance.md",
       "template": "catalog-sales-finance.template.md",
+      "hide_fk_to": ["tenants"],
       "tables": {
-        "Catalog, sales and finance": [
-          "products",
-          "inventory_items",
-          "stock_movements",
-          "vendors",
-          "customers",
-          "orders",
-          "order_items",
-          "payments",
-          "ledger_entries",
-          "purchase_orders"
-        ]
+        "Catalog, inventory and sales": ["products", "inventory_items", "stock_movements", "customers", "orders", "order_items", "payments", "ledger_entries"],
+        "Referenced": ["vendors"]
       }
     },
     {
-      "name": "Conversations, marketing and AI",
-      "output": "conversations-marketing-ai.md",
-      "template": "conversations-marketing-ai.template.md",
+      "name": "Purchasing and vendors",
+      "output": "purchasing-vendors.md",
+      "template": "purchasing-vendors.template.md",
+      "hide_fk_to": ["tenants"],
       "tables": {
-        "Conversations, marketing and AI": [
-          "conversations",
-          "messages",
-          "support_tickets",
-          "voice_calls",
-          "facebook_accounts",
-          "marketing_posts",
-          "scheduled_campaigns",
-          "agent_actions",
-          "agent_runs",
-          "automations",
-          "automation_runs"
-        ]
+        "Purchasing and vendors": ["vendors", "vendor_bills", "vendor_payments", "purchase_orders", "purchase_order_items"],
+        "Referenced": ["products"]
+      }
+    },
+    {
+      "name": "Conversations, support and voice",
+      "output": "conversations-support-voice.md",
+      "template": "conversations-support-voice.template.md",
+      "hide_fk_to": ["tenants"],
+      "tables": {
+        "Conversations, support and voice": ["conversations", "messages", "support_tickets", "voice_calls", "voice_settings"],
+        "Referenced": ["customers"]
+      }
+    },
+    {
+      "name": "Marketing",
+      "output": "marketing.md",
+      "template": "marketing.template.md",
+      "hide_fk_to": ["tenants"],
+      "tables": {
+        "Marketing": ["facebook_accounts", "marketing_posts", "scheduled_campaigns", "marketing_schedules", "comment_replies"]
+      }
+    },
+    {
+      "name": "AI and automation",
+      "output": "ai-automation.md",
+      "template": "ai-automation.template.md",
+      "hide_fk_to": ["tenants"],
+      "tables": {
+        "AI and automation": ["agent_actions", "agent_runs", "automations", "automation_runs"]
       }
     }
   ]
