@@ -1,5 +1,5 @@
 # -- Stage 1: Build dependencies with uv ---------------------------------------
-FROM python:3.12-slim AS builder
+FROM python:3.14-slim AS builder
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
@@ -9,7 +9,7 @@ COPY pyproject.toml uv.lock README.md ./
 RUN uv sync --frozen --no-dev
 
 # -- Stage 2: Production runtime -----------------------------------------------
-FROM python:3.12-slim AS runner
+FROM python:3.14-slim AS runner
 
 WORKDIR /app
 
