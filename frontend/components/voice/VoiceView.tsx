@@ -61,7 +61,7 @@ function SettingsForm({ settings, canEdit, onSaved }: { settings: VoiceSettings;
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate aria-label="Voice settings" className="flex max-w-form flex-col gap-4 rounded-lg border border-border bg-surface p-4">
+    <form onSubmit={onSubmit} noValidate aria-label="Voice settings" className="flex max-w-form flex-col gap-4 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
       {formLevel ? (
         <p role="alert" className="rounded-md border border-danger-border bg-danger-subtle px-3 py-2 text-ui-sm text-danger">
           {formLevel}
@@ -124,7 +124,7 @@ function ConfigDialog({ onClose }: { onClose: () => void }) {
     <Dialog.Root open onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-fg/40" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[min(94vw,44rem)] -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg border border-border bg-surface-raised p-4 shadow-popover focus-visible:outline-none">
+        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[min(94vw,44rem)] -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-card border-2 border-line-strong bg-surface-raised-raised p-4 shadow-popover focus-visible:outline-none">
           <Dialog.Title className="text-ui-md font-semibold text-fg">Assistant to create in VAPI</Dialog.Title>
           <Dialog.Description className="text-ui-sm text-fg-muted">Copy this JSON into a new assistant in your VAPI dashboard, then follow the notes.</Dialog.Description>
           {loaded.state === "error" ? <p role="alert" className="mt-2 text-danger">{loaded.error?.message}</p> : null}
@@ -156,7 +156,7 @@ function CallDialog({ id, onClose }: { id: string; onClose: () => void }) {
     <Dialog.Root open onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-fg/40" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[min(94vw,40rem)] -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg border border-border bg-surface-raised p-4 shadow-popover focus-visible:outline-none">
+        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[min(94vw,40rem)] -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-card border-2 border-line-strong bg-surface-raised-raised p-4 shadow-popover focus-visible:outline-none">
           <Dialog.Title className="text-ui-md font-semibold text-fg">Call details</Dialog.Title>
           <Dialog.Description className="text-ui-sm text-fg-muted">Personal details are removed from transcripts before they are stored.</Dialog.Description>
           {call ? (

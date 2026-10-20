@@ -33,9 +33,9 @@ export function DashboardView() {
   const data = loaded.data;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
       <PageHeader title="Home" description="How the shop is doing." />
-      <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-surface p-3" role="search" aria-label="Choose the period">
+      <div className="flex flex-wrap items-end gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card" role="search" aria-label="Choose the period">
         <div className="flex flex-col gap-1">
           <label htmlFor="range" className="text-ui-xs font-medium text-fg-muted">
             Period
@@ -53,7 +53,7 @@ export function DashboardView() {
       {loaded.state === "loading" && !data ? (
         <div role="status" aria-busy="true" aria-label="Loading the dashboard" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[0, 1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-24 w-full" />
+            <Skeleton key={i} className="h-36 w-full rounded-card" />
           ))}
         </div>
       ) : null}
@@ -62,13 +62,13 @@ export function DashboardView() {
       {data ? (
         <>
           {data.briefing ? (
-            <section aria-label="Briefing" className="rounded-lg border border-border bg-surface p-4">
-              <h2 className="text-ui-md font-semibold text-fg">Briefing</h2>
-              <p className="mt-1 max-w-prose text-ui-base text-fg">{data.briefing}</p>
+            <section aria-label="Briefing" className="-rotate-1 rounded-chip bg-sunny p-6 text-forest-ink shadow-card">
+              <h2 className="text-ui-xl">Briefing</h2>
+              <p className="mt-2 max-w-prose text-ui-md font-medium">{data.briefing}</p>
             </section>
           ) : null}
 
-          <section aria-label="Key figures" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <section aria-label="Key figures" className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
             <KpiCard label={`${WHEN[data.range]} sales`} value={formatMoney(data.sales.value)} delta={delta(data.sales.change_percent)} href="/orders" />
             {data.profit ? (
               <KpiCard label={`${WHEN[data.range]} profit`} value={formatMoney(data.profit.value)} delta={delta(data.profit.change_percent)} href="/orders" />

@@ -107,7 +107,7 @@ export function TenantsView() {
     <div className="flex flex-col gap-4">
       <PageHeader title="Shops" description="Every shop on BazaarFlow. Suspending a shop locks its people out at once." />
 
-      <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-surface p-3" role="search" aria-label="Filter shops">
+      <div className="flex flex-wrap items-end gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card" role="search" aria-label="Filter shops">
         <div className="flex min-w-48 flex-1 flex-col gap-1">
           <label htmlFor="tenant-search" className="text-ui-xs font-medium text-fg-muted">
             Search

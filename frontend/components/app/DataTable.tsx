@@ -49,7 +49,7 @@ export function DataTable<T extends Record<string, unknown>>({
 }: Props<T>) {
   const t = useT();
   const cellClass = (c: Column<T>) =>
-    cn("px-3 py-2 text-ui-sm text-fg", (c.numeric || c.money) && "text-end tabular-nums", c.money && "font-mono", c.mono && "font-mono");
+    cn("px-4 py-3 text-ui-base text-fg", (c.numeric || c.money) && "text-end tabular-nums", c.money && "font-mono", c.mono && "font-mono");
 
   const message = (node: ReactNode) => (
     <tr>
@@ -60,17 +60,17 @@ export function DataTable<T extends Record<string, unknown>>({
   );
 
   return (
-    <div data-testid="table-scroll" className="overflow-x-auto rounded-lg border border-border bg-surface">
+    <div data-testid="table-scroll" className="overflow-x-auto rounded-card border-2 border-line-strong bg-surface">
       <table className="w-max min-w-full border-collapse" aria-busy={state === "loading"}>
         <caption className="sr-only">{t(caption)}</caption>
         <thead>
-          <tr className="sticky top-0 bg-surface-sunken">
+          <tr className="sticky top-0 bg-lime text-forest-ink dark:bg-action-subtle dark:text-lime">
             {columns.map((c) => (
               <th
                 key={c.key}
                 scope="col"
                 className={cn(
-                  "px-3 py-2 text-start text-ui-xs font-medium text-fg-muted",
+                  "px-4 py-3 text-start font-display text-ui-sm font-normal uppercase tracking-wide",
                   (c.numeric || c.money) && "text-end",
                 )}
               >
@@ -86,7 +86,7 @@ export function DataTable<T extends Record<string, unknown>>({
           {state === "unauthorized" && message(<UnauthorizedState />)}
           {state === "ready" &&
             rows.map((row, i) => (
-              <tr key={rowKey ? rowKey(row, i) : i} className="border-t border-border hover:bg-surface-hover">
+              <tr key={rowKey ? rowKey(row, i) : i} className="border-t-2 border-dotted border-line-strong hover:bg-surface-hover">
                 {columns.map((c) => {
                   const value = row[c.key];
                   let content: ReactNode;

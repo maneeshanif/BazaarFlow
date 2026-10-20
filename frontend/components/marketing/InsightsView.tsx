@@ -31,7 +31,7 @@ export function InsightsView() {
   return (
     <div className="flex flex-col gap-4">
       <PageHeader title="Marketing insights" description="How your Facebook posts did." />
-      <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-surface p-3" role="search" aria-label="Choose the period">
+      <div className="flex flex-wrap items-end gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card" role="search" aria-label="Choose the period">
         <div className="flex flex-col gap-1">
           <label htmlFor="insight-range" className="text-ui-xs font-medium text-fg-muted">
             Period
@@ -49,7 +49,7 @@ export function InsightsView() {
       {loaded.state === "error" ? <ErrorState message={loaded.error?.message ?? "Could not load the insights."} onRetry={loaded.reload} /> : null}
 
       {data?.is_empty ? (
-        <section aria-label="Nothing to show yet" className="flex flex-col items-start gap-3 rounded-lg border border-border bg-surface p-4">
+        <section aria-label="Nothing to show yet" className="flex flex-col items-start gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
           <h2 className="text-ui-md font-semibold text-fg">No posts yet</h2>
           <p className="text-ui-sm text-fg-muted">Publish a post, or switch on the posting schedule, and its results show up here.</p>
           <Link href="/marketing/schedule" className={buttonClass("primary")}>
@@ -68,7 +68,7 @@ export function InsightsView() {
           </section>
           <p className="text-ui-sm text-fg-muted">{formatNumber(data.from_schedule)} of the published posts were written by your schedule.</p>
 
-          <section aria-label="Posts per day" className="rounded-lg border border-border bg-surface p-4">
+          <section aria-label="Posts per day" className="rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
             <h2 className="text-ui-md font-semibold text-fg">Posts per day</h2>
             <div className="mt-4 flex h-32 items-end gap-1" aria-hidden="true">
               {data.trend.map((d) => (
@@ -108,7 +108,7 @@ export function InsightsView() {
             ) : (
               <ul className="flex flex-col gap-1">
                 {data.top_posts.map((p) => (
-                  <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-ui-sm">
+                  <li key={p.id} className="flex flex-wrap items-center justify-between gap-2 rounded-card border-2 border-line-strong bg-surface-raised shadow-card px-3 py-2 text-ui-sm">
                     <span className="text-fg">{p.title}</span>
                     <span className="text-fg-muted">
                       {formatDateTime(p.published_at)} · {p.comments === null ? "comments not available" : `${formatNumber(p.comments)} ${p.comments === 1 ? "comment" : "comments"}`}

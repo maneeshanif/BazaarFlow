@@ -8,15 +8,15 @@ import { cn } from "@/lib/utils";
 type Action = { label: string; onClick: () => void };
 
 const actionClass =
-  "inline-flex h-control-md items-center rounded-md border border-border bg-surface px-3 text-ui-base font-medium text-fg hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-line-focus";
+  "inline-flex h-control-md items-center rounded-pill border-2 border-action bg-surface px-5 text-ui-base font-bold text-fg hover:bg-lime hover:text-forest-ink focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-line-focus";
 
 function Frame({ icon, title, children, role }: { icon: ReactNode; title: string; children?: ReactNode; role?: "alert" }) {
   return (
     <div role={role} className="flex flex-col items-center gap-2 px-4 py-10 text-center">
-      <span aria-hidden className="text-fg-subtle">
+      <span aria-hidden className="flex h-16 w-16 items-center justify-center rounded-full bg-lime text-forest-ink">
         {icon}
       </span>
-      <p className="text-ui-md font-semibold text-fg">{title}</p>
+      <p className="font-display text-ui-xl uppercase text-fg">{title}</p>
       {children}
     </div>
   );
@@ -24,7 +24,7 @@ function Frame({ icon, title, children, role }: { icon: ReactNode; title: string
 
 export function EmptyState({ message, action }: { message: string; action?: Action }) {
   return (
-    <Frame icon={<Inbox className="h-6 w-6" />} title={message}>
+    <Frame icon={<Inbox className="h-7 w-7" />} title={message}>
       {action ? (
         <button type="button" className={actionClass} onClick={action.onClick}>
           {action.label}
@@ -36,7 +36,7 @@ export function EmptyState({ message, action }: { message: string; action?: Acti
 
 export function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
-    <Frame role="alert" icon={<AlertTriangle className="h-6 w-6 text-danger" />} title={message}>
+    <Frame role="alert" icon={<AlertTriangle className="h-7 w-7" />} title={message}>
       {onRetry ? (
         <button type="button" className={actionClass} onClick={onRetry}>
           Try again
@@ -48,7 +48,7 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
 
 export function UnauthorizedState({ message }: { message?: string }) {
   return (
-    <Frame icon={<Lock className="h-6 w-6" />} title="Access is restricted">
+    <Frame icon={<Lock className="h-7 w-7" />} title="Access is restricted">
       <p className="max-w-form text-ui-sm text-fg-muted">
         {message ?? "Your role does not include this page. Ask the shop owner if you need access."}
       </p>
@@ -63,8 +63,8 @@ export function TableSkeleton({ columns, rows = 5, className }: { columns: numbe
       {Array.from({ length: rows }).map((_, r) => (
         <tr key={r} data-testid="skeleton-row" className={cn("border-t border-border", className)}>
           {Array.from({ length: columns }).map((__, c) => (
-            <td key={c} className="px-3 py-2">
-              <Skeleton className="h-4 w-full" />
+            <td key={c} className="px-4 py-3">
+              <Skeleton className="h-5 w-full" />
             </td>
           ))}
         </tr>

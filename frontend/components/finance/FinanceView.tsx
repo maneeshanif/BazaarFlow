@@ -31,7 +31,7 @@ function RevenueTrend({ trend }: { trend: FinanceOverview["trend"] }) {
   const label = `Revenue, last ${trend.length} days`;
   if (max === 0) {
     return (
-      <section aria-label={label} className="flex flex-col items-start gap-3 rounded-lg border border-border bg-surface p-4">
+      <section aria-label={label} className="flex flex-col items-start gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
         <h2 className="text-ui-md font-semibold text-fg">{label}</h2>
         <p className="text-ui-sm text-fg-muted">No sales in this period. Record a sale and the days will fill in here.</p>
         <Link href="/sales/new" className={buttonClass("primary")}>
@@ -42,7 +42,7 @@ function RevenueTrend({ trend }: { trend: FinanceOverview["trend"] }) {
   }
   const month = trend.length > 7;
   return (
-    <section aria-label={label} className="rounded-lg border border-border bg-surface p-4">
+    <section aria-label={label} className="rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
       <h2 className="text-ui-md font-semibold text-fg">{label}</h2>
       <div className="mt-4 flex h-40 items-end gap-1" aria-hidden="true">
         {trend.map((d) => (
@@ -187,7 +187,7 @@ export function FinanceView({ endpoint, title, description, showCashBook = false
   return (
     <div className="flex flex-col gap-4">
       <PageHeader title={title} description={description} />
-      <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-surface p-3" role="search" aria-label="Choose the period">
+      <div className="flex flex-wrap items-end gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card" role="search" aria-label="Choose the period">
         <div className="flex flex-col gap-1">
           <label htmlFor="finance-range" className="text-ui-xs font-medium text-fg-muted">
             Period
@@ -213,7 +213,7 @@ export function FinanceView({ endpoint, title, description, showCashBook = false
       {loaded.state === "unauthorized" ? <ErrorState message="Only the shop owner can open this page." /> : null}
 
       {data && data.is_empty ? (
-        <section aria-label="Nothing to show yet" className="flex flex-col items-start gap-3 rounded-lg border border-border bg-surface p-4">
+        <section aria-label="Nothing to show yet" className="flex flex-col items-start gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
           <h2 className="text-ui-md font-semibold text-fg">Nothing to show yet</h2>
           <p className="max-w-prose text-ui-sm text-fg-muted">Your revenue, receivables and payables appear here once you record a sale or a vendor bill.</p>
           <Link href="/sales/new" className={buttonClass("primary")}>
@@ -242,7 +242,7 @@ export function FinanceView({ endpoint, title, description, showCashBook = false
 
           <RevenueTrend trend={data.trend} />
 
-          <section aria-label="Cash and credit" className="rounded-lg border border-border bg-surface p-4">
+          <section aria-label="Cash and credit" className="rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
             <h2 className="text-ui-md font-semibold text-fg">Cash and credit</h2>
             <dl className="mt-2 grid grid-cols-2 gap-4 text-ui-sm">
               <div>

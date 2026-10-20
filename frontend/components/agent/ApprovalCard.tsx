@@ -35,7 +35,7 @@ export function ApprovalCard({ approval, canDecide, onChanged, className }: { ap
   }
 
   return (
-    <article aria-label={`${KIND[approval.tool] ?? "Request"}: ${approval.summary}`} className={cn("rounded-lg border border-border bg-surface p-4", className)}>
+    <article aria-label={`${KIND[approval.tool] ?? "Request"}: ${approval.summary}`} className={cn("rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card", className)}>
       <header className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="text-ui-base font-semibold text-fg">{KIND[approval.tool] ?? approval.tool}</h3>
         <StatusBadge status={approval.status} />

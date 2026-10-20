@@ -100,7 +100,7 @@ export default function ProductsPage() {
         }
       />
 
-      <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-surface p-3" role="search" aria-label="Filter products">
+      <div className="flex flex-wrap items-end gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card" role="search" aria-label="Filter products">
         <div className="flex min-w-48 flex-1 flex-col gap-1">
           <label htmlFor="product-search" className="text-ui-xs font-medium text-fg-muted">
             Search

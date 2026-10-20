@@ -18,7 +18,7 @@ type Props = {
   audit?: ReactNode;
 };
 
-const panel = "rounded-lg border border-border bg-surface p-4";
+const panel = "rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card";
 
 /**
  * The mandated form layout (PRD §5.1, ui-rules.md): header -> filters or master fields -> detail grid -> totals ->

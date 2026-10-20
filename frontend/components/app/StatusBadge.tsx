@@ -24,7 +24,7 @@ export function StatusBadge({ status, label, className }: { status: string; labe
     <span
       data-tone={tone}
       className={cn(
-        "inline-flex items-center rounded-sm border px-2 py-0.5 text-ui-2xs font-medium leading-4",
+        "inline-flex items-center rounded-pill border-2 px-3 py-0.5 text-ui-xs font-bold leading-5",
         TONE_CLASS[tone],
         className,
       )}

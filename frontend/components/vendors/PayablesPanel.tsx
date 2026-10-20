@@ -107,7 +107,7 @@ export function PayablesPanel({ vendor, onChanged }: { vendor: ShopVendor; onCha
 
   return (
     <section aria-label="Payables" className="flex max-w-form flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-surface p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
         <div>
           <h2 className="text-ui-md font-semibold text-fg">Payables</h2>
           <p className="text-ui-sm text-fg-muted">What you owe this vendor for stock you bought on credit.</p>
@@ -120,7 +120,7 @@ export function PayablesPanel({ vendor, onChanged }: { vendor: ShopVendor; onCha
         </div>
       </div>
 
-      <form onSubmit={onBill} noValidate aria-label="Add a bill" className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+      <form onSubmit={onBill} noValidate aria-label="Add a bill" className="flex flex-col gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
         <h3 className="text-ui-base font-semibold text-fg">Add a bill</h3>
         {alert(billRefused)}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -145,7 +145,7 @@ export function PayablesPanel({ vendor, onChanged }: { vendor: ShopVendor; onCha
       </form>
 
       {owes ? (
-        <form onSubmit={onPay} noValidate aria-label="Record a payment" className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+        <form onSubmit={onPay} noValidate aria-label="Record a payment" className="flex flex-col gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
           <h3 className="text-ui-base font-semibold text-fg">Record a payment</h3>
           {alert(payRefused)}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">

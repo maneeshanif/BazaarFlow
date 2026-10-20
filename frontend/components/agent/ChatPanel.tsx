@@ -31,7 +31,7 @@ function ProposalCard({ action, canDecide }: { action: ChatAction; canDecide: bo
   const [override, setOverride] = useState<Approval | null>(null);
   if (!canDecide) {
     return (
-      <div className="rounded-lg border border-border bg-surface p-3 text-ui-sm" aria-label={`Request: ${action.summary}`}>
+      <div className="rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card text-ui-sm" aria-label={`Request: ${action.summary}`}>
         <div className="flex items-center justify-between gap-2">
           <span className="font-medium text-fg">{action.summary}</span>
           <StatusBadge status={action.status} />
@@ -43,7 +43,7 @@ function ProposalCard({ action, canDecide }: { action: ChatAction; canDecide: bo
   const approval = override ?? loaded.data;
   if (!approval) {
     return (
-      <div className="rounded-lg border border-border bg-surface p-3 text-ui-sm text-fg-muted" role="status">
+      <div className="rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card text-ui-sm text-fg-muted" role="status">
         {loaded.state === "error" ? "Could not load this request." : "Loading the request..."}
       </div>
     );
@@ -96,7 +96,7 @@ export function ChatPanel() {
 
   return (
     <section aria-label="Sales chat" className="flex min-h-[28rem] max-w-3xl flex-col gap-3">
-      <div className="flex-1 overflow-y-auto rounded-lg border border-border bg-surface p-4" aria-live="polite" aria-relevant="additions">
+      <div className="flex-1 overflow-y-auto rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card" aria-live="polite" aria-relevant="additions">
         {messages.length === 0 ? (
           <div className="flex flex-col items-start gap-3">
             <p className="text-ui-md font-semibold text-fg">Tell me what you sold</p>

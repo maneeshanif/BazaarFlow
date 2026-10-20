@@ -51,7 +51,7 @@ function ApprovalsList() {
   return (
     <div className="flex flex-col gap-4">
       <PageHeader title="Approvals" description="What the AI assistant wants to do. Nothing changes until you approve it." />
-      <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-surface p-3" role="search" aria-label="Filter approvals">
+      <div className="flex flex-wrap items-end gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card" role="search" aria-label="Filter approvals">
         <div className="flex flex-col gap-1">
           <label htmlFor="approval-status" className="text-ui-xs font-medium text-fg-muted">
             Show
@@ -84,7 +84,7 @@ function ApprovalsList() {
       {list.state === "error" ? <ErrorState message={list.error?.message ?? "Could not load approvals."} onRetry={list.reload} /> : null}
       {list.state === "unauthorized" ? <UnauthorizedState /> : null}
       {list.state === "empty" ? (
-        <div className="rounded-lg border border-border bg-surface">
+        <div className="rounded-card border-2 border-line-strong bg-surface-raised shadow-card">
           <EmptyState message={EMPTY[status] ?? "Nothing here."} />
         </div>
       ) : null}

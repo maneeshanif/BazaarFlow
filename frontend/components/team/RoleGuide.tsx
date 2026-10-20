@@ -7,7 +7,7 @@ export const ROLE_HELP: Record<string, string> = {
 
 export function RoleGuide() {
   return (
-    <section aria-label="What each role can do" className="rounded-lg border border-border bg-surface p-4">
+    <section aria-label="What each role can do" className="rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
       <h2 className="text-ui-md font-semibold text-fg">What each role can do</h2>
       <dl className="mt-2 grid gap-2 text-ui-sm md:grid-cols-3">
         {(["owner", "manager", "staff"] as const).map((role) => (

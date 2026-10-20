@@ -81,7 +81,7 @@ export function LedgerPanel({ customer, onChanged }: { customer: Customer; onCha
 
   return (
     <section aria-label="Udhaar" className="flex max-w-form flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-surface p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
         <div>
           <h2 className="text-ui-md font-semibold text-fg">Udhaar</h2>
           <p className="text-ui-sm text-fg-muted">What this customer owes you for sales on credit.</p>
@@ -95,7 +95,7 @@ export function LedgerPanel({ customer, onChanged }: { customer: Customer; onCha
       </div>
 
       {owes ? (
-        <form onSubmit={onSubmit} noValidate aria-label="Record a payment" className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-4">
+        <form onSubmit={onSubmit} noValidate aria-label="Record a payment" className="flex flex-col gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
           <h3 className="text-ui-base font-semibold text-fg">Record a payment</h3>
           {refused ? (
             <p role="alert" className="rounded-md border border-danger-border bg-danger-subtle px-3 py-2 text-ui-sm text-danger">

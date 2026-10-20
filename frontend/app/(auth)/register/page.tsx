@@ -75,17 +75,17 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-canvas p-4">
+    <main className="flex min-h-screen items-center justify-center paper-lime p-4">
       <div className="w-full max-w-md">
-        <p className="mb-4 text-center text-ui-lg font-semibold text-fg">BazaarFlow</p>
+        <p className="mb-5 text-center font-display text-ui-3xl uppercase text-forest-ink">BazaarFlow</p>
         <form
           onSubmit={onSubmit}
           noValidate
           aria-label="Create your shop"
-          className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-6 shadow-popover"
+          className="flex flex-col gap-4 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-popover"
         >
           <div>
-            <h1 className="text-ui-xl font-semibold text-fg">Create your shop</h1>
+            <h1 className="text-ui-2xl">Create your shop</h1>
             <p className="text-ui-sm text-fg-muted">One account for you, one shop to run. It takes a minute.</p>
           </div>
 

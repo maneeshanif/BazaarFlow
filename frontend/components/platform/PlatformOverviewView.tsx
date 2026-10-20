@@ -31,7 +31,7 @@ export function PlatformOverviewView() {
       {loaded.state === "unauthorized" ? <ErrorState message="Only BazaarFlow operators can open this page." /> : null}
 
       {data && data.is_empty ? (
-        <section aria-label="Nothing to show yet" className="flex flex-col items-start gap-3 rounded-lg border border-border bg-surface p-4">
+        <section aria-label="Nothing to show yet" className="flex flex-col items-start gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
           <h2 className="text-ui-md font-semibold text-fg">No shops yet</h2>
           <p className="text-ui-sm text-fg-muted">Shops appear here as soon as someone signs up.</p>
         </section>

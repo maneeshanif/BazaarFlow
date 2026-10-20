@@ -1,5 +1,10 @@
 # UI Rules
 
+> **Superseded in part by `docs/adr/0005-playful-identity.md` (2026-10-21).** The owner replaced the dense neutral look with
+> the playful identity in `docs/design/reference-sweettape/`. Where this file gives sizes (36px grid rows, 34px controls,
+> 24px padding, `text-xl` KPI values, "full width, no centered container") the ADR and the tokens in `app/global.css` win.
+> Everything about forms, the four states, authorization, accessibility, formatting and the PRD fields is unchanged.
+
 Rules for building BazaarFlow UI. The PRD is the functional source of truth for information hierarchy, fields and actions. These rules keep every screen consistent.
 
 **Reference the feature/form ID in every UI task.** Never invent business fields.

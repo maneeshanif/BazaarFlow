@@ -23,7 +23,7 @@ export function AgentStatusPanel({ status, onChanged }: { status: AgentStatus; o
   }
 
   return (
-    <section aria-label="AI assistant status" className="grid gap-4 rounded-lg border border-border bg-surface p-4 md:grid-cols-[1fr_1fr_auto] md:items-center">
+    <section aria-label="AI assistant status" className="grid gap-4 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card md:grid-cols-[1fr_1fr_auto] md:items-center">
       <div>
         <h2 className="text-ui-md font-semibold text-fg">AI assistant</h2>
         <p className="mt-1 flex items-center gap-2 text-ui-sm text-fg-muted">

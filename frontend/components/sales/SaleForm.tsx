@@ -246,7 +246,7 @@ export function SaleForm() {
             {show("lines")}
           </p>
         ) : null}
-        <div className="overflow-x-auto rounded-lg border border-border bg-surface">
+        <div className="overflow-x-auto rounded-card border-2 border-line-strong bg-surface-raised shadow-card">
           <table className="w-max min-w-full border-collapse">
             <caption className="sr-only">Items on this sale</caption>
             <thead>

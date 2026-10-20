@@ -89,7 +89,7 @@ function Activity() {
         </p>
       ) : null}
 
-      <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-surface p-3" role="search" aria-label="Filter activity">
+      <div className="flex flex-wrap items-end gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card" role="search" aria-label="Filter activity">
         <div className="flex flex-col gap-1">
           <label htmlFor="run-outcome" className="text-ui-xs font-medium text-fg-muted">
             Result

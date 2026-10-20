@@ -119,7 +119,7 @@ function Thread({ id, onChanged }: { id: string; onChanged: () => void }) {
   return (
     <div className="grid min-h-0 grid-cols-1 gap-3 xl:grid-cols-[1fr_16rem]">
       <section aria-label="Conversation" className="flex min-w-0 flex-col gap-3">
-        <header className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border bg-surface p-3">
+        <header className="flex flex-wrap items-center justify-between gap-2 rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card">
           <div className="min-w-0">
             <h2 className="truncate text-ui-md font-semibold text-fg">{conversation.contact_name ?? conversation.phone}</h2>
             <p className="font-mono text-ui-xs text-fg-muted">{conversation.phone}</p>
@@ -160,7 +160,7 @@ function Thread({ id, onChanged }: { id: string; onChanged: () => void }) {
           </p>
         ) : null}
 
-        <ul aria-label="Messages" className="flex max-h-[28rem] min-h-40 flex-col gap-3 overflow-y-auto rounded-lg border border-border bg-surface-sunken p-3">
+        <ul aria-label="Messages" className="flex max-h-[28rem] min-h-40 flex-col gap-3 overflow-y-auto rounded-card border-2 border-line-strong bg-surface-raised shadow-card-sunken p-3">
           {messages.map((m) => (
             <Bubble key={m.id} message={m} onRetry={(mid) => void onRetry(mid)} />
           ))}
@@ -185,7 +185,7 @@ function Thread({ id, onChanged }: { id: string; onChanged: () => void }) {
         </form>
       </section>
 
-      <aside aria-label="Customer" className="flex flex-col gap-3 rounded-lg border border-border bg-surface p-3 text-ui-sm">
+      <aside aria-label="Customer" className="flex flex-col gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card text-ui-sm">
         <h3 className="text-ui-base font-semibold text-fg">Customer</h3>
         <p className="text-fg">{context.customer_name ?? "Not a saved customer"}</p>
         {context.balance !== null ? (
@@ -261,7 +261,7 @@ export function InboxView() {
       <PageHeader title="Inbox" description="Customer messages from WhatsApp. The AI answers prices and stock; you take over any time." />
       <div className="grid min-h-0 grid-cols-1 gap-3 lg:grid-cols-[18rem_1fr]">
         <section aria-label="Conversations" className={cn("flex min-w-0 flex-col gap-2", selected && "hidden lg:flex")}>
-          <div className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-3" role="search" aria-label="Filter conversations">
+          <div className="flex flex-col gap-2 rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card" role="search" aria-label="Filter conversations">
             <label htmlFor="inbox-search" className="text-ui-xs font-medium text-fg-muted">
               Search
             </label>
@@ -280,7 +280,7 @@ export function InboxView() {
           {list.state === "loading" && !list.data ? <Skeleton className="h-40 w-full" /> : null}
           {list.state === "error" ? <ErrorState message={list.error?.message ?? "Could not load conversations."} onRetry={list.reload} /> : null}
           {list.state === "empty" ? (
-            <p className="rounded-lg border border-border bg-surface p-3 text-ui-sm text-fg-muted">
+            <p className="rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card text-ui-sm text-fg-muted">
               {q || status ? "No conversations match." : "No customer messages yet. Connect WhatsApp in Integrations and messages will appear here."}
             </p>
           ) : null}
@@ -314,7 +314,7 @@ export function InboxView() {
               <Thread key={selected} id={selected} onChanged={reload} />
             </>
           ) : (
-            <p className="rounded-lg border border-border bg-surface p-6 text-ui-sm text-fg-muted">Choose a conversation to read it.</p>
+            <p className="rounded-card border-2 border-line-strong bg-surface-raised shadow-card p-6 text-ui-sm text-fg-muted">Choose a conversation to read it.</p>
           )}
         </div>
       </div>

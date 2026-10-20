@@ -38,6 +38,12 @@ After building any component, record: name, file path, purpose, variants, and th
 | ConfirmDialog | `frontend/components/app/ConfirmDialog.tsx` | built (task 51) |
 | WorkspaceShell (signed-in frame for new pages) | `frontend/components/app/WorkspaceShell.tsx` | built (task 51) |
 | ProductForm, StockPanel (master form + stock history pattern) | `frontend/components/inventory/` | built (tasks 41, 51) |
+| BrandImage (artwork from `public/brand` with a coloured placeholder fallback) | `frontend/components/brand/BrandImage.tsx` | built (ADR 0005) |
+| Chip, RoundArrow, TapeStrip, TiltFrame (identity primitives) | `frontend/components/brand/` | built (ADR 0005) |
+| ArcTransition (page-change arcs, mounted in the root layout, off for reduced motion) | `frontend/components/brand/ArcTransition.tsx` | built (ADR 0005) |
+| Reveal, SplitHeading, RollAcross, Drift (public-site scroll motion, GSAP ScrollTrigger) | `frontend/components/site/motion.tsx` | built (ADR 0005) |
+| HeroStage / HeroRoll3D (Three.js rolls, WebGL and motion only, picture fallback) | `frontend/components/site/` | built (ADR 0005) |
+| Intro (first-visit lime screen, once per session) | `frontend/components/site/Intro.tsx` | built (ADR 0005) |
 | useLoad (four states), useSubmit (one request at a time) | `frontend/hooks/` | built (task 52) |
 | API client and problem-details errors | `frontend/lib/api/client.ts` | built (task 51) |
 | LookupDialog (standard search dialog), CustomerLookup, ProductPicker | `frontend/components/app/LookupDialog.tsx`, `frontend/components/sales/` | built (task 38) |
@@ -116,3 +122,13 @@ AI output is a saved draft first: editable fields with a character count, "Save 
 
 ### Public site (landing, live demo)
 Own route group `app/(site)` with its own layout, fonts (Young Serif display, JetBrains Mono slip) and tokens (`ink`, `ledger`, `stamp`, `brass`, `display-lg/xl`): a shop ledger. One orchestrated motion, the hero sale slip (`components/site/HeroSlip.tsx`, GSAP): the finished state is plain HTML, motion only hides and reveals it and is skipped under reduced motion. Button classes live in `components/site/styles.ts` (never export class strings from a client module). Content rules: no unverifiable claims; planned channels are named as "coming next".
+
+## Identity classes (ADR 0005)
+
+- Panel / card: `rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card` (used by every panel in the app).
+- Page banner: `PageHeader`: lime (`bg-lime text-forest-ink`, raised surface with lime text in dark) with `seam-arc` bottom edge.
+- Sidebar, drawer and tab bar: `bg-forest text-cream`, active item `bg-lime text-forest-ink rounded-pill`, focus ring `ring-lime`.
+- Buttons: pill (`rounded-pill`), primary `bg-action text-fg-inverse shadow-card`, secondary `border-2 border-action` filling lime on hover.
+- Table header: `bg-lime text-forest-ink` (dark: `bg-action-subtle text-lime`), display face, rows divided by dotted rules.
+- Section grounds on the public site: `paper-lime`, `paper-forest`, `paper-kraft`, curved by `seam-arc` / `seam-arc-top`; later sections sit behind earlier ones (decreasing z-index) so the arcs reveal the next colour.
+- Product tones: coral, orange, sunny, sky, indigo (`Tone` in `components/brand/tones.ts`).

@@ -63,7 +63,7 @@ function Form({ schedule, onSaved }: { schedule: MarketingSchedule; onSaved: () 
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate aria-label="Posting schedule" className="flex max-w-form flex-col gap-4 rounded-lg border border-border bg-surface p-4">
+    <form onSubmit={onSubmit} noValidate aria-label="Posting schedule" className="flex max-w-form flex-col gap-4 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
       {formLevel ? (
         <p role="alert" className="rounded-md border border-danger-border bg-danger-subtle px-3 py-2 text-ui-sm text-danger">
           {formLevel}

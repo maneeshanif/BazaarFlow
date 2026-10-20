@@ -2,7 +2,7 @@
 
 Design tokens for BazaarFlow. Use these exact values throughout the codebase — never hardcode colors and never use raw Tailwind palette classes in components.
 
-> **Status: provisional.** No brand identity exists yet (PRD §33). Final branding, iconography, color palette, typography and visual polish are finalized in a separate UI design pass. This token set is a brand-neutral enterprise system that unblocks Phase 0. When brand assets arrive, **only the values in this file change** — component code that uses tokens correctly needs no edits. That is the entire point of the token layer.
+> **Status: replaced by ADR 0005 (2026-10-21).** The values below describe the old neutral set; the live values are in `frontend/app/global.css`. Original status: provisional. No brand identity exists yet (PRD §33). Final branding, iconography, color palette, typography and visual polish are finalized in a separate UI design pass. This token set is a brand-neutral enterprise system that unblocks Phase 0. When brand assets arrive, **only the values in this file change** — component code that uses tokens correctly needs no edits. That is the entire point of the token layer.
 >
 > The functional information architecture and workflow defined in the PRD **shall not change** without product-owner approval, regardless of visual restyling.
 

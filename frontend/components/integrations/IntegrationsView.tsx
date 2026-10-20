@@ -107,7 +107,7 @@ function Card({ integration, onChanged }: { integration: Integration; onChanged:
   }
 
   return (
-    <li className="rounded-lg border border-border bg-surface p-4">
+    <li className="rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="min-w-0">
           <h2 className="text-ui-md font-semibold text-fg">{integration.label}</h2>

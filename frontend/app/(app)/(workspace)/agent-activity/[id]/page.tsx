@@ -46,7 +46,7 @@ function Detail() {
           </Link>
         }
       />
-      <dl className="grid grid-cols-2 gap-3 rounded-lg border border-border bg-surface p-4 text-ui-sm md:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card text-ui-sm md:grid-cols-4">
         <div>
           <dt className="text-ui-xs font-medium text-fg-muted">Result</dt>
           <dd className="mt-1">
@@ -69,7 +69,7 @@ function Detail() {
         </div>
       </dl>
 
-      <section aria-label="The conversation" className="flex flex-col gap-2 rounded-lg border border-border bg-surface p-4">
+      <section aria-label="The conversation" className="flex flex-col gap-2 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
         <h2 className="text-ui-md font-semibold text-fg">The conversation</h2>
         <p className="text-ui-sm">
           <span className="font-medium text-fg">They said: </span>
@@ -85,11 +85,11 @@ function Detail() {
       <section aria-label="What the agent did" className="flex flex-col gap-2">
         <h2 className="text-ui-md font-semibold text-fg">What the agent did</h2>
         {steps.length === 0 ? (
-          <p className="rounded-lg border border-border bg-surface p-4 text-ui-sm text-fg-muted">It answered without using any tools.</p>
+          <p className="rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card text-ui-sm text-fg-muted">It answered without using any tools.</p>
         ) : (
           <ol className="flex flex-col gap-2">
             {steps.map((s, i) => (
-              <li key={`${i}-${s.tool}`} className="rounded-lg border border-border bg-surface p-3 text-ui-sm">
+              <li key={`${i}-${s.tool}`} className="rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card text-ui-sm">
                 <div className="flex items-center justify-between gap-2">
                   <span className="font-mono font-medium text-fg">{s.tool}</span>
                   <StatusBadge status={s.ok ? "completed" : "failed"} />

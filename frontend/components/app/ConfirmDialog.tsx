@@ -23,7 +23,7 @@ export function ConfirmDialog({ open, onOpenChange, title, children, confirmLabe
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-fg/40" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-[min(92vw,28rem)] -translate-x-1/2 -translate-y-1/2 rounded-lg border border-border bg-surface-raised p-4 shadow-popover focus-visible:outline-none">
+        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-[min(92vw,28rem)] -translate-x-1/2 -translate-y-1/2 rounded-card border-2 border-line-strong bg-surface-raised-raised p-4 shadow-popover focus-visible:outline-none">
           <Dialog.Title className="text-ui-md font-semibold text-fg">{title}</Dialog.Title>
           <Dialog.Description asChild>
             <div className="mt-2 text-ui-base text-fg-muted">{children}</div>

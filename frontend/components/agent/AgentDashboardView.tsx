@@ -37,7 +37,7 @@ export function AgentDashboardView() {
   return (
     <div className="flex flex-col gap-4">
       <PageHeader title="Agent command center" description="What your AI assistant did, and what it cost." />
-      <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-surface p-3" role="search" aria-label="Choose the period">
+      <div className="flex flex-wrap items-end gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card" role="search" aria-label="Choose the period">
         <div className="flex flex-col gap-1">
           <label htmlFor="agent-range" className="text-ui-xs font-medium text-fg-muted">
             Period
@@ -63,7 +63,7 @@ export function AgentDashboardView() {
       {loaded.state === "unauthorized" ? <ErrorState message="Only owners and managers can open this page." /> : null}
 
       {data && data.is_empty ? (
-        <section aria-label="Nothing to show yet" className="flex flex-col items-start gap-3 rounded-lg border border-border bg-surface p-4">
+        <section aria-label="Nothing to show yet" className="flex flex-col items-start gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
           <h2 className="text-ui-md font-semibold text-fg">Your assistant has not done anything yet</h2>
           <p className="max-w-prose text-ui-sm text-fg-muted">Ask it to record a sale or check your stock and its activity will show up here.</p>
           <Link href="/sales/chat" className={buttonClass("primary")}>

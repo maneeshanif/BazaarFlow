@@ -37,9 +37,9 @@ module.exports = {
   			'control-md': 'var(--control-md)',
   			'control-lg': 'var(--control-lg)'
   		},
-  		fontFamily: { display: ['var(--font-display)', 'Georgia', 'serif'], slip: ['var(--font-slip)', 'ui-monospace', 'monospace'] },
+  		fontFamily: { sans: ['var(--font-body)', 'ui-sans-serif', 'system-ui', 'sans-serif'], display: ['var(--font-display)', 'Impact', 'Arial Narrow', 'sans-serif'], slip: ['var(--font-slip)', 'cursive'] },
   		maxWidth: { form: 'var(--layout-form-max)' },
-  		boxShadow: { popover: 'var(--shadow-popover)' },
+  		boxShadow: { popover: 'var(--shadow-popover)', card: 'var(--shadow-card)' },
   		colors: {
   			canvas: 'var(--color-canvas)',
   			surface: {
@@ -70,6 +70,15 @@ module.exports = {
   			info: { DEFAULT: 'var(--color-info)', subtle: 'var(--color-info-subtle)', border: 'var(--color-info-border)' },
   			neutral: { DEFAULT: 'var(--color-neutral)', subtle: 'var(--color-neutral-subtle)', border: 'var(--color-neutral-border)' },
   			ink: { DEFAULT: 'var(--color-ink)', soft: 'var(--color-ink-soft)' },
+  			lime: { DEFAULT: 'var(--color-lime)', deep: 'var(--color-lime-deep)' },
+  			forest: { DEFAULT: 'var(--color-forest)', deep: 'var(--color-forest-deep)', ink: 'var(--color-forest-ink)' },
+  			cream: { DEFAULT: 'var(--color-cream)', tan: 'var(--color-cream-tan)' },
+  			coral: 'var(--color-coral)',
+  			orange: 'var(--color-orange)',
+  			sunny: 'var(--color-sunny)',
+  			sky: 'var(--color-sky)',
+  			indigo: 'var(--color-indigo)',
+  			kraft: { DEFAULT: 'var(--color-kraft)', ink: 'var(--color-kraft-ink)' },
   			ledger: { DEFAULT: 'var(--color-ledger)', raised: 'var(--color-ledger-raised)', rule: 'var(--color-ledger-rule)' },
   			stamp: 'var(--color-stamp)',
   			brass: 'var(--color-brass)',
@@ -136,6 +145,9 @@ module.exports = {
   			}
   		},
   		borderRadius: {
+  			chip: 'var(--radius-chip)',
+  			card: 'var(--radius-card)',
+  			pill: 'var(--radius-pill)',
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'

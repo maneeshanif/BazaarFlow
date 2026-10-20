@@ -55,17 +55,17 @@ function SignInForm() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-canvas p-4">
+    <main className="flex min-h-screen items-center justify-center paper-lime p-4">
       <div className="w-full max-w-sm">
-        <p className="mb-4 text-center text-ui-lg font-semibold text-fg">BazaarFlow</p>
+        <p className="mb-5 text-center font-display text-ui-3xl uppercase text-forest-ink">BazaarFlow</p>
         <form
           onSubmit={submit}
           noValidate
           aria-label="Sign in"
-          className="flex flex-col gap-4 rounded-lg border border-border bg-surface p-6 shadow-popover"
+          className="flex flex-col gap-4 rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-popover"
         >
           <div>
-            <h1 className="text-ui-xl font-semibold text-fg">{t("Sign in")}</h1>
+            <h1 className="text-ui-2xl">{t("Sign in")}</h1>
             <p className="text-ui-sm text-fg-muted">Use the email and password you registered your shop with.</p>
           </div>
 

@@ -216,7 +216,7 @@ export function OnboardingWizard() {
           </li>
         ))}
       </ol>
-      <section aria-label="Current step" className="max-w-form rounded-lg border border-border bg-surface p-4">
+      <section aria-label="Current step" className="max-w-form rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card">
         {state.state === "live" || !current ? (
           <div className="flex flex-col items-start gap-3">
             <h2 className="text-ui-md font-semibold text-fg">Your shop is live</h2>

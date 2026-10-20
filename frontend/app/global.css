@@ -3,238 +3,240 @@
 @tailwind utilities;
 
 /* ==========================================================================
-   Design tokens (context/ui-tokens.md, task 07). The ONLY place colours, type sizes and layout dimensions are
-   defined: components use the Tailwind names mapped to these variables (tailwind.config.js), never literals.
-   scripts/check-tokens.mjs enforces that. Identity is provisional (PRD section 33): only values in this block change.
-   Naming deviations from ui-tokens.md: the primary action colour is "action" (shadcn already owns "accent") and the
-   type scale is "text-ui-*" (Tailwind's default text-sm/base stay as they are for legacy pages).
+   Design tokens (ADR 0005: playful identity, studied in docs/design/reference-sweettape/). The ONLY place colours, type
+   sizes, radii and layout dimensions are defined: components use the Tailwind names mapped to these variables
+   (tailwind.config.js), never literals. scripts/check-tokens.mjs enforces that. Naming deviations from ui-tokens.md:
+   the primary action colour is "action" and the type scale is "text-ui-*".
    ========================================================================== */
 :root {
-  --color-canvas: #f1f5f9;
-  --color-surface: #ffffff;
-  --color-surface-raised: #ffffff;
-  --color-surface-sunken: #f8fafc;
-  --color-surface-hover: #f1f5f9;
-  --color-surface-active: #e2e8f0;
+  --color-canvas: #F7F5DC;
+  --color-surface: #FFFEF4;
+  --color-surface-raised: #FFFFFF;
+  --color-surface-sunken: #EFEDC9;
+  --color-surface-hover: #F0F9C4;
+  --color-surface-active: #DFF58E;
 
-  --color-line-strong: #cbd5e1;
-  --color-line-focus: #2563eb;
+  --color-line-strong: #B9C48A;
+  --color-line-focus: #2E3EAC;
 
-  --color-fg: #0f172a;
-  --color-fg-muted: #475569;
-  --color-fg-subtle: #64748b;
-  --color-fg-inverse: #ffffff;
+  --color-fg: #013900;
+  --color-fg-muted: #2D5A22;
+  --color-fg-subtle: #4A6B3A;
+  --color-fg-inverse: #B6FE00;
 
-  --color-action: #2563eb;
-  --color-action-hover: #1d4ed8;
-  --color-action-active: #1e40af;
-  --color-action-subtle: #eff6ff;
-  --color-action-border: #bfdbfe;
+  --color-action: #034102;
+  --color-action-hover: #0B5A07;
+  --color-action-active: #013900;
+  --color-action-subtle: #E3F9A3;
+  --color-action-border: #A7DC3A;
 
-  --color-success: #047857;
-  --color-success-subtle: #ecfdf5;
-  --color-success-border: #a7f3d0;
-  --color-warning: #b45309;
-  --color-warning-subtle: #fffbeb;
-  --color-warning-border: #fde68a;
-  --color-danger: #b91c1c;
-  --color-danger-hover: #991b1b;
-  --color-danger-subtle: #fef2f2;
-  --color-danger-border: #fecaca;
-  --color-info: #0e7490;
-  --color-info-subtle: #ecfeff;
-  --color-info-border: #a5f3fc;
-  --color-neutral: #475569;
-  --color-neutral-subtle: #f1f5f9;
-  --color-neutral-border: #cbd5e1;
+  --color-success: #0A6B2E;
+  --color-success-subtle: #DDF7C9;
+  --color-success-border: #9BD67F;
+  --color-warning: #8A4B00;
+  --color-warning-subtle: #FFEFC2;
+  --color-warning-border: #EBC76B;
+  --color-danger: #B3261E;
+  --color-danger-hover: #8F1D17;
+  --color-danger-subtle: #FFE1D9;
+  --color-danger-border: #F2A99A;
+  --color-info: #1B3FA0;
+  --color-info-subtle: #DCE8FF;
+  --color-info-border: #9DB7F0;
+  --color-neutral: #3E4F3A;
+  --color-neutral-subtle: #ECEBD0;
+  --color-neutral-border: #C5C79B;
 
-  --color-positive: #047857;
-  --color-negative: #b91c1c;
+  --color-positive: #0A6B2E;
+  --color-negative: #B3261E;
 
-  /* The public site's identity (landing and live demo): a shop ledger. Deep ledger ink on cool ledger paper, one red
-     ink for the approval stamp, a little brass. The signed-in app keeps the neutral tokens above. */
-  --color-ink: #12383a;
-  --color-ink-soft: #2f5457;
-  --color-ledger: #edf2ee;
-  --color-ledger-raised: #f8fbf8;
-  --color-ledger-rule: #bdcec5;
-  --color-stamp: #b8352a;
-  --color-brass: #d9a12b;
-  --text-display-lg: clamp(2.25rem, 5vw, 3.5rem);
-  --text-display-xl: clamp(2.5rem, 5.4vw, 4.25rem);
-
-  --color-chart-1: #2563eb;
-  --color-chart-2: #0891b2;
-  --color-chart-3: #7c3aed;
-  --color-chart-4: #d97706;
-  --color-chart-5: #059669;
-  --color-chart-6: #db2777;
-  --color-chart-grid: #e2e8f0;
-  --color-chart-axis: #94a3b8;
-
-  --text-ui-2xs: 0.6875rem;
-  --text-ui-xs: 0.75rem;
-  --text-ui-sm: 0.8125rem;
-  --text-ui-base: 0.875rem;
-  --text-ui-md: 1rem;
-  --text-ui-lg: 1.125rem;
-  --text-ui-xl: 1.375rem;
-  --text-ui-2xl: 1.75rem;
-  --text-ui-3xl: 2.25rem;
-
-  --layout-sidebar: 15rem;
-  --layout-sidebar-collapsed: 3.5rem;
-  --layout-topbar: 3.5rem;
-  --layout-tabbar: 3.5rem;
-  --layout-form-max: 60rem;
-
-  --control-sm: 1.75rem;
-  --control-md: 2.125rem;
-  --control-lg: 2.5rem;
-
-  --shadow-popover: 0 4px 16px -2px rgb(15 23 42 / 0.14);
+  --color-chart-1: #2E3EAC;
+  --color-chart-2: #FA8005;
+  --color-chart-3: #FF5A3C;
+  --color-chart-4: #1E9FD6;
+  --color-chart-5: #D9A800;
+  --color-chart-6: #2F8F1A;
+  --color-chart-grid: #DDDAB0;
+  --color-chart-axis: #6B7F4F;
 }
 
+:root {
+  /* Identity colours that do not change with the theme (docs/design/reference-sweettape/tokens.md). */
+  --color-lime: #b6fe00;
+  --color-lime-deep: #a7ef00;
+  --color-forest: #034102;
+  --color-forest-deep: #0b2f07;
+  --color-forest-ink: #013900;
+  --color-cream: #fdfbe8;
+  --color-cream-tan: #ded7b5;
+  --color-coral: #ff7b5f;
+  --color-orange: #fa8005;
+  --color-sunny: #f7d000;
+  --color-sky: #50cbff;
+  --color-indigo: #2e3eac;
+  --color-kraft: #c89b6b;
+  --color-kraft-ink: #7a4a0c;
+
+  /* The public site's names for the same palette. */
+  --color-ink: #013900;
+  --color-ink-soft: #1a5211;
+  --color-ledger: #fdfbe8;
+  --color-ledger-raised: #fffef4;
+  --color-ledger-rule: #ded7b5;
+  --color-stamp: #c73a22;
+  --color-brass: #f7d000;
+
+  --text-display-lg: clamp(2.5rem, 6vw, 4.5rem);
+  --text-display-xl: clamp(3rem, 9vw, 8rem);
+  --text-ui-2xs: 0.75rem;
+  --text-ui-xs: 0.8125rem;
+  --text-ui-sm: 0.875rem;
+  --text-ui-base: 1rem;
+  --text-ui-md: 1.0625rem;
+  --text-ui-lg: 1.25rem;
+  --text-ui-xl: 1.625rem;
+  --text-ui-2xl: 2.25rem;
+  --text-ui-3xl: 3rem;
+
+  --layout-sidebar: 16.5rem;
+  --layout-sidebar-collapsed: 4rem;
+  --layout-topbar: 4.5rem;
+  --layout-tabbar: 4rem;
+  --layout-form-max: 64rem;
+
+  --control-sm: 2.25rem;
+  --control-md: 2.75rem;
+  --control-lg: 3.25rem;
+
+  --radius-chip: 1rem;
+  --radius-card: 2.667rem;
+  --radius-pill: 999px;
+  --shadow-popover: 0 0.5rem 1.5rem -0.25rem rgb(1 57 0 / 0.28);
+  --shadow-card: 0.35rem 0.45rem 0 0 rgb(1 57 0 / 0.18);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+
 .dark {
-  --color-canvas: #0b1220;
-  --color-surface: #111a2b;
-  --color-surface-raised: #162033;
-  --color-surface-sunken: #0e1626;
-  --color-surface-hover: #1a2538;
-  --color-surface-active: #223048;
+  --color-canvas: #0B2F07;
+  --color-surface: #034102;
+  --color-surface-raised: #0F4F0B;
+  --color-surface-sunken: #082505;
+  --color-surface-hover: #0F4F0B;
+  --color-surface-active: #17610F;
 
-  --color-line-strong: #2b394f;
-  --color-line-focus: #60a5fa;
+  --color-line-strong: #3F7F1F;
+  --color-line-focus: #B6FE00;
 
-  --color-fg: #e2e8f0;
-  --color-fg-muted: #94a3b8;
-  --color-fg-subtle: #94a3b8;
-  --color-fg-inverse: #0b1220;
+  --color-fg: #FDFBE8;
+  --color-fg-muted: #D8E8A8;
+  --color-fg-subtle: #B5CF86;
+  --color-fg-inverse: #013900;
 
-  --color-action: #60a5fa;
-  --color-action-hover: #93c5fd;
-  --color-action-active: #3b82f6;
-  --color-action-subtle: #172554;
-  --color-action-border: #1e3a8a;
+  --color-action: #B6FE00;
+  --color-action-hover: #CBFF4D;
+  --color-action-active: #A7EF00;
+  --color-action-subtle: #1F5A12;
+  --color-action-border: #3F7F1F;
 
-  --color-success: #34d399;
-  --color-success-subtle: #052e22;
-  --color-success-border: #065f46;
-  --color-warning: #fbbf24;
-  --color-warning-subtle: #2a1d05;
-  --color-warning-border: #78350f;
-  --color-danger: #f87171;
-  --color-danger-hover: #fca5a5;
-  --color-danger-subtle: #2f0f12;
-  --color-danger-border: #7f1d1d;
-  --color-info: #22d3ee;
-  --color-info-subtle: #062a30;
-  --color-info-border: #155e75;
-  --color-neutral: #94a3b8;
-  --color-neutral-subtle: #1a2538;
-  --color-neutral-border: #334155;
+  --color-success: #7DE08A;
+  --color-success-subtle: #0E4A1C;
+  --color-success-border: #2E7A3C;
+  --color-warning: #FFC94D;
+  --color-warning-subtle: #4A3300;
+  --color-warning-border: #8A6200;
+  --color-danger: #FF9B8A;
+  --color-danger-hover: #FFB9AC;
+  --color-danger-subtle: #5A1A12;
+  --color-danger-border: #9B3A2C;
+  --color-info: #8FC5FF;
+  --color-info-subtle: #12305F;
+  --color-info-border: #2F5FA8;
+  --color-neutral: #C7D6A0;
+  --color-neutral-subtle: #1B4A12;
+  --color-neutral-border: #3F7F1F;
 
-  --color-positive: #34d399;
-  --color-negative: #f87171;
+  --color-positive: #7DE08A;
+  --color-negative: #FF9B8A;
 
-  --color-chart-grid: #1f2a3d;
-  --color-chart-axis: #64748b;
+  --color-chart-1: #B6FE00;
+  --color-chart-2: #50CBFF;
+  --color-chart-3: #FF7B5F;
+  --color-chart-4: #F7D000;
+  --color-chart-5: #FA8005;
+  --color-chart-6: #B9A6FF;
+  --color-chart-grid: #1F5A12;
+  --color-chart-axis: #8DB26A;
 
-  --shadow-popover: 0 4px 16px -2px rgb(0 0 0 / 0.5);
+  --shadow-popover: 0 0.5rem 1.5rem -0.25rem rgb(0 0 0 / 0.55);
+  --shadow-card: 0.35rem 0.45rem 0 0 rgb(0 0 0 / 0.35);
 }
 
 @layer base {
   :root {
-    /* Brand Colors */
-    --brand-light: 241 245 249;   /* #F1F5F9 slate-100 */
-    --brand-accent: 148 163 184;  /* #94A3B8 slate-400 */
-    --brand-secondary: 66 122 118;/* #427A76 sea light green  */
-    --brand-primary: 23 65 67;    /* #174143 dark green  */
-
-    /* shadcn UI Colors - adapted to brand palette */
-    --background: 0 0% 100%; /* #F8FAFC slate-50 background */
-    --foreground: 0 0% 3.9%;    /* deep teal text */
-
-    --card: 0 0% 100%; /* white cards */
-    --card-foreground: 0 0% 3.9%;
-
+    /* Legacy brand utilities still used by older pages, mapped onto the new palette. */
+    --brand-light: 253 251 232;
+    --brand-accent: 182 254 0;
+    --brand-secondary: 26 82 17;
+    --brand-primary: 3 65 2;
+    --background: 56 63% 92%;
+    --foreground: 119 100% 11%;
+    --card: 55 100% 98%;
+    --card-foreground: 119 100% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
+    --popover-foreground: 119 100% 11%;
+    --primary: 119 94% 13%;
+    --primary-foreground: 77 100% 50%;
+    --secondary: 57 54% 86%;
+    --secondary-foreground: 119 100% 11%;
+    --muted: 57 54% 86%;
+    --muted-foreground: 108 45% 24%;
+    --accent: 70 82% 87%;
+    --accent-foreground: 119 100% 11%;
+    --destructive: 3 71% 41%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 71 33% 65%;
+    --input: 71 33% 65%;
+    --ring: 232 58% 43%;
 
-    --primary: 0 0% 9%;           /* deep teal */
-    --primary-foreground: 0 0% 98%; /* white text */
-
-    --secondary: 0 0% 96.1%;       /* teal */
-    --secondary-foreground: 0 0% 9%;
-
-    --muted: 0 0% 96.1%;          /* slate-100 muted bg */
-    --muted-foreground: 0 0% 45.1%;  /* slate-500 muted text */
-
-    --accent: 0 0% 96.1%;         /* slate-400 accent */
-    --accent-foreground: 0 0% 9%; /* deep teal text */
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 0 0% 89.8%; /* slate-200 border */
-    --input: 0 0% 89.8%; /* slate-100 input */
-    --ring: 0 0% 3.9%;  /* teal ring */
-
-    --radius: 0.5rem;
-    /* New multi-accent palette (RGB tokens) */
-    --accent-1: 59 130 246;    /* blue */
-    --accent-1-light: 232 243 255; /* pale blue */
-
-    --accent-2: 16 185 129;    /* green */
-    --accent-2-light: 220 245 235; /* pale green */
-
-    --accent-3: 244 63 94;     /* pink/red */
-    --accent-3-light: 255 227 236; /* pale pink */
-
-    --accent-4: 99 102 241;    /* indigo */
-    --accent-4-light: 235 235 255; /* pale indigo */ --chart-1: 12 76% 61%; --chart-2: 173 58% 39%; --chart-3: 197 37% 24%; --chart-4: 43 74% 66%; --chart-5: 27 87% 67%; --sidebar-background: 0 0% 98%; --sidebar-foreground: 240 5.3% 26.1%; --sidebar-primary: 240 5.9% 10%; --sidebar-primary-foreground: 0 0% 98%; --sidebar-accent: 240 4.8% 95.9%; --sidebar-accent-foreground: 240 5.9% 10%; --sidebar-border: 220 13% 91%; --sidebar-ring: 217.2 91.2% 59.8%;
+    --radius: 1rem;
+    --accent-1: 46 62 172;
+    --accent-1-light: 220 232 255;
+    --accent-2: 47 143 26;
+    --accent-2-light: 221 247 201;
+    --accent-3: 255 90 60;
+    --accent-3-light: 255 225 217;
+    --accent-4: 250 128 5;
+    --accent-4-light: 255 239 194;
+    --chart-1: 232 58% 43%; --chart-2: 30 96% 50%; --chart-3: 9 100% 62%; --chart-4: 198 75% 48%; --chart-5: 46 100% 43%;
+    --sidebar-background: 119 94% 13%; --sidebar-foreground: 54 84% 95%; --sidebar-primary: 77 100% 50%; --sidebar-primary-foreground: 119 100% 11%;
+    --sidebar-accent: 116 76% 18%; --sidebar-accent-foreground: 54 84% 95%; --sidebar-border: 109 67% 21%; --sidebar-ring: 77 100% 50%;
   }
 
   .dark {
-    --background: 0 0% 3.9%;         /* slate-900 dark background */
-    --foreground: 0 0% 98%;      /* slate-50 light text */
+    --background: 114 74% 11%;
+    --foreground: 54 84% 95%;
+    --card: 119 94% 13%;
+    --card-foreground: 54 84% 95%;
+    --popover: 116 76% 18%;
+    --popover-foreground: 54 84% 95%;
+    --primary: 77 100% 50%;
+    --primary-foreground: 119 100% 11%;
+    --secondary: 114 76% 8%;
+    --secondary-foreground: 54 84% 95%;
+    --muted: 114 76% 8%;
+    --muted-foreground: 75 58% 78%;
+    --accent: 116 76% 18%;
+    --accent-foreground: 54 84% 95%;
+    --destructive: 9 100% 77%;
+    --destructive-foreground: 119 100% 11%;
+    --border: 100 61% 31%;
+    --input: 100 61% 31%;
+    --ring: 77 100% 50%;
 
-    --card: 0 0% 3.9%;               /* slate-800 dark cards */
-    --card-foreground: 0 0% 98%;
-
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;          /* teal */
-    --primary-foreground: 0 0% 9%;
-
-    --secondary: 0 0% 14.9%;          /* slate-700 */
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 0 0% 14.9%;              /* slate-700 */
-    --muted-foreground: 0 0% 63.9%; /* slate-300 */
-
-    --accent: 0 0% 14.9%;           /* teal accent */
-    --accent-foreground: 0 0% 98%;
-
-    --border: 0 0% 14.9%;             /* slate-700 border */
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --chart-1: 77 100% 50%; --chart-2: 198 100% 66%; --chart-3: 11 100% 69%; --chart-4: 51 100% 48%; --chart-5: 30 96% 50%;
+    --sidebar-background: 114 76% 8%; --sidebar-foreground: 54 84% 95%; --sidebar-primary: 77 100% 50%; --sidebar-primary-foreground: 119 100% 11%;
+    --sidebar-accent: 116 76% 18%; --sidebar-accent-foreground: 54 84% 95%; --sidebar-border: 109 67% 21%; --sidebar-ring: 77 100% 50%;
   }
 }
 
@@ -245,12 +247,21 @@
   
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--font-body), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-semibold tracking-tight;
+    @apply font-bold tracking-tight;
+  }
+
+  /* Page and section titles use the condensed display face, set in capitals (ADR 0005). */
+  h1, h2 {
+    font-family: var(--font-display), Impact, 'Arial Narrow', sans-serif;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    line-height: 1.02;
   }
 
   h1 { @apply text-5xl md:text-6xl; }
@@ -393,4 +404,29 @@
     transition: none !important;
     animation: none !important;
   }
+}
+
+/* ---- Identity primitives (ADR 0005) ------------------------------------------------------------------------------ */
+.paper-lime { background-color: var(--color-lime); background-image: var(--paper-lime, none); background-size: 640px; }
+.paper-forest { background-color: var(--color-forest); background-image: var(--paper-forest, none); background-size: 640px; }
+.paper-kraft { background-color: var(--color-kraft); background-image: var(--paper-kraft, none); background-size: 640px; }
+
+/* A section whose bottom edge is a wide ellipse, like the arcs on the reference site. */
+.seam-arc { border-bottom-left-radius: 50% 4rem; border-bottom-right-radius: 50% 4rem; }
+.seam-arc-top { border-top-left-radius: 50% 4rem; border-top-right-radius: 50% 4rem; }
+
+/* Dotted notepaper rule under card titles and nav labels. */
+.rule-dotted { border-bottom: 2px dotted currentColor; }
+
+/* Tilt on hover for cards that can be opened. */
+.tilt-hover { transition: transform 0.35s var(--ease-bounce), box-shadow 0.35s ease; }
+.tilt-hover:hover { transform: rotate(-1.2deg) translateY(-0.25rem); }
+
+@keyframes arc-rise { from { transform: translateY(105%); } to { transform: translateY(0); } }
+@keyframes arc-leave { from { transform: translateY(0); } to { transform: translateY(-110%); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .tilt-hover { transition: none; }
+  .tilt-hover:hover { transform: none; }
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
 }

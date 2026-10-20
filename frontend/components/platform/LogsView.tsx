@@ -21,7 +21,7 @@ function Detail({ id, onClose }: { id: string; onClose: () => void }) {
     <Dialog.Root open onOpenChange={(open) => !open && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-fg/40" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[80vh] w-[min(92vw,40rem)] -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-lg border border-border bg-surface-raised p-4 shadow-popover focus-visible:outline-none">
+        <Dialog.Content className="fixed left-1/2 top-1/2 z-50 max-h-[80vh] w-[min(92vw,40rem)] -translate-x-1/2 -translate-y-1/2 overflow-auto rounded-card border-2 border-line-strong bg-surface-raised-raised p-4 shadow-popover focus-visible:outline-none">
           <Dialog.Title className="text-ui-md font-semibold text-fg">{loaded.data?.action ?? "Log entry"}</Dialog.Title>
           <Dialog.Description className="text-ui-sm text-fg-muted">Secrets are masked when a log entry is written.</Dialog.Description>
           {loaded.state === "error" ? <p role="alert" className="mt-2 text-danger">{loaded.error?.message}</p> : null}
@@ -81,7 +81,7 @@ export function LogsView() {
   return (
     <div className="flex flex-col gap-4">
       <PageHeader title="System logs" description="The audit trail across every shop, newest first. It cannot be changed." />
-      <div className="flex flex-wrap items-end gap-3 rounded-lg border border-border bg-surface p-3" role="search" aria-label="Filter logs">
+      <div className="flex flex-wrap items-end gap-3 rounded-card border-2 border-line-strong bg-surface-raised p-5 shadow-card" role="search" aria-label="Filter logs">
         <div className="flex min-w-48 flex-1 flex-col gap-1">
           <label htmlFor="log-action" className="text-ui-xs font-medium text-fg-muted">Action contains</label>
           <TextInput id="log-action" type="search" placeholder="for example login or integration" value={search} onChange={(e) => setSearch(e.target.value)} />
