@@ -8,6 +8,8 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    // jsdom renders whole screens; on a loaded Windows machine the 5 s default flakes without any assertion failing
+    testTimeout: 30_000,
     setupFiles: ["./tests/ui/setup.ts"],
     include: ["tests/ui/**/*.test.{ts,tsx}"],
   },
