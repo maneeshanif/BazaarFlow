@@ -37,9 +37,16 @@ Editorial documentary photograph, soft natural morning light through the front w
 Editorial documentary photograph, natural morning light, a modern neighbourhood grocery in Islamabad that also sends out delivery orders: a tidy packing counter with brown paper bags and small cardboard boxes waiting to go, a shopkeeper in a pressed shirt and a neat vest, seen from the side, writing an order on his phone, well-organised shelves of spices, tea and rice behind him. Clean, warm, professional, honest and unposed, shallow depth of field, shot on a 50 mm lens. No readable text, no brand names, no logos, no watermark.
 ```
 
-### photo-ledger.jpg  | 3:4
+### photo-ledger.jpg  | 3:4  (use ONE of the two; save the one you pick under this name)
+
+**Version A: Islamabad, a modern shop**
 ```
-Documentary photograph, natural window light, shallow depth of field. Close-up of a hand writing with a pen in a handwritten khata ledger book on a worn wooden shop counter, a phone showing a chat conversation beside it, a small desk calculator and a neat pile of Pakistani rupee notes. Warm colour, honest and unposed. No readable text, no brand names, no watermark.
+Editorial documentary photograph, soft natural window light, shallow depth of field, shot on a 50 mm lens. A clean polished counter in a modern Islamabad neighbourhood store. A manicured hand in a pressed shirt cuff writes with a fine pen in a bound hardcover khata ledger with neat ruled columns, beside it a recent smartphone showing a chat conversation, a sleek desk calculator, a small brass bell and a tidy fan of Pakistani rupee notes. A blurred shelf of neatly packed goods in the background. Warm, refined, honest and unposed. Hand only, no face. No readable text, no brand names, no logos, no watermark.
+```
+
+**Version B: a US small shop**
+```
+Editorial documentary photograph, soft natural window light, shallow depth of field, shot on a 50 mm lens. A reclaimed-wood counter in an independent US neighbourhood shop. A hand in a rolled linen sleeve writes with a pen in a clothbound ledger book, beside it a smartphone showing a chat conversation, a small calculator, a card reader and a neat stack of US dollar bills under a ceramic mug. A blurred shelf of artisan goods and a plant in the background. Warm, refined, honest and unposed. Hand only, no face. No readable text, no brand names, no logos, no watermark.
 ```
 
 ### photo-parcels.jpg  | 3:4
