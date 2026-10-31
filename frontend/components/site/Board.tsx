@@ -49,7 +49,7 @@ export function Board() {
         <Drift distance={60} className="md:col-span-4 md:col-start-2 md:row-start-2">
           <Bob amount={14} seconds={5}>
             <TiltFrame tilt={-8} className="mx-auto aspect-[4/3] w-full max-w-sm">
-              <BrandImage file="illus-produce.jpg" alt="" decorative label="Mangoes and chillies" tone="sunny" />
+              <BrandImage file="illus-produce.jpg" alt="" decorative label="Peaches and tomatoes" tone="sunny" />
             </TiltFrame>
           </Bob>
           <p aria-hidden className="mt-6 text-center font-slip text-ui-lg text-lime">

@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
  */
 export function BrandVideo({ name, fallback, className, label }: { name: string; fallback: ReactNode; className?: string; label?: string }) {
   const [state, setState] = useState<"checking" | "yes" | "no">("checking");
+  const [kind, setKind] = useState<"webm" | "mp4">("mp4");
   const video = useRef<HTMLVideoElement | null>(null);
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -17,8 +18,18 @@ export function BrandVideo({ name, fallback, className, label }: { name: string;
       return;
     }
     let live = true;
-    fetch(`/brand/${name}.mp4`, { method: "HEAD" })
-      .then((r) => live && setState(r.ok && (r.headers.get("content-type") ?? "").startsWith("video") ? "yes" : "no"))
+    // a .webm (VP9 with transparency, for the hero) wins where the browser can play it; otherwise the .mp4
+    const probe = (ext: "webm" | "mp4") =>
+      fetch(`/brand/${name}.${ext}`, { method: "HEAD" }).then((r) => r.ok && (r.headers.get("content-type") ?? "").startsWith("video"));
+    const canWebm = document.createElement("video").canPlayType('video/webm; codecs="vp9"') !== "";
+    (canWebm ? probe("webm") : Promise.resolve(false))
+      .catch(() => false)
+      .then((w) => (w ? "webm" : probe("mp4").then((m) => (m ? "mp4" : null))))
+      .then((k) => {
+        if (!live) return;
+        if (k) setKind(k);
+        setState(k ? "yes" : "no");
+      })
       .catch(() => live && setState("no"));
     return () => {
       live = false;
@@ -38,8 +49,7 @@ export function BrandVideo({ name, fallback, className, label }: { name: string;
       aria-hidden={label ? undefined : true}
       onError={() => setState("no")}
     >
-      <source src={`/brand/${name}.webm`} type="video/webm" />
-      <source src={`/brand/${name}.mp4`} type="video/mp4" />
+      <source src={`/brand/${name}.${kind}`} type={`video/${kind}`} />
     </video>
   );
 }

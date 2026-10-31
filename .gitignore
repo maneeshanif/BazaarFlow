@@ -41,3 +41,4 @@ app/db/
 # Playwright
 frontend/test-results/
 frontend/playwright-report/
+design-source/

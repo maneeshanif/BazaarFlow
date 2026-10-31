@@ -411,9 +411,9 @@
 :root {
   --crumple: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='720' height='720'><filter id='c' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='0.008 0.014' numOctaves='5' seed='7' result='n'/><feDiffuseLighting in='n' lighting-color='white' surfaceScale='3.2'><feDistantLight azimuth='235' elevation='58'/></feDiffuseLighting></filter><rect width='100%25' height='100%25' filter='url(%23c)'/></svg>");
 }
-.paper-lime { background-color: var(--color-lime); background-image: var(--paper-lime, none), var(--crumple); background-size: 640px, 720px; background-blend-mode: normal, multiply; }
-.paper-forest { background-color: var(--color-forest); background-image: var(--paper-forest, none), var(--crumple); background-size: 640px, 720px; background-blend-mode: normal, multiply; }
-.paper-kraft { background-color: var(--color-kraft); background-image: var(--paper-kraft, none), var(--crumple); background-size: 640px, 720px; background-blend-mode: normal, multiply; }
+.paper-lime { background-color: var(--color-lime); background-image: var(--paper-lime, none); background-size: 100% auto; background-repeat: repeat-y; }
+.paper-forest { background-color: var(--color-forest); background-image: var(--paper-forest, none); background-size: 100% auto; background-repeat: repeat-y; }
+.paper-kraft { background-color: var(--color-kraft); background-image: var(--paper-kraft, none); background-size: 100% auto; background-repeat: repeat-y; }
 
 /* A section whose bottom edge is a wide ellipse, like the arcs on the reference site. */
 .seam-arc { border-bottom-left-radius: 50% 4rem; border-bottom-right-radius: 50% 4rem; }
@@ -442,7 +442,7 @@
   --paper-kraft: url("/brand/texture-kraft.jpg");
   --paper-cream: url("/brand/texture-cream-paper.jpg");
 }
-.paper-cream { background-color: var(--color-cream); background-image: var(--paper-cream, none), var(--crumple); background-size: 640px, 720px; background-blend-mode: normal, multiply; }
+.paper-cream { background-color: var(--color-cream); background-image: var(--paper-cream, none); background-size: 100% auto; background-repeat: repeat-y; }
 
 /* The arrow cursor replaces the system cursor only for a fine pointer and only when motion is allowed (Cursor.tsx adds the class). */
 html.has-cursor, html.has-cursor * { cursor: none !important; }
