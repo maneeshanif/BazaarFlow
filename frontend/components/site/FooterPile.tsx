@@ -1,6 +1,7 @@
 "use client";
 
 import { gsap } from "gsap";
+import { Draggable } from "gsap/Draggable";
 import Link from "next/link";
 import { useLayoutEffect, useRef } from "react";
 import { BrandImage } from "@/components/brand/BrandImage";
@@ -28,6 +29,7 @@ export function FooterPile() {
   useLayoutEffect(() => {
     if (!motionAllowed() || !root.current) return;
     register();
+    gsap.registerPlugin(Draggable);
     const ctx = gsap.context(() => {
       gsap.from("[data-drop]", {
         y: () => -gsap.utils.random(320, 560),
@@ -39,12 +41,26 @@ export function FooterPile() {
         scrollTrigger: { trigger: root.current, start: "top 75%", once: true },
       });
     }, root);
-    return () => ctx.revert();
+    // the discs can be picked up, thrown about and dropped; they tip and settle like the reference's pile
+    const drags = Draggable.create(root.current.querySelectorAll("[data-disc]"), {
+      type: "x,y",
+      bounds: root.current.parentElement ?? undefined,
+      onPress() {
+        gsap.to(this.target, { scale: 1.12, duration: 0.2 });
+      },
+      onRelease() {
+        gsap.to(this.target, { scale: 1, rotate: gsap.utils.random(-25, 25), duration: 0.7, ease: "elastic.out(1, 0.4)" });
+      },
+    });
+    return () => {
+      drags.forEach((d) => d.kill());
+      ctx.revert();
+    };
   }, []);
   return (
     <div ref={root} className="pointer-events-none absolute inset-0 hidden md:block">
       {DISCS.map((d, i) => (
-        <div key={d.file} data-drop aria-hidden className={`absolute overflow-hidden rounded-full shadow-card ${d.at}`} style={{ rotate: `${i % 2 ? 14 : -12}deg` }}>
+        <div key={d.file} data-drop data-disc aria-hidden className={`pointer-events-auto absolute cursor-grab touch-none [&_img]:pointer-events-none select-none overflow-hidden rounded-full shadow-card active:cursor-grabbing ${d.at}`} style={{ rotate: `${i % 2 ? 14 : -12}deg` }}>
           <BrandImage file={d.file} alt="" decorative label={d.label} tone={d.tone} />
         </div>
       ))}

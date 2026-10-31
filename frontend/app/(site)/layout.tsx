@@ -4,6 +4,7 @@ import { BrandImage } from "@/components/brand/BrandImage";
 import { Cursor } from "@/components/site/Cursor";
 import { FooterPile } from "@/components/site/FooterPile";
 import { Intro } from "@/components/site/Intro";
+import { PageCurtain } from "@/components/site/PageCurtain";
 import { INTRO_BOOT_SCRIPT } from "@/components/site/intro-state";
 import { PUBLIC_MENU } from "@/components/site/content";
 import { MenuTab, type MenuLink } from "@/components/site/MenuTab";
@@ -44,6 +45,7 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
           </Link>
         </div>
       </header>
+      <PageCurtain />
       <MenuTab links={PUBLIC_MENU} extra={MENU_EXTRA} />
 
       <main id="content">{children}</main>

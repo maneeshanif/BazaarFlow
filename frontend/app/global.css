@@ -512,14 +512,13 @@ html[data-intro] .cut-letter[data-cut] { animation-delay: calc(var(--delay, 0s) 
 }
 
 /* The menu tab arrives from above once the opening is over, and sways when the page scrolls. */
-@keyframes tab-arrive { from { transform: translateY(-115%); } to { transform: translateY(0); } }
 
 @media (prefers-reduced-motion: reduce) {
   .roll:hover .roll-char, .roll:focus-visible .roll-char { animation: none; }
 }
 
 /* The opening: shown only when the boot script flagged this visit; the menu tab waits for it too. */
+.page-curtain { pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .page-curtain { display: none; } }
 .intro-root { display: none; }
 html[data-intro] .intro-root { display: block; }
-.menu-tab-arrive { animation: tab-arrive 0.9s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
-html[data-intro] .menu-tab-arrive { animation-delay: 2.4s; }

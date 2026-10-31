@@ -103,13 +103,13 @@ export function GiantStory() {
       };
       measure();
       const tl = gsap.timeline({
-        defaults: { ease: "power2.inOut" },
+        defaults: { ease: "sine.inOut" },
         scrollTrigger: {
           trigger: root,
           pin: true,
-          scrub: 0.7,
+          scrub: 1.4,
           start: "top top",
-          end: () => `+=${Math.round(window.innerHeight * 6)}`,
+          end: () => `+=${Math.round(window.innerHeight * 9)}`,
           invalidateOnRefresh: true,
           anticipatePin: 1,
           onRefreshInit: measure,
@@ -117,19 +117,19 @@ export function GiantStory() {
       });
       // three moves with a short pause between them
       for (let k = 1; k <= 3; k += 1) {
-        const at = (k - 1) * 1.4;
+        const at = (k - 1) * 2;
         tl.to(el, { x: () => frozen[k].x, y: () => frozen[k].y, duration: 1 }, at);
         for (const p of pieces) {
           const depth = Number(p.dataset.depth ?? 1);
           if (depth === 1) continue;
-          tl.to(p, { x: () => (depth - 1) * frozen[k].x, y: () => (depth - 1) * frozen[k].y * 0.6, duration: 1 }, at);
+          tl.to(p, { x: () => (depth - 1) * frozen[k].x * 0.5, y: () => (depth - 1) * frozen[k].y * 0.3, duration: 1 }, at);
         }
       }
       // arrows draw themselves, each once the camera is moving toward the word it points at
       el.querySelectorAll<SVGPathElement>("[data-draw]").forEach((path, i) => {
         const len = path.getTotalLength();
         gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
-        tl.to(path, { strokeDashoffset: 0, duration: 0.5, ease: "none" }, Math.floor(i / 2) * 1.4 + 0.2);
+        tl.to(path, { strokeDashoffset: 0, duration: 0.8, ease: "none" }, Math.floor(i / 2) * 2 + 0.3);
       });
       return () => {
         delete el.dataset.mode;

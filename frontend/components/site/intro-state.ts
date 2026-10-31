@@ -11,7 +11,7 @@ export const INTRO_TOTAL_SECONDS = 3.3;
  * the very first frame, so nothing flashes before the opening starts. Storage blocked means no opening, rather than one on
  * every page.
  */
-export const INTRO_BOOT_SCRIPT = `try{if(sessionStorage.getItem("${KEY}")!=="1"&&!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.intro="1"}catch(e){}`;
+export const INTRO_BOOT_SCRIPT = `try{if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.intro="1"}catch(e){}`;
 
 export function markIntroSeen(): void {
   try {

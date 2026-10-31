@@ -83,7 +83,7 @@ describe("Chapters (disc slider)", () => {
   it("shows the first chapter, keeps the others in the page but hidden, and switches by disc or arrow key", () => {
     render(<Chapters />);
     const tabs = screen.getAllByRole("tab");
-    expect(tabs).toHaveLength(4);
+    expect(tabs).toHaveLength(6);
     expect(tabs[0]).toHaveAttribute("aria-selected", "true");
     expect(screen.getByText(/Example: the shopkeeper writes/)).toBeInTheDocument();
     fireEvent.click(tabs[1]);

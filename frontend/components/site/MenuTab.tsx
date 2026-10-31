@@ -135,7 +135,7 @@ export function MenuTab({ links, extra = [] }: { links: MenuLink[]; extra?: Menu
         aria-expanded={open}
         aria-controls={id}
         onClick={() => setOpen((o) => !o)}
-        className="menu-tab-shape menu-tab-arrive paper-cream group relative ms-auto block h-20 w-[8.5rem] origin-top pb-3 pt-2 text-center font-display text-ui-lg uppercase tracking-wide text-forest-ink transition-[transform,rotate] duration-500 [transition-timing-function:var(--ease-bounce)] hover:rotate-[2deg] focus-visible:outline-none"
+        className="menu-tab-shape paper-cream group relative ms-auto block h-20 w-[8.5rem] origin-top pb-3 pt-2 text-center font-display text-ui-lg uppercase tracking-wide text-forest-ink transition-[transform,rotate] duration-500 [transition-timing-function:var(--ease-bounce)] hover:rotate-[2deg] focus-visible:outline-none"
       >
         <span aria-hidden className="mx-2 block border-t-2 border-dotted border-forest-ink" />
         <span className="mt-3 block rounded-chip px-2 group-focus-visible:ring-4 group-focus-visible:ring-line-focus">{open ? "Close" : "Menu"}</span>
