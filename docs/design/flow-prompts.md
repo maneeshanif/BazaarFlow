@@ -12,91 +12,75 @@ filename in the heading. The site shows a coloured placeholder for any file that
   tile seamlessly.
 - If a result shows readable brand names, logos or captions you did not ask for, regenerate that one.
 
-**What BazaarFlow is, for context:** a back-office for small shops in Pakistan that pack and send out orders (delivery parcels,
+**What BazaarFlow is, for context:** a back-office for small shops that pack and send out orders (the photos use a US small-business setting) (delivery parcels,
 small goods, packed food). Serious, documentary, warm. Colours: lime `#B6FE00`, forest green `#034102`, cream `#FDFBE8`,
 coral `#FF7B5F`, orange `#FA8005`, sunny yellow `#F7D000`, sky `#50CBFF`, indigo `#2E3EAC`, kraft brown `#C99A63`.
 
 ---
 
-## A. Photos (12). Documentary look, no faces to camera, no readable text
+## A. Photos (12). US small-business setting, documentary look, no faces to camera, no readable text
 
-### photo-shop-counter.jpg  | 3:4  (use ONE of the three; save the one you pick under this name)
+All twelve use the same look so they sit together: soft natural light, warm colour, shallow depth of field, a 50 mm lens,
+honest and unposed, a clean well-run independent shop.
 
-**Version A: a modern, well-run Pakistani shop**
-```
-Editorial documentary photograph, natural morning light through a glass shopfront, a clean modern neighbourhood general store in Karachi or Lahore: bright, tidy and well stocked, with neat shelves of packaged goods, glass jars and rice in clear bins, a polished counter with a digital scale and a card machine. A confident shopkeeper in his thirties in a crisp pressed shirt, seen three-quarter from the side, smiling slightly as he types an order into a smartphone. Honest and unposed, warm natural colour, shallow depth of field, shot on a 50 mm lens. No readable text, no brand names, no logos, no watermark.
-```
-
-**Version B: a US small-business shop**
+### photo-shop-counter.jpg  | 3:4
 ```
 Editorial documentary photograph, soft natural morning light through the front window, a charming independent corner shop in a US neighbourhood: wooden shelves of artisan jars, snacks and fresh bread, a tidy counter with a card reader and a brown paper bag of groceries ready for pickup. A friendly shop owner in a canvas apron, seen from the side, typing an order into a phone, a handwritten chalkboard behind that is blurred and unreadable. Honest and unposed, warm colour, shallow depth of field, shot on a 50 mm lens. No readable text, no brand names, no logos, no watermark.
 ```
 
-**Version C: a Pakistani shop that packs delivery orders**
-```
-Editorial documentary photograph, natural morning light, a modern neighbourhood grocery in Islamabad that also sends out delivery orders: a tidy packing counter with brown paper bags and small cardboard boxes waiting to go, a shopkeeper in a pressed shirt and a neat vest, seen from the side, writing an order on his phone, well-organised shelves of spices, tea and rice behind him. Clean, warm, professional, honest and unposed, shallow depth of field, shot on a 50 mm lens. No readable text, no brand names, no logos, no watermark.
-```
-
-### photo-ledger.jpg  | 3:4  (use ONE of the two; save the one you pick under this name)
-
-**Version A: Islamabad, a modern shop**
-```
-Editorial documentary photograph, soft natural window light, shallow depth of field, shot on a 50 mm lens. A clean polished counter in a modern Islamabad neighbourhood store. A manicured hand in a pressed shirt cuff writes with a fine pen in a bound hardcover khata ledger with neat ruled columns, beside it a recent smartphone showing a chat conversation, a sleek desk calculator, a small brass bell and a tidy fan of Pakistani rupee notes. A blurred shelf of neatly packed goods in the background. Warm, refined, honest and unposed. Hand only, no face. No readable text, no brand names, no logos, no watermark.
-```
-
-**Version B: a US small shop**
+### photo-ledger.jpg  | 3:4
 ```
 Editorial documentary photograph, soft natural window light, shallow depth of field, shot on a 50 mm lens. A reclaimed-wood counter in an independent US neighbourhood shop. A hand in a rolled linen sleeve writes with a pen in a clothbound ledger book, beside it a smartphone showing a chat conversation, a small calculator, a card reader and a neat stack of US dollar bills under a ceramic mug. A blurred shelf of artisan goods and a plant in the background. Warm, refined, honest and unposed. Hand only, no face. No readable text, no brand names, no logos, no watermark.
 ```
 
 ### photo-parcels.jpg  | 3:4
 ```
-Documentary photograph, soft natural light, shallow depth of field. Two hands in a rust-orange knitted sweater holding two small parcels wrapped in brown kraft paper, tied with twine and sealed with tape, a handwritten address label on each that is blurred and unreadable. The person's face is not in the frame. Warm colour, honest and unposed. No watermark.
+Editorial documentary photograph, soft natural light, shallow depth of field, shot on a 50 mm lens. Two hands in a rust-orange chunky knit sweater holding two small parcels wrapped in brown kraft paper, tied with natural twine and sealed with tape, a handwritten shipping label on each that is blurred and unreadable. The person's face is not in the frame. Warm colour, honest and unposed. No brand names, no logos, no watermark.
 ```
 
-### photo-market.jpg  | 3:4
+### photo-market.jpg  | 3:4  (the delivery rider in the street)
 ```
-Documentary photograph at golden hour, warm colour. A narrow bazaar lane in a Pakistani city, a delivery rider on a motorbike seen from behind with a square insulated food box on the back, hanging fabrics and stacked produce crates on both sides, soft dust in the light. No readable signs, no brand names, no watermark.
+Editorial documentary photograph at golden hour, warm colour, shot on a 50 mm lens. A quiet tree-lined street of brick storefronts in a US city, a delivery courier on an electric bike seen from behind with a square insulated food-delivery box on the back, a farmers-market stall with produce crates and bunting at the edge of the frame, soft light through the leaves. No readable signs, no brand names, no logos, no watermark.
 ```
 
 ### photo-team.jpg  | 3:4
 ```
-Documentary photograph, natural light from a window. Two shop staff in a back room checking stock on a tablet next to metal shelves of boxed small goods and a packing table with a roll of tape and a ball of string, seen from the side and behind, not looking at the camera. Honest and unposed, slightly warm colour. No readable text, no brand names, no watermark.
+Editorial documentary photograph, natural light from a large window, shot on a 50 mm lens. Two shop staff in aprons in the back room of a small US shop, checking stock on a tablet next to metal shelves of boxed goods and a packing table with a roll of tape and a ball of twine, seen from the side and behind, not looking at the camera. Honest and unposed, warm colour. No readable text, no brand names, no logos, no watermark.
 ```
 
 ### photo-family.jpg  | 16:9
 ```
-Documentary photograph from directly above, soft natural light. A packing table covered with a plain cloth: three brown kraft-paper parcels tied with twine, a steel tiffin carrier, a paper bag of sweets, a roll of cream tape, scissors and a handwritten order list, arranged neatly with a little breathing space between them. Warm colour. No readable text, no brand names, no watermark.
+Editorial documentary photograph from directly above, soft natural light, shot on a 50 mm lens. A wooden packing table: three brown kraft-paper parcels tied with twine, a steel lunch tiffin, a paper bag of pastries, a roll of cream tape, scissors and a handwritten order list, arranged neatly with breathing space between them. Warm colour. No readable text, no brand names, no logos, no watermark.
 ```
 
 ### photo-food-pack.jpg  | 3:4
 ```
-Documentary photograph in warm kitchen light, shallow depth of field. A pair of hands closing a cardboard box of hot food for delivery, rice and curry in separate small foil containers inside it, a paper bag beside the box, a little steam rising, a clean kitchen counter. Hands only, no face. No readable text, no brand names, no watermark.
+Editorial documentary photograph in warm kitchen light, shallow depth of field, shot on a 50 mm lens. A pair of hands closing a kraft takeout box of hot food for delivery, rice and curry in separate compostable containers inside it, a paper bag with a folded top beside the box, a little steam rising, a stainless-steel restaurant counter. Hands only, no face. No readable text, no brand names, no logos, no watermark.
 ```
 
 ### photo-delivery-bag.jpg  | 3:4
 ```
-Documentary photograph in soft evening light. A delivery rider seen from behind, a green insulated box bag on his back, walking up a quiet residential lane in Pakistan, brick walls and a tree, face not visible. Honest and unposed, warm colour. No readable text, no brand names, no watermark.
+Editorial documentary photograph in soft evening light, shot on a 50 mm lens. A delivery courier seen from behind, an insulated square delivery backpack on his back, walking up the front path of a suburban US house with a porch and a maple tree, face not visible. Honest and unposed, warm colour. No readable text, no brand names, no logos, no watermark.
 ```
 
 ### photo-small-goods.jpg  | 3:4
 ```
-Documentary photograph, natural light. A shelf of small goods in a corner shop: tea packets, biscuits, jars of pickle and bars of soap in tidy rows, a hand-written price tag in marker pen that is blurred and unreadable. Shallow depth of field, slightly warm colour. No readable brand names, no logos, no watermark.
+Editorial documentary photograph, natural light, shot on a 50 mm lens. A wooden shelf in an independent US shop with small goods in tidy rows: jars of jam and pickles, tea tins, bars of handmade soap and small bags of granola, a hand-lettered price tag in chalk that is blurred and unreadable. Shallow depth of field, warm colour. No readable brand names, no logos, no watermark.
 ```
 
 ### photo-doorstep.jpg  | 3:4
 ```
-Documentary photograph in soft morning light. A small brown paper parcel and a paper bag of groceries placed on a doorstep next to a pair of leather sandals, a patterned doormat, nobody in the frame. Quiet, honest, slightly warm colour. No readable text, no brand names, no watermark.
+Editorial documentary photograph in soft morning light, shot on a 50 mm lens. A small brown cardboard parcel and a paper bag of groceries placed on a porch step next to a pair of leather boots and a woven doormat, nobody in the frame. Quiet, honest, warm colour. No readable text, no brand names, no logos, no watermark.
 ```
 
 ### photo-handover.jpg  | 4:3
 ```
-Documentary photograph, shallow depth of field, soft morning light. Two hands handing over a wrapped brown parcel at a metal gate, one hand in a rider's glove, the other bare, no faces in the frame. Honest and unposed, warm colour. No readable text, no watermark.
+Editorial documentary photograph, shallow depth of field, soft morning light, shot on a 50 mm lens. Two hands handing over a wrapped brown parcel at a front gate, one hand in a courier's glove, the other bare, no faces in the frame. Honest and unposed, warm colour. No readable text, no brand names, no logos, no watermark.
 ```
 
 ### photo-bakery-box.jpg  | 3:4
 ```
-Documentary photograph from above, natural light. A baker's hands tying twine around a small white bakery box on a flour-dusted wooden counter, a few loose flour marks and a wooden rolling pin at the edge, no face. Warm colour, shallow depth of field. No readable text, no brand names, no watermark.
+Editorial documentary photograph from above, natural light, shot on a 50 mm lens. A baker's hands tying natural twine around a small white bakery box on a flour-dusted butcher-block counter, a rolling pin and a linen cloth at the edge, no face. Warm colour, shallow depth of field. No readable text, no brand names, no logos, no watermark.
 ```
 
 ---
@@ -105,7 +89,7 @@ Documentary photograph from above, natural light. A baker's hands tying twine ar
 
 ### illus-produce.jpg  | 4:3
 ```
-Hand-painted gouache pattern of ripe mangoes, green chillies and cut pomegranates with leaves, arranged evenly across warm cream paper, bold simple shapes, visible brush texture, rich saturated colour, a printed-textile feel. No text, no border, no watermark.
+Hand-painted gouache pattern of ripe peaches, red tomatoes, green peppers and cut figs with leaves, arranged evenly across warm cream paper, bold simple shapes, visible brush texture, rich saturated colour, a printed-textile feel. No text, no border, no watermark.
 ```
 
 ### hero-parcels.png  | 3:2  **cut-out**

@@ -19,6 +19,8 @@ watermarks. Original artwork, not based on any existing brand.*
 
 ## Ready-to-paste version
 
+**Setting changed 2026-10-31:** all photos now use a US small-business setting (the owner's choice); the older photo prompts further down this file still say Pakistan, so use `flow-prompts.md`.
+
 `docs/design/flow-prompts.md` has one complete prompt per file, written for Google Flow (Nano Banana and Veo). Use that file when
 generating; this one explains the intent. The 24 stand-in images generated earlier were removed again at the owner's request, so
 `frontend/public/brand/` is empty and the site shows coloured placeholders until the real files arrive.
