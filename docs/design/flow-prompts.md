@@ -20,9 +20,21 @@ coral `#FF7B5F`, orange `#FA8005`, sunny yellow `#F7D000`, sky `#50CBFF`, indigo
 
 ## A. Photos (12). Documentary look, no faces to camera, no readable text
 
-### photo-shop-counter.jpg  | 3:4
+### photo-shop-counter.jpg  | 3:4  (use ONE of the three; save the one you pick under this name)
+
+**Version A: a modern, well-run Pakistani shop**
 ```
-Documentary photograph, natural morning light, a real working neighbourhood grocery shop in Pakistan, honest and unposed, slightly warm colour, shallow depth of field. A shopkeeper seen from the side, writing an order into a phone behind the counter, glass jars of spices and sacks of rice on the shelves behind him, a steel scale on the counter. No readable text, no brand names, no logos, no watermark.
+Editorial documentary photograph, natural morning light through a glass shopfront, a clean modern neighbourhood general store in Karachi or Lahore: bright, tidy and well stocked, with neat shelves of packaged goods, glass jars and rice in clear bins, a polished counter with a digital scale and a card machine. A confident shopkeeper in his thirties in a crisp pressed shirt, seen three-quarter from the side, smiling slightly as he types an order into a smartphone. Honest and unposed, warm natural colour, shallow depth of field, shot on a 50 mm lens. No readable text, no brand names, no logos, no watermark.
+```
+
+**Version B: a US small-business shop**
+```
+Editorial documentary photograph, soft natural morning light through the front window, a charming independent corner shop in a US neighbourhood: wooden shelves of artisan jars, snacks and fresh bread, a tidy counter with a card reader and a brown paper bag of groceries ready for pickup. A friendly shop owner in a canvas apron, seen from the side, typing an order into a phone, a handwritten chalkboard behind that is blurred and unreadable. Honest and unposed, warm colour, shallow depth of field, shot on a 50 mm lens. No readable text, no brand names, no logos, no watermark.
+```
+
+**Version C: a Pakistani shop that packs delivery orders**
+```
+Editorial documentary photograph, natural morning light, a modern neighbourhood grocery in Islamabad that also sends out delivery orders: a tidy packing counter with brown paper bags and small cardboard boxes waiting to go, a shopkeeper in a pressed shirt and a neat vest, seen from the side, writing an order on his phone, well-organised shelves of spices, tea and rice behind him. Clean, warm, professional, honest and unposed, shallow depth of field, shot on a 50 mm lens. No readable text, no brand names, no logos, no watermark.
 ```
 
 ### photo-ledger.jpg  | 3:4
