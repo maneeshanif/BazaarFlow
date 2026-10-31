@@ -12,7 +12,7 @@ export const teamMemberSchema = z.object({
     .min(1, "Enter their email")
     .max(254, "Email can be at most 254 characters")
     .email("Enter an email like name@example.com"),
-  role: z.enum(["manager", "staff"], { errorMap: () => ({ message: "Choose what they can do" }) }),
+  role: z.enum(["manager", "staff"], { error: "Choose what they can do" }),
   password: z
     .string()
     .refine((v) => v === "" || v.length >= 8, "Password must be at least 8 characters")

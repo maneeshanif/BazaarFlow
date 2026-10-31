@@ -20,7 +20,7 @@ const optionalMoney = z
 
 const whole = (label: string) =>
   z.coerce
-    .number({ invalid_type_error: `${label} must be a whole number` })
+    .number({ error: `${label} must be a whole number` })
     .int(`${label} must be a whole number`)
     .min(0, `${label} cannot be negative`)
     .max(1_000_000, `${label} is too large`);
@@ -41,7 +41,7 @@ export type ProductInput = z.input<typeof productSchema>;
 
 export const stockMovementSchema = z.object({
   delta: z.coerce
-    .number({ invalid_type_error: "Enter a whole number" })
+    .number({ error: "Enter a whole number" })
     .int("Enter a whole number")
     .refine((n) => n !== 0, "Enter a number other than zero")
     .refine((n) => Math.abs(n) <= 1_000_000, "That quantity is too large"),

@@ -6,7 +6,7 @@ import { z } from "zod";
  */
 export const briefSchema = z
   .object({
-    goal: z.enum(["promote_product", "announce_offer", "festival_greeting", "general"], { errorMap: () => ({ message: "Choose what the post is for" }) }),
+    goal: z.enum(["promote_product", "announce_offer", "festival_greeting", "general"], { error: "Choose what the post is for" }),
     tone: z.enum(["friendly", "professional", "festive"]),
     language: z.enum(["english", "roman_urdu"]),
     productId: z.string(),

@@ -36,7 +36,7 @@ export const registerSchema = z.object({
     .transform(normalizePhone)
     .pipe(z.string().regex(/^\+[1-9][0-9]{7,14}$/, "Enter a phone number like 0300 1234567 or +92 300 1234567")),
   city: z.string().trim().max(60, "City can be at most 60 characters").optional(),
-  accept_terms: z.literal(true, { errorMap: () => ({ message: "You need to accept the terms to create an account" }) }),
+  accept_terms: z.literal(true, { error: "You need to accept the terms to create an account" }),
 });
 
 export type RegisterFormInput = z.input<typeof registerSchema>;
