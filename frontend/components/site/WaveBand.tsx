@@ -21,7 +21,7 @@ type Props = {
  * The wavy lime ribbon between the board and the chapters: huge capitals follow a curve and slide along it as the page
  * scrolls (the reference does the same with a sentence that runs off the edge). Decoration; the sentence is read once.
  */
-export function WaveBand({ text = LINE, ribbon = true, letters = "fill-forest-ink", className = "relative -mt-24 h-56 md:h-72", zIndex = 85 }: Props) {
+export function WaveBand({ text = LINE, ribbon = true, letters = "fill-forest-ink", className = "relative -mt-24 h-64 md:h-96", zIndex = 95 }: Props) {
   const path = useRef<SVGTextPathElement | null>(null);
   const root = useRef<HTMLElement | null>(null);
   useLayoutEffect(() => {
@@ -40,9 +40,9 @@ export function WaveBand({ text = LINE, ribbon = true, letters = "fill-forest-in
   }, []);
   return (
     <section ref={root} aria-label={text.trim()} style={{ zIndex }} className={`overflow-hidden ${className}`}>
-      <svg viewBox="0 0 1440 300" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full" aria-hidden>
+      <svg viewBox="0 0 1440 420" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full" aria-hidden>
         <defs>
-          <path id="wave-path" d="M-200 170 C 100 40, 380 270, 720 160 S 1300 30, 1700 150" />
+          <path id="wave-path" d="M-200 250 C 100 120, 380 350, 720 240 S 1300 110, 1700 230" />
         </defs>
         {ribbon ? <use href="#wave-path" className="fill-none stroke-lime" strokeWidth="190" /> : null}
         <text className={`${letters} font-display uppercase`} style={{ fontSize: 130 }}>

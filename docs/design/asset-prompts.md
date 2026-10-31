@@ -17,6 +17,15 @@ existing brand or photo.*
 paper grain and a small offset shadow. Heavy condensed lettering where letters are needed. No gradients, no glow, no
 watermarks. Original artwork, not based on any existing brand.*
 
+## Stand-ins already generated (2026-10-31)
+
+So the site is not full of coloured boxes while you make the final art, 24 stand-in files were generated with FLUX Schnell
+(about $0.07 in total) from these same prompts and saved in `frontend/public/brand/`: the 12 `photo-*.jpg`, `illus-produce.jpg`,
+the 6 `disc-*.png`, `hero-parcels.png` and the 4 `texture-*-paper.jpg`. **Replace any of them by saving your file under the same
+name.** Their limits: the discs have a plain icon and no lettering, the textures were recoloured to the exact brand colours and
+made seamless in code, and `hero-parcels.png` is cut out of a white background. Still not made: the logo, favicon, icon set,
+`roll-small`, `tape-strip`, `sticky-note`, `binder-clip`, `ribbon`, the `illus-empty/error/locked` set and every video.
+
 Palette to ask for: lime `#B6FE00`, forest green `#034102`, cream `#FDFBE8`, coral `#FF7B5F`, orange `#FA8005`,
 sunny yellow `#F7D000`, sky `#50CBFF`, indigo `#2E3EAC`, kraft brown `#C99A63`.
 
