@@ -2,46 +2,50 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 import { BrandImage } from "@/components/brand/BrandImage";
-
-const KEY = "bazaarflow-intro-seen";
-
-function seen(): boolean {
-  try {
-    return window.sessionStorage.getItem(KEY) === "1";
-  } catch {
-    return true; // storage blocked: skip the intro rather than repeat it
-  }
-}
+import { introWillPlay, markIntroSeen } from "@/components/site/intro-state";
 
 /**
- * The first-visit moment: a lime screen with the logo badge that lifts away. Shown once per browser session, never
- * for reduced motion, never blocks input (it fades itself out with CSS and ignores the pointer).
+ * Layers, top first. The lime one carries the logo and lifts away first; the colours behind it follow, each a little
+ * later, so the page seems to be uncovered by a rainbow of curved sheets (measured on the reference, home-motion-measured.md).
+ */
+const LAYERS = ["bg-lime", "bg-coral", "bg-orange", "bg-sunny", "bg-lime", "bg-sky", "bg-indigo"];
+const HOLD = 1.45; // seconds the logo is on screen before the first layer lifts
+
+/**
+ * The first-visit opening: a lime screen, the logo badge pops in, then curved coloured sheets lift off the top and the hero
+ * is underneath. Once per browser session, never for reduced motion, never takes pointer input, hidden from assistive
+ * technology, and it hides itself (CSS) when it is done.
  */
 export function Intro() {
   const show = useSyncExternalStore(
     () => () => {},
-    () => !seen() && !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    introWillPlay,
     () => false,
   );
   useEffect(() => {
-    if (!show) return;
-    try {
-      window.sessionStorage.setItem(KEY, "1");
-    } catch {
-      /* ignore */
-    }
+    if (show) markIntroSeen();
   }, [show]);
   if (!show) return null;
   return (
     <div
       aria-hidden
       data-testid="intro"
-      className="pointer-events-none fixed inset-0 z-[70] flex items-center justify-center bg-lime"
-      style={{ animation: "arc-leave 0.7s 1.3s cubic-bezier(0.7,0,0.3,1) forwards" }}
+      className="pointer-events-none fixed inset-0 z-[150]"
+      style={{ animation: `intro-gone 0s ${HOLD + 1.4}s forwards` }}
     >
-      <div className="h-28 w-44 overflow-hidden rounded-card">
-        <BrandImage file="logo-badge.png" alt="" decorative label="BazaarFlow" tone="forest" />
-      </div>
+      {LAYERS.map((tone, i) => (
+        <div
+          key={i}
+          className={`absolute inset-0 ${tone} flex items-center justify-center rounded-b-[50%_14vh]`}
+          style={{ zIndex: LAYERS.length - i, animation: `arc-leave 0.95s ${HOLD + i * 0.07}s cubic-bezier(0.7,0,0.3,1) forwards` }}
+        >
+          {i === 0 ? (
+            <div className="h-28 w-44 overflow-hidden rounded-chip" style={{ animation: "logo-pop 0.7s 0.25s var(--ease-bounce) both" }}>
+              <BrandImage file="logo-badge.png" alt="" decorative label="BazaarFlow" tone="forest" />
+            </div>
+          ) : null}
+        </div>
+      ))}
     </div>
   );
 }

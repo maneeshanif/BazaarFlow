@@ -127,8 +127,14 @@ Own route group `app/(site)` with its own layout, fonts (Young Serif display, Je
 
 - Panel / card: `rounded-card border-2 border-line-strong bg-surface-raised p-6 shadow-card` (used by every panel in the app).
 - Page banner: `PageHeader`: lime (`bg-lime text-forest-ink`, raised surface with lime text in dark) with `seam-arc` bottom edge.
-- Sidebar, drawer and tab bar: `bg-forest text-cream`, active item `bg-lime text-forest-ink rounded-pill`, focus ring `ring-lime`.
+- Sidebar, drawer and tab bar: `bg-forest text-cream`; sidebar rows are display-face labels with a dotted rule under each, the active row `bg-lime text-forest-ink` with a forest arrow badge, an arrow badge fading in on hover; focus ring `ring-lime`.
 - Buttons: pill (`rounded-pill`), primary `bg-action text-fg-inverse shadow-card`, secondary `border-2 border-action` filling lime on hover.
 - Table header: `bg-lime text-forest-ink` (dark: `bg-action-subtle text-lime`), display face, rows divided by dotted rules.
 - Section grounds on the public site: `paper-lime`, `paper-forest`, `paper-kraft`, curved by `seam-arc` / `seam-arc-top`; later sections sit behind earlier ones (decreasing z-index) so the arcs reveal the next colour.
 - Product tones: coral, orange, sunny, sky, indigo (`Tone` in `components/brand/tones.ts`).
+
+## Public site components (2026-10-31 update to ADR 0005)
+- `components/site/`: `Intro` (opening, once per session; `intro-state.ts` decides it once), `Cursor` (arrow cursor), `SiteScroll` (Lenis), `MenuTab` (pull-tab menu), `HeroHeadline` (hand-cut headline), `HeroStage` / `HeroParcels3D` (Three.js parcels), `Board` (forest board), `WaveBand` (wavy ribbon), `Chapters` (disc slider with tab semantics), `GiantStory` (pinned horizontal story), `FooterPile` (dropped discs).
+- `components/site/motion.tsx`: `Reveal`, `SplitHeading`, `RollAcross`, `Drift`, `Bob` (up and down), `WaveText` (letters hop in a wave).
+- `components/brand/TapeStrip`: draws itself in CSS and unrolls from one end when it scrolls into view.
+

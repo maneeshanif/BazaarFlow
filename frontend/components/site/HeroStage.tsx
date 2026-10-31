@@ -4,15 +4,15 @@ import dynamic from "next/dynamic";
 import { BrandImage } from "@/components/brand/BrandImage";
 
 /** Three.js is loaded only in the browser and only for the hero; everyone else gets the picture. */
-const HeroRoll3D = dynamic(() => import("@/components/site/HeroRoll3D"), { ssr: false });
+const HeroParcels3D = dynamic(() => import("@/components/site/HeroParcels3D"), { ssr: false });
 
 export function HeroStage() {
   return (
-    <div className="relative h-[22rem] w-full sm:h-[28rem] lg:h-[36rem]" data-testid="hero-stage">
-      <HeroRoll3D
+    <div className="relative h-[17rem] w-full sm:h-[22rem] lg:h-[28rem]" data-testid="hero-stage">
+      <HeroParcels3D
         fallback={
-          <div className="mx-auto h-full max-w-md overflow-hidden rounded-full">
-            <BrandImage file="hero-roll.png" alt="A roll of BazaarFlow tape" label="Hero roll" tone="forest" />
+          <div className="mx-auto h-full max-w-xl">
+            <BrandImage file="hero-parcels.png" alt="A stack of small delivery parcels and a tiffin carrier" label="Parcels" tone="forest" className="object-contain" />
           </div>
         }
       />

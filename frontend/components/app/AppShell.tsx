@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
-import { Bell, LogOut, Search, UserCircle } from "lucide-react";
+import { ArrowUpRight, Bell, LogOut, Search, UserCircle } from "lucide-react";
 import { LanguageSwitcher } from "@/components/app/LanguageSwitcher";
 import { NavIcon } from "@/components/app/icons";
 import { useT } from "@/lib/i18n/LocaleProvider";
@@ -30,15 +30,16 @@ function NavList({ groups, activeHref, onNavigate }: { groups: NavGroup[]; activ
   return (
     <>
       {groups.map((group) => (
-        <div key={group.label} className="mb-3">
-          <p className="px-4 pb-1 font-display text-ui-sm uppercase tracking-wide text-lime">{t(group.label)}</p>
+        <div key={group.label} className="mb-4">
+          <p className="px-4 pb-1 text-ui-xs font-bold uppercase tracking-widest text-lime">{t(group.label)}</p>
           <ul>
             {group.items.map((item) => {
-              const base = "flex h-control-md items-center gap-3 rounded-pill px-4 text-ui-base font-bold";
+              // each row has a dotted rule under it, like the sheet of the public menu
+              const base = "group flex h-control-md items-center gap-3 rounded-chip border-b-2 border-dotted border-lime/30 px-4";
               if (!item.href) {
                 return (
                   <li key={item.label}>
-                    <span aria-disabled="true" title="Coming soon" className={cn(base, "cursor-not-allowed text-cream/70")}>
+                    <span aria-disabled="true" title="Coming soon" className={cn(base, "cursor-not-allowed text-ui-base font-bold text-cream/70")}>
                       <NavIcon name={item.icon} />
                       <span className="truncate">{t(item.label)}</span>
                       <span className="ms-auto text-ui-2xs">{t("Soon")}</span>
@@ -56,11 +57,21 @@ function NavList({ groups, activeHref, onNavigate }: { groups: NavGroup[]; activ
                     className={cn(
                       base,
                       navFocus,
+                      "font-display text-ui-base uppercase tracking-wide transition-colors",
                       active ? "bg-lime text-forest-ink" : "text-cream hover:bg-forest-deep",
                     )}
                   >
                     <NavIcon name={item.icon} />
                     <span className="truncate">{t(item.label)}</span>
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "ms-auto grid h-6 w-6 shrink-0 place-items-center rounded-full transition-[transform,opacity] duration-300 [transition-timing-function:var(--ease-bounce)]",
+                        active ? "bg-forest-ink text-lime" : "scale-50 bg-lime text-forest-ink opacity-0 group-hover:scale-100 group-hover:opacity-100",
+                      )}
+                    >
+                      <ArrowUpRight className="h-3.5 w-3.5 rtl:-scale-x-100" />
+                    </span>
                   </Link>
                 </li>
               );

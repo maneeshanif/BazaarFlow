@@ -2,7 +2,7 @@
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { createElement, useLayoutEffect, useRef, type ElementType, type ReactNode } from "react";
+import { createElement, Fragment, useLayoutEffect, useRef, type ElementType, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -10,13 +10,13 @@ import { cn } from "@/lib/utils";
  * hide a piece only when they are about to animate it, and only when the visitor has not asked for reduced motion.
  */
 let registered = false;
-function register() {
+export function register() {
   if (!registered) {
     gsap.registerPlugin(ScrollTrigger);
     registered = true;
   }
 }
-const motionAllowed = () => typeof window !== "undefined" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+export const motionAllowed = () => typeof window !== "undefined" && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /** Fades and lifts its children into place the first time they scroll into view. */
 export function Reveal({ children, className, y = 60, delay = 0, tilt = 0 }: { children: ReactNode; className?: string; y?: number; delay?: number; tilt?: number }) {
@@ -119,5 +119,63 @@ export function Drift({ children, className, distance = 60 }: { children: ReactN
     <div ref={ref} className={className}>
       {children}
     </div>
+  );
+}
+
+/**
+ * Floats its children gently up and down for as long as they are on screen, each piece at its own pace so a group never
+ * moves in step (the reference's drifting photos and discs do the same).
+ */
+export function Bob({ children, className, amount = 18, seconds = 3 }: { children: ReactNode; className?: string; amount?: number; seconds?: number }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  useLayoutEffect(() => {
+    if (!motionAllowed() || !ref.current) return;
+    register();
+    const ctx = gsap.context(() => {
+      const tween = gsap.to(ref.current, { y: -amount, rotate: gsap.utils.random(-3, 3), duration: seconds * gsap.utils.random(0.8, 1.3), ease: "sine.inOut", repeat: -1, yoyo: true, paused: true });
+      ScrollTrigger.create({ trigger: ref.current, start: "top bottom", end: "bottom top", onToggle: (self) => (self.isActive ? tween.play() : tween.pause()) });
+    }, ref);
+    return () => ctx.revert();
+  }, [amount, seconds]);
+  return (
+    <div ref={ref} className={className}>
+      {children}
+    </div>
+  );
+}
+
+/**
+ * Text whose letters hop up and down in a wave while it is on screen (the kraft card on the reference does this on its
+ * last lines). The sentence is exposed once to assistive technology; the letters are decoration.
+ */
+export function WaveText({ text, className, amount = 0.14 }: { text: string; className?: string; amount?: number }) {
+  const ref = useRef<HTMLSpanElement | null>(null);
+  useLayoutEffect(() => {
+    if (!motionAllowed() || !ref.current) return;
+    register();
+    const ctx = gsap.context(() => {
+      const tween = gsap.to(ref.current!.querySelectorAll("[data-wave]"), { yPercent: -amount * 100, duration: 0.5, ease: "sine.inOut", repeat: -1, yoyo: true, stagger: { each: 0.07, repeat: -1, yoyo: true }, paused: true });
+      ScrollTrigger.create({ trigger: ref.current, start: "top bottom", end: "bottom top", onToggle: (self) => (self.isActive ? tween.play() : tween.pause()) });
+    }, ref);
+    return () => ctx.revert();
+  }, [amount]);
+  return (
+    <span ref={ref} className={className}>
+      <span className="sr-only">{text}</span>
+      <span aria-hidden>
+        {text.split(" ").map((word, w, all) => (
+          <Fragment key={w}>
+            <span className="inline-block whitespace-nowrap">
+              {Array.from(word).map((ch, i) => (
+                <span key={i} data-wave className="inline-block">
+                  {ch}
+                </span>
+              ))}
+            </span>
+            {w < all.length - 1 ? " " : null}
+          </Fragment>
+        ))}
+      </span>
+    </span>
   );
 }
