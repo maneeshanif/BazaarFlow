@@ -1,8 +1,11 @@
-import { fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { Chapters } from "@/components/site/Chapters";
+import { ContactForm } from "@/components/site/ContactForm";
 import { Cursor } from "@/components/site/Cursor";
 import { MenuTab } from "@/components/site/MenuTab";
+import { NewsList, type NewsItem } from "@/components/site/NewsList";
+import { CharText, RollLabel, WordText } from "@/components/site/text";
 
 const LINKS = [
   { label: "How it works", href: "/#how" },
@@ -88,5 +91,70 @@ describe("Chapters (disc slider)", () => {
     fireEvent.keyDown(tabs[1], { key: "ArrowDown" });
     expect(tabs[2]).toHaveAttribute("aria-selected", "true");
     expect(screen.getAllByRole("tabpanel", { hidden: false })).toHaveLength(1);
+  });
+});
+
+
+describe("Text engine", () => {
+  it("exposes a heading, a paragraph and a rolling label once, whole, while the letters are decoration", () => {
+    const { container } = render(
+      <>
+        <CharText text="Pick your tool" />
+        <WordText text="Six parts of one back-office." />
+        <RollLabel text="Live demo" />
+      </>,
+    );
+    expect(screen.getByRole("heading", { name: "Pick your tool" })).toBeInTheDocument();
+    expect(screen.getByText("Six parts of one back-office.", { selector: ".sr-only" })).toBeInTheDocument();
+    expect(screen.getByText("Live demo", { selector: ".sr-only" })).toBeInTheDocument();
+    // every drawn letter is hidden from assistive technology
+    expect(container.querySelectorAll("[aria-hidden] [data-char]").length).toBe("Pickyourtool".length);
+  });
+
+  it("lifts the letters near the pointer and lets them settle when it leaves (fine pointer only)", () => {
+    media(["pointer: fine"]);
+    vi.useFakeTimers({ toFake: ["requestAnimationFrame", "cancelAnimationFrame"] });
+    const { container } = render(<CharText text="Hello" reveal={false} />);
+    const root = container.querySelector("span") as HTMLElement;
+    const letters = [...container.querySelectorAll<HTMLElement>("[data-char]")];
+    // jsdom has no layout: give every clip a box so the distances mean something
+    letters.forEach((l, i) => {
+      (l.parentElement as HTMLElement).getBoundingClientRect = () => ({ left: i * 40, top: 0, width: 40, height: 40, right: i * 40 + 40, bottom: 40, x: i * 40, y: 0, toJSON() {} }) as DOMRect;
+    });
+    act(() => {
+      fireEvent.pointerMove(root, { clientX: 100, clientY: 20, pointerType: "mouse" });
+      vi.advanceTimersByTime(400);
+    });
+    expect(letters[2].style.transform).toContain("translate3d");
+    expect(letters[0].style.transform === "" || !letters[0].style.transform.includes("-0.")).toBe(true);
+    act(() => {
+      fireEvent.pointerLeave(root);
+      vi.advanceTimersByTime(3000);
+    });
+    expect(letters[2].style.transform).toBe("");
+    vi.useRealTimers();
+  });
+});
+
+describe("News filter", () => {
+  const items: NewsItem[] = [
+    { id: "a", kind: "Update", title: "Shipped one", text: "t", when: "Oct 2026", photo: "x.jpg", tone: "sunny" },
+    { id: "b", kind: "Next", title: "Coming one", text: "t", when: "Coming", photo: "x.jpg", tone: "sky" },
+  ];
+  it("shows everything, then only the chosen kind, and counts each", () => {
+    render(<NewsList items={items} />);
+    expect(screen.getAllByRole("article")).toHaveLength(2);
+    fireEvent.click(screen.getByRole("tab", { name: /Next/ }));
+    expect(screen.getAllByRole("article")).toHaveLength(1);
+    expect(screen.getByText("Coming one", { selector: "h3" })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /All/ })).toHaveTextContent("2");
+  });
+});
+
+describe("Contact form", () => {
+  it("asks for a name and a message before it does anything", () => {
+    render(<ContactForm />);
+    fireEvent.click(screen.getByRole("button", { name: "Send" }));
+    expect(screen.getByRole("alert")).toHaveTextContent("name and a message");
   });
 });

@@ -31,17 +31,30 @@ sunny yellow `#F7D000`, sky `#50CBFF`, indigo `#2E3EAC`, kraft brown `#C99A63`.
 
 ## Hero and section objects (transparent PNG, 1600 px)
 
-The hero shows a 3D parcel stack drawn in the browser; `hero-parcels.png` is only the picture shown when 3D is off.
+The hero shows a 3D parcel stack drawn in the browser. The owner liked it, so it is now also an image and a video to make (below): when the video exists it plays instead of the browser-drawn scene; `hero-parcels.png` is the still shown for reduced motion and when WebGL is off.
 
 | File | Prompt |
 | --- | --- |
-| `hero-parcels.png` | Three small kraft-paper delivery parcels stacked at a slight angle, one sealed with a strip of cream tape, one tied with twine, plus a small round steel tiffin carrier in front. Viewed from the front, soft shadow, centred. Graphic style, not a photo. |
-| `disc-sales.png`, `disc-stock.png`, `disc-khata.png`, `disc-chat.png`, `disc-money.png` | A round badge, 800 px, like a product seal: a thick coloured ring with the centre in a lighter tint, a bold icon in the middle (sales: receipt; stock: stacked boxes; khata: ledger book; chat: chat bubble; money: rupee coin) and a curved line of small text around the edge reading SALES, STOCK, KHATA, CHAT or MONEY. Ring colours in order: coral, sunny yellow, indigo, orange, sky. Transparent background, slight tilt, small shadow. These are the round pieces that float through the page. |
+| `hero-parcels.png` | The hero object as a still, 1600 px, transparent: three small matte kraft-paper delivery parcels stacked at a slight angle (the biggest in the middle, a smaller one to its left with a sunny-yellow tape band, a cream tape band over the big one), a round coral tiffin carrier with a forest-green lid and a small carry handle to the right, and a small roll of sunny-yellow tape floating above and behind. Simple rounded shapes, soft studio light from the upper right, soft shadow underneath, centred. A clean 3D render look, not a photo, not a cartoon. |
+| `disc-sales.png`, `disc-stock.png`, `disc-khata.png`, `disc-chat.png`, `disc-money.png`, `disc-posts.png` | A round badge, 800 px, like a product seal: a thick coloured ring with the centre in a lighter tint, a bold icon in the middle (sales: receipt; stock: stacked boxes; khata: ledger book; chat: chat bubble for the inbox; money: rupee coin; posts: megaphone) and a curved line of small text around the edge reading SALES, STOCK, KHATA, INBOX, MONEY or POSTS. Ring colours in order: coral, sunny yellow, indigo, orange, sky, lime-green. Transparent background, slight tilt, small shadow. These are the round pieces that float through the page, sit in the slider, pile up in the footer and overlap in a row on the "What it handles" page. |
 | `roll-small.png` | A small roll of cream masking tape seen at an angle, transparent background. Used as a quiet detail beside photos. |
 | `tape-strip.png` | A translucent kraft tape strip with slightly torn ends, 600x180, transparent. The page also draws its own strips in CSS; this file is optional. |
 | `sticky-note.png` | A yellow sticky note with a short serious to-do list in neat handwriting: "pack Ali's order", "count flour and rice", "settle Sana's udhaar". Optional; the page draws its own in CSS. |
 | `binder-clip.png` | A black steel binder clip, transparent, seen from the front. Optional. |
 | `ribbon.png` | An off-white paper tab with a dotted top edge and a swallow-tail lower edge, 420x260, empty. Optional; the menu tab is drawn in CSS. |
+
+## Video (looping, silent, optional)
+
+The page checks for these files and plays them in place of the still or the browser-drawn scene. No file, no problem: the page
+keeps showing what it shows now. Give each as `.mp4` (H.264) and, if you can, `.webm` (VP9) of the same clip. Silent, 24 or 30
+fps, a seamless loop (the last frame flows into the first), under 4 MB each.
+
+| File | Size | Prompt |
+| --- | --- | --- |
+| `hero-parcels.webm` (with **alpha / transparent background**) and `hero-parcels.mp4` | 1600x1000, 8 s loop | The same object as `hero-parcels.png`, moving: the three parcels, the tiffin carrier and the tape roll float and turn slowly, each at its own pace, the camera barely moving, a soft shadow on an invisible floor. Matte paper material, soft studio light from the upper right, clean 3D render look. WebM must have a transparent background so the crumpled lime paper shows through; the MP4 (no transparency) may sit on flat lime `#B6FE00`. |
+| `story-handover.mp4` / `.webm` | 1600x1200, 6 s loop | Documentary, slow and quiet: two hands hand over a wrapped parcel at a gate, one in a rider's glove, one bare, the parcel passes across and the bare hand draws it in, natural morning light, shallow depth of field, no faces, no readable text. Ends where it starts. Used in the closing panel on every page. |
+
+More clips can be wired in later (a turning disc, a rider in the street for the News page): ask when you have them.
 
 ## Photo frames (3:4 portrait unless stated, 1200 px)
 
@@ -82,6 +95,7 @@ These sit in rounded, tilted frames with taped corners. Use the photo style line
 
 ## What the page draws itself (no file needed)
 
-The cursor arrow, the menu tab and sheet, tape strips that unroll, the sticky note, the binder clip, the wavy ribbon and the
-hand-cut headline letters are drawn in code, so they work before any artwork exists. The 3D parcels in the hero are built
+The cursor arrow, the menu tab and sheet, tape strips that unroll, the sticky note, the binder clip, the wavy ribbon, the
+spinning "small shops, big orders" badge, the arrows that draw themselves, the torn-paper card, the crumpled paper grounds (a
+fallback until your textures arrive) and the hand-cut headline letters are drawn in code, so they work before any artwork exists. The 3D parcels in the hero are built
 in the browser with Three.js.

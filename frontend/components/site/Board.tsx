@@ -1,7 +1,8 @@
 import { BrandImage } from "@/components/brand/BrandImage";
 import { TapeStrip } from "@/components/brand/TapeStrip";
 import { TiltFrame } from "@/components/brand/TiltFrame";
-import { Bob, Drift, Reveal, WaveText } from "@/components/site/motion";
+import { Bob, Drift, WaveText } from "@/components/site/motion";
+import { ScrubText } from "@/components/site/text";
 
 const TODO = ["pack Ali's order", "count flour and rice", "settle Sana's udhaar"];
 
@@ -37,12 +38,8 @@ export function Board() {
           <div className="paper-kraft relative rounded-card p-8 shadow-card md:p-14">
             <TapeStrip className="-top-4 right-16 h-10 w-40 rotate-2" />
             <h2 id="board-title" className="font-display text-ui-3xl uppercase leading-[0.95] text-kraft-ink md:text-display-lg">
-              <Reveal y={30} className="block">
-                Order rush. Udhaar chaos. Stock-take Sunday.
-              </Reveal>
-              <Reveal y={30} delay={0.15} className="mt-3 block">
-                A parcel with the wrong address.
-              </Reveal>
+              <ScrubText text="Order rush. Udhaar chaos. Stock-take Sunday." className="block" />
+              <ScrubText text="A parcel with the wrong address." className="mt-3 block" />
               <WaveText text="We keep it straight." className="mt-3 block" />
             </h2>
           </div>

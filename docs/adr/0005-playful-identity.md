@@ -56,3 +56,10 @@ delivery parcels, small goods, packed food) with a more serious tone. Measured s
   being dropped silently before.
 - The asset prompts were rewritten for the delivery, small-goods and packed-food subject with documentary photography.
 
+## Update 2026-10-31 (round 2): pages, text motion, video slots
+Measurements: `home-motion-measured.md` section 6. Every menu link now has its own page (About, How it works, What it handles,
+News, Contact), replacing the old marketing pages and header. Headings and paragraphs are built from clipped letters and
+words that rise on scroll and react to the pointer; links roll their letters on hover; the pinned story is a camera path. The
+3D hero stays as the fallback and is also specified as an image and a looping video in the asset prompts; a supplied video
+replaces it automatically. Contact has no server behind it: Send opens the visitor's email app.
+

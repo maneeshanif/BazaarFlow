@@ -72,7 +72,7 @@ const CHAPTERS: Chapter[] = [
     does: "Drafts it in your tone. You edit it and send it for approval. Publishing to Facebook comes later.",
     photo: "photo-market.jpg",
     photoLabel: "Bazaar",
-    disc: "disc-chat.png",
+    disc: "disc-posts.png",
   },
 ];
 
@@ -134,9 +134,16 @@ export function Chapters() {
 
         {/* the disc with its name behind it */}
         <div className="relative order-1 mx-auto flex aspect-square w-full max-w-xl items-center justify-center lg:order-2">
-          <p aria-hidden className={`giant-word absolute inset-x-0 top-1/2 -translate-y-1/2 text-center font-display uppercase ${dark ? "text-cream/25" : "text-cream/60"}`}>
-            {c.word}
-          </p>
+          <svg aria-hidden key={c.word} viewBox="0 0 600 600" className="absolute inset-0 h-full w-full" style={{ animation: "logo-pop 0.7s var(--ease-bounce) both" }}>
+            <defs>
+              <path id={`${uid}-arc`} d="M 20 300 A 280 280 0 0 0 580 300" />
+            </defs>
+            <text className={`font-display uppercase ${dark ? "fill-cream/25" : "fill-cream/60"}`} style={{ fontSize: 190 }} textAnchor="middle">
+              <textPath href={`#${uid}-arc`} startOffset="50%">
+                {c.word}
+              </textPath>
+            </text>
+          </svg>
           <Bob amount={14} seconds={4} className="relative z-10 w-3/5">
             <div key={c.id} className="aspect-square -rotate-6 overflow-hidden rounded-full shadow-card" style={{ animation: "logo-pop 0.7s var(--ease-bounce) both" }}>
               <BrandImage file={c.disc} alt="" decorative label={c.word} tone="cream" />

@@ -407,9 +407,13 @@
 }
 
 /* ---- Identity primitives (ADR 0005) ------------------------------------------------------------------------------ */
-.paper-lime { background-color: var(--color-lime); background-image: var(--paper-lime, none); background-size: 640px; }
-.paper-forest { background-color: var(--color-forest); background-image: var(--paper-forest, none); background-size: 640px; }
-.paper-kraft { background-color: var(--color-kraft); background-image: var(--paper-kraft, none); background-size: 640px; }
+/* Paper grounds: the owner's texture file when it exists, otherwise a crumple drawn by an SVG lighting filter. */
+:root {
+  --crumple: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='720' height='720'><filter id='c' x='0' y='0' width='100%25' height='100%25'><feTurbulence type='fractalNoise' baseFrequency='0.008 0.014' numOctaves='5' seed='7' result='n'/><feDiffuseLighting in='n' lighting-color='white' surfaceScale='3.2'><feDistantLight azimuth='235' elevation='58'/></feDiffuseLighting></filter><rect width='100%25' height='100%25' filter='url(%23c)'/></svg>");
+}
+.paper-lime { background-color: var(--color-lime); background-image: var(--paper-lime, none), var(--crumple); background-size: 640px, 720px; background-blend-mode: normal, multiply; }
+.paper-forest { background-color: var(--color-forest); background-image: var(--paper-forest, none), var(--crumple); background-size: 640px, 720px; background-blend-mode: normal, multiply; }
+.paper-kraft { background-color: var(--color-kraft); background-image: var(--paper-kraft, none), var(--crumple); background-size: 640px, 720px; background-blend-mode: normal, multiply; }
 
 /* A section whose bottom edge is a wide ellipse, like the arcs on the reference site. */
 .seam-arc { border-bottom-left-radius: 50% 4rem; border-bottom-right-radius: 50% 4rem; }
@@ -438,7 +442,7 @@
   --paper-kraft: url("/brand/texture-kraft.jpg");
   --paper-cream: url("/brand/texture-cream-paper.jpg");
 }
-.paper-cream { background-color: var(--color-cream); background-image: var(--paper-cream, none); background-size: 640px; }
+.paper-cream { background-color: var(--color-cream); background-image: var(--paper-cream, none), var(--crumple); background-size: 640px, 720px; background-blend-mode: normal, multiply; }
 
 /* The arrow cursor replaces the system cursor only for a fine pointer and only when motion is allowed (Cursor.tsx adds the class). */
 html.has-cursor, html.has-cursor * { cursor: none !important; }
@@ -453,12 +457,14 @@ html.lenis, html.lenis body { height: auto; }
 .hero-small { font-size: clamp(1.5rem, 3.2vw, 2.5rem); line-height: 1; }
 .giant-word { font-size: clamp(4.5rem, 17vw, 12rem); line-height: 0.85; white-space: normal; }
 .giant-track[data-mode="h"] .giant-word { font-size: clamp(9rem, 42vh, 30rem); line-height: 0.8; white-space: nowrap; }
+.giant-track[data-mode="h"] .giant-word-long { font-size: clamp(7rem, 31vh, 24rem); }
 .cut-letter { display: inline-block; transform-origin: 50% 80%; }
 @keyframes cut-in {
   from { opacity: 0; transform: translateY(60%) rotate(var(--r0, 0deg)) scale(0.7); }
   to { opacity: 1; transform: translateY(var(--dy, 0)) rotate(var(--r, 0deg)) scale(1); }
 }
-.cut-letter[data-cut] { animation: cut-in 0.7s var(--ease-bounce) both; animation-delay: calc(var(--delay, 0s) + var(--base, 0s)); }
+.cut-letter[data-cut] { animation: cut-in 0.7s var(--ease-bounce) both; animation-delay: calc(var(--delay, 0s) + 0.1s); }
+html[data-intro] .cut-letter[data-cut] { animation-delay: calc(var(--delay, 0s) + 2.4s); }
 .cut-letter:not([data-cut]) { transform: translateY(var(--dy, 0)) rotate(var(--r, 0deg)); }
 
 /* Menu tab: swallow-tail lower edge. */
@@ -469,8 +475,51 @@ html.lenis, html.lenis body { height: auto; }
 @keyframes intro-gone { to { visibility: hidden; } }
 
 /* Pinned story: stacked on phones and for reduced motion; one long horizontal line when Giant.tsx switches it on. */
-.giant-track[data-mode="h"] { flex-direction: row; align-items: center; width: max-content; }
+.gi { position: relative; }
+.giant-track[data-mode="h"] { display: block; height: 100%; width: 520vw; }
+.giant-wrap:has(.giant-track[data-mode="h"]) { height: 100vh; padding: 0; }
+.giant-track[data-mode="h"] .gi { position: absolute; left: var(--l); top: var(--t); }
 
 @media (prefers-reduced-motion: reduce) {
   .cut-letter[data-cut] { animation: none; opacity: 1; transform: translateY(var(--dy, 0)) rotate(var(--r, 0deg)); }
 }
+
+/* ---- Text engine (components/site/text.tsx): letters in clips, rolling links, the dropping sticker ------------------------ */
+.clip { display: inline-block; overflow: hidden; vertical-align: bottom; padding-block: 0.08em; margin-block: -0.08em; }
+.clip[data-free] { overflow: visible; }
+.char { display: inline-block; will-change: transform; }
+
+@keyframes roll-char {
+  0% { transform: translateY(0); animation-timing-function: cubic-bezier(0.55, 0, 0.85, 0.4); }
+  50% { transform: translateY(-130%); }
+  50.01% { transform: translateY(130%); animation-timing-function: cubic-bezier(0.15, 0.6, 0.45, 1); }
+  100% { transform: translateY(0); }
+}
+.roll-clip { display: inline-block; overflow: hidden; vertical-align: bottom; }
+.roll:hover .roll-char, .roll:focus-visible .roll-char { animation: roll-char 0.45s calc(var(--i, 0) * 0.035s) both; }
+.roll-char { display: inline-block; }
+
+/* The logo sticker lands with a squash and stretch (the reference's sticker does the same). */
+@keyframes sticker-drop {
+  0% { opacity: 0; transform: translateY(-110px) rotate(-8deg) scale(1, 1); }
+  10% { opacity: 1; }
+  40% { transform: translateY(6px) rotate(-5deg) scale(1, 1); animation-timing-function: ease-out; }
+  48% { transform: translateY(0) rotate(-4deg) scale(1.12, 0.86); }
+  58% { transform: translateY(-14px) rotate(-4deg) scale(0.95, 1.07); animation-timing-function: ease-in; }
+  68% { transform: translateY(0) rotate(-4deg) scale(1.05, 0.95); }
+  78% { transform: translateY(-4px) rotate(-4deg) scale(0.99, 1.02); }
+  100% { transform: translateY(0) rotate(-4deg) scale(1, 1); }
+}
+
+/* The menu tab arrives from above once the opening is over, and sways when the page scrolls. */
+@keyframes tab-arrive { from { transform: translateY(-115%); } to { transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .roll:hover .roll-char, .roll:focus-visible .roll-char { animation: none; }
+}
+
+/* The opening: shown only when the boot script flagged this visit; the menu tab waits for it too. */
+.intro-root { display: none; }
+html[data-intro] .intro-root { display: block; }
+.menu-tab-arrive { animation: tab-arrive 0.9s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) backwards; }
+html[data-intro] .menu-tab-arrive { animation-delay: 2.4s; }

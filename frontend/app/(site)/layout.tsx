@@ -4,8 +4,11 @@ import { BrandImage } from "@/components/brand/BrandImage";
 import { Cursor } from "@/components/site/Cursor";
 import { FooterPile } from "@/components/site/FooterPile";
 import { Intro } from "@/components/site/Intro";
+import { INTRO_BOOT_SCRIPT } from "@/components/site/intro-state";
+import { PUBLIC_MENU } from "@/components/site/content";
 import { MenuTab, type MenuLink } from "@/components/site/MenuTab";
 import { SiteScroll } from "@/components/site/SiteScroll";
+import { RollLabel } from "@/components/site/text";
 
 export const metadata: Metadata = {
   title: "BazaarFlow - the back-office that keeps your khata",
@@ -13,11 +16,8 @@ export const metadata: Metadata = {
     "Tell BazaarFlow what you sold in English or Roman Urdu. It updates your stock and your customers' udhaar, and nothing changes until you approve it.",
 };
 
-/** The pull-tab menu. Same destinations the header and footer always had, plus the sign-up. */
-const MENU: MenuLink[] = [
-  { label: "How it works", href: "/#how" },
-  { label: "You stay in charge", href: "/#control" },
-  { label: "Live demo", href: "/demo" },
+/** Two smaller links under the big ones: the ways into the app. */
+const MENU_EXTRA: MenuLink[] = [
   { label: "Create your shop", href: "/register" },
   { label: "Sign in", href: "/sign-in" },
 ];
@@ -30,6 +30,7 @@ const FOOT_LINK =
 export default function SiteLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div className="min-h-screen bg-forest-deep text-cream">
+      <script dangerouslySetInnerHTML={{ __html: INTRO_BOOT_SCRIPT }} />
       <Intro />
       <Cursor />
       <SiteScroll />
@@ -43,24 +44,22 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
           </Link>
         </div>
       </header>
-      <MenuTab links={MENU} />
+      <MenuTab links={PUBLIC_MENU} extra={MENU_EXTRA} />
 
       <main id="content">{children}</main>
 
       <footer className="paper-forest relative -mt-12 overflow-hidden bg-forest">
         <nav aria-label="Footer" className="mx-auto flex max-w-[110rem] flex-wrap justify-between gap-x-8 gap-y-4 px-4 pt-28 md:px-8">
-          <Link href="/#how" className={FOOT_LINK}>
-            How it works
-          </Link>
-          <Link href="/demo" className={FOOT_LINK}>
-            Live demo
-          </Link>
-          <Link href="/register" className={FOOT_LINK}>
-            Create your shop
-          </Link>
-          <Link href="/sign-in" className={FOOT_LINK}>
-            Sign in
-          </Link>
+          {[
+            ["About", "/about"],
+            ["How it works", "/how-it-works"],
+            ["News", "/news"],
+            ["Contact", "/contact"],
+          ].map(([label, href]) => (
+            <Link key={href} href={href} className={`roll ${FOOT_LINK}`}>
+              <RollLabel text={label} />
+            </Link>
+          ))}
         </nav>
         <div className="relative mx-auto flex min-h-[32rem] max-w-[110rem] flex-col items-center justify-center px-4 py-24 text-center">
           <div className="h-16 w-28 -rotate-3 overflow-hidden rounded-chip" aria-hidden>

@@ -1,23 +1,20 @@
 import Link from "next/link";
 import { BrandImage } from "@/components/brand/BrandImage";
 import type { Tone } from "@/components/brand/tones";
-import { TiltFrame } from "@/components/brand/TiltFrame";
 import { Board } from "@/components/site/Board";
 import { Chapters } from "@/components/site/Chapters";
+import { ClosingPanel } from "@/components/site/ClosingPanel";
+import { CONTROLS } from "@/components/site/content";
 import { GiantStory } from "@/components/site/GiantStory";
+import { HeroFloaters } from "@/components/site/HeroFloaters";
 import { HeroHeadline } from "@/components/site/HeroHeadline";
 import { HeroStage } from "@/components/site/HeroStage";
-import { Reveal, SplitHeading } from "@/components/site/motion";
-import { SITE_ON_FOREST, SITE_ON_FOREST_SECONDARY, SITE_SECONDARY } from "@/components/site/styles";
+import { Reveal } from "@/components/site/motion";
+import { CharText, RollLabel, WordText } from "@/components/site/text";
+import { SITE_SECONDARY } from "@/components/site/styles";
+import { SpinBadge } from "@/components/site/SpinBadge";
 import { StartDemoButton } from "@/components/site/StartDemoButton";
 import { WaveBand } from "@/components/site/WaveBand";
-
-const CONTROLS = [
-  "Sales, payments and stock changes wait for a manager or the owner to approve them.",
-  "Every conversation is logged with the tools it used. Names, phone numbers and emails are hidden in the log.",
-  "The owner can pause the assistant at any moment, and each shop has a monthly AI allowance that stops it.",
-  "Staff can chat and propose. Only owners and managers approve.",
-];
 
 const BAZAAR: { title: string; text: string; file: string; tone: Tone }[] = [
   { title: "Rupees and udhaar", text: "Prices in Rs, and a ledger for each customer with their purchases and payments.", file: "photo-ledger.jpg", tone: "coral" },
@@ -30,29 +27,31 @@ const BAZAAR: { title: string; text: string; file: string; tone: Tone }[] = [
 export default function LandingPage() {
   return (
     <>
-      {/* 1. Hero: crumpled lime paper, small line, huge hand-cut words, parcels rising from behind the curve */}
+      {/* 1. Hero: crumpled lime paper, small line, huge hand-cut words, taped photos and discs that drift, parcels rising from behind the curve */}
       <section
         aria-label="BazaarFlow"
         style={{ zIndex: 100 }}
         className="paper-lime seam-arc relative flex min-h-screen flex-col items-center px-4 pb-44 pt-28 text-forest-ink md:px-8 md:pb-56 md:pt-24"
       >
+        <HeroFloaters />
         <p className="absolute start-4 top-20 max-w-[16rem] border-s-2 border-dotted border-forest-ink ps-3 font-display text-ui-base uppercase leading-tight md:start-8">
           Keeping a small shop&apos;s books, from the first sale to the last parcel
         </p>
-        <div className="mt-12 w-full max-w-[110rem] md:mt-8">
+        <SpinBadge text="Small shops, big orders" className="absolute end-6 top-44 hidden h-28 w-28 md:block lg:end-[6%] lg:top-[22%] lg:h-40 lg:w-40" />
+        <div className="relative mt-12 w-full max-w-[110rem] md:mt-8">
           <HeroHeadline />
         </div>
-        <p className="mx-auto mt-6 max-w-prose text-center text-ui-lg font-medium">
-          BazaarFlow is a back-office for shops in Pakistan that pack and send out orders. Write a sale in English or Roman Urdu and it updates your stock and your
-          customers&apos; udhaar. Nothing changes until you approve it.
-        </p>
-        <div className="mt-6 flex flex-wrap items-start justify-center gap-3">
+        <WordText
+          text="BazaarFlow is a back-office for shops in Pakistan that pack and send out orders. Write a sale in English or Roman Urdu and it updates your stock and your customers' udhaar. Nothing changes until you approve it."
+          className="relative mx-auto mt-6 max-w-prose text-center text-ui-lg font-medium"
+        />
+        <div className="relative mt-6 flex flex-wrap items-start justify-center gap-3">
           <StartDemoButton />
           <Link href="/register" className={SITE_SECONDARY}>
-            Create your shop
+            <RollLabel text="Create your shop" />
           </Link>
         </div>
-        <p className="mt-3 max-w-prose text-center text-ui-sm font-medium">Free. The demo gives you a shop of your own for a day, with sales and customers already in it. No sign-up.</p>
+        <p className="relative mt-3 max-w-prose text-center text-ui-sm font-medium">Free. The demo gives you a shop of your own for a day, with sales and customers already in it. No sign-up.</p>
         <div className="absolute inset-x-0 bottom-0 z-[110] mx-auto w-full max-w-3xl translate-y-1/3">
           <HeroStage />
         </div>
@@ -77,7 +76,7 @@ export default function LandingPage() {
             <div className="-rotate-[7deg] rounded-chip border-8 border-coral px-8 py-4 font-display text-ui-3xl uppercase tracking-wide text-coral md:text-display-lg">Approved</div>
           </div>
           <div>
-            <SplitHeading id="control-title" text="You stay in charge of your shop." className="max-w-[16ch] text-display-lg text-lime" />
+            <CharText id="control-title" text="You stay in charge of your shop." className="max-w-[16ch] text-display-lg text-lime" />
             <ul className="mt-8 flex max-w-prose flex-col gap-4 text-ui-lg text-cream">
               {CONTROLS.map((c) => (
                 <li key={c} className="rounded-card border-2 border-dotted border-lime/60 px-6 py-4">
@@ -91,7 +90,7 @@ export default function LandingPage() {
 
       {/* 7. Pill rows */}
       <section aria-labelledby="bazaar-title" style={{ zIndex: 60 }} className="relative -mt-12 overflow-hidden bg-forest-deep px-4 pb-24 pt-28 md:px-8">
-        <SplitHeading id="bazaar-title" text="Built for how a bazaar shop works." className="mx-auto max-w-[110rem] text-display-lg text-lime" />
+        <CharText id="bazaar-title" text="Built for how a bazaar shop works." className="mx-auto max-w-[110rem] text-display-lg text-lime" />
         <ul className="mx-auto mt-12 flex max-w-[110rem] flex-col gap-5">
           {BAZAAR.map((b, i) => (
             <li key={b.title}>
@@ -110,23 +109,7 @@ export default function LandingPage() {
       </section>
 
       {/* 8. Closing panel */}
-      <section aria-labelledby="try-title" style={{ zIndex: 65 }} className="paper-lime seam-arc-top seam-arc relative -mt-12 px-4 pb-28 pt-32 text-forest-ink md:px-8">
-        <div className="mx-auto grid max-w-[110rem] gap-6 lg:grid-cols-2">
-          <TiltFrame tilt={-3} className="min-h-[22rem]">
-            <BrandImage file="photo-handover.jpg" alt="" decorative label="The handover" tone="sunny" />
-          </TiltFrame>
-          <div className="rounded-card bg-forest p-8 text-cream shadow-card md:p-14">
-            <SplitHeading id="try-title" text="Let's get every order there." className="text-display-lg text-lime" />
-            <p className="mt-5 max-w-prose text-ui-lg">A day of sales, eight products and three customers are waiting. Make a sale by chat and approve it yourself.</p>
-            <div className="mt-8 flex flex-wrap items-start gap-3">
-              <StartDemoButton className={SITE_ON_FOREST}>Try the live demo</StartDemoButton>
-              <Link href="/register" className={SITE_ON_FOREST_SECONDARY}>
-                Create your shop
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ClosingPanel />
     </>
   );
 }

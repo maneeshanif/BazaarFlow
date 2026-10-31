@@ -62,7 +62,7 @@ After building any component, record: name, file path, purpose, variants, and th
 Purpose: the signed-in application frame (PRD section 4). Persistent 240px sidebar from `lg` (1024px), drawer below it, 56px topbar, five-item tab bar on phones.
 Classes: sidebar `w-sidebar border-r border-border bg-surface`; topbar `h-topbar border-b border-border bg-surface`; page `bg-canvas text-fg`; nav item `h-control-md rounded-md px-3 text-ui-base`, active `bg-action-subtle text-action font-medium`, idle `text-fg-muted hover:bg-surface-hover`; focus ring `focus-visible:ring-2 focus-visible:ring-line-focus`.
 Do: pass `role` (navigation is filtered, unauthorized items are hidden); give pages `p-4 md:p-6` through the shell, never add a page-level horizontal scroller.
-Don't: render the marketing header inside the shell (marketing pages live in `app/(marketing)`).
+Don't: render the marketing header inside the shell (public pages live in `app/(site)`).
 
 ### DataTable
 Purpose: the one data grid. Props: `caption`, `columns`, `rows`, `state` = ready | loading | empty | error | unauthorized, `emptyMessage/emptyAction`, `errorMessage/onRetry`.
@@ -137,4 +137,10 @@ Own route group `app/(site)` with its own layout, fonts (Young Serif display, Je
 - `components/site/`: `Intro` (opening, once per session; `intro-state.ts` decides it once), `Cursor` (arrow cursor), `SiteScroll` (Lenis), `MenuTab` (pull-tab menu), `HeroHeadline` (hand-cut headline), `HeroStage` / `HeroParcels3D` (Three.js parcels), `Board` (forest board), `WaveBand` (wavy ribbon), `Chapters` (disc slider with tab semantics), `GiantStory` (pinned horizontal story), `FooterPile` (dropped discs).
 - `components/site/motion.tsx`: `Reveal`, `SplitHeading`, `RollAcross`, `Drift`, `Bob` (up and down), `WaveText` (letters hop in a wave).
 - `components/brand/TapeStrip`: draws itself in CSS and unrolls from one end when it scrolls into view.
+
+### Added 2026-10-31 (round 2)
+- `components/site/text.tsx`: `CharText` (headings: letters in clips, rise on scroll, react to the pointer), `WordText` (paragraphs), `ScrubText` (letters pulled up by the scroll), `RollLabel` (letters roll on hover of a `.roll` link or button), `useProximity`.
+- `CutTitle` / `CutWord` (hand-cut page titles), `SubHero` (top of every inner page), `ClosingPanel` (end of every page), `BrandVideo` (silent looping clip with a fallback), `HeroFloaters`, `SpinBadge`, `TabCards`, `NewsList`, `ContactForm`.
+- Public pages: `/about`, `/how-it-works`, `/features`, `/news`, `/contact` (the old `(marketing)` pages and header are gone). Menu and footer links live in `components/site/content.ts`.
+- The opening is flagged by an inline boot script (`INTRO_BOOT_SCRIPT`) that sets `data-intro` on `<html>` before the first paint; the CSS shows the opening and delays the hero from that flag.
 

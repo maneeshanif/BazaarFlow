@@ -79,3 +79,44 @@ Changes for BazaarFlow (decided with the owner on 2026-10-31):
   detail (taped corners, tape strips that unroll as you scroll), not the subject.
 - Tone is more serious: real, documentary-style photographs, fewer jokes, plain statements.
 - The pull tab says "MENU" and holds the BazaarFlow links.
+
+## 6. Round 2: small details, measured 2026-10-31 with Playwright (the owner asked for every small animation)
+
+**Text is built from letters (and words) in clipping wrappers.** Every heading is `.clip > .char` (letters) and body copy is
+`.body-clip > .body-rise` (words). On scroll they rise from `translate(0, 130%)` (letters) or `42%` (words) with a stagger,
+the wrapper hiding what has not risen yet.
+
+**Hover on a heading: the pointer's neighbours react.** Sampled on the hero title with the pointer over the "I": the letters
+nearest it lifted by up to about 20 px (that is roughly 0.07 of the font size), tilted up to about 5 degrees *away* from the
+pointer (letters on its left turn left, letters on its right turn right, the one under it stays upright) and grew by up to
+7 percent. The effect fades with distance (about 4 letters each side) and everything settles within 300 ms of the pointer
+leaving. Body-copy words carry the same hook with a smaller offset.
+
+**Link hover: the label rolls.** Footer links (and similar) animate every letter with `footer-link-roll`: 0.45 s, 35 ms apart
+from letter to letter; each letter slides up out of its clip (to -130%), re-enters from below (+130%) and settles.
+
+**The logo sticker drops with squash and stretch** (`powers-mark-drop`): it falls about 96 px, lands (a 4 px overshoot), squashes
+to 1.09 wide by 0.91 tall, springs back taller, and settles after two or three small bounces.
+
+**The menu tab arrives from above** (`is-arriving`, `translate(0, -115%)` to 0) once the opening has gone.
+
+**The long pinned scene is a camera path, not a straight slide.** About 8,700 px of scroll: the camera reads the first word,
+swings down and to the right to the second word (which enters from the lower right), then up to the third (which enters from
+the top). Photos, round discs and notes sit at different depths and move at different speeds relative to the words, and each
+also bobs up and down on its own. Hand-drawn arrows between the words draw themselves (stroke offset) as the camera reaches
+them. Small circled numbers (1), (2), (3) mark the words.
+
+**The forest board's kraft card**: lines are revealed by the scroll itself, letter by letter, so a half-revealed line looks
+sliced. Taped strips and the clear tape hanging from the top move at their own speed.
+
+**The chapter word is set on an arc** ("CREATIVE" runs along a curve under the disc, "THE" above it) and the section changes
+colour with the chosen product.
+
+**Other pages** (all share the hero with a centred logo badge, a chip, a two-line hand-cut title and the same footer):
+- About: the title's letters start scattered and assemble; a torn-paper card; a sentence on a wave over the forest board
+  with four rounded "tab" cards floating at different heights; newspaper clippings.
+- Our family (products): "PICK YOUR PLAYER" with six round discs in an overlapping row, each tilted; below it the footer.
+- News: "WHAT'S ROLLING"; a highlighted card; a filter list (ALL, EVENT, NEWS with counts) beside a grid of dated cards.
+- Contact: "LET'S STICK TOGETHER"; a cream panel with a dotted top edge and a form; a big vertical SEND button; a taped sticky
+  note with the email and phone leaning on the panel's corner.
+

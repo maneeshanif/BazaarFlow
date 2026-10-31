@@ -2,8 +2,9 @@
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { createElement, Fragment, useLayoutEffect, useRef, type ElementType, type ReactNode } from "react";
+import { Fragment, useLayoutEffect, useRef, type ElementType, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { CharText } from "@/components/site/text";
 
 /**
  * Scroll motion for the public site (ADR 0005). Everything is visible in the server-rendered HTML; the scripts below
@@ -37,49 +38,11 @@ export function Reveal({ children, className, y = 60, delay = 0, tilt = 0 }: { c
 }
 
 /**
- * A display heading whose letters rise one after another. The text is exposed once, whole, to assistive technology;
- * the split letters are decoration.
+ * A display heading whose letters rise one after another and react to the pointer. The text is exposed once, whole, to
+ * assistive technology; the split letters are decoration. (Kept under this name; the work is in `text.tsx`.)
  */
-export function SplitHeading({ text, as: Tag = "h2", className, id }: { text: string; as?: ElementType; className?: string; id?: string }) {
-  const ref = useRef<HTMLSpanElement | null>(null);
-  useLayoutEffect(() => {
-    if (!motionAllowed() || !ref.current) return;
-    register();
-    const ctx = gsap.context(() => {
-      const letters = ref.current!.querySelectorAll("[data-letter]");
-      gsap.from(letters, {
-        yPercent: 110,
-        rotate: () => gsap.utils.random(-14, 14),
-        duration: 0.8,
-        stagger: 0.025,
-        ease: "back.out(1.6)",
-        scrollTrigger: { trigger: ref.current, start: "top 88%", once: true },
-      });
-    }, ref);
-    return () => ctx.revert();
-  }, [text]);
-  const words = text.split(" ");
-  return createElement(
-    Tag,
-    { id, className },
-    <span ref={ref}>
-      <span className="sr-only">{text}</span>
-      <span aria-hidden>
-        {words.map((word, w) => (
-          <span key={w} className="inline-block whitespace-nowrap">
-            {Array.from(word).map((ch, i) => (
-              <span key={i} className="inline-block overflow-hidden align-bottom">
-                <span data-letter className="inline-block">
-                  {ch}
-                </span>
-              </span>
-            ))}
-            {w < words.length - 1 ? " " : null}
-          </span>
-        ))}
-      </span>
-    </span>,
-  );
+export function SplitHeading({ text, as, className, id }: { text: string; as?: ElementType; className?: string; id?: string }) {
+  return <CharText text={text} as={as} className={className} id={id} />;
 }
 
 /** Rolls its child across the section as the visitor scrolls, turning as it goes (the tape rolls in from the edge). */
