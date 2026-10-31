@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {                                     
   return (
-    <html lang="en" className={`${body.variable} ${display.variable} ${slip.variable}`}>
+    <html lang="en" suppressHydrationWarning className={`${body.variable} ${display.variable} ${slip.variable}`}>
       <body className="antialiased">
         <LocaleProvider>
           {children}

@@ -1,5 +1,22 @@
+/**
+ * The colour tokens are CSS variables holding whole colours, which Tailwind cannot give an opacity (bg-fg/40,
+ * border-lime/30). Wrapping each one lets those modifiers work: with a modifier the colour is mixed with transparent,
+ * without one the plain variable is used.
+ */
+function withAlpha(value) {
+  if (typeof value === "string") {
+    if (!value.startsWith("var(--color-")) return value;
+    return ({ opacityValue }) =>
+      opacityValue === undefined || String(opacityValue).includes("var(")
+        ? value
+        : `color-mix(in srgb, ${value} ${Number(opacityValue) * 100}%, transparent)`;
+  }
+  if (value && typeof value === "object") return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, withAlpha(v)]));
+  return value;
+}
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+const config = {
   darkMode: ["class"],
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -179,3 +196,6 @@ module.exports = {
 	// eslint-disable-next-line @typescript-eslint/no-require-imports
 	plugins: [require("tailwindcss-animate")],
 };
+
+config.theme.extend.colors = withAlpha(config.theme.extend.colors);
+module.exports = config;

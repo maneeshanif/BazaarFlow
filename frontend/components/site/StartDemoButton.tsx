@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { SITE_PRIMARY } from "@/components/site/styles";
+import { RollLabel } from "@/components/site/text";
 import { cn } from "@/lib/utils";
 
 /**
@@ -35,7 +36,7 @@ export function StartDemoButton({ className, children = "Try the live demo" }: {
   return (
     <div className="flex flex-col items-start gap-2">
       <button type="button" onClick={() => void start()} disabled={busy} aria-busy={busy} className={cn(SITE_PRIMARY, className)}>
-        {busy ? "Setting up your shop..." : children}
+        {busy ? "Setting up your shop..." : typeof children === "string" ? <RollLabel text={children} /> : children}
       </button>
       {error ? (
         <p role="alert" className="max-w-prose rounded-md border border-danger-border bg-danger-subtle px-3 py-2 text-ui-sm text-danger">
