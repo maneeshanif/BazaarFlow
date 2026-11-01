@@ -34,7 +34,7 @@ export function Intro() {
           style={{ zIndex: LAYERS.length - i, animation: `arc-leave 0.95s ${HOLD + i * 0.07}s cubic-bezier(0.7,0,0.3,1) forwards` }}
         >
           {i === 0 ? (
-            <div className="h-28 w-44 overflow-hidden rounded-chip" style={{ animation: "sticker-drop 1.25s 0.2s linear both", transformOrigin: "50% 100%" }}>
+            <div className="h-28 w-44 overflow-hidden rounded-chip" style={{ animation: "sticker-drop 1.6s 0.1s linear both", transformOrigin: "50% 50%" }}>
               <BrandImage file="logo-badge.png" alt="" decorative label="BazaarFlow" tone="forest" />
             </div>
           ) : null}

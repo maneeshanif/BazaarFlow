@@ -499,16 +499,15 @@ html[data-intro] .cut-letter[data-cut] { animation-delay: calc(var(--delay, 0s) 
 .roll:hover .roll-char, .roll:focus-visible .roll-char { animation: roll-char 0.45s calc(var(--i, 0) * 0.035s) both; }
 .roll-char { display: inline-block; }
 
-/* The logo sticker lands with a squash and stretch (the reference's sticker does the same). */
+/* The logo sticker lies edge-on, then flips over onto the screen, overshoots a little and settles (measured on the reference: a 3D tumble, not a drop). */
 @keyframes sticker-drop {
-  0% { opacity: 0; transform: translateY(-110px) rotate(-8deg) scale(1, 1); }
-  10% { opacity: 1; }
-  40% { transform: translateY(6px) rotate(-5deg) scale(1, 1); animation-timing-function: ease-out; }
-  48% { transform: translateY(0) rotate(-4deg) scale(1.12, 0.86); }
-  58% { transform: translateY(-14px) rotate(-4deg) scale(0.95, 1.07); animation-timing-function: ease-in; }
-  68% { transform: translateY(0) rotate(-4deg) scale(1.05, 0.95); }
-  78% { transform: translateY(-4px) rotate(-4deg) scale(0.99, 1.02); }
-  100% { transform: translateY(0) rotate(-4deg) scale(1, 1); }
+  0% { opacity: 0; transform: perspective(900px) rotate(-4deg) rotateX(-80deg) scale(0.62); }
+  8% { opacity: 1; }
+  30% { transform: perspective(900px) rotate(-4deg) rotateX(-80deg) scale(0.62); animation-timing-function: cubic-bezier(0.5, 0, 0.3, 1); }
+  62% { transform: perspective(900px) rotate(-4deg) rotateX(12deg) scale(1.08); animation-timing-function: ease-in-out; }
+  78% { transform: perspective(900px) rotate(-4deg) rotateX(-4deg) scale(1.01); animation-timing-function: ease-in-out; }
+  90% { transform: perspective(900px) rotate(-4deg) rotateX(1.5deg) scale(1); }
+  100% { transform: perspective(900px) rotate(-4deg) rotateX(0) scale(1); }
 }
 
 /* The menu tab arrives from above once the opening is over, and sways when the page scrolls. */
