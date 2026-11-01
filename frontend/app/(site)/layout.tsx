@@ -9,6 +9,7 @@ import { INTRO_BOOT_SCRIPT } from "@/components/site/intro-state";
 import { PUBLIC_MENU } from "@/components/site/content";
 import { MenuTab, type MenuLink } from "@/components/site/MenuTab";
 import { SiteScroll } from "@/components/site/SiteScroll";
+import { SoundToggle } from "@/components/site/SoundToggle";
 import { RollLabel } from "@/components/site/text";
 
 export const metadata: Metadata = {
@@ -47,6 +48,7 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
       </header>
       <PageCurtain />
       <MenuTab links={PUBLIC_MENU} extra={MENU_EXTRA} />
+      <SoundToggle />
 
       <main id="content">{children}</main>
 

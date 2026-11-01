@@ -45,8 +45,8 @@ export function WaveBand({ text = LINE, ribbon = true, letters = "fill-forest-in
           <path id="wave-path" d="M-200 250 C 100 120, 380 350, 720 240 S 1300 110, 1700 230" />
         </defs>
         {ribbon ? <use href="#wave-path" className="fill-none stroke-lime" strokeWidth="190" /> : null}
-        <text className={`${letters} font-display uppercase`} style={{ fontSize: 130 }}>
-          <textPath ref={path} href="#wave-path" startOffset="0">
+        <text className={`${letters} font-display uppercase`} style={{ fontSize: 118 }}>
+          <textPath ref={path} href="#wave-path" startOffset="0" dy="42">
             {`${text.trim()}  `.repeat(4)}
           </textPath>
         </text>

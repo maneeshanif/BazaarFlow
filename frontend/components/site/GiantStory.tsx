@@ -6,6 +6,7 @@ import { BrandImage } from "@/components/brand/BrandImage";
 import { Chip } from "@/components/brand/Chip";
 import { TiltFrame } from "@/components/brand/TiltFrame";
 import { Bob, register } from "@/components/site/motion";
+import { play } from "@/components/site/sound";
 import { CharText, WordText } from "@/components/site/text";
 
 /** Where a piece sits on the big stage, in viewport widths and heights. Ignored when the pieces stack. */
@@ -119,6 +120,7 @@ export function GiantStory() {
       for (let k = 1; k <= 3; k += 1) {
         const at = (k - 1) * 2;
         tl.to(el, { x: () => frozen[k].x, y: () => frozen[k].y, duration: 1 }, at);
+        tl.call(() => play("slideChange"), undefined, at + 0.05);
         for (const p of pieces) {
           const depth = Number(p.dataset.depth ?? 1);
           if (depth === 1) continue;

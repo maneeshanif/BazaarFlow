@@ -21,8 +21,7 @@ export function Board() {
           <Bob amount={10} seconds={4} className="relative mx-auto w-full max-w-md -rotate-3">
             <div aria-hidden className="absolute -left-3 top-8 z-20 h-10 w-5 rotate-[-20deg] rounded-[3px] border-2 border-forest-ink bg-kraft-ink shadow-popover" />
             <div className="relative rounded-chip bg-sunny p-6 pt-8 text-forest-ink shadow-card">
-              <TapeStrip className="-top-7 left-1/2 -translate-x-full -rotate-2" />
-              <TapeStrip className="-top-7 left-1/2 -rotate-2" />
+              <TapeStrip className="-top-7 left-1/2 h-14 w-56 -translate-x-1/2 -rotate-2" />
               <p className="font-display text-ui-2xl uppercase">To do</p>
               <ul className="mt-3 space-y-2 font-slip text-ui-lg">
                 {TODO.map((t) => (
@@ -38,7 +37,7 @@ export function Board() {
 
         {/* kraft card with the statement */}
         <Drift distance={30} className="md:col-span-7 md:col-start-6 md:row-span-2 md:row-start-1">
-          <div className="paper-kraft relative rounded-card p-8 shadow-card md:p-14">
+          <div data-tape-card className="paper-kraft relative rounded-card p-8 shadow-card md:p-14">
             <TapeStrip className="-top-8 right-0 h-24 w-[min(34rem,92%)]" />
             <h2 id="board-title" className="font-display text-ui-3xl uppercase leading-[0.95] text-kraft-ink md:text-display-lg">
               <ScrubText text="Order rush. Udhaar chaos. Stock-take Sunday." className="block" />
@@ -51,7 +50,7 @@ export function Board() {
         {/* produce illustration */}
         <Drift distance={60} className="md:col-span-4 md:col-start-2 md:row-start-2">
           <Bob amount={14} seconds={5}>
-            <TiltFrame tilt={-8} slide={{ x: -315, y: -96 }} className="mx-auto aspect-[4/3] w-full max-w-2xl">
+            <TiltFrame tilt={-8} className="mx-auto aspect-[4/3] w-full max-w-2xl">
               <BrandImage file="illus-produce.jpg" alt="" decorative label="Peaches and tomatoes" tone="sunny" />
             </TiltFrame>
           </Bob>
@@ -63,14 +62,14 @@ export function Board() {
         {/* photos */}
         <Drift distance={80} className="md:col-span-4 md:col-start-3 md:row-start-3">
           <Bob amount={12} seconds={4.5}>
-            <TiltFrame tilt={5} slide={{ x: -200, y: -80 }} className="mx-auto aspect-[3/4] w-full max-w-md">
+            <TiltFrame tilt={5} className="mx-auto aspect-[3/4] w-full max-w-md">
               <BrandImage file="photo-parcels.jpg" alt="Hands holding two small parcels sealed with tape" label="Parcels" tone="coral" />
             </TiltFrame>
           </Bob>
         </Drift>
         <Drift distance={40} className="md:col-span-4 md:col-start-8 md:row-start-3 md:mt-24">
           <Bob amount={16} seconds={3.6}>
-            <TiltFrame tilt={-5} slide={{ x: 200, y: -80 }} className="mx-auto aspect-[3/4] w-full max-w-md">
+            <TiltFrame tilt={-5} className="mx-auto aspect-[3/4] w-full max-w-md">
               <BrandImage file="photo-food-pack.jpg" alt="Hands closing a box of hot food for delivery" label="Packed food" tone="sky" />
             </TiltFrame>
           </Bob>

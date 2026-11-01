@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Fragment, useEffect, useId, useRef, useState } from "react";
+import { play } from "@/components/site/sound";
 import { RollLabel } from "@/components/site/text";
 import { ArrowUpRight } from "lucide-react";
 
@@ -86,7 +87,7 @@ export function MenuTab({ links, extra = [] }: { links: MenuLink[]; extra?: Menu
     };
   }, [open]);
   return (
-    <div ref={root} className="fixed right-3 top-0 z-[120] w-[min(28rem,calc(100vw-1.5rem))] md:right-6">
+    <div ref={root} data-own-sound className="fixed right-3 top-0 z-[120] w-[min(28rem,calc(100vw-1.5rem))] md:right-6">
       <nav
         id={id}
         aria-label="Main"
@@ -101,6 +102,7 @@ export function MenuTab({ links, extra = [] }: { links: MenuLink[]; extra?: Menu
               <Link
                 href={l.href}
                 onClick={() => setOpen(false)}
+                onMouseEnter={() => open && play("menuHover")}
                 className="roll group flex items-center justify-between gap-3 py-3 font-display text-ui-2xl uppercase leading-none text-forest-ink focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-line-focus md:text-ui-3xl"
               >
                 <span>
@@ -134,7 +136,10 @@ export function MenuTab({ links, extra = [] }: { links: MenuLink[]; extra?: Menu
         type="button"
         aria-expanded={open}
         aria-controls={id}
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => {
+          if (!open) play("menuPull");
+          setOpen((o) => !o);
+        }}
         className="menu-tab-shape paper-cream group relative ms-auto block h-20 w-[8.5rem] origin-top pb-3 pt-2 text-center font-display text-ui-lg uppercase tracking-wide text-forest-ink transition-[transform,rotate] duration-500 [transition-timing-function:var(--ease-bounce)] hover:rotate-[2deg] focus-visible:outline-none"
       >
         <span aria-hidden className="mx-2 block border-t-2 border-dotted border-forest-ink" />

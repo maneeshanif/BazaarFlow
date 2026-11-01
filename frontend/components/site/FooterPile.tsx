@@ -5,6 +5,7 @@ import { useLayoutEffect, useRef } from "react";
 import { BrandImage } from "@/components/brand/BrandImage";
 import type { Tone } from "@/components/brand/tones";
 import { motionAllowed } from "@/components/site/motion";
+import { play } from "@/components/site/sound";
 
 type Item = { key: string; size: string; x: number; kind: "disc"; file: string; label: string; tone: Tone } | { key: string; size: string; x: number; kind: "link"; href: string; label: string };
 
@@ -53,6 +54,14 @@ export function FooterPile() {
     let raf = 0;
     let last = 0;
     let visible = false;
+    let lastHit = 0;
+    // a knock is heard only when it is hard enough, and not more than about ten times a second
+    const knock = (speed: number) => {
+      const now = performance.now();
+      if (speed < 4 || now - lastHit < 90) return;
+      lastHit = now;
+      play("ballHit", Math.min(speed / 14, 1) * 0.8);
+    };
 
     const step = (t: number) => {
       raf = requestAnimationFrame(step);
@@ -89,6 +98,7 @@ export function FooterPile() {
           b.vy = Math.abs(b.vy) * BOUNCE;
         }
         if (b.y > H - b.r) {
+          knock(b.vy);
           b.y = H - b.r;
           b.vy = -Math.abs(b.vy) * BOUNCE;
           if (Math.abs(b.vy) < 1) b.vy = 0;
@@ -118,6 +128,7 @@ export function FooterPile() {
           q.y += ny * push * (qm / total);
           const rel = (q.vx - p.vx) * nx + (q.vy - p.vy) * ny;
           if (rel < 0) {
+            knock(-rel);
             const j2 = -(1 + BOUNCE) * rel * 0.5;
             if (pm) {
               p.vx -= j2 * nx;
