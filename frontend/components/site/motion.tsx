@@ -97,13 +97,13 @@ export function Stick({ children, className, tilt = 14, x = 0, y = 90 }: { child
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ref.current,
-        { y, x, rotate: tilt, scale: 1.07, transformOrigin: "50% 0%", filter: "drop-shadow(0 26px 22px rgb(0 0 0 / 0.35))" },
+        { y, x, rotate: tilt, scale: 1.07, transformOrigin: "50% 0%", filter: "drop-shadow(0 26px 22px color-mix(in srgb, var(--color-forest-ink) 40%, transparent))" },
         {
           y: 0,
           x: 0,
           rotate: 0,
           scale: 1,
-          filter: "drop-shadow(0 4px 6px rgb(0 0 0 / 0.25))",
+          filter: "drop-shadow(0 4px 6px color-mix(in srgb, var(--color-forest-ink) 30%, transparent))",
           duration: 0.9,
           ease: "back.out(2.2)",
           scrollTrigger: { trigger: ref.current, start: "top 82%", toggleActions: "play none none reverse" },
