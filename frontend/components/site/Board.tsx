@@ -39,7 +39,7 @@ export function Board() {
         {/* kraft card with the statement */}
         <Drift distance={30} className="md:col-span-7 md:col-start-6 md:row-span-2 md:row-start-1">
           <div className="paper-kraft relative rounded-card p-8 shadow-card md:p-14">
-            <TapeStrip className="-top-8 right-0 h-24 w-[min(34rem,92%)] rounded-none bg-orange/40" />
+            <TapeStrip className="-top-8 right-0 h-24 w-[min(34rem,92%)]" />
             <h2 id="board-title" className="font-display text-ui-3xl uppercase leading-[0.95] text-kraft-ink md:text-display-lg">
               <ScrubText text="Order rush. Udhaar chaos. Stock-take Sunday." className="block" />
               <ScrubText text="A parcel with the wrong address." className="mt-3 block" />
