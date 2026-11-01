@@ -37,10 +37,10 @@ export function Board() {
         </Drift>
 
         {/* kraft card with the statement */}
-        <Drift distance={30} className="md:col-span-7 md:col-start-6 md:row-span-2 md:row-start-1">
-          <div className="paper-kraft relative rounded-card p-8 shadow-card md:p-14">
+        <Drift distance={30} className="md:col-span-8 md:col-start-5 md:row-span-2 md:row-start-1 md:-mr-24">
+          <div className="paper-kraft relative rounded-card p-8 shadow-card md:min-h-[48rem] md:p-20 md:pl-28">
             <TapeStrip className="-top-8 right-0 h-24 w-[min(34rem,92%)] rounded-none bg-orange/40" />
-            <h2 id="board-title" className="font-display text-ui-3xl uppercase leading-[0.95] text-kraft-ink md:text-display-lg">
+            <h2 id="board-title" className="font-display text-ui-3xl uppercase leading-[0.95] text-kraft-ink md:text-display-xl">
               <ScrubText text="Order rush. Udhaar chaos. Stock-take Sunday." className="block" />
               <ScrubText text="A parcel with the wrong address." className="mt-3 block" />
               <WaveText text="We keep it straight." className="mt-3 block" />
@@ -49,9 +49,9 @@ export function Board() {
         </Drift>
 
         {/* produce illustration */}
-        <Drift distance={60} className="md:col-span-4 md:col-start-2 md:row-start-2">
+        <Drift distance={60} className="md:col-span-6 md:col-start-1 md:row-start-2 md:-ml-24">
           <Bob amount={14} seconds={5}>
-            <TiltFrame tilt={-8} slide={{ x: -315, y: -96 }} className="mx-auto aspect-[4/3] w-full max-w-2xl">
+            <TiltFrame tilt={-8} slide={{ x: -315, y: -96 }} className="mx-auto aspect-[4/3] w-full max-w-4xl">
               <BrandImage file="illus-produce.jpg" alt="" decorative label="Peaches and tomatoes" tone="sunny" />
             </TiltFrame>
           </Bob>
@@ -61,16 +61,16 @@ export function Board() {
         </Drift>
 
         {/* photos */}
-        <Drift distance={80} className="md:col-span-4 md:col-start-3 md:row-start-3">
+        <Drift distance={80} className="md:col-span-5 md:col-start-2 md:row-start-3">
           <Bob amount={12} seconds={4.5}>
-            <TiltFrame tilt={5} slide={{ x: -200, y: -80 }} className="mx-auto aspect-[3/4] w-full max-w-md">
+            <TiltFrame tilt={5} slide={{ x: -200, y: -80 }} className="mx-auto aspect-[3/4] w-full max-w-xl">
               <BrandImage file="photo-parcels.jpg" alt="Hands holding two small parcels sealed with tape" label="Parcels" tone="coral" />
             </TiltFrame>
           </Bob>
         </Drift>
-        <Drift distance={40} className="md:col-span-4 md:col-start-8 md:row-start-3 md:mt-24">
+        <Drift distance={40} className="md:col-span-5 md:col-start-8 md:row-start-3 md:mt-24">
           <Bob amount={16} seconds={3.6}>
-            <TiltFrame tilt={-5} slide={{ x: 200, y: -80 }} className="mx-auto aspect-[3/4] w-full max-w-md">
+            <TiltFrame tilt={-5} slide={{ x: 200, y: -80 }} className="mx-auto aspect-[3/4] w-full max-w-xl">
               <BrandImage file="photo-food-pack.jpg" alt="Hands closing a box of hot food for delivery" label="Packed food" tone="sky" />
             </TiltFrame>
           </Bob>
