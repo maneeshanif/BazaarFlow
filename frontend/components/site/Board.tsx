@@ -1,5 +1,6 @@
 import { BrandImage } from "@/components/brand/BrandImage";
 import { TapeStrip } from "@/components/brand/TapeStrip";
+import { HangingTape } from "@/components/site/HangingTape";
 import { TiltFrame } from "@/components/brand/TiltFrame";
 import { Bob, Drift, WaveText } from "@/components/site/motion";
 import { ScrubText } from "@/components/site/text";
@@ -13,6 +14,7 @@ const TODO = ["pack Ali's order", "count flour and rice", "settle Sana's udhaar"
 export function Board() {
   return (
     <section aria-labelledby="board-title" style={{ zIndex: 90 }} className="paper-forest relative -mt-16 overflow-hidden bg-forest-deep px-4 pb-32 pt-40 md:px-8">
+      <HangingTape />
       <div className="mx-auto grid max-w-[110rem] gap-y-16 md:grid-cols-12 md:gap-x-8 md:gap-y-24">
         {/* sticky note with a clip */}
         <Drift distance={50} className="md:col-span-4 md:col-start-1 md:row-start-1 md:mt-10">
