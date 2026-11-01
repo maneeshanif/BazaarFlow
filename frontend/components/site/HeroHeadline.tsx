@@ -20,7 +20,7 @@ export function HeroHeadline() {
         <span aria-hidden className="block">
           <span className="hero-small flex items-center justify-center gap-3 md:gap-6">
             <span>Tell it</span>
-            <span className="inline-block h-[2em] w-[3.8em] shrink-0 -rotate-6 overflow-hidden rounded-chip">
+            <span className="relative -top-[0.7em] inline-block h-[2.2em] w-[4.2em] shrink-0 -rotate-[9deg] overflow-hidden rounded-chip">
               <BrandImage file="logo-badge.png" alt="" decorative label="BazaarFlow" tone="forest" />
             </span>
             <span>what you sold.</span>

@@ -21,7 +21,9 @@ export function HangingTape() {
       const roll = el.querySelector("[data-roll]");
       const tl = gsap.timeline({ scrollTrigger: { trigger: el.parentElement, start: "top 55%", once: true } });
       tl.fromTo(el, { scale: 0.82, y: 187, autoAlpha: 0, transformOrigin: "50% 0%" }, { scale: 1, y: 0, autoAlpha: 1, duration: 1.3, ease: "back.out(2.2)" }, 0);
-      tl.fromTo(strip, { scaleY: 0.05, transformOrigin: "50% 0%" }, { scaleY: 1, duration: 1.5, ease: "elastic.out(1, 0.55)" }, 0.1);
+      // pulled out by a hand: the free end travels down fast, slows, and stops; the strip then sways once on its top edge
+      tl.fromTo(strip, { scaleY: 0.02, transformOrigin: "50% 0%" }, { scaleY: 1, duration: 1.1, ease: "power3.out" }, 0.15);
+      tl.fromTo(strip, { rotate: 5 }, { rotate: 0, duration: 1.6, ease: "elastic.out(1, 0.35)" }, 0.9);
       tl.fromTo(roll, { rotate: -140 }, { rotate: 0, duration: 1.3, ease: "power3.out" }, 0);
     }, el);
     return () => ctx.revert();

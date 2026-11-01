@@ -86,6 +86,40 @@ export function Drift({ children, className, distance = 60 }: { children: ReactN
 }
 
 /**
+ * A card that sticks to the board. Scrolling down, it swings in from a loose, tilted position and attaches with a small
+ * bounce; scrolling back up past it, it peels away to the loose position again (the reference's small cards do both).
+ */
+export function Stick({ children, className, tilt = 14, x = 0, y = 90 }: { children: ReactNode; className?: string; tilt?: number; x?: number; y?: number }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  useLayoutEffect(() => {
+    if (!motionAllowed() || !ref.current) return;
+    register();
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        ref.current,
+        { y, x, rotate: tilt, scale: 1.07, transformOrigin: "50% 0%", filter: "drop-shadow(0 26px 22px rgb(0 0 0 / 0.35))" },
+        {
+          y: 0,
+          x: 0,
+          rotate: 0,
+          scale: 1,
+          filter: "drop-shadow(0 4px 6px rgb(0 0 0 / 0.25))",
+          duration: 0.9,
+          ease: "back.out(2.2)",
+          scrollTrigger: { trigger: ref.current, start: "top 82%", toggleActions: "play none none reverse" },
+        },
+      );
+    }, ref);
+    return () => ctx.revert();
+  }, [tilt, x, y]);
+  return (
+    <div ref={ref} className={className}>
+      {children}
+    </div>
+  );
+}
+
+/**
  * Floats its children gently up and down for as long as they are on screen, each piece at its own pace so a group never
  * moves in step (the reference's drifting photos and discs do the same).
  */
