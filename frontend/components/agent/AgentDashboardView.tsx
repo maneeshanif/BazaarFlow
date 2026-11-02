@@ -7,6 +7,7 @@ import { KpiCard } from "@/components/app/KpiCard";
 import { PageHeader } from "@/components/app/PageHeader";
 import { ErrorState } from "@/components/app/StateViews";
 import { SelectInput } from "@/components/form/Controls";
+import { MarketingAgentsPanel } from "@/components/marketing/MarketingAgentsPanel";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useLoad } from "@/hooks/useLoad";
 import { apiGet } from "@/lib/api/client";
@@ -98,6 +99,7 @@ export function AgentDashboardView() {
           </p>
         </>
       ) : null}
+      <MarketingAgentsPanel />
     </div>
   );
 }

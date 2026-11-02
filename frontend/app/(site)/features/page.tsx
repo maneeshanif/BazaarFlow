@@ -11,18 +11,18 @@ import { CharText } from "@/components/site/text";
 
 export const metadata: Metadata = {
   title: "What it handles - BazaarFlow",
-  description: "Sales, orders, customers' udhaar, stock, vendors, money, an inbox and marketing posts, in one back-office for a small shop.",
+  description: "Sales, orders, customers' udhaar, stock, vendors, money, an inbox, a marketing agent and a Facebook ads agent, in one back-office for a small shop.",
 };
 
-const DISC: Record<string, string> = { sales: "disc-sales.png", khata: "disc-khata.png", stock: "disc-stock.png", money: "disc-money.png", inbox: "disc-chat.png", marketing: "disc-posts.png" };
+const DISC: Record<string, string> = { sales: "disc-sales.png", khata: "disc-khata.png", stock: "disc-stock.png", money: "disc-money.png", inbox: "disc-chat.png", marketing: "disc-posts.png", ads: "disc-ads.png" };
 const BG: Record<string, string> = { coral: "bg-coral", indigo: "bg-indigo text-cream", sunny: "bg-sunny", sky: "bg-sky", orange: "bg-orange", lime: "bg-lime" };
 
 export default function FeaturesPage() {
   return (
     <>
-      <SubHero chip="What it handles" lines={["Pick your", "tool."]} lead="Six parts of one back-office. Use the ones your shop needs today and leave the rest for later.">
+      <SubHero chip="What it handles" lines={["Pick your", "tool."]} lead="Seven parts of one back-office. Use the ones your shop needs today and leave the rest for later.">
         {/* overlapping discs, as on the reference's product page */}
-        <ul className="mt-14 flex max-w-full flex-wrap items-center justify-center md:flex-nowrap md:[&>li+li]:-ms-6" aria-label="The six parts">
+        <ul className="mt-14 flex max-w-full flex-wrap items-center justify-center md:flex-nowrap md:[&>li+li]:-ms-6" aria-label="The seven parts">
           {MODULES.map((m, i) => (
             <li key={m.key} className="relative">
               <Bob amount={14} seconds={3 + (i % 3) * 0.6}>

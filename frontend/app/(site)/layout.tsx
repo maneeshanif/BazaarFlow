@@ -57,6 +57,8 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
           {[
             ["About", "/about"],
             ["How it works", "/how-it-works"],
+            ["Marketing agent", "/social-posts"],
+            ["Facebook ads agent", "/features#ads"],
             ["News", "/news"],
             ["Contact", "/contact"],
           ].map(([label, href]) => (
@@ -74,7 +76,7 @@ export default function SiteLayout({ children }: Readonly<{ children: React.Reac
             <br />
             by you
           </p>
-          <p className="mt-6 max-w-md text-ui-md text-cream">A back-office for shops in Pakistan. Coming next: orders from WhatsApp and posts to Facebook.</p>
+          <p className="mt-6 max-w-md text-ui-md text-cream">A back-office for shops in Pakistan. Coming next: orders from WhatsApp, and a marketing agent and a Facebook ads agent for your Page.</p>
           <FooterPile />
         </div>
         <p className="relative pb-6 text-center text-ui-sm text-cream/80">&copy; {new Date().getFullYear()} BazaarFlow</p>

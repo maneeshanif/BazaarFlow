@@ -15,6 +15,8 @@ const ITEMS: Item[] = [
   { key: "stock", kind: "disc", file: "disc-stock.png", label: "Stock", tone: "sunny", size: "h-32 w-32 lg:h-48 lg:w-48", x: 0.3 },
   { key: "sales", kind: "disc", file: "disc-sales.png", label: "Sales", tone: "coral", size: "h-36 w-36 lg:h-52 lg:w-52", x: 0.62 },
   { key: "money", kind: "disc", file: "disc-money.png", label: "Money", tone: "sky", size: "h-32 w-32 lg:h-48 lg:w-48", x: 0.8 },
+  { key: "marketing", kind: "disc", file: "disc-posts.png", label: "Marketing agent", tone: "lime", size: "h-32 w-32 lg:h-48 lg:w-48", x: 0.38 },
+  { key: "ads", kind: "disc", file: "disc-ads.png", label: "Facebook ads agent", tone: "sky", size: "h-28 w-28 lg:h-44 lg:w-44", x: 0.7 },
   { key: "demo", kind: "link", href: "/demo", label: "Demo", size: "h-24 w-24 lg:h-32 lg:w-32", x: 0.46 },
   { key: "sign-in", kind: "link", href: "/sign-in", label: "Sign in", size: "h-24 w-24 lg:h-32 lg:w-32", x: 0.92 },
 ];

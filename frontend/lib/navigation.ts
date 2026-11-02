@@ -73,6 +73,7 @@ export const NAV: NavGroup[] = [
       { label: "Activity", icon: "activity", roles: MANAGER_UP, href: "/marketing/activity" },
       { label: "Comments", icon: "message-square", roles: MANAGER_UP, href: "/marketing/comments" },
       { label: "Insights", icon: "bar-chart", roles: MANAGER_UP, href: "/marketing/insights" },
+      { label: "Facebook ads agent", icon: "megaphone", roles: MANAGER_UP, href: "/marketing/ads" },
     ],
   },
   {

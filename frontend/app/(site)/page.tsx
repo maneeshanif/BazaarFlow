@@ -4,7 +4,7 @@ import type { Tone } from "@/components/brand/tones";
 import { Board } from "@/components/site/Board";
 import { Chapters } from "@/components/site/Chapters";
 import { ClosingPanel } from "@/components/site/ClosingPanel";
-import { CONTROLS } from "@/components/site/content";
+import { CONTROLS, MODULES } from "@/components/site/content";
 import { GiantStory } from "@/components/site/GiantStory";
 import { HeroFloaters } from "@/components/site/HeroFloaters";
 import { HeroHeadline } from "@/components/site/HeroHeadline";
@@ -102,6 +102,20 @@ export default function LandingPage() {
                   <h3 className="font-display text-ui-2xl uppercase text-lime md:w-1/3">{b.title}</h3>
                   <p className="max-w-prose text-ui-lg text-cream">{b.text}</p>
                 </div>
+              </Reveal>
+            </li>
+          ))}
+        </ul>
+        <CharText text="Two agents to market for you." className="mx-auto mt-24 max-w-[110rem] text-display-lg text-lime" />
+        <ul className="mx-auto mt-12 grid max-w-[110rem] gap-5 md:grid-cols-2">
+          {MODULES.filter((m) => m.key === "marketing" || m.key === "ads").map((m, i) => (
+            <li key={m.key}>
+              <Reveal delay={i * 0.05} y={40}>
+                <Link href={m.key === "ads" ? "/features#ads" : "/social-posts"} className="block h-full rounded-card bg-forest p-8 transition-transform hover:-translate-y-1">
+                  <h3 className="font-display text-ui-2xl uppercase text-lime">{m.name}</h3>
+                  <p className="mt-3 max-w-prose text-ui-lg text-cream">{m.line}</p>
+                  <p className="mt-4 text-ui-sm font-medium text-sunny">Partly coming next</p>
+                </Link>
               </Reveal>
             </li>
           ))}
