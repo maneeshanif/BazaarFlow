@@ -1,6 +1,6 @@
 # Local development image: the API plus what is needed to provision, migrate and seed a throwaway database.
 # Not for production (that is backend.Dockerfile).
-FROM python:3.12-slim
+FROM python:3.15-slim
 
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
